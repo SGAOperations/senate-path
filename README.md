@@ -26,8 +26,13 @@ Backend:
 
 Prerequisites: make sure everything is installed
 
-1. [yarn](https://yarnpkg.com/): `npm install --global yarn`
-2. [nx](https://nx.dev/): `npm add --global nx@latest`
+1. [node/npm](https://nodejs.org/en)
+    - To check if it's installed: `node -v` and `npm -v`
+    - To install: for [mac/linux](https://github.com/nvm-sh/nvm) and [windows](https://github.com/coreybutler/nvm-windows) (setup instructions are in the link under the `Installing and Updating` and `Installation & Upgrades` sections, respectively)
+3. [yarn](https://yarnpkg.com/)
+    - To check if it's installed: `yarn -v`
+    - To install: `npm install --global yarn`
+4. [nx](https://nx.dev/): `npm add --global nx@latest`
 
 First, clone the repo and `cd` into the directory
 
