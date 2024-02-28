@@ -24,6 +24,11 @@ Backend:
 
 ## Setting up the development environment
 
+Prerequisites: make sure everything is installed
+
+1. [yarn](https://yarnpkg.com/): `npm install --global yarn`
+2. [nx](https://nx.dev/): `yarn global add nx@latest`
+
 First, clone the repo and `cd` into the directory
 
 ```bash
