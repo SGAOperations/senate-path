@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Get } from '@nestjs/common';
 
 import { ApplicationsService } from './applications.service';
 import { CreateApplicationRequestDto } from './dto/create-application-request.dto';
@@ -6,6 +6,11 @@ import { CreateApplicationRequestDto } from './dto/create-application-request.dt
 @Controller('/applications')
 export class ApplicationsController {
   constructor(private readonly applicationsService: ApplicationsService) {}
+
+  @Get()
+  getApplications() {
+    return this.applicationsService.getApplications();
+  }
 
   @Post()
   createApplication(@Body() request: CreateApplicationRequestDto) {

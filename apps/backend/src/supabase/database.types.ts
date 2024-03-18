@@ -27,6 +27,60 @@ export type Database = {
         }
         Relationships: []
       }
+      applications: {
+        Row: {
+          id: number
+          created_at: string
+          fullName: string
+          preferredFullName: string
+          phoneticPronunciation: string
+          nickname: string
+          nuid: string
+          pronouns: string
+          email: string
+          phoneNumber: string
+          year: number
+          college: string
+          major: string
+          minors: string
+          constituency: string
+        }
+        Insert: {
+          id?: number
+          created_at?: string
+          fullName: string
+          preferredFullName: string
+          phoneticPronunciation: string
+          nickname: string
+          nuid: string
+          pronouns: string
+          email: string
+          phoneNumber: string
+          year: number
+          college: string
+          major: string
+          minors: string
+          constituency: string
+        }
+        Update: {
+          id?: number
+          created_at?: string
+          fullName?: string
+          preferredFullName?: string
+          phoneticPronunciation?: string
+          nickname?: string
+          nuid?: string
+          pronouns?: string
+          email?: string
+          phoneNumber?: string
+          year?: number
+          college?: string
+          major?: string
+          minors?: string
+          constituency?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

@@ -1,9 +1,20 @@
 import { Injectable } from '@nestjs/common';
 
 import supabase from '../supabase/client';
+import { Tables } from '../supabase/database.types';
 
 @Injectable()
 export class ApplicationsService {
+  async getApplications(): Promise<Tables<'applications'>[]> {
+    const { data, error } = await supabase.from('applications').select('*');
+
+    if (error) {
+      throw new Error(error.message);
+    }
+    
+    return data;
+  }
+  
   async createApplication({
     fullName,
     preferredFullName,
