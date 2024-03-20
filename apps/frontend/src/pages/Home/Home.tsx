@@ -36,9 +36,6 @@ const Home: React.FC = () => {
           <FormControl>
             This is an example of a text field
             <FormInput
-              id="text-field"
-              name="textField"
-              placeholder="Your answer"
               value={textField}
               onChange={(e) =>
                 setFormData((prevData) => ({

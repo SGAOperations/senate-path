@@ -30,10 +30,9 @@ const Nominations: React.FC = () => {
               </FormTextContainer>
               <FormTextAnswerContainer>
                 <FormInput
+                  label="Required"
+                  placeholder="Your Full Name"
                   required
-                  id="outlined-basic"
-                  name="name"
-                  placeholder="Your answer"
                   value={fullName}
                   onChange={(e) =>
                     setName((prevData) => ({
@@ -58,10 +57,9 @@ const Nominations: React.FC = () => {
             </FormTextContainer>
             <FormTextAnswerContainer>
               <FormInput
+                label = "Required"
                 required
-                id="outlined-basic"
-                name="name"
-                placeholder="Your answer"
+                placeholder="Your Preferred Name"
                 value={preferredName}
                 onChange={(e) =>
                   setPreferredName((prevData) => ({
