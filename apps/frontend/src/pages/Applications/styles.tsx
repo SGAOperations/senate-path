@@ -33,13 +33,13 @@ export const FormSelect = styled(Select)(() => ({
 }));
 
 export const FormText = styled.div(() => ({
-  border: '1 px',
+  border: '1px',
   boxShadow: '2px 2px 5px #ccc',
   borderRadius: '5px',
   margin: '10px',
 }))
 export const FormQuestionContainer = styled.div(() => ({
-  border: '1 px',
+  border: '1px',
   alignItems: 'center',
   justifyContent:'center',
   flexDirection: 'column',
@@ -57,3 +57,7 @@ export const FormTextAnswerContainer = styled.div(() => ({
   width: '100%',
   justifyContent: 'center',
 }))
+
+export const Introduction = styled('div')({
+  margin: '20px auto', 
+});
