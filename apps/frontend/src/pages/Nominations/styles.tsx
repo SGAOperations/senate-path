@@ -1,3 +1,4 @@
+import { TextField } from '@mui/material';
 import FormGroup from '@mui/material/FormGroup';
 import Input from '@mui/material/Input';
 import Select from '@mui/material/Select';
@@ -17,12 +18,12 @@ export const SampleForm = styled(FormGroup)(() => ({
   width: '50%',
 }));
 
-export const FormInput = styled(Input)(() => ({
+export const FormInput = styled(TextField)(() => ({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  width: '50%',
-  
+  maxWidth: '100%',
+  id: 'filled-required',
 }));
 
 export const FormSelect = styled(Select)(() => ({
@@ -35,12 +36,22 @@ export const FormText = styled.div(() => ({
   borderRadius: '5px',
   margin: '10px',
 }))
-export const FormNameText = styled.div(() => ({
+export const FormQuestionContainer = styled.div(() => ({
   border: '1 px',
   alignItems: 'center',
   justifyContent:'center',
+  flexDirection: 'column',
   boxShadow: '2px 2px 5px #ccc',
   borderRadius: '5px',
   margin: '10px',
   display:'flex',
+}))
+export const FormTextContainer = styled.div(() => ({
+padding: '3%'
+}))
+export const FormTextAnswerContainer = styled.div(() => ({
+  display: 'flex',
+  paddingBottom: '3%',
+  width: '100%',
+  justifyContent: 'center',
 }))
