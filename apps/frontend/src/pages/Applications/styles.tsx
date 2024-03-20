@@ -59,5 +59,7 @@ export const FormTextAnswerContainer = styled.div(() => ({
 }))
 
 export const Introduction = styled('div')({
-  margin: '20px auto', 
+  width: '100%',
+  textAlign: 'center',
+  margin: '20px 0',
 });

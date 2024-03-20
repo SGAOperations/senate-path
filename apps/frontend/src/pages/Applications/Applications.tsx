@@ -18,6 +18,13 @@ const Nominations: React.FC = () => {
   const [{ name: pronunciation}, setPronunciation] = useState<SampleFullNameData>({
     name: '',
   });
+  const [{ name: nickname}, setNickname] = useState<SampleFullNameData>({
+    name: '',
+  });
+  const [{ name: northeasternID}, setNortheasternID] = useState<SampleFullNameData>({
+    name: '',
+  });
+
   const isTextFieldError = fullName === '';
   return (
       
@@ -125,6 +132,59 @@ const Nominations: React.FC = () => {
       </SampleForm>
       }
 
+      {
+        <SampleForm>
+        <FormControl>
+          <FormQuestionContainer>
+            <FormTextContainer>
+            What is your nickname?
+            <br></br>
+            If you have a nickname, please enter it here. This name will not be used in official SGA business, but it will be used informally when appropriate.
+            </FormTextContainer>
+            <FormTextAnswerContainer>
+              <FormInput
+                placeholder="Nickname"
+                value={nickname}
+                onChange={(e) =>
+                  setNickname((prevData) => ({
+                    ...prevData,
+                    name: e.target.value,
+                  }))
+                }
+                error={isTextFieldError}
+              />
+            </FormTextAnswerContainer>
+          </FormQuestionContainer>
+        </FormControl>
+      </SampleForm>
+      }
+
+      {
+      <SampleForm>
+        <FormControl>
+          <FormQuestionContainer>
+            <FormTextContainer>
+            What is your NUID?
+            </FormTextContainer>
+            <FormTextAnswerContainer>
+              <FormInput
+                label = "Required"
+                required
+                placeholder="NUID"
+                value={northeasternID}
+                onChange={(e) =>
+                  setNortheasternID((prevData) => ({
+                    ...prevData,
+                    name: e.target.value,
+                  }))
+                }
+                error={isTextFieldError}
+              />
+            </FormTextAnswerContainer>
+          </FormQuestionContainer>
+        </FormControl>
+      </SampleForm>
+      }
 
       </HomeContainer>
   );
