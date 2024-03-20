@@ -34,7 +34,8 @@ const Nominations: React.FC = () => {
               <br></br>
               Please enter your full name as it appears in the university records. This name will only be used in official communications between SGA leadership and university administrators.
               </FormTextContainer>
-            <FormTextAnswerContainer>
+
+              <FormTextAnswerContainer>
               <FormInput
                 required
                 id="outlined-basic"
@@ -49,15 +50,13 @@ const Nominations: React.FC = () => {
                 }
                 error={isTextFieldError}
               />
-            </FormTextAnswerContainer>
+              </FormTextAnswerContainer>
             
             </FormQuestionContainer>
           </FormControl>
 
             </SampleForm>
       </HomeContainer>
-      
-      }
     </>
   );
 };
