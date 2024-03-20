@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useFormControl } from '@mui/material/FormControl';
 import FormControl from '@mui/material/FormControl';
-import { Checkbox, FormControlLabel, FormGroup, FormControl } from '@mui/material';
+import { Checkbox, FormControlLabel, FormGroup } from '@mui/material';
 import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionContainer, FormTextAnswerContainer, Introduction } from './styles';
 import { SampleFullNameData } from './types';
 
