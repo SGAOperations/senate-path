@@ -9,6 +9,7 @@ export const HomeContainer = styled.div(() => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
+  height: '100%'
 }));
 
 export const SampleForm = styled(FormGroup)(() => ({
@@ -24,6 +25,7 @@ export const FormInput = styled(TextField)(() => ({
   alignItems: 'center',
   maxWidth: '100%',
   id: 'filled-required',
+  
 }));
 
 export const FormSelect = styled(Select)(() => ({
