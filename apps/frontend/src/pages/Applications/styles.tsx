@@ -67,7 +67,7 @@ export const Introduction = styled('div')({
 
 export const FormInputCheckbox = styled('div')({
   display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
+  flexDirection: 'column',
+  rowGap: 8,
   maxWidth: '100%',
 });
