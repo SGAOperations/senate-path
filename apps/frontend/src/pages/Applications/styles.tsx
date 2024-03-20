@@ -65,7 +65,7 @@ export const Introduction = styled('div')({
   margin: '20px 0',
 });
 
-export const FormGroup = styled('div')({
+export const FormInputCheckbox = styled('div')({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
