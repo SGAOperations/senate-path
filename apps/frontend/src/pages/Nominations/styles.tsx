@@ -18,9 +18,29 @@ export const SampleForm = styled(FormGroup)(() => ({
 }));
 
 export const FormInput = styled(Input)(() => ({
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
   width: '50%',
+  
 }));
 
 export const FormSelect = styled(Select)(() => ({
-  width: '50%',
+  width: '100%',
 }));
+
+export const FormText = styled.div(() => ({
+  border: '1 px',
+  boxShadow: '2px 2px 5px #ccc',
+  borderRadius: '5px',
+  margin: '10px',
+}))
+export const FormNameText = styled.div(() => ({
+  border: '1 px',
+  alignItems: 'center',
+  justifyContent:'center',
+  boxShadow: '2px 2px 5px #ccc',
+  borderRadius: '5px',
+  margin: '10px',
+  display:'flex',
+}))
