@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useFormControl } from '@mui/material/FormControl';
 import FormControl from '@mui/material/FormControl';
+import { Checkbox, FormControlLabel, FormGroup, FormControl } from '@mui/material';
 import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionContainer, FormTextAnswerContainer, Introduction } from './styles';
 import { SampleFullNameData } from './types';
 
@@ -25,6 +26,19 @@ const Nominations: React.FC = () => {
     name: '',
   });
 
+  const [pronouns, setPronouns] = useState<string[]>([]);
+
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    if (pronouns.includes(value)) {
+      // If already selected, remove it
+      setPronouns(pronouns.filter(pronoun => pronoun !== value));
+    } else {
+      // If not selected, add it
+      setPronouns([...pronouns, value]);
+    }
+  };
+
   const isTextFieldError = fullName === '';
   return (
       
@@ -32,7 +46,7 @@ const Nominations: React.FC = () => {
         {
           <SampleForm>
             <Introduction style={{ textAlign: 'center' }}>
-              SGA Senator Application
+              <h2>SGA Senator Application</h2>
               <br></br>
               Thank you for your interest in joining the Student Government Association (SGA)! SGA serves as the voice of the undergraduate student body and strives to promote student interests in the university and its surrounding communities. We have many active projects and initiatives. Read more about our work at northeasternsga.com.
               <br></br>
@@ -181,6 +195,23 @@ const Nominations: React.FC = () => {
                 error={isTextFieldError}
               />
             </FormTextAnswerContainer>
+          </FormQuestionContainer>
+        </FormControl>
+      </SampleForm>
+      }
+
+{
+      <SampleForm>
+        <FormControl>
+          <FormQuestionContainer>
+            <FormTextContainer>
+            What pronouns do you use?
+            </FormTextContainer>
+            <FormInput>
+                <FormControlLabel required control={<Checkbox />} onChange={handleCheckboxChange} label="She/her/her" value="She/her/her" checked={pronouns.includes('She/her/her')}/>
+                <FormControlLabel required control={<Checkbox />} onChange={handleCheckboxChange} label="He/him/his" value="He/him/his" checked={pronouns.includes('He/him/his')}/>
+                <FormControlLabel required control={<Checkbox />} onChange={handleCheckboxChange} label="They/them/their" value="They/them/their" checked={pronouns.includes('They/them/their')}/>
+            </FormInput>
           </FormQuestionContainer>
         </FormControl>
       </SampleForm>
