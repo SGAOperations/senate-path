@@ -39,7 +39,6 @@ const Nominations: React.FC = () => {
 
   const isTextFieldError = fullName === '';
   return (
-      
       <HomeContainer>
         {
           <SampleForm>
@@ -207,13 +206,47 @@ const Nominations: React.FC = () => {
             </FormTextContainer>
             <FormTextAnswerContainer>
               <FormInputCheckbox>
-              <FormGroup>
-                <FormControlLabel required control={<Checkbox />} onChange={handleCheckboxChange} label="She/her/her" value="She/her/her" checked={pronouns.includes('She/her/her')}/>
-                <FormControlLabel required control={<Checkbox />} onChange={handleCheckboxChange} label="He/him/his" value="He/him/his" checked={pronouns.includes('He/him/his')}/>
-                <FormControlLabel required control={<Checkbox />} onChange={handleCheckboxChange} label="They/them/their" value="They/them/their" checked={pronouns.includes('They/them/their')}/>
-                <FormControlLabel required control={<Checkbox />} onChange={handleCheckboxChange} label="Other" value="Other" checked={pronouns.includes('Other')}/>
-              </FormGroup>
+                <FormGroup>
+                  <FormControlLabel required control={<Checkbox />} onChange={handleCheckboxChange} label="She/her/her" value="She/her/her" checked={pronouns.includes('She/her/her')}/>
+                  <FormControlLabel required control={<Checkbox />} onChange={handleCheckboxChange} label="He/him/his" value="He/him/his" checked={pronouns.includes('He/him/his')}/>
+                  <FormControlLabel required control={<Checkbox />} onChange={handleCheckboxChange} label="They/them/their" value="They/them/their" checked={pronouns.includes('They/them/their')}/>
+                  <FormControlLabel required control={<Checkbox />} onChange={handleCheckboxChange} label="Other" value="Other" checked={pronouns.includes('Other')}/>
+                </FormGroup>
               </FormInputCheckbox>
+            </FormTextAnswerContainer>
+          </FormQuestionContainer>
+        </FormControl>
+      </SampleForm>
+      }
+      {
+      <SampleForm>
+        <FormControl>
+          <FormQuestionContainer>
+            <FormTextContainer>
+            What pronouns do you use?
+            </FormTextContainer>
+            <FormTextAnswerContainer>
+            <FormInput
+                label = "Required"
+                required
+                placeholder="Your Preferred Name"
+                value={preferredName}
+                onChange={(e) =>
+                  setPreferredName((prevData) => ({
+                    ...prevData,
+                    name: e.target.value,
+                  }))
+                }
+                error={isTextFieldError}
+              />
+              {/* <FormInputCheckbox>
+                <FormGroup>
+                  <FormControlLabel required control={<Checkbox />} onChange={handleCheckboxChange} label="She/her/her" value="She/her/her" checked={pronouns.includes('She/her/her')}/>
+                  <FormControlLabel required control={<Checkbox />} onChange={handleCheckboxChange} label="He/him/his" value="He/him/his" checked={pronouns.includes('He/him/his')}/>
+                  <FormControlLabel required control={<Checkbox />} onChange={handleCheckboxChange} label="They/them/their" value="They/them/their" checked={pronouns.includes('They/them/their')}/>
+                  <FormControlLabel required control={<Checkbox />} onChange={handleCheckboxChange} label="Other" value="Other" checked={pronouns.includes('Other')}/>
+                </FormGroup>
+              </FormInputCheckbox> */}
             </FormTextAnswerContainer>
           </FormQuestionContainer>
         </FormControl>

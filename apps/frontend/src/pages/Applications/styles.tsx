@@ -1,6 +1,5 @@
 import { TextField } from '@mui/material';
 import FormGroup from '@mui/material/FormGroup';
-import Input from '@mui/material/Input';
 import Select from '@mui/material/Select';
 
 import styled from 'styled-components';
@@ -9,7 +8,7 @@ export const HomeContainer = styled.div(() => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  height: '100%'
+  paddingBottom: '5%',
 }));
 
 export const SampleForm = styled(FormGroup)(() => ({
@@ -46,7 +45,7 @@ export const FormQuestionContainer = styled.div(() => ({
   boxShadow: '2px 2px 5px #ccc',
   borderRadius: '5px',
   margin: '10px',
-  display:'flex',
+  display:'block',
 }))
 export const FormTextContainer = styled.div(() => ({
 padding: '3%'
@@ -65,9 +64,10 @@ export const Introduction = styled('div')({
   margin: '20px 0',
 });
 
-export const FormInputCheckbox = styled('div')({
+export const FormInputCheckbox = styled.div(()=>({
   display: 'flex',
+  padding: '10%',
   flexDirection: 'column',
   rowGap: 8,
   maxWidth: '100%',
-});
+}));
