@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useFormControl } from '@mui/material/FormControl';
 import FormControl from '@mui/material/FormControl';
 import { Checkbox, FormControlLabel, FormGroup } from '@mui/material';
-import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionContainer, FormTextAnswerContainer, Introduction } from './styles';
+import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionContainer, FormTextAnswerContainer, Introduction, FormGroup } from './styles';
 import { SampleFullNameData } from './types';
 
 
@@ -31,10 +31,8 @@ const Nominations: React.FC = () => {
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     if (pronouns.includes(value)) {
-      // If already selected, remove it
       setPronouns(pronouns.filter(pronoun => pronoun !== value));
     } else {
-      // If not selected, add it
       setPronouns([...pronouns, value]);
     }
   };

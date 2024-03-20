@@ -64,3 +64,10 @@ export const Introduction = styled('div')({
   textAlign: 'center',
   margin: '20px 0',
 });
+
+export const FormGroup = styled('div')({
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  maxWidth: '100%',
+});
