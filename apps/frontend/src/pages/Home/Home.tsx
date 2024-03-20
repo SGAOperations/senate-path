@@ -4,7 +4,7 @@ import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 
 import { MENU_ITEMS } from './constants';
-import { HomeContainer, SampleForm, FormInput, FormSelect } from './styles';
+import { HomeContainer, SampleForm, FormInput } from './styles';
 import { SampleFormData } from './types';
 
 const Home: React.FC = () => {
@@ -36,9 +36,7 @@ const Home: React.FC = () => {
           <FormControl>
             This is an example of a text field
             <FormInput
-              id="text-field"
-              name="textField"
-              placeholder="Your answer"
+              label="Required"
               value={textField}
               onChange={(e) =>
                 setFormData((prevData) => ({
@@ -46,14 +44,16 @@ const Home: React.FC = () => {
                   textField: e.target.value,
                 }))
               }
+              required
               error={isTextFieldError}
             />
           </FormControl>
 
           <FormControl>
             This is an example of a dropdown menu
-            <FormSelect
-              label="Dropdown"
+            <FormInput
+              select
+              label="Required"
               value={dropdown}
               onChange={(e) =>
                 setFormData((prevData) => ({
@@ -61,6 +61,7 @@ const Home: React.FC = () => {
                   dropdown: e.target.value as string,
                 }))
               }
+              required
               error={isDropdownError}
             >
               {MENU_ITEMS.map((item) => (
@@ -68,7 +69,7 @@ const Home: React.FC = () => {
                   {item}
                 </MenuItem>
               ))}
-            </FormSelect>
+            </FormInput>
           </FormControl>
 
           <Button variant="contained" onClick={handleSampleFormSubmit}>
