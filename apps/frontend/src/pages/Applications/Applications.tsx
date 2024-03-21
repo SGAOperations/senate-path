@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useFormControl } from '@mui/material/FormControl';
 import FormControl from '@mui/material/FormControl';
 import { Checkbox, FormControlLabel } from '@mui/material';
-import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionContainer, FormTextAnswerContainer, Introduction, FormGroup } from './styles';
+import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionContainer, FormTextAnswerContainer, Introduction, FormInputCheckbox } from './styles';
 import { SampleFullNameData } from './types';
 
 
@@ -209,14 +209,14 @@ const Nominations: React.FC = () => {
             <FormTextContainer>
             What pronouns do you use?
             </FormTextContainer>
-                <FormGroup>
+                <FormInputCheckbox>
                   
                   <FormControlLabel required control={<Checkbox />} onChange={handleCheckboxChange} label="She/her/her" value="She/her/her" checked={pronouns.includes('She/her/her')}/>
                   <FormControlLabel required control={<Checkbox />} onChange={handleCheckboxChange} label="He/him/his" value="He/him/his" checked={pronouns.includes('He/him/his')}/>
                   <FormControlLabel required control={<Checkbox />} onChange={handleCheckboxChange} label="They/them/their" value="They/them/their" checked={pronouns.includes('They/them/their')}/>
                   <FormControlLabel required control={<Checkbox />} onChange={handleCheckboxChange} label="Other" value="Other" checked={pronouns.includes('Other')}/>
                 
-                </FormGroup>
+                </FormInputCheckbox>
           </FormQuestionContainer>
         </FormControl>
       </SampleForm>

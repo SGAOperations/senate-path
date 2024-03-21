@@ -17,10 +17,6 @@ export const SampleForm = styled(FormGroup)(() => ({
   flexDirection: 'column',
   rowGap: 16,
   width: '50%',
-  textAlign: 'center',
-  alignItems: 'center',
-  justifyContent: 'center',
-  paddingBottom: '3%',
 }));
 
 export const FormInput = styled(TextField)(() => ({
@@ -67,4 +63,12 @@ export const Introduction = styled('div')({
   width: '100%',
   textAlign: 'center',
   margin: '20px 0',
+});
+
+export const FormInputCheckbox = styled('div')({
+  display: 'flex',
+  width: '100%',
+  textAlign: 'center',
+  alignItems: 'center',
+  padding: '3%',
 });
