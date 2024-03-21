@@ -8,7 +8,7 @@ export const HomeContainer = styled.div(() => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  paddingBottom: '15% 0',
+  paddingBottom: '20% 0',
   overflowY: 'auto',
 }));
 
@@ -70,5 +70,6 @@ export const FormInputCheckbox = styled('div')({
   width: '100%',
   textAlign: 'center',
   alignItems: 'center',
-  padding: '3%',
+  justifyContent: 'center',
+  paddingBottom: '3%',
 });
