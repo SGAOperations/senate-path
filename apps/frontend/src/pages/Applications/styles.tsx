@@ -64,3 +64,11 @@ export const Introduction = styled('div')({
   textAlign: 'center',
   margin: '20px 0',
 });
+
+export const FormInputCheckbox = styled('div')({
+  display: 'flex',
+  width: '100%',
+  textAlign: 'center',
+  alignItems: 'center',
+  padding: '3%',
+});
