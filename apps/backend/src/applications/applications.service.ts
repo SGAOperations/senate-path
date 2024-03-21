@@ -1,4 +1,5 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
+import { UpdateApplicationRequestDto } from './dto/update-application-request.dto';
 
 import supabase from '../supabase/client';
 import { Tables } from '../supabase/database.types';
@@ -67,60 +68,18 @@ export class ApplicationsService {
 
   async updateApplication({
     id,
-    fullName,
-    preferredFullName,
-    phoneticPronunciation,
-    nickname,
-    nuid,
-    pronouns,
-    email,
-    phoneNumber,
-    year,
-    college,
-    major,
-    minors,
-    constituency,
+    ...applicationColumns
   }: {
     id: number;
-    fullName: string;
-    preferredFullName: string;
-    phoneticPronunciation: string;
-    nickname: string;
-    nuid: string; 
-    pronouns: string;
-    email: string;
-    phoneNumber: string;
-    year: number;
-    college: string;
-    major: string;
-    minors: string;
-    constituency: string;
-  }): Promise<void> {
+  } & UpdateApplicationRequestDto): Promise<void> {
 
-    const { data: applicationData, error: applicationError } = await supabase.from('applications').select('*').eq('id', id);
+    const { data: applicationData } = await supabase.from('applications').select('*').eq('id', id);
     if (applicationData.length === 0) {
-      throw new HttpException({
-        status: HttpStatus.BAD_REQUEST,
-        error: `Application with given id, ${id}, does not exist.`,
-      }, HttpStatus.BAD_REQUEST, {
-        cause: applicationError
-      });
+      throw new BadRequestException(`Application with given id, ${id}, does not exist.`);
     }
 
     const { error } = await supabase.from('applications').update({
-      fullName,
-      preferredFullName,
-      phoneticPronunciation,
-      nickname,
-      nuid,
-      pronouns,
-      email,
-      phoneNumber,
-      year,
-      college,
-      major,
-      minors,
-      constituency,
+      ...applicationColumns
     }).eq('id', id);
 
     if (error) {

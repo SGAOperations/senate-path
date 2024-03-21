@@ -35,7 +35,7 @@ export class ApplicationsController {
   @Put('/:id')
   updateApplication(@Param('id') id: number, @Body() request: UpdateApplicationRequestDto) {
     return this.applicationsService.updateApplication({
-      id: id,
+      id,
       fullName: request.fullName,
       preferredFullName: request.preferredFullName,
       phoneticPronunciation: request.phoneticPronunciation,
