@@ -9,6 +9,7 @@ export const HomeContainer = styled.div(() => ({
   flexDirection: 'column',
   alignItems: 'center',
   paddingBottom: '5%',
+  overflowY: 'auto',
 }));
 
 export const SampleForm = styled(FormGroup)(() => ({
