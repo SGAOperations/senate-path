@@ -72,7 +72,3 @@ export const FormInputCheckbox = styled('div')({
   justifyContent: 'center',
   paddingBottom: '3%',
 });
-
-export const FormSelect = styled(Select)(() => ({
-  width: '50%',
-}));
