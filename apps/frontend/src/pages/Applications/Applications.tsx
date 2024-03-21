@@ -32,6 +32,11 @@ const Nominations: React.FC = () => {
     name: '',
   });
 
+  const [{ textField, dropdown }, setFormData] = useState<SampleFormData>({
+    textField: '',
+    dropdown: '',
+  });
+
   const [pronouns, setPronouns] = useState<string[]>([]);
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,6 +49,9 @@ const Nominations: React.FC = () => {
   };
 
   const isTextFieldError = fullName === '';
+  const isDropdownError = dropdown === '';
+
+
   return (
       <HomeContainer>
         {
@@ -277,6 +285,36 @@ const Nominations: React.FC = () => {
                 error={isTextFieldError}
               />
             </FormTextAnswerContainer>
+          </FormQuestionContainer>
+        </FormControl>
+      </SampleForm>
+      }
+
+{
+        <SampleForm>
+        <FormControl>
+          <FormQuestionContainer>
+            <FormTextContainer>
+            What is your year?
+            <br></br>
+            </FormTextContainer>
+            <FormSelect
+              label="Dropdown"
+              value={dropdown}
+              onChange={(e) =>
+                setFormData((prevData) => ({
+                  ...prevData,
+                  dropdown: e.target.value as string,
+                }))
+              }
+              error={isDropdownError}
+            >
+              {YEARS.map((item) => (
+                <MenuItem value={item} key={item}>
+                  {item}
+                </MenuItem>
+              ))}
+            </FormSelect>
           </FormQuestionContainer>
         </FormControl>
       </SampleForm>

@@ -1,1 +1,1 @@
-export const MENU_ITEMS = ['One', 'Two', 'Three'];
+export const YEARS = ['Undergraduate – first year', 'Undergraduate – second year', 'Undergraduate – third year', 'Undergraduate – fourth year', 'Undergraduate – fifth+ year'];
