@@ -181,6 +181,7 @@ const Nominations: React.FC = () => {
           <FormQuestionContainer>
             <FormTextContainer>
             What is your NUID?
+            <br></br>
             </FormTextContainer>
             <FormTextAnswerContainer>
               <FormInput

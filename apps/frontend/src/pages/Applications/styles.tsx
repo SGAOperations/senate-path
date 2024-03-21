@@ -47,7 +47,6 @@ export const FormQuestionContainer = styled.div(() => ({
   borderRadius: '5px',
   margin: '10px',
   display:'block',
-  overflowY: 'auto'
 }))
 export const FormTextContainer = styled.div(() => ({
 padding: '3%'
@@ -69,6 +68,5 @@ export const Introduction = styled('div')({
 export const FormInputCheckbox = styled('div')({
   display: 'flex',
   width: '100%',
-  textAlign: 'center',
   padding: '3%',
 });
