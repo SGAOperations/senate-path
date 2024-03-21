@@ -252,7 +252,7 @@ const Nominations: React.FC = () => {
               <FormInput
                 label = "Required"
                 required
-                placeholder="email"
+                placeholder="Email"
                 value={email}
                 onChange={(e) =>
                   setEmail((prevData) => ({
@@ -341,7 +341,7 @@ const Nominations: React.FC = () => {
               <FormInput
                 label = "Required"
                 required
-                placeholder="college"
+                placeholder="College"
                 value={college}
                 onChange={(e) =>
                   setCollege((prevData) => ({
@@ -369,7 +369,7 @@ const Nominations: React.FC = () => {
               <FormInput
                 label = "Required"
                 required
-                placeholder="major"
+                placeholder="Major"
                 value={major}
                 onChange={(e) =>
                   setMajor((prevData) => ({
@@ -391,12 +391,12 @@ const Nominations: React.FC = () => {
         <FormControl>
           <FormQuestionContainer>
             <FormTextContainer>
-            What is your minors?
+            What are your minors?
             </FormTextContainer>
             <FormTextAnswerContainer>
               <FormInput
-                label = "Required"
-                placeholder="minors"
+                label = "Minors"
+                placeholder="Minors"
                 value={minors}
                 onChange={(e) =>
                   setMinors((prevData) => ({

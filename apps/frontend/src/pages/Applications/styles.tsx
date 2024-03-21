@@ -30,6 +30,8 @@ export const FormInput = styled(TextField)(() => ({
 
 export const FormSelect = styled(Select)(() => ({
   width: '50%',
+  paddingBottom: '3%',
+  justifyContent: 'center',
 }));
 
 export const FormText = styled.div(() => ({
