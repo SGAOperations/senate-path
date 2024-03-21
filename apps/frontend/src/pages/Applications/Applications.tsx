@@ -7,8 +7,6 @@ import { SampleFullNameData, SampleFormData } from './types';
 import { YEARS } from './constants'
 
 
-
-
 const Nominations: React.FC = () => {
   const [{ name: fullName}, setName] = useState<SampleFullNameData>({
     name: '',
@@ -29,6 +27,15 @@ const Nominations: React.FC = () => {
     name: '',
   });
   const [{ name: phoneNumber}, setPhoneNumber] = useState<SampleFullNameData>({
+    name: '',
+  });
+  const [{ name: college}, setCollege] = useState<SampleFullNameData>({
+    name: '',
+  });
+  const [{ name: major}, setMajor] = useState<SampleFullNameData>({
+    name: '',
+  });
+  const [{ name: minors}, setMinors] = useState<SampleFullNameData>({
     name: '',
   });
 
@@ -300,6 +307,7 @@ const Nominations: React.FC = () => {
             </FormTextContainer>
             <FormSelect
               label="Dropdown"
+              required
               value={dropdown}
               onChange={(e) =>
                 setFormData((prevData) => ({
@@ -315,6 +323,91 @@ const Nominations: React.FC = () => {
                 </MenuItem>
               ))}
             </FormSelect>
+          </FormQuestionContainer>
+        </FormControl>
+      </SampleForm>
+      }
+
+{
+      <SampleForm>
+        <FormControl>
+          <FormQuestionContainer>
+            <FormTextContainer>
+            What is your college?
+            <br></br>
+            For combined majors (a single major listed in the course catalog that spans two disciplines), list only the home college. For double majors (two distinct majors listed separately in the course catalog), include both colleges.
+            </FormTextContainer>
+            <FormTextAnswerContainer>
+              <FormInput
+                label = "Required"
+                required
+                placeholder="college"
+                value={college}
+                onChange={(e) =>
+                  setCollege((prevData) => ({
+                    ...prevData,
+                    name: e.target.value,
+                  }))
+                }
+                error={isTextFieldError}
+              />
+              <br></br>
+            </FormTextAnswerContainer>
+          </FormQuestionContainer>
+        </FormControl>
+      </SampleForm>
+      }
+
+{
+      <SampleForm>
+        <FormControl>
+          <FormQuestionContainer>
+            <FormTextContainer>
+            What is your major?
+            </FormTextContainer>
+            <FormTextAnswerContainer>
+              <FormInput
+                label = "Required"
+                required
+                placeholder="major"
+                value={major}
+                onChange={(e) =>
+                  setMajor((prevData) => ({
+                    ...prevData,
+                    name: e.target.value,
+                  }))
+                }
+                error={isTextFieldError}
+              />
+              <br></br>
+            </FormTextAnswerContainer>
+          </FormQuestionContainer>
+        </FormControl>
+      </SampleForm>
+      }
+
+{
+      <SampleForm>
+        <FormControl>
+          <FormQuestionContainer>
+            <FormTextContainer>
+            What is your minors?
+            </FormTextContainer>
+            <FormTextAnswerContainer>
+              <FormInput
+                label = "Required"
+                placeholder="minors"
+                value={minors}
+                onChange={(e) =>
+                  setMinors((prevData) => ({
+                    ...prevData,
+                    name: e.target.value,
+                  }))
+                }
+                error={isTextFieldError}
+              />
+              <br></br>
+            </FormTextAnswerContainer>
           </FormQuestionContainer>
         </FormControl>
       </SampleForm>

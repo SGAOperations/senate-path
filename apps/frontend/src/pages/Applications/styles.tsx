@@ -29,7 +29,7 @@ export const FormInput = styled(TextField)(() => ({
 }));
 
 export const FormSelect = styled(Select)(() => ({
-  width: '100%',
+  width: '50%',
 }));
 
 export const FormText = styled.div(() => ({
