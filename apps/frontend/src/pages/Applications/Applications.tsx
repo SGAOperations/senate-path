@@ -28,6 +28,9 @@ const Nominations: React.FC = () => {
   const [{ name: email}, setEmail] = useState<SampleFullNameData>({
     name: '',
   });
+  const [{ name: phoneNumber}, setPhoneNumber] = useState<SampleFullNameData>({
+    name: '',
+  });
 
   const [pronouns, setPronouns] = useState<string[]>([]);
 
@@ -228,6 +231,8 @@ const Nominations: React.FC = () => {
             </FormTextContainer>
             <FormTextAnswerContainer>
               <FormInput
+                label = "Required"
+                required
                 placeholder="email"
                 value={email}
                 onChange={(e) =>
@@ -243,6 +248,36 @@ const Nominations: React.FC = () => {
         </FormControl>
       </SampleForm>
       }
+
+{
+        <SampleForm>
+        <FormControl>
+          <FormQuestionContainer>
+            <FormTextContainer>
+            What is your phone number?
+            <br></br>
+            Please enter your cell phone number. If you do not have a phone that can receive calls and texts in the United States, note so here. Make sure to include the country code if your phone number has a country code other than 1 (most North American countries and islands).
+            </FormTextContainer>
+            <FormTextAnswerContainer>
+              <FormInput
+                label = "Required"
+                required
+                placeholder="phoneNumber"
+                value={phoneNumber}
+                onChange={(e) =>
+                  setPhoneNumber((prevData) => ({
+                    ...prevData,
+                    name: e.target.value,
+                  }))
+                }
+                error={isTextFieldError}
+              />
+            </FormTextAnswerContainer>
+          </FormQuestionContainer>
+        </FormControl>
+      </SampleForm>
+      }
+
 
       </HomeContainer>
       
