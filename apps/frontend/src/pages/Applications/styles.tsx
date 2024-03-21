@@ -30,7 +30,6 @@ export const FormInput = styled(TextField)(() => ({
 
 export const FormSelect = styled(Select)(() => ({
   width: '50%',
-  paddingBottom: '3%',
   justifyContent: 'center',
 }));
 
@@ -68,6 +67,14 @@ export const Introduction = styled('div')({
 });
 
 export const FormInputCheckbox = styled('div')({
+  display: 'flex',
+  width: '100%',
+  padding: '3%',
+  justifyContent: 'center',
+  paddingBottom: '3%',
+});
+
+export const FormDropdown = styled('div')({
   display: 'flex',
   width: '100%',
   padding: '3%',

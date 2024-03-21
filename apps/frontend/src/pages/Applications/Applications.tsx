@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useFormControl } from '@mui/material/FormControl';
 import { MenuItem, FormControl } from '@mui/material';
 import { Checkbox, FormControlLabel } from '@mui/material';
-import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionContainer, FormTextAnswerContainer, Introduction, FormInputCheckbox, FormSelect } from './styles';
+import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionContainer, FormTextAnswerContainer, Introduction, FormInputCheckbox, FormSelect, FormDropdown } from './styles';
 import { SampleFullNameData, SampleFormData } from './types';
 import { YEARS } from './constants'
 
@@ -305,6 +305,7 @@ const Nominations: React.FC = () => {
             What is your year?
             <br></br>
             </FormTextContainer>
+            <FormDropdown>
             <FormSelect
               label="Dropdown"
               required
@@ -323,6 +324,7 @@ const Nominations: React.FC = () => {
                 </MenuItem>
               ))}
             </FormSelect>
+            </FormDropdown>
           </FormQuestionContainer>
         </FormControl>
       </SampleForm>
@@ -395,7 +397,6 @@ const Nominations: React.FC = () => {
             </FormTextContainer>
             <FormTextAnswerContainer>
               <FormInput
-                label = "Minors"
                 placeholder="Minors"
                 value={minors}
                 onChange={(e) =>
