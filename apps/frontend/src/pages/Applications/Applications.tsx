@@ -196,6 +196,7 @@ const Nominations: React.FC = () => {
                 }
                 error={isTextFieldError}
               />
+              <br></br>
             </FormTextAnswerContainer>
           </FormQuestionContainer>
         </FormControl>
@@ -264,7 +265,7 @@ const Nominations: React.FC = () => {
               <FormInput
                 label = "Required"
                 required
-                placeholder="phoneNumber"
+                placeholder="Phone Number"
                 value={phoneNumber}
                 onChange={(e) =>
                   setPhoneNumber((prevData) => ({

@@ -47,6 +47,7 @@ export const FormQuestionContainer = styled.div(() => ({
   borderRadius: '5px',
   margin: '10px',
   display:'block',
+  overflowY: 'auto'
 }))
 export const FormTextContainer = styled.div(() => ({
 padding: '3%'
