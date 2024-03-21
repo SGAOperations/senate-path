@@ -64,11 +64,3 @@ export const Introduction = styled('div')({
   textAlign: 'center',
   margin: '20px 0',
 });
-
-export const FormInputCheckbox = styled.div(()=>({
-  display: 'flex',
-  padding: '10%',
-  flexDirection: 'column',
-  rowGap: 8,
-  maxWidth: '100%',
-}));
