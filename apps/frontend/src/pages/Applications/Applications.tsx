@@ -25,6 +25,9 @@ const Nominations: React.FC = () => {
   const [{ name: northeasternID}, setNortheasternID] = useState<SampleFullNameData>({
     name: '',
   });
+  const [{ name: email}, setEmail] = useState<SampleFullNameData>({
+    name: '',
+  });
 
   const [pronouns, setPronouns] = useState<string[]>([]);
 
@@ -44,7 +47,6 @@ const Nominations: React.FC = () => {
           <SampleForm>
             <Introduction style={{ textAlign: 'center' }}>
               <h2>SGA Senator Application</h2>
-              <br></br>
               Thank you for your interest in joining the Student Government Association (SGA)! SGA serves as the voice of the undergraduate student body and strives to promote student interests in the university and its surrounding communities. We have many active projects and initiatives. Read more about our work at northeasternsga.com.
               <br></br>
               Any undergraduate student in good academic and judicial standing is eligible to apply to become a senator. There are no elections. Read more about the process to become a senator in the frequently asked questions document (https://docs.google.com/document/d/1xDyzPBpnlzlHmPL9pd2mGsKhzQCl_Cs9EPlFb0G-Y_o/edit) and please contact Senate Speaker Donoghue at Donoghue.ca@northeastern.edu with any questions.
@@ -218,35 +220,28 @@ const Nominations: React.FC = () => {
         </FormControl>
       </SampleForm>
       }
+
       {
-      <SampleForm>
+        <SampleForm>
         <FormControl>
           <FormQuestionContainer>
             <FormTextContainer>
-            What pronouns do you use?
+            What is your Northeastern email?
+            <br></br>
+            All email communications will be sent to this address.
             </FormTextContainer>
             <FormTextAnswerContainer>
-            <FormInput
-                label = "Required"
-                required
-                placeholder="Your Preferred Name"
-                value={preferredName}
+              <FormInput
+                placeholder="email"
+                value={email}
                 onChange={(e) =>
-                  setPreferredName((prevData) => ({
+                  setEmail((prevData) => ({
                     ...prevData,
                     name: e.target.value,
                   }))
                 }
                 error={isTextFieldError}
               />
-              {/* <FormInputCheckbox>
-                <FormGroup>
-                  <FormControlLabel required control={<Checkbox />} onChange={handleCheckboxChange} label="She/her/her" value="She/her/her" checked={pronouns.includes('She/her/her')}/>
-                  <FormControlLabel required control={<Checkbox />} onChange={handleCheckboxChange} label="He/him/his" value="He/him/his" checked={pronouns.includes('He/him/his')}/>
-                  <FormControlLabel required control={<Checkbox />} onChange={handleCheckboxChange} label="They/them/their" value="They/them/their" checked={pronouns.includes('They/them/their')}/>
-                  <FormControlLabel required control={<Checkbox />} onChange={handleCheckboxChange} label="Other" value="Other" checked={pronouns.includes('Other')}/>
-                </FormGroup>
-              </FormInputCheckbox> */}
             </FormTextAnswerContainer>
           </FormQuestionContainer>
         </FormControl>

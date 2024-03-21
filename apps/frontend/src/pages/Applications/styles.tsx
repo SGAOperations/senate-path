@@ -8,7 +8,7 @@ export const HomeContainer = styled.div(() => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  paddingBottom: '5%',
+  paddingBottom: '10% 0',
   overflowY: 'auto',
 }));
 
