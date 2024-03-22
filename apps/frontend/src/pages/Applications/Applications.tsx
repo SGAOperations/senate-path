@@ -4,7 +4,7 @@ import { MenuItem, FormControl } from '@mui/material';
 import { Checkbox, FormControlLabel } from '@mui/material';
 import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionContainer, FormTextAnswerContainer, Introduction, FormInputCheckbox, FormSelect, FormDropdown } from './styles';
 import { SampleFullNameData, SampleFormData } from './types';
-import { YEARS } from './constants'
+import { YEARS, CONSTITUENCY } from './constants'
 
 
 const Nominations: React.FC = () => {
@@ -42,6 +42,11 @@ const Nominations: React.FC = () => {
   const [{ textField, dropdown }, setFormData] = useState<SampleFormData>({
     textField: '',
     dropdown: '',
+  });
+
+  const [{ textField2, dropdown2 }, setFormData2] = useState<SampleFormData>({
+    textField2: '',
+    dropdown2: '',
   });
 
   const [pronouns, setPronouns] = useState<string[]>([]);
@@ -414,6 +419,42 @@ const Nominations: React.FC = () => {
       </SampleForm>
       }
 
+{
+        <SampleForm>
+        <FormControl>
+          <FormQuestionContainer>
+            <FormTextContainer>
+            What is your constituency?
+            <br></br>
+            Academic senators represent an official Northeastern academic college or program. Example constituencies include the College of Engineering, the Global Scholars program, or the Honors program. Students in specialized entrance programs can only apply to become a senator representing a specialized entrance program as a constituency while actively enrolled in the program. For example, students can only apply to be NUin senators as first-semester students. Most senators are academic senators.
+            <br></br>
+            Special interest senators are selected by the members and executive board of the organization they intend to represent. Example constituencies include Greek life organizations and clubs. More information about the difference between academic and special interest senators is available in the frequently asked questions document located at https://docs.google.com/document/d/1xDyzPBpnlzlHmPL9pd2mGsKhzQCl_Cs9EPlFb0G-Y_o/edit. 
+            <br></br>
+            </FormTextContainer>
+            <FormDropdown>
+            <FormSelect
+              label="Dropdown2"
+              required
+              value={dropdown2}
+              onChange={(e) =>
+                setFormData2((prevData) => ({
+                  ...prevData,
+                  dropdown: e.target.value as string,
+                }))
+              }
+              error={isDropdownError}
+            >
+              {CONSTITUENCY.map((item) => (
+                <MenuItem value={item} key={item}>
+                  {item}
+                </MenuItem>
+              ))}
+            </FormSelect>
+            </FormDropdown>
+          </FormQuestionContainer>
+        </FormControl>
+      </SampleForm>
+      }
 
       </HomeContainer>
       
