@@ -5,7 +5,7 @@ import { Checkbox, FormControlLabel } from '@mui/material';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormLabel from '@mui/material/FormLabel';
-import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionContainer, FormTextAnswerContainer, Introduction, FormInputCheckbox, FormSelect, FormDropdown, RadioGroup } from './styles';
+import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionContainer, FormTextAnswerContainer, Introduction, FormInputCheckbox, FormSelect, FormDropdown, RadioButtons } from './styles';
 import { SampleFullNameData, SampleFormData } from './types';
 import { YEARS, CONSTITUENCY, CONSTITUENCY_TYPE } from './constants'
 
@@ -322,6 +322,7 @@ const Nominations: React.FC = () => {
             What is your year?*
             <br></br>
             </FormTextContainer>
+            <RadioButtons>
             <RadioGroup
               defaultValue="first"
               name="year-buttons-group"
@@ -335,6 +336,7 @@ const Nominations: React.FC = () => {
               <FormControlLabel value="fourth" control={<Radio />} label="Undergraduate fourth year" />
               <FormControlLabel value="fifth" control={<Radio />} label="Undergraduate fifth+ year" />
             </RadioGroup>
+            </RadioButtons>
           </FormQuestionContainer>
         </FormControl>
       </SampleForm>
