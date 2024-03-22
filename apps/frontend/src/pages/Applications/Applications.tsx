@@ -325,8 +325,6 @@ const Nominations: React.FC = () => {
             <RadioGroup
               defaultValue="first"
               name="year-buttons-group"
-              value={selectedYear}
-              onChange={handleYearChange}
               required
             >
               <FormControlLabel value="first" control={<Radio />} label="Undergraduate first year" />
