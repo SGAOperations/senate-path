@@ -446,7 +446,7 @@ const Nominations: React.FC = () => {
               onChange={(e) =>
                 setFormData2((prevData) => ({
                   ...prevData,
-                  dropdown: e.target.value as string,
+                  dropdown2: e.target.value as string,
                 }))
               }
               error={isDropdownError}
@@ -489,7 +489,7 @@ const Nominations: React.FC = () => {
               onChange={(e) =>
                 setFormData3((prevData) => ({
                   ...prevData,
-                  dropdown: e.target.value as string,
+                  dropdown3: e.target.value as string,
                 }))
               }
               error={isDropdownError}
