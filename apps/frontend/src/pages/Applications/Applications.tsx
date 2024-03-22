@@ -322,10 +322,13 @@ const Nominations: React.FC = () => {
             What is your year?*
             <br></br>
             </FormTextContainer>
+            <RadioButtons>
             <RadioGroup
-              defaultValue="first"
               name="year-buttons-group"
               required
+            //  value={selectedYear}
+            //  onChange={handleYearChange}
+
             >
               <FormControlLabel value="first" control={<Radio />} label="Undergraduate first year" />
               <FormControlLabel value="second" control={<Radio />} label="Undergraduate second year" />
@@ -333,6 +336,7 @@ const Nominations: React.FC = () => {
               <FormControlLabel value="fourth" control={<Radio />} label="Undergraduate fourth year" />
               <FormControlLabel value="fifth" control={<Radio />} label="Undergraduate fifth+ year" />
             </RadioGroup>
+            </RadioButtons>
           </FormQuestionContainer>
         </FormControl>
       </SampleForm>
