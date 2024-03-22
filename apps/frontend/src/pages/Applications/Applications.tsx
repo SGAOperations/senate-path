@@ -50,7 +50,7 @@ const Nominations: React.FC = () => {
   //const handleYearChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   //  setSelectedYear(event.target.value);
   //};
-
+  
   const [{ textField2, dropdown2 }, setFormData2] = useState<SampleFormData>({
     textField2: '',
     dropdown2: '',
@@ -73,7 +73,7 @@ const Nominations: React.FC = () => {
   };
 
   const isTextFieldError = fullName === '';
-  const isDropdownError = dropdown === '';
+  const isDropdownError = dropdown2 === '';
 
 
   return (
