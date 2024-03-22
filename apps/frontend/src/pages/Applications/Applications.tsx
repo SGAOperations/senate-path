@@ -534,6 +534,16 @@ const Nominations: React.FC = () => {
 {
         <SampleForm>
         <FormControl>
+            <FormTextContainer>
+            <h3>SGA Senator Nomination Form</h3>
+            </FormTextContainer>
+        </FormControl>
+      </SampleForm>
+      }
+
+{
+        <SampleForm>
+        <FormControl>
           <FormQuestionContainer>
             <FormTextContainer>
             Are you a returning senator?*
