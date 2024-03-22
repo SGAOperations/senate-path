@@ -5,9 +5,8 @@ import { Checkbox, FormControlLabel } from '@mui/material';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormLabel from '@mui/material/FormLabel';
-import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionContainer, FormTextAnswerContainer, Introduction, FormInputCheckbox, FormSelect, FormDropdown, RadioButtons } from './styles';
+import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionContainer, FormTextAnswerContainer, Introduction, FormInputCheckbox, FormSelect, RadioButtons } from './styles';
 import { SampleFullNameData, SampleFormData } from './types';
-import { CONSTITUENCY, CONSTITUENCY_TYPE } from './constants'
 
 
 const Nominations: React.FC = () => {
@@ -62,16 +61,12 @@ const Nominations: React.FC = () => {
   const handleConstituencyTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setConstituencyType(event.target.value);
   };
-  
-  const [{ textField2, dropdown2 }, setFormData2] = useState<SampleFormData>({
-    textField2: '',
-    dropdown2: '',
-  });
 
-  const [{ textField3, dropdown3 }, setFormData3] = useState<SampleFormData>({
-    textField3: '',
-    dropdown3: '',
-  });
+  const [selectedReturningType, setReturningType] = useState<string>('first'); 
+
+  const handleReturningTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setReturningType(event.target.value);
+  };
 
   const [pronouns, setPronouns] = useState<string[]>([]);
 
@@ -85,7 +80,6 @@ const Nominations: React.FC = () => {
   };
 
   const isTextFieldError = fullName === '';
-  const isDropdownError = dropdown2 === '';
 
 
   return (
@@ -526,6 +520,31 @@ const Nominations: React.FC = () => {
               />
               <br></br>
             </FormTextAnswerContainer>
+          </FormQuestionContainer>
+        </FormControl>
+      </SampleForm>
+      }
+
+{
+        <SampleForm>
+        <FormControl>
+          <FormQuestionContainer>
+            <FormTextContainer>
+            Are you a returning senator?*
+            <br></br>
+            Select "yes" only if you have completed the Senator Education and Training Program (STEP) and remained a senator in good standing for at least one entire semester.
+            </FormTextContainer>
+            <RadioButtons>
+            <RadioGroup
+              name="returning-type-buttons-group"
+              required
+              value={selectedReturningType}
+              onChange={handleReturningTypeChange}
+            >
+              <FormControlLabel value="yes" control={<Radio />} label="Yes" />
+              <FormControlLabel value="no" control={<Radio />} label="No" />
+            </RadioGroup>
+            </RadioButtons>
           </FormQuestionContainer>
         </FormControl>
       </SampleForm>

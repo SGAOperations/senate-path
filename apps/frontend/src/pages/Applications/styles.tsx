@@ -77,14 +77,6 @@ export const FormInputCheckbox = styled('div')({
   paddingBottom: '3%',
 });
 
-export const FormDropdown = styled('div')({
-  display: 'flex',
-  width: '100%',
-  padding: '3%',
-  justifyContent: 'center',
-  paddingBottom: '3%',
-});
-
 export const RadioButtons = styled('div')({
   width: '100%',
   textAlign: 'center',
