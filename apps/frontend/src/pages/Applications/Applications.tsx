@@ -48,8 +48,7 @@ const Nominations: React.FC = () => {
   const [selectedYear, setSelectedYear] = useState<string>('first'); 
 
   const handleYearChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-    setSelectedYear(value);
+    setSelectedYear(event.target.value);
   };
 
   const [{ textField2, dropdown2 }, setFormData2] = useState<SampleFormData>({
