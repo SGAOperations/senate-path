@@ -88,5 +88,7 @@ export const FormDropdown = styled('div')({
 export const RadioButtons = styled('div')({
   width: '100%',
   textAlign: 'center',
+  display: 'flex',
   justifyContent: 'center',
+  alignItems: 'center',
 });
