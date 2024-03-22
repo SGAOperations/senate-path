@@ -5,7 +5,7 @@ import { Checkbox, FormControlLabel } from '@mui/material';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormLabel from '@mui/material/FormLabel';
-import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionContainer, FormTextAnswerContainer, Introduction, FormInputCheckbox, FormSelect, FormDropdown } from './styles';
+import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionContainer, FormTextAnswerContainer, Introduction, FormInputCheckbox, FormSelect, FormDropdown, RadioGroup } from './styles';
 import { SampleFullNameData, SampleFormData } from './types';
 import { YEARS, CONSTITUENCY, CONSTITUENCY_TYPE } from './constants'
 
@@ -45,10 +45,11 @@ const Nominations: React.FC = () => {
     name: '',
   });
 
-  const [{ textField, dropdown }, setFormData] = useState<SampleFormData>({
-    textField: '',
-    dropdown: '',
-  });
+  const [selectedYear, setSelectedYear] = useState<string>('first'); // Default value for first year
+
+  const handleYearChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedYear(event.target.value);
+  };
 
   const [{ textField2, dropdown2 }, setFormData2] = useState<SampleFormData>({
     textField2: '',
@@ -324,6 +325,8 @@ const Nominations: React.FC = () => {
             <RadioGroup
               defaultValue="first"
               name="year-buttons-group"
+              value={selectedYear}
+              onChange={handleYearChange}
               required
             >
               <FormControlLabel value="first" control={<Radio />} label="Undergraduate first year" />

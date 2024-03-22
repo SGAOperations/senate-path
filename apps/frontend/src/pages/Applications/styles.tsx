@@ -84,3 +84,9 @@ export const FormDropdown = styled('div')({
   justifyContent: 'center',
   paddingBottom: '3%',
 });
+
+export const RadioGroup = styled('div')({
+  width: '100%',
+  textAlign: 'center',
+  justifyContent: 'center',
+});
