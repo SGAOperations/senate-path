@@ -68,6 +68,12 @@ const Nominations: React.FC = () => {
     setReturningType(event.target.value);
   };
 
+  const [selectedAttestation, setAttestation] = useState<string>('first'); 
+
+  const handleAttestationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setAttestation(event.target.value);
+  };
+
   const [pronouns, setPronouns] = useState<string[]>([]);
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -500,7 +506,7 @@ const Nominations: React.FC = () => {
         <FormControl>
           <FormQuestionContainer>
             <FormTextContainer>
-            What is the name of your constituency?*
+            What is the name of your constituency?
             <br></br>
             Please enter the name of the organization as recognized by the Student Involvement Board. Only recognized student organizations may have a special interest senator.
             </FormTextContainer>
@@ -543,6 +549,30 @@ const Nominations: React.FC = () => {
             >
               <FormControlLabel value="yes" control={<Radio />} label="Yes" />
               <FormControlLabel value="no" control={<Radio />} label="No" />
+            </RadioGroup>
+            </RadioButtons>
+          </FormQuestionContainer>
+        </FormControl>
+      </SampleForm>
+      }
+
+{
+        <SampleForm>
+        <FormControl>
+          <FormQuestionContainer>
+            <FormTextContainer>
+            Acknowledgment and Attestation*
+            <br></br>
+            Please carefully read the following statement and select the button below if you agree: I attest that I am the undergraduate student in good academic and judicial standing listed on this form and that all information I am submitting is completely truthful and accurately presented; I authorize the Northeastern University Student Government Association to verify the information on this form, and I agree to abide by every responsibility and expectation of a senator, including attending weekly senate meetings and maintaining effective communication with my constituents.
+            </FormTextContainer>
+            <RadioButtons>
+            <RadioGroup
+              name="attestation-buttons-group"
+              required
+              value={selectedAttestation}
+              onChange={handleAttestationChange}
+            >
+              <FormControlLabel value="agree" control={<Radio />} label="I have carefully read and fully agree to the statement above." />
             </RadioGroup>
             </RadioButtons>
           </FormQuestionContainer>
