@@ -50,6 +50,12 @@ const Nominations: React.FC = () => {
   const handleYearChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedYear(event.target.value);
   };
+
+  const [selectedConstituency, setConstituency] = useState<string>('first'); 
+
+  const handleConstituencyChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setConstituency(event.target.value);
+  };
   
   const [{ textField2, dropdown2 }, setFormData2] = useState<SampleFormData>({
     textField2: '',
@@ -326,8 +332,8 @@ const Nominations: React.FC = () => {
             <RadioGroup
               name="year-buttons-group"
               required
-            //  value={selectedYear}
-            //  onChange={handleYearChange}
+              value={selectedYear}
+              onChange={handleYearChange}
 
             >
               <FormControlLabel value="first" control={<Radio />} label="Undergraduate first year" />
@@ -438,26 +444,18 @@ const Nominations: React.FC = () => {
             Special interest senators are selected by the members and executive board of the organization they intend to represent. Example constituencies include Greek life organizations and clubs. More information about the difference between academic and special interest senators is available in the frequently asked questions document located at https://docs.google.com/document/d/1xDyzPBpnlzlHmPL9pd2mGsKhzQCl_Cs9EPlFb0G-Y_o/edit. 
             <br></br>
             </FormTextContainer>
-            <FormDropdown>
-            <FormSelect
-              label="Dropdown2"
+            <RadioButtons>
+            <RadioGroup
+              name="constituency-buttons-group"
               required
-              value={dropdown2}
-              onChange={(e) =>
-                setFormData2((prevData) => ({
-                  ...prevData,
-                  dropdown2: e.target.value as string,
-                }))
-              }
-              error={isDropdownError}
+              value={selectedConstituency}
+              onChange={handleConstituencyChange}
+
             >
-              {CONSTITUENCY.map((item) => (
-                <MenuItem value={item} key={item}>
-                  {item}
-                </MenuItem>
-              ))}
-            </FormSelect>
-            </FormDropdown>
+              <FormControlLabel value="academic" control={<Radio />} label="Academic senator" />
+              <FormControlLabel value="special" control={<Radio />} label="Special interest senator" />
+            </RadioGroup>
+            </RadioButtons>
           </FormQuestionContainer>
         </FormControl>
       </SampleForm>

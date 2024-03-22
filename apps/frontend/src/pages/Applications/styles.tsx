@@ -91,4 +91,5 @@ export const RadioButtons = styled('div')({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
+  paddingBottom: '3%',
 });
