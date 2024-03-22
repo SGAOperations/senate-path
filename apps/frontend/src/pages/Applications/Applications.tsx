@@ -2,6 +2,11 @@ import { useState } from 'react';
 import { useFormControl } from '@mui/material/FormControl';
 import { MenuItem, FormControl } from '@mui/material';
 import { Checkbox, FormControlLabel } from '@mui/material';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
 import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionContainer, FormTextAnswerContainer, Introduction, FormInputCheckbox, FormSelect, FormDropdown } from './styles';
 import { SampleFullNameData, SampleFormData } from './types';
 import { YEARS, CONSTITUENCY, CONSTITUENCY_TYPE } from './constants'
@@ -315,29 +320,20 @@ const Nominations: React.FC = () => {
         <FormControl>
           <FormQuestionContainer>
             <FormTextContainer>
-            What is your year?
+            What is your year?*
             <br></br>
             </FormTextContainer>
-            <FormDropdown>
-            <FormSelect
-              label="Dropdown"
+            <RadioGroup
+              defaultValue="first"
+              name="year-buttons-group"
               required
-              value={dropdown}
-              onChange={(e) =>
-                setFormData((prevData) => ({
-                  ...prevData,
-                  dropdown: e.target.value as string,
-                }))
-              }
-              error={isDropdownError}
             >
-              {YEARS.map((item) => (
-                <MenuItem value={item} key={item}>
-                  {item}
-                </MenuItem>
-              ))}
-            </FormSelect>
-            </FormDropdown>
+              <FormControlLabel value="first" control={<Radio />} label="Undergraduate first year" />
+              <FormControlLabel value="second" control={<Radio />} label="Undergraduate second year" />
+              <FormControlLabel value="third" control={<Radio />} label="ndergraduate third year" />
+              <FormControlLabel value="fourth" control={<Radio />} label="Undergraduate fourth year" />
+              <FormControlLabel value="fifth" control={<Radio />} label="Undergraduate fifth+ year" />
+            </RadioGroup>
           </FormQuestionContainer>
         </FormControl>
       </SampleForm>
@@ -432,7 +428,7 @@ const Nominations: React.FC = () => {
         <FormControl>
           <FormQuestionContainer>
             <FormTextContainer>
-            What is your constituency?
+            What is your constituency?*
             <br></br>
             Academic senators represent an official Northeastern academic college or program. Example constituencies include the College of Engineering, the Global Scholars program, or the Honors program. Students in specialized entrance programs can only apply to become a senator representing a specialized entrance program as a constituency while actively enrolled in the program. For example, students can only apply to be NUin senators as first-semester students. Most senators are academic senators.
             <br></br>
@@ -480,7 +476,7 @@ const Nominations: React.FC = () => {
         <FormControl>
           <FormQuestionContainer>
             <FormTextContainer>
-            What type of constituency would you like to represent?
+            What type of constituency would you like to represent?*
             </FormTextContainer>
             <FormDropdown>
             <FormSelect
@@ -512,7 +508,7 @@ const Nominations: React.FC = () => {
         <FormControl>
           <FormQuestionContainer>
             <FormTextContainer>
-            What is the name of your constituency?
+            What is the name of your constituency?*
             <br></br>
             Please enter the name of the organization as recognized by the Student Involvement Board. Only recognized student organizations may have a special interest senator.
             </FormTextContainer>
