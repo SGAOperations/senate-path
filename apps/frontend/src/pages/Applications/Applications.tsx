@@ -45,10 +45,15 @@ const Nominations: React.FC = () => {
     name: '',
   });
 
-  const [selectedYear, setSelectedYear] = useState<string>('first'); // Default value for first year
+  const [selectedYear, setSelectedYear] = useState<string>('first'); 
 
   const handleYearChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedYear(event.target.value);
+    const { value } = event.target;
+    if (selectedYear.includes(value)) {
+      setSelectedYear(selectedYear.filter(year => year !== value));
+    } else {
+      setSelectedYear([...selectedYear, value]);
+    }
   };
 
   const [{ textField2, dropdown2 }, setFormData2] = useState<SampleFormData>({
