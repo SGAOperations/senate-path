@@ -5,6 +5,7 @@ import { Checkbox, FormControlLabel } from '@mui/material';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormLabel from '@mui/material/FormLabel';
+import Button from '@mui/material/Button';
 import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionContainer, FormTextAnswerContainer, Introduction, FormInputCheckbox, FormSelect, RadioButtons } from './styles';
 import { SampleFullNameData, SampleFormData } from './types';
 
@@ -590,6 +591,24 @@ const Nominations: React.FC = () => {
       </SampleForm>
       }
 
+        <Button variant="contained"
+        onClick={() => {
+          console.log('Full Name: '+ fullName);
+          console.log('Preferred Name: '+ preferredName);
+          console.log('Pronouciation: '+ pronunciation);
+          console.log('Nick Name: '+ nickname);
+          console.log('NUID: '+  northeasternID);
+          console.log('Pronouns : '+ pronouns);
+          console.log('Northeastern Email: '+ email);
+          console.log('Phone Number: '+ phoneNumber);
+          console.log('Year: '+ selectedYear);
+          console.log('Northeastern Email: '+ email);
+          console.log('College: '+ college);
+          console.log('Major: '+ major);
+          console.log('Minor: '+ minors);
+          console.log('Constituency: '+ constituencyName);
+        }}
+        >Submit</Button>
 
       </HomeContainer>
       
