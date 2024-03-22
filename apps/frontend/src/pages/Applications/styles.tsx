@@ -8,7 +8,7 @@ export const HomeContainer = styled.div(() => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  paddingBottom: '50% 0',
+  paddingBottom: '5%',
   overflowY: 'auto',
 }));
 
@@ -17,6 +17,9 @@ export const SampleForm = styled(FormGroup)(() => ({
   flexDirection: 'column',
   rowGap: 16,
   width: '50%',
+  //overflowY: 'auto',
+  paddingBottom:'2%',
+
 }));
 
 export const FormInput = styled(TextField)(() => ({
