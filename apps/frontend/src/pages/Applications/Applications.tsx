@@ -56,6 +56,12 @@ const Nominations: React.FC = () => {
   const handleConstituencyChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setConstituency(event.target.value);
   };
+
+  const [selectedConstituencyType, setConstituencyType] = useState<string>('first'); 
+
+  const handleConstituencyTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setConstituencyType(event.target.value);
+  };
   
   const [{ textField2, dropdown2 }, setFormData2] = useState<SampleFormData>({
     textField2: '',
@@ -338,7 +344,7 @@ const Nominations: React.FC = () => {
             >
               <FormControlLabel value="first" control={<Radio />} label="Undergraduate first year" />
               <FormControlLabel value="second" control={<Radio />} label="Undergraduate second year" />
-              <FormControlLabel value="third" control={<Radio />} label="ndergraduate third year" />
+              <FormControlLabel value="third" control={<Radio />} label="Undergraduate third year" />
               <FormControlLabel value="fourth" control={<Radio />} label="Undergraduate fourth year" />
               <FormControlLabel value="fifth" control={<Radio />} label="Undergraduate fifth+ year" />
             </RadioGroup>
@@ -479,26 +485,17 @@ const Nominations: React.FC = () => {
             <FormTextContainer>
             What type of constituency would you like to represent?*
             </FormTextContainer>
-            <FormDropdown>
-            <FormSelect
-              label="Dropdown3"
+            <RadioButtons>
+            <RadioGroup
+              name="constituency-type-buttons-group"
               required
-              value={dropdown3}
-              onChange={(e) =>
-                setFormData3((prevData) => ({
-                  ...prevData,
-                  dropdown3: e.target.value as string,
-                }))
-              }
-              error={isDropdownError}
+              value={selectedConstituencyType}
+              onChange={handleConstituencyTypeChange}
             >
-              {CONSTITUENCY_TYPE.map((item) => (
-                <MenuItem value={item} key={item}>
-                  {item}
-                </MenuItem>
-              ))}
-            </FormSelect>
-            </FormDropdown>
+              <FormControlLabel value="club" control={<Radio />} label="Official club" />
+              <FormControlLabel value="greek" control={<Radio />} label="Greek organization" />
+            </RadioGroup>
+            </RadioButtons>
           </FormQuestionContainer>
         </FormControl>
       </SampleForm>
