@@ -4,7 +4,7 @@ import { MenuItem, FormControl } from '@mui/material';
 import { Checkbox, FormControlLabel } from '@mui/material';
 import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionContainer, FormTextAnswerContainer, Introduction, FormInputCheckbox, FormSelect, FormDropdown } from './styles';
 import { SampleFullNameData, SampleFormData } from './types';
-import { YEARS, CONSTITUENCY } from './constants'
+import { YEARS, CONSTITUENCY, CONSTITUENCY_TYPE } from './constants'
 
 
 const Nominations: React.FC = () => {
@@ -38,6 +38,9 @@ const Nominations: React.FC = () => {
   const [{ name: minors}, setMinors] = useState<SampleFullNameData>({
     name: '',
   });
+  const [{ name: constituencyName}, setConstituencyName] = useState<SampleFullNameData>({
+    name: '',
+  });
 
   const [{ textField, dropdown }, setFormData] = useState<SampleFormData>({
     textField: '',
@@ -47,6 +50,11 @@ const Nominations: React.FC = () => {
   const [{ textField2, dropdown2 }, setFormData2] = useState<SampleFormData>({
     textField2: '',
     dropdown2: '',
+  });
+
+  const [{ textField3, dropdown3 }, setFormData3] = useState<SampleFormData>({
+    textField3: '',
+    dropdown3: '',
   });
 
   const [pronouns, setPronouns] = useState<string[]>([]);
@@ -455,6 +463,80 @@ const Nominations: React.FC = () => {
         </FormControl>
       </SampleForm>
       }
+
+      {
+        <SampleForm>
+        <FormControl>
+            <FormTextContainer>
+            <h3>Special Interest Senator Constituency Information</h3>
+            Note: Special interest senators applying from a student organization with less than 30 members must submit a paper nomination. Paper applications are available to pick up at the SGA office, 332 Curry.
+            </FormTextContainer>
+        </FormControl>
+      </SampleForm>
+      }
+
+{
+        <SampleForm>
+        <FormControl>
+          <FormQuestionContainer>
+            <FormTextContainer>
+            What type of constituency would you like to represent?
+            </FormTextContainer>
+            <FormDropdown>
+            <FormSelect
+              label="Dropdown3"
+              required
+              value={dropdown3}
+              onChange={(e) =>
+                setFormData3((prevData) => ({
+                  ...prevData,
+                  dropdown: e.target.value as string,
+                }))
+              }
+              error={isDropdownError}
+            >
+              {CONSTITUENCY_TYPE.map((item) => (
+                <MenuItem value={item} key={item}>
+                  {item}
+                </MenuItem>
+              ))}
+            </FormSelect>
+            </FormDropdown>
+          </FormQuestionContainer>
+        </FormControl>
+      </SampleForm>
+      }
+
+{
+      <SampleForm>
+        <FormControl>
+          <FormQuestionContainer>
+            <FormTextContainer>
+            What is the name of your constituency?
+            <br></br>
+            Please enter the name of the organization as recognized by the Student Involvement Board. Only recognized student organizations may have a special interest senator.
+            </FormTextContainer>
+            <FormTextAnswerContainer>
+              <FormInput
+                label = "Required"
+                required
+                placeholder="Constituency Name"
+                value={constituencyName}
+                onChange={(e) =>
+                  setConstituencyName((prevData) => ({
+                    ...prevData,
+                    name: e.target.value,
+                  }))
+                }
+                error={isTextFieldError}
+              />
+              <br></br>
+            </FormTextAnswerContainer>
+          </FormQuestionContainer>
+        </FormControl>
+      </SampleForm>
+      }
+
 
       </HomeContainer>
       
