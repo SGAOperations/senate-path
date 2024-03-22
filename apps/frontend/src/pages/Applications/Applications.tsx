@@ -7,7 +7,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormLabel from '@mui/material/FormLabel';
 import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionContainer, FormTextAnswerContainer, Introduction, FormInputCheckbox, FormSelect, FormDropdown, RadioButtons } from './styles';
 import { SampleFullNameData, SampleFormData } from './types';
-import { YEARS, CONSTITUENCY, CONSTITUENCY_TYPE } from './constants'
+import { CONSTITUENCY, CONSTITUENCY_TYPE } from './constants'
 
 
 const Nominations: React.FC = () => {
@@ -49,11 +49,7 @@ const Nominations: React.FC = () => {
 
   const handleYearChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
-    if (selectedYear.includes(value)) {
-      setSelectedYear(selectedYear.filter(year => year !== value));
-    } else {
-      setSelectedYear([...selectedYear, value]);
-    }
+    setSelectedYear(value);
   };
 
   const [{ textField2, dropdown2 }, setFormData2] = useState<SampleFormData>({
