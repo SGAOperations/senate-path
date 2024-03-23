@@ -1,14 +1,31 @@
-import { FormGroup, FormLabel, Box, Typography, TextField, InputLabel, Select, MenuItem, FormControl, RadioGroup, FormControlLabel, Radio } from '@mui/material';
+import { FormGroup, FormLabel, Box, Typography, TextField, InputLabel, Select, MenuItem, FormControl, RadioGroup, FormControlLabel, Radio, Button } from '@mui/material';
 import React, { useState } from 'react';
-const [fullName, setFullName] = useState("");
-const [northeasternEmail, setNortheasternEmail] = useState("");
-const [nominee, setNominee] = useState("");
-const [constituent, setConstituent] = useState("");
-const [college, setCollege] = useState("");
-const [major, setMajor] = useState("");
-const [gradYear, setGradYear] = useState("");
-const [receiveInfo, setReceiveInfo] = useState("");
+
 const Nominations: React.FC = () => {
+  const [fullName, setFullName] = useState("");
+  const [northeasternEmail, setNortheasternEmail] = useState("");
+  const [nominee, setNominee] = useState("");
+  const [constituent, setConstituent] = useState("");
+  const [college, setCollege] = useState("");
+  const [major, setMajor] = useState("");
+  const [gradYear, setGradYear] = useState("");
+  const [receiveInfo, setReceiveInfo] = useState("");
+  const isFullNameError = fullName === "";
+  const isNortheasternEmailError = northeasternEmail === "";
+  const isNomineeError = nominee === "";
+  const isConstituentError = constituent === "";
+  const isCollegeError = college === "";
+  const isMajorError = major === "";
+  const isGradYearError = gradYear === "";
+  const isRecieveInfoError = receiveInfo === "";
+  const handleSampleFormSubmit = () => {
+    if (isFullNameError || isNortheasternEmailError || isNomineeError || isConstituentError || isCollegeError || isMajorError || isGradYearError || isRecieveInfoError) {
+      console.log("One or more fields don't pass validation");
+      return;
+    }
+
+    console.log('Values:', fullName, northeasternEmail, nominee, constituent, college, major, gradYear, receiveInfo);
+  };
   return (
     <>
       {/* TODO delete the above text and replace it with the nominations form here */
@@ -29,6 +46,9 @@ const Nominations: React.FC = () => {
           id="outlined-required"
           label="Required"
           defaultValue=""
+          onChange={(e) =>
+            setFullName(e.target.value)
+          }
           />
         </FormControl>
         <FormGroup>
@@ -39,6 +59,9 @@ const Nominations: React.FC = () => {
           id="outlined-required"
           label="Required"
           defaultValue=""
+          onChange={(e) =>
+            setNortheasternEmail(e.target.value)
+          }
           />
         </FormGroup>
         <FormControl required>
@@ -47,9 +70,12 @@ const Nominations: React.FC = () => {
             <Select
             labelId="nominee"
             label="nominee"
+            onChange={(e) =>
+              setNominee(e.target.value as string)
+            }
           >
             {/* Insert MenuItems using database of nominees */}
-            {/* <MenuItem value={"name"}>Name</MenuItem> */}
+            <MenuItem value={"name"}>Name</MenuItem>
           </Select>
         </FormControl>
         <FormControl required>
@@ -59,9 +85,12 @@ const Nominations: React.FC = () => {
             <Select
             labelId="constituent"
             label="Constituent"
+            onChange={(e) =>
+              setConstituent(e.target.value as string)
+            }
           >
             {/* Insert MenuItems using database of Constituents */}
-            {/* <MenuItem value={"constituent"}>Constituent</MenuItem> */}
+            <MenuItem value={"constituent"}>Constituent</MenuItem>
           </Select>
         </FormControl>
 
@@ -73,6 +102,9 @@ const Nominations: React.FC = () => {
           id="outlined-required"
           label="Required"
           defaultValue=""
+          onChange={(e) =>
+            setCollege(e.target.value)
+          }
           />
 
         </FormControl>
@@ -84,6 +116,9 @@ const Nominations: React.FC = () => {
           id="outlined-required"
           label="Required"
           defaultValue=""
+          onChange={(e) =>
+            setMajor(e.target.value)
+          }
           />
 
         </FormControl>
@@ -95,6 +130,9 @@ const Nominations: React.FC = () => {
           <RadioGroup
             aria-labelledby="demo-radio-buttons-group-label"
             name="radio-buttons-group"
+            onChange={(e) =>
+              setGradYear(e.target.value)
+            }
           >
             <FormControlLabel value="2023" control={<Radio />} label="2023" />
             <FormControlLabel value="2024" control={<Radio />} label="2024" />
@@ -113,6 +151,9 @@ const Nominations: React.FC = () => {
             <p>Becoming a senator is an excellent, rewarding opportunity to serve and improve the Northeastern community.</p>
           <RadioGroup
             name="radio-buttons-group"
+            onChange={(e) =>
+              setReceiveInfo(e.target.value)
+            }
           >
             <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
             <FormControlLabel value="No" control={<Radio />} label="No" />
@@ -120,6 +161,9 @@ const Nominations: React.FC = () => {
           </FormGroup>
         </FormControl>
 
+        <Button variant="contained" onClick={handleSampleFormSubmit}>
+            Submit
+          </Button>
         </FormControl>
         
       </Box>
