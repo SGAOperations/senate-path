@@ -4,9 +4,7 @@ import { Checkbox, FormControlLabel } from '@mui/material';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import Button from '@mui/material/Button';
-import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionContainer, FormTextAnswerContainer, Introduction, FormInputCheckbox, FormSelect, RadioButtons } from './styles';
-import { SampleFullNameData } from './types';
-
+import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionContainer, FormTextAnswerContainer, Introduction, FormInputCheckbox, RadioButtons } from './styles';
 
 const Applications: React.FC = () => {
   const [fullName, setFullName] = useState<string>('');
@@ -62,8 +60,17 @@ const Applications: React.FC = () => {
   };
 
   const isTextFieldError = fullName === '';
-
-
+  const isPreferredNameError = preferredName === '';
+  const isPronunicationError = pronunciation === '';
+  const isNicknameError = nickname === '';
+  const isNortheasternIDError = northeasternID === '';
+  const isEmailError = email === '';
+  const isPhoneNumberError = phoneNumber === '';
+  const isCollegeError = college === '';
+  const isMajorError = major === '';
+  const isMinorError = minors === '';
+  const isconstituencyNameError = constituencyName === '';
+  const isYearError = selectedYear === '';
   return (
       <HomeContainer>
         {
@@ -121,7 +128,7 @@ const Applications: React.FC = () => {
                 placeholder="Your Preferred Name"
                 value={preferredName}
                 onChange={(e) => setPreferredName(e.target.value)}
-                error={isTextFieldError}
+                error={isPreferredNameError}
               />
 
             </FormTextAnswerContainer>
@@ -147,7 +154,7 @@ const Applications: React.FC = () => {
                 onChange={(e) =>
                   setPronunciation(e.target.value)
                 }
-                error={isTextFieldError}
+                error={isPronunicationError}
               />
             </FormTextAnswerContainer>
           </FormQuestionContainer>
@@ -171,7 +178,7 @@ const Applications: React.FC = () => {
                 onChange={(e) =>
                   setNickname(e.target.value)
                 }
-                error={isTextFieldError}
+                error={isNicknameError}
               />
             </FormTextAnswerContainer>
           </FormQuestionContainer>
@@ -196,7 +203,7 @@ const Applications: React.FC = () => {
                 onChange={(e) =>
                   setNortheasternID(e.target.value)
                 }
-                error={isTextFieldError}
+                error={isNortheasternIDError}
               />
               <br></br>
             </FormTextAnswerContainer>
@@ -243,7 +250,7 @@ const Applications: React.FC = () => {
                 onChange={(e) =>
                   setEmail(e.target.value)
                 }
-                error={isTextFieldError}
+                error={isEmailError}
               />
             </FormTextAnswerContainer>
           </FormQuestionContainer>
@@ -269,7 +276,7 @@ const Applications: React.FC = () => {
                 onChange={(e) =>
                   setPhoneNumber(e.target.value)
                 }
-                error={isTextFieldError}
+                error={isPhoneNumberError}
               />
             </FormTextAnswerContainer>
           </FormQuestionContainer>
@@ -323,7 +330,7 @@ const Applications: React.FC = () => {
                 onChange={(e) =>
                   setCollege(e.target.value)
                 }
-                error={isTextFieldError}
+                error={isCollegeError}
               />
               <br></br>
             </FormTextAnswerContainer>
@@ -348,7 +355,7 @@ const Applications: React.FC = () => {
                 onChange={(e) =>
                   setMajor(e.target.value)
                 }
-                error={isTextFieldError}
+                error={isMajorError}
               />
               <br></br>
             </FormTextAnswerContainer>
@@ -371,7 +378,7 @@ const Applications: React.FC = () => {
                 onChange={(e) =>
                   setMinors(e.target.value)
                 }
-                error={isTextFieldError}
+                error={isMinorError}
               />
               <br></br>
             </FormTextAnswerContainer>
@@ -461,7 +468,7 @@ const Applications: React.FC = () => {
                 onChange={(e) =>
                   setConstituencyName(e.target.value)
                 }
-                error={isTextFieldError}
+                error={isconstituencyNameError}
               />
               <br></br>
             </FormTextAnswerContainer>
