@@ -10,7 +10,7 @@ import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionCo
 import { SampleFullNameData, SampleFormData } from './types';
 
 
-const Nominations: React.FC = () => {
+const Applications: React.FC = () => {
   const [{ name: fullName}, setName] = useState<SampleFullNameData>({
     name: '',
   });
