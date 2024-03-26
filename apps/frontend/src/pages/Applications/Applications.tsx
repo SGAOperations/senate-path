@@ -11,12 +11,8 @@ import { SampleFullNameData, SampleFormData } from './types';
 
 
 const Applications: React.FC = () => {
-  const [{ name: fullName}, setName] = useState<SampleFullNameData>({
-    name: '',
-  });
-  const [{ name: preferredName}, setPreferredName] = useState<SampleFullNameData>({
-    name: '',
-  });
+  const [fullName, setFullName] = useState<string>('');
+  const [preferredName, setPreferredName] = useState<string>('');
   const [{ name: pronunciation}, setPronunciation] = useState<SampleFullNameData>({
     name: '',
   });
@@ -93,7 +89,7 @@ const Applications: React.FC = () => {
       <HomeContainer>
         {
           <SampleForm>
-            <Introduction style={{ textAlign: 'center' }}>
+            <Introduction>
               <h2>SGA Senator Application</h2>
               Thank you for your interest in joining the Student Government Association (SGA)! SGA serves as the voice of the undergraduate student body and strives to promote student interests in the university and its surrounding communities. We have many active projects and initiatives. Read more about our work at northeasternsga.com.
               <br></br>
@@ -123,12 +119,7 @@ const Applications: React.FC = () => {
                   placeholder="Your Full Name"
                   required
                   value={fullName}
-                  onChange={(e) =>
-                    setName((prevData) => ({
-                      ...prevData,
-                      name: e.target.value,
-                    }))
-                  }
+                  onChange={(e) => setFullName(e.target.value)}
                   error={isTextFieldError}
                 />
               </FormTextAnswerContainer>
@@ -150,12 +141,7 @@ const Applications: React.FC = () => {
                 required
                 placeholder="Your Preferred Name"
                 value={preferredName}
-                onChange={(e) =>
-                  setPreferredName((prevData) => ({
-                    ...prevData,
-                    name: e.target.value,
-                  }))
-                }
+                onChange={(e) => setPreferredName(e.target.value)}
                 error={isTextFieldError}
               />
 
@@ -615,4 +601,4 @@ const Applications: React.FC = () => {
   );
 };
 
-export default Nominations;
+export default Applications;
