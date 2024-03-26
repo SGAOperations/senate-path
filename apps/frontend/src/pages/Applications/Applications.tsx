@@ -1,47 +1,26 @@
 import { useState } from 'react';
-import { useFormControl } from '@mui/material/FormControl';
-import { MenuItem, FormControl } from '@mui/material';
+import {  FormControl } from '@mui/material';
 import { Checkbox, FormControlLabel } from '@mui/material';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
-import FormLabel from '@mui/material/FormLabel';
 import Button from '@mui/material/Button';
 import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionContainer, FormTextAnswerContainer, Introduction, FormInputCheckbox, FormSelect, RadioButtons } from './styles';
-import { SampleFullNameData, SampleFormData } from './types';
+import { SampleFullNameData } from './types';
 
 
 const Applications: React.FC = () => {
   const [fullName, setFullName] = useState<string>('');
   const [preferredName, setPreferredName] = useState<string>('');
-  const [{ name: pronunciation}, setPronunciation] = useState<SampleFullNameData>({
-    name: '',
-  });
-  const [{ name: nickname}, setNickname] = useState<SampleFullNameData>({
-    name: '',
-  });
-  const [{ name: northeasternID}, setNortheasternID] = useState<SampleFullNameData>({
-    name: '',
-  });
-  const [{ name: email}, setEmail] = useState<SampleFullNameData>({
-    name: '',
-  });
-  const [{ name: phoneNumber}, setPhoneNumber] = useState<SampleFullNameData>({
-    name: '',
-  });
-  const [{ name: college}, setCollege] = useState<SampleFullNameData>({
-    name: '',
-  });
-  const [{ name: major}, setMajor] = useState<SampleFullNameData>({
-    name: '',
-  });
-  const [{ name: minors}, setMinors] = useState<SampleFullNameData>({
-    name: '',
-  });
-  const [{ name: constituencyName}, setConstituencyName] = useState<SampleFullNameData>({
-    name: '',
-  });
-
-  const [selectedYear, setSelectedYear] = useState<string>('first'); 
+  const [pronunciation, setPronunciation] = useState<string>('');
+  const [nickname, setNickname] = useState<string>('');
+  const [northeasternID, setNortheasternID] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [phoneNumber, setPhoneNumber] = useState<string>('');
+  const [college, setCollege] = useState<string>('');
+  const [major, setMajor] = useState<string>('');
+  const [minors, setMinors] = useState<string>('');
+  const [constituencyName, setConstituencyName] = useState<string>('');
+  const [selectedYear, setSelectedYear] = useState<string>(''); 
 
   const handleYearChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedYear(event.target.value);
@@ -166,10 +145,7 @@ const Applications: React.FC = () => {
                 placeholder="Name Pronunciation"
                 value={pronunciation}
                 onChange={(e) =>
-                  setPronunciation((prevData) => ({
-                    ...prevData,
-                    name: e.target.value,
-                  }))
+                  setPronunciation(e.target.value)
                 }
                 error={isTextFieldError}
               />
@@ -193,10 +169,7 @@ const Applications: React.FC = () => {
                 placeholder="Nickname"
                 value={nickname}
                 onChange={(e) =>
-                  setNickname((prevData) => ({
-                    ...prevData,
-                    name: e.target.value,
-                  }))
+                  setNickname(e.target.value)
                 }
                 error={isTextFieldError}
               />
@@ -221,10 +194,7 @@ const Applications: React.FC = () => {
                 placeholder="NUID"
                 value={northeasternID}
                 onChange={(e) =>
-                  setNortheasternID((prevData) => ({
-                    ...prevData,
-                    name: e.target.value,
-                  }))
+                  setNortheasternID(e.target.value)
                 }
                 error={isTextFieldError}
               />
@@ -271,10 +241,7 @@ const Applications: React.FC = () => {
                 placeholder="Email"
                 value={email}
                 onChange={(e) =>
-                  setEmail((prevData) => ({
-                    ...prevData,
-                    name: e.target.value,
-                  }))
+                  setEmail(e.target.value)
                 }
                 error={isTextFieldError}
               />
@@ -300,10 +267,7 @@ const Applications: React.FC = () => {
                 placeholder="Phone Number"
                 value={phoneNumber}
                 onChange={(e) =>
-                  setPhoneNumber((prevData) => ({
-                    ...prevData,
-                    name: e.target.value,
-                  }))
+                  setPhoneNumber(e.target.value)
                 }
                 error={isTextFieldError}
               />
@@ -357,10 +321,7 @@ const Applications: React.FC = () => {
                 placeholder="College"
                 value={college}
                 onChange={(e) =>
-                  setCollege((prevData) => ({
-                    ...prevData,
-                    name: e.target.value,
-                  }))
+                  setCollege(e.target.value)
                 }
                 error={isTextFieldError}
               />
@@ -385,10 +346,7 @@ const Applications: React.FC = () => {
                 placeholder="Major"
                 value={major}
                 onChange={(e) =>
-                  setMajor((prevData) => ({
-                    ...prevData,
-                    name: e.target.value,
-                  }))
+                  setMajor(e.target.value)
                 }
                 error={isTextFieldError}
               />
@@ -411,10 +369,7 @@ const Applications: React.FC = () => {
                 placeholder="Minors"
                 value={minors}
                 onChange={(e) =>
-                  setMinors((prevData) => ({
-                    ...prevData,
-                    name: e.target.value,
-                  }))
+                  setMinors(e.target.value)
                 }
                 error={isTextFieldError}
               />
@@ -504,10 +459,7 @@ const Applications: React.FC = () => {
                 placeholder="Constituency Name"
                 value={constituencyName}
                 onChange={(e) =>
-                  setConstituencyName((prevData) => ({
-                    ...prevData,
-                    name: e.target.value,
-                  }))
+                  setConstituencyName(e.target.value)
                 }
                 error={isTextFieldError}
               />
