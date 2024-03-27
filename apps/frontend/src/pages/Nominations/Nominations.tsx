@@ -18,12 +18,7 @@ const Nominations: React.FC = () => {
     fetchData();
   }, []);
 
-  return (
-    <>
-      I am the nominations page
-      {/* TODO delete the above text and replace it with the nominations form here */}
-    </>
-  );
+  return <>I am the nominations page</>;
 };
 
 export default Nominations;
