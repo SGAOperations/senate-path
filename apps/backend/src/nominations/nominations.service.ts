@@ -38,7 +38,7 @@ export class NominationsService {
 
     const { data: nominationData } = await supabase.from('nominations').select('*').eq('id', id);
     if (nominationData.length === 0) {
-      throw new BadRequestException(`Application with given id, ${id}, does not exist.`);
+      throw new BadRequestException(`Nominations with given id, ${id}, does not exist.`);
     }
 
     const { error } = await supabase.from('nominations').update({
