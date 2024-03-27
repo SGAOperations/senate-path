@@ -63,6 +63,45 @@ export type Database = {
         }
         Relationships: []
       }
+      nominations: {
+        Row: {
+          college: string | null
+          constituency: string | null
+          created_at: string
+          email: string | null
+          fullName: string | null
+          graduationYear: number | null
+          id: number
+          major: string | null
+          nominee: string | null
+          receiveSenatorInfo: boolean | null
+        }
+        Insert: {
+          college?: string | null
+          constituency?: string | null
+          created_at?: string
+          email?: string | null
+          fullName?: string | null
+          graduationYear?: number | null
+          id?: number
+          major?: string | null
+          nominee?: string | null
+          receiveSenatorInfo?: boolean | null
+        }
+        Update: {
+          college?: string | null
+          constituency?: string | null
+          created_at?: string
+          email?: string | null
+          fullName?: string | null
+          graduationYear?: number | null
+          id?: number
+          major?: string | null
+          nominee?: string | null
+          receiveSenatorInfo?: boolean | null
+        }
+        Relationships: []
+      }
       users: {
         Row: {
           firstName: string
