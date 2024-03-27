@@ -59,22 +59,6 @@ const Applications: React.FC = () => {
     }
   };
 
-  const action = (
-    <React.Fragment>
-      <Button color="secondary" size="small" onClick={handleClose}>
-        UNDO
-      </Button>
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={handleClose}
-      >
-        <CloseIcon fontSize="small" />
-      </IconButton>
-    </React.Fragment>
-  );
-
   const isTextFieldError = fullName === '';
   const isPreferredNameError = preferredName === '';
   const isPronunicationError = pronunciation === '';
