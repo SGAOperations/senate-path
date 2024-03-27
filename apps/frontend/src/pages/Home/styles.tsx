@@ -1,6 +1,5 @@
-import FormGroup from '@mui/material/FormGroup';
-import Input from '@mui/material/Input';
-import Select from '@mui/material/Select';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
 
 import styled from 'styled-components';
 
@@ -10,17 +9,13 @@ export const HomeContainer = styled.div(() => ({
   alignItems: 'center',
 }));
 
-export const SampleForm = styled(FormGroup)(() => ({
+export const SampleForm = styled(Box)(() => ({
   display: 'flex',
   flexDirection: 'column',
   rowGap: 16,
   width: '50%',
 }));
 
-export const FormInput = styled(Input)(() => ({
-  width: '50%',
-}));
-
-export const FormSelect = styled(Select)(() => ({
+export const FormInput = styled(TextField)(() => ({
   width: '50%',
 }));
