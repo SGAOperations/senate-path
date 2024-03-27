@@ -98,7 +98,37 @@ const Nominations: React.FC = () => {
             }
           >
             {/* Insert MenuItems using database of nominees */}
-            <MenuItem value={"name"}>Name</MenuItem>
+            <MenuItem value={"Aj Leveen"}>Aj Leveen</MenuItem>
+            <MenuItem value={"Alessandra Diaz"}>Alessandra Diaz</MenuItem>
+            <MenuItem value={"Alexandra Vergara-Anglim"}>Alexandra Vergara-Anglim</MenuItem>
+            <MenuItem value={"Alexis Weldner"}>Alexis Weldner</MenuItem>
+            <MenuItem value={"Arsema Gebreyesus"}>Arsema Gebreyesus</MenuItem>
+            <MenuItem value={"Avery Darlington"}>Avery Darlington</MenuItem>
+            <MenuItem value={"Avery Placke"}>Avery Placke</MenuItem>
+            <MenuItem value={"Chand Duggal"}>Chand Duggal</MenuItem>
+            <MenuItem value={"Chris Molinari"}>Chris Molinari</MenuItem>
+            <MenuItem value={"David O'Brien"}>David O'Brien</MenuItem>
+            <MenuItem value={"Dylan Lee"}>Dylan Lee</MenuItem>
+            <MenuItem value={"Elena Pittman"}>Elena Pittman</MenuItem>
+            <MenuItem value={"Esha Minhas"}>Esha Minhas</MenuItem>
+            <MenuItem value={"Ethan D'Costa"}>Ethan D'Costa</MenuItem>
+            <MenuItem value={"Guarang Deka"}>Guarang Deka</MenuItem>
+            <MenuItem value={"Genevieve Savage"}>Genevieve Savage</MenuItem>
+            <MenuItem value={"Hannah Libelo"}>Hannah Libelo</MenuItem>
+            <MenuItem value={"Kate Mittelhauser"}>Kate Mittelhauser</MenuItem>
+            <MenuItem value={"Mia Netland"}>Mia Netland</MenuItem>
+            <MenuItem value={"Michelle Rubin"}>Michelle Rubin</MenuItem>
+            <MenuItem value={"Nandini Kalani"}>Nandini Kalani</MenuItem>
+            <MenuItem value={"Nasha Palsetia"}>Nasha Palsetia</MenuItem>
+            <MenuItem value={"Niharika Banerjee"}>Niharika Banerjee</MenuItem>
+            <MenuItem value={"Nit Kearke"}>Nit Kearke</MenuItem>
+            <MenuItem value={"Noah Ben-Zion"}>Noah Ben-Zion</MenuItem>
+            <MenuItem value={"Olivia Kleschinsky"}>Olivia Kleschinsky</MenuItem>
+            <MenuItem value={"Quella Wang"}>Quella Wang</MenuItem>
+            <MenuItem value={"Trisha Shenoy"}>Trisha Shenoy</MenuItem>
+            <MenuItem value={"Valentina Haro"}>Valentina Haro</MenuItem>
+
+
           </FormSelect>
             </FormTextAnswerContainer>
           </FormQuestionContainer>
@@ -118,7 +148,25 @@ const Nominations: React.FC = () => {
             }
           >
             {/* Insert MenuItems using database of Constituents */}
-            <MenuItem value={"constituent"}>Constituent</MenuItem>
+            <MenuItem value={"Alpha Chi Omega Sorority"}>Alpha Chi Omega Sorority</MenuItem>
+            <MenuItem value={"Alpha Epsilon Phi"}>Alpha Epsilon Phi</MenuItem>
+            <MenuItem value={"Alpha Epsilon Pi"}>Alpha Epsilon Pi</MenuItem>
+            <MenuItem value={"Bouvé College of Health Sciences"}>Bouvé College of Health Sciences</MenuItem>
+            <MenuItem value={"College of Science"}>College of Science</MenuItem>
+            <MenuItem value={"College of Social Sciences and Humanities"}>College of Social Sciences and Humanities</MenuItem>
+            <MenuItem value={"D'Amore-McKim School of Business"}>D'Amore-McKim School of Business</MenuItem>
+            <MenuItem value={"Delta Phi Epsilon"}>Delta Phi Epsilon</MenuItem>
+            <MenuItem value={"Delta Tau Delta"}>Delta Tau Delta</MenuItem>
+            <MenuItem value={"Delta Zeta"}>Delta Zeta</MenuItem>
+            <MenuItem value={"Global Scholars program"}>Global Scholars program</MenuItem>
+            <MenuItem value={"Honors program"}>Honors program</MenuItem>
+            <MenuItem value={"Kappa Delta"}>Kappa Delta</MenuItem>
+            <MenuItem value={"Khoury College of Computer Sciences"}>Khoury College of Computer Sciences</MenuItem>
+            <MenuItem value={"Northeastern University Real Estate Club (NURE)"}>Northeastern University Real Estate Club (NURE)</MenuItem>
+            <MenuItem value={"NU Immerse"}>NU Immerse</MenuItem>
+            <MenuItem value={"Phi Sigma Rho"}>Phi Sigma Rho</MenuItem>
+            <MenuItem value={"Sandbox"}>Sandbox</MenuItem>
+
           </FormSelect>
             </FormTextAnswerContainer>
           </FormQuestionContainer>
