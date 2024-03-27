@@ -19,7 +19,6 @@ const Applications: React.FC = () => {
   const [minors, setMinors] = useState<string>('');
   const [constituencyName, setConstituencyName] = useState<string>('');
   const [selectedYear, setSelectedYear] = useState<string>(''); 
-  const [open, setOpen] = React.useState(false);
 
   const handleYearChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedYear(event.target.value);
@@ -569,7 +568,6 @@ const Applications: React.FC = () => {
           console.log('Major: '+ major);
           console.log('Minor: '+ minors);
           console.log('Constituency: '+ constituencyName);
-          handleClick();
         }}
         >Submit</Button>
 
