@@ -13,7 +13,19 @@ import {
   Radio,
   Button,
 } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import {
+  HomeContainer,
+  FormInput,
+  SampleForm,
+  FormTextContainer,
+  FormQuestionContainer,
+  FormTextAnswerContainer,
+  Introduction,
+  FormInputCheckbox,
+  FormSelect,
+  RadioButtons,
+} from '../Applications/styles';
+import React, { useState, useEffect } from 'react';
 
 const Nominations: React.FC = () => {
   // START: fetch example
@@ -83,9 +95,9 @@ const Nominations: React.FC = () => {
     <>
       {
         /* TODO delete the above text and replace it with the nominations form here */
-        <Box>
-          <FormGroup>
-            <h1>SGA Senator Nomination Form</h1>
+        <HomeContainer>
+          <SampleForm>
+            <h1 style={{ textAlign: 'center' }}>SGA Senator Nomination Form</h1>
             <p>
               Complete this form to nominate a person to become a senator in the
               Student Government Association (SGA). SGA serves as the voice of
@@ -112,108 +124,231 @@ const Nominations: React.FC = () => {
               Please contact Cassidy Donoghue at donoghue.ca@northeastern.edu
               with any questions.
             </p>
-          </FormGroup>
-          <FormControl>
-            <FormControl required>
-              <h1>What is your full name?</h1>
-              <p>
-                Please enter your first and last name as they appear in the
-                official university records.
-              </p>
-              <TextField
-                required
-                id="outlined-required"
-                label="Required"
-                defaultValue=""
-                onChange={(e) => setFullName(e.target.value)}
-              />
-            </FormControl>
-            <FormGroup>
-              <h1>What is your Northeastern email?</h1>
-              <p>
-                We may contact you to verify the authenticity of this
-                nomination.
-              </p>
-              <TextField
-                required
-                id="outlined-required"
-                label="Required"
-                defaultValue=""
-                onChange={(e) => setNortheasternEmail(e.target.value)}
-              />
-            </FormGroup>
-            <FormControl required>
-              <h1>Select the name of the person you are nominating</h1>
-              <InputLabel id="nominee">Nominee</InputLabel>
-              <Select
-                labelId="nominee"
-                label="nominee"
-                onChange={(e) => setNominee(e.target.value as string)}
-              >
-                {/* Insert MenuItems using database of nominees */}
-                <MenuItem value={'name'}>Name</MenuItem>
-              </Select>
-            </FormControl>
-            <FormControl required>
-              <h1>
-                Please confirm you are one of the prospective senator's
-                constituents.
-              </h1>
-              <p>
-                Select a college, organization, or program from the list below
-                to confirm you are one of the prospective senator's
-                constituents.{' '}
-                <span style={{ fontWeight: 'bold' }}>
-                  You must select the same constituency as the prospective
-                  senator for this nomination to be processed.
-                </span>
-              </p>
-              <InputLabel id="constituent">Constituent</InputLabel>
-              <Select
-                labelId="constituent"
-                label="Constituent"
-                onChange={(e) => setConstituent(e.target.value as string)}
-              >
-                {/* Insert MenuItems using database of Constituents */}
-                <MenuItem value={'constituent'}>Constituent</MenuItem>
-              </Select>
-            </FormControl>
+          </SampleForm>
 
+          <SampleForm>
             <FormControl required>
-              <h1>What is your college?</h1>
-              <p>
-                Note: For combined majors (a single major listed in the course
-                catalog that spans two disciplines), list only the home college.
-                For double majors (two distinct majors listed separately in the
-                course catalog), include both colleges.
-              </p>
-              <TextField
-                required
-                id="outlined-required"
-                label="Required"
-                defaultValue=""
-                onChange={(e) => setCollege(e.target.value)}
-              />
+              <FormQuestionContainer>
+                <FormTextContainer>
+                  <h1>What is your full name?</h1>
+                  <p>
+                    Please enter your first and last name as they appear in the
+                    official university records.
+                  </p>
+                </FormTextContainer>
+                <FormTextAnswerContainer>
+                  <TextField
+                    required
+                    id="outlined-required"
+                    label="Required"
+                    defaultValue=""
+                    onChange={(e) => setFullName(e.target.value)}
+                  />
+                </FormTextAnswerContainer>
+              </FormQuestionContainer>
             </FormControl>
+          </SampleForm>
 
-            <FormControl>
-              <h1>What is your major?</h1>
-              <TextField
-                required
-                id="outlined-required"
-                label="Required"
-                defaultValue=""
-                onChange={(e) => setMajor(e.target.value)}
-              />
-            </FormControl>
+          <SampleForm>
+            <FormQuestionContainer>
+              <FormTextContainer>
+                <h1>What is your Northeastern email?</h1>
+                <p>
+                  We may contact you to verify the authenticity of this
+                  nomination.
+                </p>
+              </FormTextContainer>
+              <FormTextAnswerContainer>
+                <TextField
+                  required
+                  id="outlined-required"
+                  label="Required"
+                  defaultValue=""
+                  onChange={(e) => setNortheasternEmail(e.target.value)}
+                />
+              </FormTextAnswerContainer>
+            </FormQuestionContainer>
+          </SampleForm>
 
-            <FormControl required>
-              <FormGroup>
+          <SampleForm>
+            <FormQuestionContainer>
+              <FormTextContainer>
+                <h1>Select the name of the person you are nominating</h1>
+              </FormTextContainer>
+              <FormTextAnswerContainer>
+                <FormSelect
+                  required
+                  label="nominee"
+                  onChange={(e) => setNominee(e.target.value as string)}
+                >
+                  {/* Insert MenuItems using database of nominees */}
+                  <MenuItem value={'Aj Leveen'}>Aj Leveen</MenuItem>
+                  <MenuItem value={'Alessandra Diaz'}>Alessandra Diaz</MenuItem>
+                  <MenuItem value={'Alexandra Vergara-Anglim'}>
+                    Alexandra Vergara-Anglim
+                  </MenuItem>
+                  <MenuItem value={'Alexis Weldner'}>Alexis Weldner</MenuItem>
+                  <MenuItem value={'Arsema Gebreyesus'}>
+                    Arsema Gebreyesus
+                  </MenuItem>
+                  <MenuItem value={'Avery Darlington'}>
+                    Avery Darlington
+                  </MenuItem>
+                  <MenuItem value={'Avery Placke'}>Avery Placke</MenuItem>
+                  <MenuItem value={'Chand Duggal'}>Chand Duggal</MenuItem>
+                  <MenuItem value={'Chris Molinari'}>Chris Molinari</MenuItem>
+                  <MenuItem value={"David O'Brien"}>David O'Brien</MenuItem>
+                  <MenuItem value={'Dylan Lee'}>Dylan Lee</MenuItem>
+                  <MenuItem value={'Elena Pittman'}>Elena Pittman</MenuItem>
+                  <MenuItem value={'Esha Minhas'}>Esha Minhas</MenuItem>
+                  <MenuItem value={"Ethan D'Costa"}>Ethan D'Costa</MenuItem>
+                  <MenuItem value={'Guarang Deka'}>Guarang Deka</MenuItem>
+                  <MenuItem value={'Genevieve Savage'}>
+                    Genevieve Savage
+                  </MenuItem>
+                  <MenuItem value={'Hannah Libelo'}>Hannah Libelo</MenuItem>
+                  <MenuItem value={'Kate Mittelhauser'}>
+                    Kate Mittelhauser
+                  </MenuItem>
+                  <MenuItem value={'Mia Netland'}>Mia Netland</MenuItem>
+                  <MenuItem value={'Michelle Rubin'}>Michelle Rubin</MenuItem>
+                  <MenuItem value={'Nandini Kalani'}>Nandini Kalani</MenuItem>
+                  <MenuItem value={'Nasha Palsetia'}>Nasha Palsetia</MenuItem>
+                  <MenuItem value={'Niharika Banerjee'}>
+                    Niharika Banerjee
+                  </MenuItem>
+                  <MenuItem value={'Nit Kearke'}>Nit Kearke</MenuItem>
+                  <MenuItem value={'Noah Ben-Zion'}>Noah Ben-Zion</MenuItem>
+                  <MenuItem value={'Olivia Kleschinsky'}>
+                    Olivia Kleschinsky
+                  </MenuItem>
+                  <MenuItem value={'Quella Wang'}>Quella Wang</MenuItem>
+                  <MenuItem value={'Trisha Shenoy'}>Trisha Shenoy</MenuItem>
+                  <MenuItem value={'Valentina Haro'}>Valentina Haro</MenuItem>
+                </FormSelect>
+              </FormTextAnswerContainer>
+            </FormQuestionContainer>
+          </SampleForm>
+
+          <SampleForm>
+            <FormQuestionContainer>
+              <FormTextContainer>
+                <h1>
+                  Please confirm you are one of the prospective senator's
+                  constituents.
+                </h1>
+                <p>
+                  Select a college, organization, or program from the list below
+                  to confirm you are one of the prospective senator's
+                  constituents.{' '}
+                  <span style={{ fontWeight: 'bold' }}>
+                    You must select the same constituency as the prospective
+                    senator for this nomination to be processed.
+                  </span>
+                </p>
+              </FormTextContainer>
+              <FormTextAnswerContainer>
+                <FormSelect
+                  required
+                  onChange={(e) => setConstituent(e.target.value as string)}
+                >
+                  {/* Insert MenuItems using database of Constituents */}
+                  <MenuItem value={'Alpha Chi Omega Sorority'}>
+                    Alpha Chi Omega Sorority
+                  </MenuItem>
+                  <MenuItem value={'Alpha Epsilon Phi'}>
+                    Alpha Epsilon Phi
+                  </MenuItem>
+                  <MenuItem value={'Alpha Epsilon Pi'}>
+                    Alpha Epsilon Pi
+                  </MenuItem>
+                  <MenuItem value={'Bouvé College of Health Sciences'}>
+                    Bouvé College of Health Sciences
+                  </MenuItem>
+                  <MenuItem value={'College of Science'}>
+                    College of Science
+                  </MenuItem>
+                  <MenuItem value={'College of Social Sciences and Humanities'}>
+                    College of Social Sciences and Humanities
+                  </MenuItem>
+                  <MenuItem value={"D'Amore-McKim School of Business"}>
+                    D'Amore-McKim School of Business
+                  </MenuItem>
+                  <MenuItem value={'Delta Phi Epsilon'}>
+                    Delta Phi Epsilon
+                  </MenuItem>
+                  <MenuItem value={'Delta Tau Delta'}>Delta Tau Delta</MenuItem>
+                  <MenuItem value={'Delta Zeta'}>Delta Zeta</MenuItem>
+                  <MenuItem value={'Global Scholars program'}>
+                    Global Scholars program
+                  </MenuItem>
+                  <MenuItem value={'Honors program'}>Honors program</MenuItem>
+                  <MenuItem value={'Kappa Delta'}>Kappa Delta</MenuItem>
+                  <MenuItem value={'Khoury College of Computer Sciences'}>
+                    Khoury College of Computer Sciences
+                  </MenuItem>
+                  <MenuItem
+                    value={'Northeastern University Real Estate Club (NURE)'}
+                  >
+                    Northeastern University Real Estate Club (NURE)
+                  </MenuItem>
+                  <MenuItem value={'NU Immerse'}>NU Immerse</MenuItem>
+                  <MenuItem value={'Phi Sigma Rho'}>Phi Sigma Rho</MenuItem>
+                  <MenuItem value={'Sandbox'}>Sandbox</MenuItem>
+                </FormSelect>
+              </FormTextAnswerContainer>
+            </FormQuestionContainer>
+          </SampleForm>
+
+          <SampleForm>
+            <FormQuestionContainer>
+              <FormTextContainer>
+                <h1>What is your college?</h1>
+                <p>
+                  Note: For combined majors (a single major listed in the course
+                  catalog that spans two disciplines), list only the home
+                  college. For double majors (two distinct majors listed
+                  separately in the course catalog), include both colleges.
+                </p>
+              </FormTextContainer>
+              <FormTextAnswerContainer>
+                <TextField
+                  required
+                  id="outlined-required"
+                  label="Required"
+                  defaultValue=""
+                  onChange={(e) => setCollege(e.target.value)}
+                />
+              </FormTextAnswerContainer>
+            </FormQuestionContainer>
+          </SampleForm>
+
+          <SampleForm>
+            <FormQuestionContainer>
+              <FormTextContainer>
+                <h1>What is your major?</h1>
+              </FormTextContainer>
+              <FormTextAnswerContainer>
+                <TextField
+                  required
+                  id="outlined-required"
+                  label="Required"
+                  defaultValue=""
+                  onChange={(e) => setMajor(e.target.value)}
+                />
+              </FormTextAnswerContainer>
+            </FormQuestionContainer>
+          </SampleForm>
+
+          <SampleForm>
+            <FormQuestionContainer>
+              <FormTextContainer>
                 <h1>What is your expected graduation year?</h1>
-                <FormLabel id="demo-radio-buttons-group-label">Year</FormLabel>
+              </FormTextContainer>
+              <RadioButtons>
                 <RadioGroup
-                  aria-labelledby="demo-radio-buttons-group-label"
-                  name="radio-buttons-group"
+                  name="year-buttons-group"
+                  aria-required
                   onChange={(e) => setGradYear(e.target.value)}
                 >
                   <FormControlLabel
@@ -252,11 +387,13 @@ const Nominations: React.FC = () => {
                     label="Other"
                   />
                 </RadioGroup>
-              </FormGroup>
-            </FormControl>
+              </RadioButtons>
+            </FormQuestionContainer>
+          </SampleForm>
 
-            <FormControl required>
-              <FormGroup>
+          <SampleForm>
+            <FormQuestionContainer>
+              <FormTextContainer>
                 <h1>
                   Would you like to receive information about how to become a
                   senator?
@@ -265,8 +402,11 @@ const Nominations: React.FC = () => {
                   Becoming a senator is an excellent, rewarding opportunity to
                   serve and improve the Northeastern community.
                 </p>
+              </FormTextContainer>
+              <RadioButtons>
                 <RadioGroup
-                  name="radio-buttons-group"
+                  aria-required
+                  name="receive-buttons-group"
                   onChange={(e) => setReceiveInfo(e.target.value)}
                 >
                   <FormControlLabel
@@ -276,14 +416,14 @@ const Nominations: React.FC = () => {
                   />
                   <FormControlLabel value="No" control={<Radio />} label="No" />
                 </RadioGroup>
-              </FormGroup>
-            </FormControl>
+              </RadioButtons>
+            </FormQuestionContainer>
+          </SampleForm>
 
-            <Button variant="contained" onClick={handleSampleFormSubmit}>
-              Submit
-            </Button>
-          </FormControl>
-        </Box>
+          <Button variant="contained" onClick={handleSampleFormSubmit}>
+            Submit
+          </Button>
+        </HomeContainer>
       }
     </>
   );
