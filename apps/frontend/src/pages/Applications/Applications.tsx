@@ -4,6 +4,9 @@ import { Checkbox, FormControlLabel } from '@mui/material';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import Button from '@mui/material/Button';
+import Snackbar from '@mui/material/Snackbar';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionContainer, FormTextAnswerContainer, Introduction, FormInputCheckbox, RadioButtons } from './styles';
 
 const Applications: React.FC = () => {
@@ -19,6 +22,7 @@ const Applications: React.FC = () => {
   const [minors, setMinors] = useState<string>('');
   const [constituencyName, setConstituencyName] = useState<string>('');
   const [selectedYear, setSelectedYear] = useState<string>(''); 
+  const [open, setOpen] = React.useState(false);
 
   const handleYearChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedYear(event.target.value);
@@ -58,6 +62,34 @@ const Applications: React.FC = () => {
       setPronouns([...pronouns, value]);
     }
   };
+
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  const action = (
+    <React.Fragment>
+      <Button color="secondary" size="small" onClick={handleClose}>
+        UNDO
+      </Button>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  );
 
   const isTextFieldError = fullName === '';
   const isPreferredNameError = preferredName === '';
@@ -552,8 +584,16 @@ const Applications: React.FC = () => {
           console.log('Major: '+ major);
           console.log('Minor: '+ minors);
           console.log('Constituency: '+ constituencyName);
+          handleClick();
         }}
         >Submit</Button>
+        <Snackbar>
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        message="Successfully submitted"
+        action={action}
+        </Snackbar>
 
       </HomeContainer>
       
