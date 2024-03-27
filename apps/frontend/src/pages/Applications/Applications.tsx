@@ -60,18 +60,6 @@ const Applications: React.FC = () => {
     }
   };
 
-  const handleClick = () => {
-    setOpen(true);
-  };
-
-  const handleClose = (event: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setOpen(false);
-  };
-
   const action = (
     <React.Fragment>
       <Button color="secondary" size="small" onClick={handleClose}>
