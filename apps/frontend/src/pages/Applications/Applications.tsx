@@ -24,25 +24,25 @@ const Applications: React.FC = () => {
     setSelectedYear(event.target.value);
   };
 
-  const [selectedConstituency, setConstituency] = useState<string>('first'); 
+  const [selectedConstituency, setConstituency] = useState<string>('academic'); 
 
   const handleConstituencyChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setConstituency(event.target.value);
   };
 
-  const [selectedConstituencyType, setConstituencyType] = useState<string>('first'); 
+  const [selectedConstituencyType, setConstituencyType] = useState<string>('club'); 
 
   const handleConstituencyTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setConstituencyType(event.target.value);
   };
 
-  const [selectedReturningType, setReturningType] = useState<string>('first'); 
+  const [selectedReturningType, setReturningType] = useState<string>('no'); 
 
   const handleReturningTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setReturningType(event.target.value);
   };
 
-  const [selectedAttestation, setAttestation] = useState<string>('first'); 
+  const [selectedAttestation, setAttestation] = useState<string>('agree'); 
 
   const handleAttestationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAttestation(event.target.value);
