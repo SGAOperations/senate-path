@@ -1,6 +1,6 @@
 import { FormGroup, FormLabel, Box, Typography, TextField, InputLabel, Select, MenuItem, FormControl, RadioGroup, FormControlLabel, Radio, Button } from '@mui/material';
 import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionContainer, FormTextAnswerContainer, Introduction, FormInputCheckbox, FormSelect, RadioButtons } from '../Applications/styles';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Nominations: React.FC = () => {
   const [fullName, setFullName] = useState("");
