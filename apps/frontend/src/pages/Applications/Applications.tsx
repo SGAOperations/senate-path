@@ -6,6 +6,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionContainer, FormTextAnswerContainer, Introduction, FormInputCheckbox, RadioButtons } from './styles';
 
 const Applications: React.FC = () => {
@@ -586,13 +587,14 @@ const Applications: React.FC = () => {
           handleClick();
         }}
         >Submit</Button>
-        <Snackbar>
-        open={open}
-        autoHideDuration={6000}
-        onClose={handleClose}
-        message="Successfully submitted"
-        action={action}
-        </Snackbar>
+        <Snackbar
+          open={open}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          message="Successfully submitted"
+          action={action}
+        />
+
 
       </HomeContainer>
       
