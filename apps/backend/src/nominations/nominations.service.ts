@@ -20,8 +20,24 @@ export class NominationsService {
   async createNomination({
     ...nominationsColumns
   }: CreateNominationRequestDto): Promise<void> {
+    let status = 'APPROVED';
+    const { data: nominationData } = await supabase.from('nominations').select('*').eq('email', nominationsColumns.email);
+    
+    // Has this nominator already nominated this nominee?
+    const valid = nominationData.reduce(
+      (acc, curr) => {
+        if (curr.nominee === nominationsColumns.nominee) {
+          return acc && false;
+        } return acc && true;
+      },
+      true);
+    if (!valid || nominationsColumns.fullName === nominationsColumns.nominee) {
+      status = "DENIED";
+    }
+
     const { error } = await supabase.from('nominations').insert({
-     ...nominationsColumns
+     ...nominationsColumns,
+     status,
     });
 
     if (error) {
@@ -41,12 +57,16 @@ export class NominationsService {
       throw new BadRequestException(`Nominations with given id, ${id}, does not exist.`);
     }
 
-    const { error } = await supabase.from('nominations').update({
-      ...nominationColumns
-    }).eq('id', id);
+    if (nominationColumns.status == 'APPROVED' || nominationColumns.status == 'DENIED' || nominationColumns.status == 'MANUAL_REVIEW') {
+      const { error } = await supabase.from('nominations').update({
+        ...nominationColumns
+      }).eq('id', id);
 
-    if (error) {
-      throw new Error(error.message);
+      if (error) {
+        throw new Error(error.message);
+      }
+    } else {
+      throw new BadRequestException(`Invalid status, ${nominationColumns.status}, provided.`);
     }
   }
 }
