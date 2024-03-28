@@ -15,6 +15,18 @@ export class ApplicationsService {
     
     return data;
   }
+
+  async getNominationForms(): Promise<any> {
+    const { data, error } = await supabase.from('applications').select('fullName, email');
+
+    if (error) {
+      throw new Error(error.message);
+    }
+    
+    const constituenciesList = data.map((item: any) => item.fullName);
+    
+    return {"nominees": data, "constituencies": constituenciesList};
+  }
   
   async createApplication({
     fullName,

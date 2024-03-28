@@ -13,6 +13,11 @@ export class ApplicationsController {
     return this.applicationsService.getApplications();
   }
 
+  @Get('/nomination-forms')
+  getNominationForms() {
+    return this.applicationsService.getNominationForms();
+  }
+
   @Post()
   createApplication(@Body() request: CreateApplicationRequestDto) {
     return this.applicationsService.createApplication({
