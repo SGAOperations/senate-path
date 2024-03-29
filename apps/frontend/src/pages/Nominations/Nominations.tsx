@@ -1,5 +1,5 @@
 import { FormGroup, FormLabel, Box, Typography, TextField, InputLabel, Select, MenuItem, FormControl, RadioGroup, FormControlLabel, Radio, Button } from '@mui/material';
-import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionContainer, FormTextAnswerContainer, Introduction, FormInputCheckbox, FormSelect, RadioButtons } from '../Applications/styles';
+import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionContainer, FormTextAnswerContainer, Introduction, FormInputCheckbox, FormSelect, RadioButtons, Title } from '../Nominations/styles';
 import React, { useState, useEffect } from 'react';
 
 const Nominations: React.FC = () => {
@@ -27,12 +27,30 @@ const Nominations: React.FC = () => {
 
     console.log('Values:', fullName, northeasternEmail, nominee, constituent, college, major, gradYear, receiveInfo);
   };
+
+  const fetchData = () => {
+    fetch('http://localhost:3000/api/applications')
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <>
-      {/* TODO delete the above text and replace it with the nominations form here */
+      {
       <HomeContainer>
         <SampleForm>
-            <h1 style={{textAlign: 'center' }}>SGA Senator Nomination Form</h1>
+          <Title>SGA Senator Nomination Form </Title>
             <p>Complete this form to nominate a person to become a senator in the Student Government Association (SGA). SGA serves as the voice of the undergraduate student body and strives to promote student interests in the university and its surrounding communities. To learn more about SGA, visit our website at northeasternsga.com.</p>
             <p>This form is a nomination, not a vote. It is simply a statement you would like to see one of your peers become a senator in SGA. You may complete this form for an unlimited number of prospective senators, but you may only nominate each student once. You must belong to the same constituency as the prospective senator seeks to represent (so only undergraduate students in the College of Engineering may nominate senators for the College of Engineering, only NUin students may nominate senators for the NUin program, etc).</p>
             <p>SGA senator applications are currently open. To apply for a senatorship, visit <a href="">Senator Applications</a></p>
@@ -98,36 +116,10 @@ const Nominations: React.FC = () => {
             }
           >
             {/* Insert MenuItems using database of nominees */}
-            <MenuItem value={"Aj Leveen"}>Aj Leveen</MenuItem>
-            <MenuItem value={"Alessandra Diaz"}>Alessandra Diaz</MenuItem>
-            <MenuItem value={"Alexandra Vergara-Anglim"}>Alexandra Vergara-Anglim</MenuItem>
-            <MenuItem value={"Alexis Weldner"}>Alexis Weldner</MenuItem>
-            <MenuItem value={"Arsema Gebreyesus"}>Arsema Gebreyesus</MenuItem>
-            <MenuItem value={"Avery Darlington"}>Avery Darlington</MenuItem>
-            <MenuItem value={"Avery Placke"}>Avery Placke</MenuItem>
-            <MenuItem value={"Chand Duggal"}>Chand Duggal</MenuItem>
-            <MenuItem value={"Chris Molinari"}>Chris Molinari</MenuItem>
-            <MenuItem value={"David O'Brien"}>David O'Brien</MenuItem>
-            <MenuItem value={"Dylan Lee"}>Dylan Lee</MenuItem>
-            <MenuItem value={"Elena Pittman"}>Elena Pittman</MenuItem>
-            <MenuItem value={"Esha Minhas"}>Esha Minhas</MenuItem>
-            <MenuItem value={"Ethan D'Costa"}>Ethan D'Costa</MenuItem>
-            <MenuItem value={"Guarang Deka"}>Guarang Deka</MenuItem>
-            <MenuItem value={"Genevieve Savage"}>Genevieve Savage</MenuItem>
-            <MenuItem value={"Hannah Libelo"}>Hannah Libelo</MenuItem>
-            <MenuItem value={"Kate Mittelhauser"}>Kate Mittelhauser</MenuItem>
-            <MenuItem value={"Mia Netland"}>Mia Netland</MenuItem>
-            <MenuItem value={"Michelle Rubin"}>Michelle Rubin</MenuItem>
-            <MenuItem value={"Nandini Kalani"}>Nandini Kalani</MenuItem>
-            <MenuItem value={"Nasha Palsetia"}>Nasha Palsetia</MenuItem>
-            <MenuItem value={"Niharika Banerjee"}>Niharika Banerjee</MenuItem>
-            <MenuItem value={"Nit Kearke"}>Nit Kearke</MenuItem>
-            <MenuItem value={"Noah Ben-Zion"}>Noah Ben-Zion</MenuItem>
-            <MenuItem value={"Olivia Kleschinsky"}>Olivia Kleschinsky</MenuItem>
-            <MenuItem value={"Quella Wang"}>Quella Wang</MenuItem>
-            <MenuItem value={"Trisha Shenoy"}>Trisha Shenoy</MenuItem>
-            <MenuItem value={"Valentina Haro"}>Valentina Haro</MenuItem>
-
+            <MenuItem value={"Name1"}>Name1</MenuItem>
+            <MenuItem value={"Name2"}>Name2</MenuItem>
+            <MenuItem value={"Name3"}>Name3</MenuItem>
+            <MenuItem value={"Name4"}>Name4</MenuItem>
 
           </FormSelect>
             </FormTextAnswerContainer>
@@ -223,6 +215,7 @@ const Nominations: React.FC = () => {
             onChange={(e) =>
               setGradYear(e.target.value)
             }
+            /* TODO pick up radio options from env variable */
           >
             <FormControlLabel value="2023" control={<Radio />} label="2023" />
             <FormControlLabel value="2024" control={<Radio />} label="2024" />
