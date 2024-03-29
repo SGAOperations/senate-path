@@ -53,10 +53,22 @@ const Applications: React.FC = () => {
   const [major, setMajor] = useState<string>('');
   const [minors, setMinors] = useState<string>('');
   const [constituencyName, setConstituencyName] = useState<string>('');
-  const [selectedYear, setSelectedYear] = useState<string>(''); 
+  const [selectedYear, setSelectedYear] = useState<number>(1); 
 
   const handleYearChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedYear(event.target.value);
+    if(event.target.value === "first"){
+      setSelectedYear(1);
+    }else if(event.target.value === "second") {
+      setSelectedYear(2);
+    }
+    else if(event.target.value === "third") {
+      setSelectedYear(3);
+    }
+    else if(event.target.value === "fourth") {
+      setSelectedYear(4);
+    }else{
+      setSelectedYear(5);
+    }
   };
 
   const [selectedConstituency, setConstituency] = useState<string>('academic'); 
@@ -105,7 +117,7 @@ const Applications: React.FC = () => {
   const isMajorError = major === '';
   const isMinorError = minors === '';
   const isconstituencyNameError = constituencyName === '';
-  const isYearError = selectedYear === '';
+  const isYearError = selectedYear < 0;
   return (
       <HomeContainer>
         {
