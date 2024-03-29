@@ -31,10 +31,6 @@ const Applications: React.FC = () => {
     {
       method: "POST",
       body: JSON.stringify(formData) //PUT DATA IN HERE
-      body: JSON.stringify({
-        fullName: fullName,
-        preferredFullName: preferredName
-      })
     })
       .then((response) => {
         return response.json();
