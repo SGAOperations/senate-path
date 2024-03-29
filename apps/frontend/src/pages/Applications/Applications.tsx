@@ -8,9 +8,29 @@ import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionCo
 
 const Applications: React.FC = () => {
   const fetchData = () => {
+    const formData = {
+      fullName: fullName,
+      preferredName: preferredName, 
+      pronunciation: pronunciation,
+      nickname: nickname, 
+      northeasternID: northeasternID,
+      email: email,
+      phoneNumber: phoneNumber,
+      college: college, 
+      major: major, 
+      minors: minors, 
+      constituencyName: constituencyName, 
+      selectedYear: selectedYear, 
+      selectedConstituency: selectedConstituency, 
+      selectedConstituencyType: selectedConstituencyType,
+      selectedReturningType: selectedReturningType, 
+      selectedAttestation: selectedAttestation, 
+      pronouns: pronouns,
+    }
     fetch('http://localhost:3000/api/applications',
     {
       method: "POST",
+      body: JSON.stringify(formData) //PUT DATA IN HERE
       body: JSON.stringify({
         fullName: fullName,
         preferredFullName: preferredName
