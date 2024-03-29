@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {  FormControl } from '@mui/material';
 import { Checkbox, FormControlLabel } from '@mui/material';
 import Radio from '@mui/material/Radio';
@@ -7,6 +7,22 @@ import Button from '@mui/material/Button';
 import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionContainer, FormTextAnswerContainer, Introduction, FormInputCheckbox, RadioButtons } from './styles';
 
 const Applications: React.FC = () => {
+  const fetchData = () => {
+    fetch('http://localhost:3000/api/applications',
+    {
+      method: "POST",
+      body: '' //PUT DATA IN HERE
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   const [fullName, setFullName] = useState<string>('');
   const [preferredName, setPreferredName] = useState<string>('');
   const [pronunciation, setPronunciation] = useState<string>('');
@@ -537,22 +553,7 @@ const Applications: React.FC = () => {
       }
 
         <Button variant="contained"
-        onClick={() => {
-          console.log('Full Name: '+ fullName);
-          console.log('Preferred Name: '+ preferredName);
-          console.log('Pronouciation: '+ pronunciation);
-          console.log('Nick Name: '+ nickname);
-          console.log('NUID: '+  northeasternID);
-          console.log('Pronouns : '+ pronouns);
-          console.log('Northeastern Email: '+ email);
-          console.log('Phone Number: '+ phoneNumber);
-          console.log('Year: '+ selectedYear);
-          console.log('Northeastern Email: '+ email);
-          console.log('College: '+ college);
-          console.log('Major: '+ major);
-          console.log('Minor: '+ minors);
-          console.log('Constituency: '+ constituencyName);
-        }}
+        onClick={fetchData}
         >Submit</Button>
 
 
