@@ -46,7 +46,7 @@ const Applications: React.FC = () => {
   const [preferredName, setPreferredName] = useState<string>('');
   const [pronunciation, setPronunciation] = useState<string>('');
   const [nickname, setNickname] = useState<string>('');
-  const [northeasternID, setNortheasternID] = useState<number>(0);
+  const [northeasternID, setNortheasternID] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [college, setCollege] = useState<string>('');
@@ -98,7 +98,7 @@ const Applications: React.FC = () => {
   const isPreferredNameError = preferredName === '';
   const isPronunicationError = pronunciation === '';
   const isNicknameError = nickname === '';
-  const isNortheasternIDError = northeasternID === 0;
+  const isNortheasternIDError = northeasternID === '';
   const isEmailError = email === '';
   const isPhoneNumberError = phoneNumber === '';
   const isCollegeError = college === '';
@@ -230,13 +230,13 @@ const Applications: React.FC = () => {
             <br></br>
             </FormTextContainer>
             <FormTextAnswerContainer>
-              <FormInput
+            <FormInput
                 label = "Required"
                 required
                 placeholder="NUID"
-                value={northeasternID === 0 ? '' : northeasternID.toString()} 
+                value={northeasternID}
                 onChange={(e) =>
-                  setNortheasternID(parseInt(e.target.value, 10))
+                  setNortheasternID(e.target.value)
                 }
                 error={isNortheasternIDError}
               />
