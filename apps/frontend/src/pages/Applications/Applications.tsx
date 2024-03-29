@@ -11,7 +11,10 @@ const Applications: React.FC = () => {
     fetch('http://localhost:3000/api/applications',
     {
       method: "POST",
-      body: '' //PUT DATA IN HERE
+      body: JSON.stringify({
+        fullName: fullName,
+        preferredFullName: preferredName
+      })
     })
       .then((response) => {
         return response.json();
