@@ -27,6 +27,7 @@ const Applications: React.FC = () => {
       selectedAttestation: selectedAttestation, 
       pronouns: pronouns,
     }
+    console.log("THING " + formData)
     fetch('http://localhost:3000/api/applications',
     {
       method: "POST",
