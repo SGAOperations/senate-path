@@ -18,15 +18,14 @@ export class ApplicationsService {
   }
 
   async getNominationForms(): Promise<GetNominationFormDTO> {
-    const { data, error } = await supabase.from('applications').select('fullName, email');
+    const { data: nominees, error: nomineesError } = await supabase.from('applications').select('fullName, email');
+    const { data: constituencies, error: constituencyError } = await supabase.from('applications').select('constituency');
 
-    if (error) {
-      throw new Error(error.message);
+    if (nomineesError || constituencyError) {
+      throw new Error(nomineesError.message + constituencyError.message);
     }
     
-    const constituenciesList = data.map((item) => item.fullName);
-    
-    return {"nominees": data, "constituencies": constituenciesList};
+    return {"nominees": nominees, "constituencies": constituencies};
   }
   
   async createApplication({
