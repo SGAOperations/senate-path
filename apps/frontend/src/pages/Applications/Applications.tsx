@@ -9,35 +9,32 @@ import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionCo
 const Applications: React.FC = () => {
   const fetchData = () => {
     const formData = {
-      fullName: fullName,
-      preferredName: preferredName, 
-      pronunciation: pronunciation,
-      nickname: nickname, 
-      northeasternID: northeasternID,
-      email: email,
-      phoneNumber: phoneNumber,
-      college: college, 
-      major: major, 
-      minors: minors, 
-      constituencyName: constituencyName, 
-      selectedYear: selectedYear, 
-      selectedConstituency: selectedConstituency, 
-      selectedConstituencyType: selectedConstituencyType,
-      selectedReturningType: selectedReturningType, 
-      selectedAttestation: selectedAttestation, 
-      pronouns: pronouns,
+      fullName,
+      preferredName, 
+      pronunciation,
+      nickname, 
+      northeasternID,
+      email,
+      phoneNumber,
+      college, 
+      major, 
+      minors, 
+      constituencyName, 
+      selectedYear, 
+      selectedConstituency, 
+      selectedConstituencyType,
+      selectedReturningType, 
+      selectedAttestation, 
+      pronouns,
     }
-    console.log("THING " + formData)
-    fetch('http://localhost:3000/api/applications',
-    {
-      method: "POST",
-      body: JSON.stringify(formData) //PUT DATA IN HERE
+    console.log(formData)
+    fetch('http://localhost:3000/api/applications', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData), //PUT DATA IN HERE
     })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data);
+      .then(() => {
+        console.log('Successfully submitted application');
       })
       .catch((error) => {
         console.log(error);
