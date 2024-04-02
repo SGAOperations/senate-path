@@ -60,19 +60,8 @@ const Applications: React.FC = () => {
   const [selectedYear, setSelectedYear] = useState<number>(1); 
 
   const handleYearChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if(event.target.value === "first"){
-      setSelectedYear(1);
-    }else if(event.target.value === "second") {
-      setSelectedYear(2);
-    }
-    else if(event.target.value === "third") {
-      setSelectedYear(3);
-    }
-    else if(event.target.value === "fourth") {
-      setSelectedYear(4);
-    }else{
-      setSelectedYear(5);
-    }
+    const value = parseInt(event.target.value); 
+    setSelectedYear(value);
   };
 
   const [selectedConstituency, setConstituency] = useState<string>('academic'); 
@@ -347,15 +336,15 @@ const Applications: React.FC = () => {
             <RadioGroup
               name="year-buttons-group"
               required
-              value={selectedYear}
+              value={selectedYear.toString()}
               onChange={handleYearChange}
 
             >
-              <FormControlLabel value="first" control={<Radio />} label="Undergraduate first year" />
-              <FormControlLabel value="second" control={<Radio />} label="Undergraduate second year" />
-              <FormControlLabel value="third" control={<Radio />} label="Undergraduate third year" />
-              <FormControlLabel value="fourth" control={<Radio />} label="Undergraduate fourth year" />
-              <FormControlLabel value="fifth" control={<Radio />} label="Undergraduate fifth+ year" />
+              <FormControlLabel value="1" control={<Radio />} label="Undergraduate first year" />
+              <FormControlLabel value="2" control={<Radio />} label="Undergraduate second year" />
+              <FormControlLabel value="3" control={<Radio />} label="Undergraduate third year" />
+              <FormControlLabel value="4" control={<Radio />} label="Undergraduate fourth year" />
+              <FormControlLabel value="5" control={<Radio />} label="Undergraduate fifth+ year" />
             </RadioGroup>
             </RadioButtons>
           </FormQuestionContainer>
