@@ -33,8 +33,14 @@ const Applications: React.FC = () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData), //PUT DATA IN HERE
     })
-      .then(() => {
-        console.log('Successfully submitted application');
+      .then((data) => data.json())
+      .then((response) => {
+        console.log(response);
+        if (response.error) {
+          console.log(`Application failed to submit: ${response.message}`);
+        } else {
+          console.log('Application successfully submitted');
+        }
       })
       .catch((error) => {
         console.log(error);
