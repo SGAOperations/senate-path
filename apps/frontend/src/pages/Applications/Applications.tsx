@@ -10,22 +10,22 @@ const Applications: React.FC = () => {
   const fetchData = () => {
     const formData = {
       fullName,
-      preferredName, 
-      pronunciation,
+      preferredFullName: preferredName, 
+      phoneticPronunciation:pronunciation,
       nickname, 
-      northeasternID,
+      nuid: northeasternID,
       email,
       phoneNumber,
       college, 
       major, 
       minors, 
       constituencyName, 
-      selectedYear, 
-      selectedConstituency, 
+      year: selectedYear, 
+      constituency: selectedConstituency, 
       selectedConstituencyType,
       selectedReturningType, 
       selectedAttestation, 
-      pronouns,
+      pronouns: pronouns.join(", "),
     }
     console.log(formData)
     fetch('http://localhost:3000/api/applications', {
