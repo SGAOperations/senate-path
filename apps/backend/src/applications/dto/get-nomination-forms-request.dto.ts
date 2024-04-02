@@ -7,5 +7,5 @@ export class GetNominationFormDTO {
     email: string
   }>
   @IsArray()
-  constituencies: Array<{constituency: string}>
+  constituencies: Array<string>
 }

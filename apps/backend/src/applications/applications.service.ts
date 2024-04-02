@@ -25,7 +25,7 @@ export class ApplicationsService {
       throw new Error(nomineesError.message + constituencyError.message);
     }
     
-    return {"nominees": nominees, "constituencies": constituencies};
+    return {"nominees": nominees, "constituencies": constituencies.map(item => item.constituency)};
   }
   
   async createApplication({
