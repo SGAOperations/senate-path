@@ -6,7 +6,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { TableStyling } from './styles';
+import { TableStyling, Headers } from './styles';
 
 interface Entry {
   id: string;
@@ -56,7 +56,9 @@ const Admin: React.FC = () => {
   
   return (
     <div>
-      <h1>Nominations</h1>
+      <Headers>
+      <h2>Nominations</h2>
+      </Headers>
       <TableStyling>
       <TableContainer component={Paper}>
         <Table>
@@ -79,7 +81,9 @@ const Admin: React.FC = () => {
         </Table>
       </TableContainer>
       </TableStyling>
-      <h1>Applications</h1>
+      <Headers>
+      <h2>Applications</h2>
+      </Headers>
       <TableStyling>
       <TableContainer component={Paper}>
         <Table>

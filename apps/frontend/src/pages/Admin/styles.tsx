@@ -5,3 +5,7 @@ export const TableStyling = styled.div(() => ({
     alignItems: 'center',
     padding: '2%',
   }));
+
+export const Headers = styled.div(() => ({
+    paddingLeft: '2%',
+}));
