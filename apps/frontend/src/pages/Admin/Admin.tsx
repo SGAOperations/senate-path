@@ -1,5 +1,5 @@
 const Admin: React.FC = () => {
-  return <>Admin page</>;
+  return <>Admin page hi</>;
 };
 
 export default Admin;
