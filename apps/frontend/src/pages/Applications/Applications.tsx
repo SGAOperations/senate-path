@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {  FormControl } from '@mui/material';
 import { Checkbox, FormControlLabel } from '@mui/material';
 import Radio from '@mui/material/Radio';
@@ -7,6 +7,45 @@ import Button from '@mui/material/Button';
 import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionContainer, FormTextAnswerContainer, Introduction, FormInputCheckbox, RadioButtons } from './styles';
 
 const Applications: React.FC = () => {
+  const submitApplication = () => {
+    const formData = {
+      fullName,
+      preferredFullName: preferredName, 
+      phoneticPronunciation:pronunciation,
+      nickname, 
+      nuid: northeasternID,
+      email,
+      phoneNumber,
+      college, 
+      major, 
+      minors, 
+      constituencyName, 
+      year: selectedYear, 
+      constituency: selectedConstituency, 
+      selectedConstituencyType,
+      selectedReturningType, 
+      selectedAttestation, 
+      pronouns: pronouns.join(", "),
+    }
+    console.log(formData)
+    fetch('http://localhost:3000/api/applications', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData), //PUT DATA IN HERE
+    })
+      .then((data) => data.json())
+      .then((response) => {
+        console.log(response);
+        if (response.error) {
+          console.log(`Application failed to submit: ${response.message}`);
+        } else {
+          console.log('Application successfully submitted');
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   const [fullName, setFullName] = useState<string>('');
   const [preferredName, setPreferredName] = useState<string>('');
   const [pronunciation, setPronunciation] = useState<string>('');
@@ -18,10 +57,11 @@ const Applications: React.FC = () => {
   const [major, setMajor] = useState<string>('');
   const [minors, setMinors] = useState<string>('');
   const [constituencyName, setConstituencyName] = useState<string>('');
-  const [selectedYear, setSelectedYear] = useState<string>(''); 
+  const [selectedYear, setSelectedYear] = useState<number>(1); 
 
   const handleYearChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedYear(event.target.value);
+    const value = parseInt(event.target.value); 
+    setSelectedYear(value);
   };
 
   const [selectedConstituency, setConstituency] = useState<string>('academic'); 
@@ -70,7 +110,7 @@ const Applications: React.FC = () => {
   const isMajorError = major === '';
   const isMinorError = minors === '';
   const isconstituencyNameError = constituencyName === '';
-  const isYearError = selectedYear === '';
+  const isYearError = selectedYear < 0;
   return (
       <HomeContainer>
         {
@@ -195,7 +235,7 @@ const Applications: React.FC = () => {
             <br></br>
             </FormTextContainer>
             <FormTextAnswerContainer>
-              <FormInput
+            <FormInput
                 label = "Required"
                 required
                 placeholder="NUID"
@@ -296,15 +336,15 @@ const Applications: React.FC = () => {
             <RadioGroup
               name="year-buttons-group"
               required
-              value={selectedYear}
+              value={selectedYear.toString()}
               onChange={handleYearChange}
 
             >
-              <FormControlLabel value="first" control={<Radio />} label="Undergraduate first year" />
-              <FormControlLabel value="second" control={<Radio />} label="Undergraduate second year" />
-              <FormControlLabel value="third" control={<Radio />} label="Undergraduate third year" />
-              <FormControlLabel value="fourth" control={<Radio />} label="Undergraduate fourth year" />
-              <FormControlLabel value="fifth" control={<Radio />} label="Undergraduate fifth+ year" />
+              <FormControlLabel value="1" control={<Radio />} label="Undergraduate first year" />
+              <FormControlLabel value="2" control={<Radio />} label="Undergraduate second year" />
+              <FormControlLabel value="3" control={<Radio />} label="Undergraduate third year" />
+              <FormControlLabel value="4" control={<Radio />} label="Undergraduate fourth year" />
+              <FormControlLabel value="5" control={<Radio />} label="Undergraduate fifth+ year" />
             </RadioGroup>
             </RadioButtons>
           </FormQuestionContainer>
@@ -537,22 +577,7 @@ const Applications: React.FC = () => {
       }
 
         <Button variant="contained"
-        onClick={() => {
-          console.log('Full Name: '+ fullName);
-          console.log('Preferred Name: '+ preferredName);
-          console.log('Pronouciation: '+ pronunciation);
-          console.log('Nick Name: '+ nickname);
-          console.log('NUID: '+  northeasternID);
-          console.log('Pronouns : '+ pronouns);
-          console.log('Northeastern Email: '+ email);
-          console.log('Phone Number: '+ phoneNumber);
-          console.log('Year: '+ selectedYear);
-          console.log('Northeastern Email: '+ email);
-          console.log('College: '+ college);
-          console.log('Major: '+ major);
-          console.log('Minor: '+ minors);
-          console.log('Constituency: '+ constituencyName);
-        }}
+        onClick={submitApplication}
         >Submit</Button>
 
 
