@@ -20,8 +20,18 @@ export class NominationsService {
   async createNomination({
     ...nominationsColumns
   }: CreateNominationRequestDto): Promise<void> {
+    let status = 'APPROVED';
+    const { data: nominationData } = await supabase.from('nominations').select('*').eq('email', nominationsColumns.email);
+    
+    // Has this nominator already nominated this nominee?
+    const valid = nominationData.every((nomination) => nomination.nominee !== nominationsColumns.nominee);
+    if (!valid || nominationsColumns.fullName === nominationsColumns.nominee) {
+      status = "DENIED";
+    }
+
     const { error } = await supabase.from('nominations').insert({
-     ...nominationsColumns
+     ...nominationsColumns,
+     status,
     });
 
     if (error) {
