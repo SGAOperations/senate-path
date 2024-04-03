@@ -15,7 +15,7 @@ interface Nomination {
 
 const Admin: React.FC = () => {
   const [nominations, setNominations] = useState<Nomination[]>([]);
-
+  
   useEffect(() => {
     fetch('http://localhost:3000/api/nominations', {
       method: 'GET',
@@ -52,6 +52,27 @@ const Admin: React.FC = () => {
                 <TableCell>{nomination.id}</TableCell>
                 <TableCell>{nomination.fullName}</TableCell>
                 <TableCell>{nomination.email}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <h1>Applications</h1>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>ID</TableCell>
+              <TableCell>Full Name</TableCell>
+              <TableCell>Email</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {applications.map(applications => (
+              <TableRow key={applications.id}>
+                <TableCell>{applications.id}</TableCell>
+                <TableCell>{applications.fullName}</TableCell>
+                <TableCell>{applications.email}</TableCell>
               </TableRow>
             ))}
           </TableBody>
