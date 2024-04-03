@@ -24,13 +24,7 @@ export class NominationsService {
     const { data: nominationData } = await supabase.from('nominations').select('*').eq('email', nominationsColumns.email);
     
     // Has this nominator already nominated this nominee?
-    const valid = nominationData.reduce(
-      (acc, curr) => {
-        if (curr.nominee === nominationsColumns.nominee) {
-          return acc && false;
-        } return acc && true;
-      },
-      true);
+    const valid = nominationData.every((nomination) => nomination.nominee !== nominationsColumns.nominee);
     if (!valid || nominationsColumns.fullName === nominationsColumns.nominee) {
       status = "DENIED";
     }
@@ -57,16 +51,12 @@ export class NominationsService {
       throw new BadRequestException(`Nominations with given id, ${id}, does not exist.`);
     }
 
-    if (nominationColumns.status == 'APPROVED' || nominationColumns.status == 'DENIED' || nominationColumns.status == 'MANUAL_REVIEW') {
-      const { error } = await supabase.from('nominations').update({
-        ...nominationColumns
-      }).eq('id', id);
+    const { error } = await supabase.from('nominations').update({
+      ...nominationColumns
+    }).eq('id', id);
 
-      if (error) {
-        throw new Error(error.message);
-      }
-    } else {
-      throw new BadRequestException(`Invalid status, ${nominationColumns.status}, provided.`);
+    if (error) {
+      throw new Error(error.message);
     }
   }
 }
