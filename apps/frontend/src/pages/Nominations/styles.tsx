@@ -1,6 +1,5 @@
 import { TextField } from '@mui/material';
 import FormGroup from '@mui/material/FormGroup';
-import Input from '@mui/material/Input';
 import Select from '@mui/material/Select';
 
 import styled from 'styled-components';
@@ -9,7 +8,8 @@ export const HomeContainer = styled.div(() => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  height: '100%'
+  paddingBottom: '5%',
+  overflowY: 'auto',
 }));
 
 export const SampleForm = styled(FormGroup)(() => ({
@@ -17,6 +17,9 @@ export const SampleForm = styled(FormGroup)(() => ({
   flexDirection: 'column',
   rowGap: 16,
   width: '50%',
+  //overflowY: 'auto',
+  paddingBottom:'2%',
+
 }));
 
 export const FormInput = styled(TextField)(() => ({
@@ -29,31 +32,60 @@ export const FormInput = styled(TextField)(() => ({
 }));
 
 export const FormSelect = styled(Select)(() => ({
-  width: '100%',
+  width: '50%',
+  justifyContent: 'center',
 }));
 
 export const FormText = styled.div(() => ({
-  border: '1 px',
+  border: '1px',
   boxShadow: '2px 2px 5px #ccc',
   borderRadius: '5px',
   margin: '10px',
 }))
 export const FormQuestionContainer = styled.div(() => ({
-  border: '1 px',
+  border: '1px',
   alignItems: 'center',
   justifyContent:'center',
   flexDirection: 'column',
   boxShadow: '2px 2px 5px #ccc',
   borderRadius: '5px',
   margin: '10px',
-  display:'flex',
+  display:'block',
 }))
 export const FormTextContainer = styled.div(() => ({
 padding: '3%'
 }))
+
 export const FormTextAnswerContainer = styled.div(() => ({
   display: 'flex',
   paddingBottom: '3%',
   width: '100%',
   justifyContent: 'center',
+}))
+
+export const Introduction = styled('div')({
+  width: '100%',
+  textAlign: 'center',
+  margin: '20px 0',
+});
+
+export const FormInputCheckbox = styled('div')({
+  display: 'flex',
+  width: '100%',
+  padding: '3%',
+  justifyContent: 'center',
+  paddingBottom: '3%',
+});
+
+export const RadioButtons = styled('div')({
+  width: '100%',
+  textAlign: 'center',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  paddingBottom: '3%',
+});
+
+export const Title = styled.h1(() => ({
+  textAlign: 'center',
 }))
