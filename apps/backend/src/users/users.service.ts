@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import supabase from '../supabase/client';
 import { Tables } from '../supabase/database.types';
+import { CreateUserRequestDto } from './dto/create-user-request.dto';
 
 @Injectable()
 export class UsersService {
@@ -15,17 +16,8 @@ export class UsersService {
     return data;
   }
 
-  async createUser({
-    firstName,
-    lastName,
-  }: {
-    firstName: string;
-    lastName: string;
-  }): Promise<void> {
-    const { error } = await supabase.from('users').insert({
-      firstName,
-      lastName,
-    });
+  async createUser(userColumns: CreateUserRequestDto): Promise<void> {
+    const { error } = await supabase.from('users').insert(userColumns);
 
     if (error) {
       throw new Error(error.message);
