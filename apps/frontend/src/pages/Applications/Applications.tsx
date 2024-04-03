@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionContainer, FormTextAnswerContainer, Introduction, FormInputCheckbox, RadioButtons } from './styles';
 
 const Applications: React.FC = () => {
-  const fetchData = () => {
+  const submitApplication = () => {
     const formData = {
       fullName,
       preferredFullName: preferredName, 
@@ -577,7 +577,7 @@ const Applications: React.FC = () => {
       }
 
         <Button variant="contained"
-        onClick={fetchData}
+        onClick={submitApplication}
         >Submit</Button>
 
 
