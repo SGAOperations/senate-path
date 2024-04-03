@@ -5,22 +5,25 @@ import React, { useState, useEffect } from 'react';
 const Nominations: React.FC = () => {
   // START: fetch example
   // For more info, https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
-  const fetchData = () => {
-    fetch('http://localhost:3000/api/applications')
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+  // const fetchData = (formData) => {
+  //   fetch('http://localhost:3000/api/nominations', {
+  //     method: 'POST',
+  //     body:
+  //   })
+  //     .then((response) => {
+  //       return response.json();
+  //     })
+  //     .then((data) => {
+  //       console.log(data);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  // useEffect((formData) => {
+  //   fetchData(formData);
+  // }, []);
   // END: fetch example
 
   const [fullName, setFullName] = useState('');
@@ -30,7 +33,7 @@ const Nominations: React.FC = () => {
   const [college, setCollege] = useState('');
   const [major, setMajor] = useState('');
   const [gradYear, setGradYear] = useState('');
-  const [receiveInfo, setReceiveInfo] = useState('');
+  const [receiveInfo, setReceiveInfo] = useState(false);
   const isFullNameError = fullName === '';
   const isNortheasternEmailError = northeasternEmail === '';
   const isNomineeError = nominee === '';
@@ -38,7 +41,6 @@ const Nominations: React.FC = () => {
   const isCollegeError = college === '';
   const isMajorError = major === '';
   const isGradYearError = gradYear === '';
-  const isRecieveInfoError = receiveInfo === '';
   const handleSampleFormSubmit = () => {
     if (
       isFullNameError ||
@@ -47,8 +49,7 @@ const Nominations: React.FC = () => {
       isConstituentError ||
       isCollegeError ||
       isMajorError ||
-      isGradYearError ||
-      isRecieveInfoError
+      isGradYearError
     ) {
       console.log("One or more fields don't pass validation");
       return;
@@ -65,24 +66,19 @@ const Nominations: React.FC = () => {
       gradYear,
       receiveInfo
     );
+    const values = {fullName, northeasternEmail, nominee, constituent, college, major, gradYear, receiveInfo}
+
+    fetch('http://localhost:3000/api/nominations', {
+      method: 'POST',
+      headers: {"Content-Type" : "application/json"},
+      body: JSON.stringify(values)
+    }).then(() => {
+      console.log('Form values added');
+    }).catch((error) => {
+            console.log(error);
+          });
   };
 
-  const fetchData = () => {
-    fetch('http://localhost:3000/api/applications')
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
 
   return (
     <>
@@ -225,180 +221,6 @@ const Nominations: React.FC = () => {
           <SampleForm>
             <FormQuestionContainer>
               <FormTextContainer>
-                <h1>What is your Northeastern email?</h1>
-                <p>
-                  We may contact you to verify the authenticity of this
-                  nomination.
-                </p>
-              </FormTextContainer>
-              <FormTextAnswerContainer>
-                <TextField
-                  required
-                  id="outlined-required"
-                  label="Required"
-                  defaultValue=""
-                  onChange={(e) => setNortheasternEmail(e.target.value)}
-                />
-              </FormTextAnswerContainer>
-            </FormQuestionContainer>
-          </SampleForm>
-
-          <SampleForm>
-            <FormQuestionContainer>
-              <FormTextContainer>
-                <h1>Select the name of the person you are nominating</h1>
-              </FormTextContainer>
-              <FormTextAnswerContainer>
-                <FormSelect
-                  required
-                  label="nominee"
-                  onChange={(e) => setNominee(e.target.value as string)}
-                >
-                  {/* Insert MenuItems using database of nominees */}
-                  <MenuItem value={'Aj Leveen'}>Aj Leveen</MenuItem>
-                  <MenuItem value={'Alessandra Diaz'}>Alessandra Diaz</MenuItem>
-                  <MenuItem value={'Alexandra Vergara-Anglim'}>
-                    Alexandra Vergara-Anglim
-                  </MenuItem>
-                  <MenuItem value={'Alexis Weldner'}>Alexis Weldner</MenuItem>
-                  <MenuItem value={'Arsema Gebreyesus'}>
-                    Arsema Gebreyesus
-                  </MenuItem>
-                  <MenuItem value={'Avery Darlington'}>
-                    Avery Darlington
-                  </MenuItem>
-                  <MenuItem value={'Avery Placke'}>Avery Placke</MenuItem>
-                  <MenuItem value={'Chand Duggal'}>Chand Duggal</MenuItem>
-                  <MenuItem value={'Chris Molinari'}>Chris Molinari</MenuItem>
-                  <MenuItem value={"David O'Brien"}>David O'Brien</MenuItem>
-                  <MenuItem value={'Dylan Lee'}>Dylan Lee</MenuItem>
-                  <MenuItem value={'Elena Pittman'}>Elena Pittman</MenuItem>
-                  <MenuItem value={'Esha Minhas'}>Esha Minhas</MenuItem>
-                  <MenuItem value={"Ethan D'Costa"}>Ethan D'Costa</MenuItem>
-                  <MenuItem value={'Guarang Deka'}>Guarang Deka</MenuItem>
-                  <MenuItem value={'Genevieve Savage'}>
-                    Genevieve Savage
-                  </MenuItem>
-                  <MenuItem value={'Hannah Libelo'}>Hannah Libelo</MenuItem>
-                  <MenuItem value={'Kate Mittelhauser'}>
-                    Kate Mittelhauser
-                  </MenuItem>
-                  <MenuItem value={'Mia Netland'}>Mia Netland</MenuItem>
-                  <MenuItem value={'Michelle Rubin'}>Michelle Rubin</MenuItem>
-                  <MenuItem value={'Nandini Kalani'}>Nandini Kalani</MenuItem>
-                  <MenuItem value={'Nasha Palsetia'}>Nasha Palsetia</MenuItem>
-                  <MenuItem value={'Niharika Banerjee'}>
-                    Niharika Banerjee
-                  </MenuItem>
-                  <MenuItem value={'Nit Kearke'}>Nit Kearke</MenuItem>
-                  <MenuItem value={'Noah Ben-Zion'}>Noah Ben-Zion</MenuItem>
-                  <MenuItem value={'Olivia Kleschinsky'}>
-                    Olivia Kleschinsky
-                  </MenuItem>
-                  <MenuItem value={'Quella Wang'}>Quella Wang</MenuItem>
-                  <MenuItem value={'Trisha Shenoy'}>Trisha Shenoy</MenuItem>
-                  <MenuItem value={'Valentina Haro'}>Valentina Haro</MenuItem>
-                </FormSelect>
-              </FormTextAnswerContainer>
-            </FormQuestionContainer>
-          </SampleForm>
-
-          <SampleForm>
-            <FormQuestionContainer>
-              <FormTextContainer>
-                <h1>
-                  Please confirm you are one of the prospective senator's
-                  constituents.
-                </h1>
-                <p>
-                  Select a college, organization, or program from the list below
-                  to confirm you are one of the prospective senator's
-                  constituents.{' '}
-                  <span style={{ fontWeight: 'bold' }}>
-                    You must select the same constituency as the prospective
-                    senator for this nomination to be processed.
-                  </span>
-                </p>
-              </FormTextContainer>
-              <FormTextAnswerContainer>
-                <FormSelect
-                  required
-                  onChange={(e) => setConstituent(e.target.value as string)}
-                >
-                  {/* Insert MenuItems using database of Constituents */}
-                  <MenuItem value={'Alpha Chi Omega Sorority'}>
-                    Alpha Chi Omega Sorority
-                  </MenuItem>
-                  <MenuItem value={'Alpha Epsilon Phi'}>
-                    Alpha Epsilon Phi
-                  </MenuItem>
-                  <MenuItem value={'Alpha Epsilon Pi'}>
-                    Alpha Epsilon Pi
-                  </MenuItem>
-                  <MenuItem value={'Bouvé College of Health Sciences'}>
-                    Bouvé College of Health Sciences
-                  </MenuItem>
-                  <MenuItem value={'College of Science'}>
-                    College of Science
-                  </MenuItem>
-                  <MenuItem value={'College of Social Sciences and Humanities'}>
-                    College of Social Sciences and Humanities
-                  </MenuItem>
-                  <MenuItem value={"D'Amore-McKim School of Business"}>
-                    D'Amore-McKim School of Business
-                  </MenuItem>
-                  <MenuItem value={'Delta Phi Epsilon'}>
-                    Delta Phi Epsilon
-                  </MenuItem>
-                  <MenuItem value={'Delta Tau Delta'}>Delta Tau Delta</MenuItem>
-                  <MenuItem value={'Delta Zeta'}>Delta Zeta</MenuItem>
-                  <MenuItem value={'Global Scholars program'}>
-                    Global Scholars program
-                  </MenuItem>
-                  <MenuItem value={'Honors program'}>Honors program</MenuItem>
-                  <MenuItem value={'Kappa Delta'}>Kappa Delta</MenuItem>
-                  <MenuItem value={'Khoury College of Computer Sciences'}>
-                    Khoury College of Computer Sciences
-                  </MenuItem>
-                  <MenuItem
-                    value={'Northeastern University Real Estate Club (NURE)'}
-                  >
-                    Northeastern University Real Estate Club (NURE)
-                  </MenuItem>
-                  <MenuItem value={'NU Immerse'}>NU Immerse</MenuItem>
-                  <MenuItem value={'Phi Sigma Rho'}>Phi Sigma Rho</MenuItem>
-                  <MenuItem value={'Sandbox'}>Sandbox</MenuItem>
-                </FormSelect>
-              </FormTextAnswerContainer>
-            </FormQuestionContainer>
-          </SampleForm>
-
-          <SampleForm>
-            <FormQuestionContainer>
-              <FormTextContainer>
-                <h1>What is your college?</h1>
-                <p>
-                  Note: For combined majors (a single major listed in the course
-                  catalog that spans two disciplines), list only the home
-                  college. For double majors (two distinct majors listed
-                  separately in the course catalog), include both colleges.
-                </p>
-              </FormTextContainer>
-              <FormTextAnswerContainer>
-                <TextField
-                  required
-                  id="outlined-required"
-                  label="Required"
-                  defaultValue=""
-                  onChange={(e) => setCollege(e.target.value)}
-                />
-              </FormTextAnswerContainer>
-            </FormQuestionContainer>
-          </SampleForm>
-
-          <SampleForm>
-            <FormQuestionContainer>
-              <FormTextContainer>
                 <h1>What is your major?</h1>
               </FormTextContainer>
               <FormTextAnswerContainer>
@@ -455,7 +277,7 @@ const Nominations: React.FC = () => {
                 <RadioGroup
                   aria-required
                   name="receive-buttons-group"
-                  onChange={(e) => setReceiveInfo(e.target.value)}
+                  onChange={(e) => setReceiveInfo(e.target.value==="Yes")}
                 >
                   <FormControlLabel
                     value="Yes"
