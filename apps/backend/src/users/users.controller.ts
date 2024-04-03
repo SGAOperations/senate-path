@@ -14,9 +14,6 @@ export class UsersController {
 
   @Post()
   createUser(@Body() request: CreateUserRequestDto) {
-    return this.usersService.createUser({
-      firstName: request.firstName,
-      lastName: request.lastName,
-    });
+    return this.usersService.createUser(request);
   }
 }

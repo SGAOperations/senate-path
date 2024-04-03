@@ -15,40 +15,17 @@ export class ApplicationsController {
 
   @Post()
   createApplication(@Body() request: CreateApplicationRequestDto) {
-    return this.applicationsService.createApplication({
-      fullName: request.fullName,
-      preferredFullName: request.preferredFullName,
-      phoneticPronunciation: request.phoneticPronunciation,
-      nickname: request.nickname,
-      nuid: request.nuid,
-      pronouns: request.pronouns,
-      email: request.email,
-      phoneNumber: request.phoneNumber,
-      year: request.year,
-      college: request.college,
-      major: request.major,
-      minors: request.minors,
-      constituency: request.constituency,
-    });
+    return this.applicationsService.createApplication(request);
   }
 
   @Put('/:id')
-  updateApplication(@Param('id') id: number, @Body() request: UpdateApplicationRequestDto) {
+  updateApplication(
+    @Param('id') id: number,
+    @Body() request: UpdateApplicationRequestDto
+  ) {
     return this.applicationsService.updateApplication({
       id,
-      fullName: request.fullName,
-      preferredFullName: request.preferredFullName,
-      phoneticPronunciation: request.phoneticPronunciation,
-      nickname: request.nickname,
-      nuid: request.nuid,
-      pronouns: request.pronouns,
-      email: request.email,
-      phoneNumber: request.phoneNumber,
-      year: request.year,
-      college: request.college,
-      major: request.major,
-      minors: request.minors,
-      constituency: request.constituency,
+      ...request,
     });
   }
 }
