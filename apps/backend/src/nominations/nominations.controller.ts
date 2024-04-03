@@ -15,16 +15,17 @@ export class NominationsController {
 
   @Post()
   createNomination(@Body() request: CreateNominationRequestDto) {
-    return this.nominationsService.createNomination({
-      ...request
-    });
+    return this.nominationsService.createNomination(request);
   }
 
   @Put('/:id')
-  updateApplication(@Param('id') id: number, @Body() request: UpdateNominationRequestDto) {
+  updateApplication(
+    @Param('id') id: number,
+    @Body() request: UpdateNominationRequestDto
+  ) {
     return this.nominationsService.updateNomination({
       id,
-      ...request
+      ...request,
     });
   }
 }
