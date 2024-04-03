@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const TableContainer = styled.div(() => ({
+export const TableStyling = styled.div(() => ({
     display: 'flex',
     alignItems: 'center',
     padding: '5%',
