@@ -1,5 +1,6 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { UpdateApplicationRequestDto } from './dto/update-application-request.dto';
+import { GetNominationFormDTO } from './dto/get-nomination-forms-request.dto';
 
 import supabase from '../supabase/client';
 import { Tables } from '../supabase/database.types';
@@ -17,6 +18,17 @@ export class ApplicationsService {
     return data;
   }
 
+  async getNominationForms(): Promise<GetNominationFormDTO> {
+    const { data: nominees, error: nomineesError } = await supabase.from('applications').select('fullName, email');
+    const { data: constituencies, error: constituencyError } = await supabase.from('applications').select('constituency');
+
+    if (nomineesError || constituencyError) {
+      throw new Error(nomineesError.message + constituencyError.message);
+    }
+    
+    return {"nominees": nominees, "constituencies": [...new Set(constituencies.map(item => item.constituency))]};
+  }
+  
   async createApplication(
     applicationColumns: CreateApplicationRequestDto
   ): Promise<void> {
