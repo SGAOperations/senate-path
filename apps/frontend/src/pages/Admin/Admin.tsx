@@ -64,9 +64,9 @@ const Admin: React.FC = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Full Name</TableCell>
-              <TableCell>Email</TableCell>
+              <TableCell><b>ID</b></TableCell>
+              <TableCell><b>Full Name</b></TableCell>
+              <TableCell><b>Email</b></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -89,9 +89,9 @@ const Admin: React.FC = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Full Name</TableCell>
-              <TableCell>Email</TableCell>
+              <TableCell><b>ID</b></TableCell>
+              <TableCell><b>Full Name</b></TableCell>
+              <TableCell><b>Email</b></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
