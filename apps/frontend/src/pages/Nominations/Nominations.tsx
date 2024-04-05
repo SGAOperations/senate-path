@@ -3,28 +3,6 @@ import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionCo
 import React, { useState, useEffect } from 'react';
 
 const Nominations: React.FC = () => {
-  // START: fetch example
-  // For more info, https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
-  // const fetchData = (formData) => {
-  //   fetch('http://localhost:3000/api/nominations', {
-  //     method: 'POST',
-  //     body:
-  //   })
-  //     .then((response) => {
-  //       return response.json();
-  //     })
-  //     .then((data) => {
-  //       console.log(data);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
-
-  // useEffect((formData) => {
-  //   fetchData(formData);
-  // }, []);
-  // END: fetch example
 
   const [fullName, setFullName] = useState('');
   const [northeasternEmail, setNortheasternEmail] = useState('');
