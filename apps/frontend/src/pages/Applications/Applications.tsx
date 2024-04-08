@@ -10,7 +10,6 @@ import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionCo
 
 const Applications: React.FC = () => {
   const submitApplication = () => {
-    setOpen(true);
     const formData = {
       fullName,
       preferredFullName: preferredName, 
@@ -43,6 +42,7 @@ const Applications: React.FC = () => {
           console.log(`Application failed to submit: ${response.message}`);
         } else {
           console.log('Application successfully submitted');
+          setOpen(true);
         }
       })
       .catch((error) => {
