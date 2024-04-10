@@ -8,6 +8,23 @@ import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionCo
 
 const Applications: React.FC = () => {
   const submitApplication = () => {
+    if (
+      isTextFieldError ||
+      isPreferredNameError ||
+      isPronunicationError ||
+      isNicknameError ||
+      isNortheasternIDError ||
+      isEmailError ||
+      isPhoneNumberError ||
+      isCollegeError ||
+      isMinorError ||
+      isMajorError ||
+      isconstituencyNameError || 
+      isYearError
+    ) {
+      console.log("One or more fields don't pass validation");
+      return;
+    }
     const formData = {
       fullName,
       preferredFullName: preferredName, 
