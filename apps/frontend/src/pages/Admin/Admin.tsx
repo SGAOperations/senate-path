@@ -18,10 +18,8 @@ const Admin: React.FC = () => {
   const [nominations, setNominations] = useState<Entry[]>([]);
   const [applications, setApplications] = useState<Entry[]>([]);
   
-  const getData = (url: string) => {
-    fetch(url, {
-      method: 'GET',
-    })
+  const getData = (url: string, setData: (data: Entry[]) => void) => {
+    fetch(url)
     .then(response => {
       if (!response.ok) {
         throw new Error('Failed to fetch');
@@ -29,19 +27,20 @@ const Admin: React.FC = () => {
       return response.json();
     })
     .then(data => {
-      if (url == 'http://localhost:3000/api/nominations') {
-        setNominations(data);
-      } else {
-        setApplications(data);
-      }
+      setData(data);
     })
     .catch(error => {
       console.error('Error fetching:', error);
     });
   } 
   
-  useEffect(getNominations, []);
-  useEffect(getApplications, []);
+  useEffect(() => {
+    getData('http://localhost:3000/api/nominations', setNominations);
+  }, []);
+
+  useEffect(() => {
+    getData('http://localhost:3000/api/applications', setApplications);
+  }, []);
 
   return (
     <div>
