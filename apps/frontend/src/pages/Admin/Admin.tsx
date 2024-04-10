@@ -42,58 +42,45 @@ const Admin: React.FC = () => {
     getData('http://localhost:3000/api/applications', setApplications);
   }, []);
 
+  const GenericTable = ({ data }) => (
+    <TableContainer component={Paper}>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell><b>ID</b></TableCell>
+            <TableCell><b>Full Name</b></TableCell>
+            <TableCell><b>Email</b></TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {data.map(item => (
+            <TableRow key={item.id}>
+              <TableCell>{item.id}</TableCell>
+              <TableCell>{item.fullName}</TableCell>
+              <TableCell>{item.email}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+
+  const Tables = ({ nominations, applications }) => (
+    <div>
+      <Headers>Nominations</Headers>
+      <TableStyling>
+        <CustomTable data={nominations} />
+      </TableStyling>
+      <Headers>Applications</Headers>
+      <TableStyling>
+        <CustomTable data={applications} />
+      </TableStyling>
+    </div>
+  );
+
   return (
     <div>
-      <Headers>
-      <h2>Nominations</h2>
-      </Headers>
-      <TableStyling>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell><b>ID</b></TableCell>
-              <TableCell><b>Full Name</b></TableCell>
-              <TableCell><b>Email</b></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {nominations.map(nomination => (
-              <TableRow key={nomination.id}>
-                <TableCell>{nomination.id}</TableCell>
-                <TableCell>{nomination.fullName}</TableCell>
-                <TableCell>{nomination.email}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      </TableStyling>
-      <Headers>
-      <h2>Applications</h2>
-      </Headers>
-      <TableStyling>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell><b>ID</b></TableCell>
-              <TableCell><b>Full Name</b></TableCell>
-              <TableCell><b>Email</b></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {applications.map(application => (
-              <TableRow key={application.id}>
-                <TableCell>{application.id}</TableCell>
-                <TableCell>{application.fullName}</TableCell>
-                <TableCell>{application.email}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      </TableStyling>
+      <Tables nominations={nominations} applications={applications} />
     </div>
   );
 };
