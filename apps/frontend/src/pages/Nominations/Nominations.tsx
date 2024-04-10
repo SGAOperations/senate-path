@@ -1,8 +1,6 @@
 import { FormGroup, FormLabel, Box, Typography, TextField, InputLabel, Select, MenuItem, FormControl, RadioGroup, FormControlLabel, Radio, Button } from '@mui/material';
 import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionContainer, FormTextAnswerContainer, Introduction, FormInputCheckbox, FormSelect, RadioButtons, Title } from '../Nominations/styles';
 import React, { useState, useEffect } from 'react';
-import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
 import SubmitPopUp from '../../components/SubmitPopUp';
 
 const Nominations: React.FC = () => {
@@ -44,13 +42,6 @@ const Nominations: React.FC = () => {
   const isCollegeError = college === '';
   const isMajorError = major === '';
   const isGradYearError = gradYear === 0;
-  const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setOpen(false);
-  };
   const [open, setOpen] = useState(false);
   const handleSampleFormSubmit = () => {
     if (

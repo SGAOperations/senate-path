@@ -578,7 +578,6 @@ const Applications: React.FC = () => {
         </FormControl>
       </SampleForm>
       }
-
         <Button variant="contained"
         onClick={submitApplication}
         >Submit</Button>
