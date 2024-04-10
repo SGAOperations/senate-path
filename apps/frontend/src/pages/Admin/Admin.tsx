@@ -69,11 +69,11 @@ const Admin: React.FC = () => {
     <div>
       <Headers>Nominations</Headers>
       <TableStyling>
-        <CustomTable data={nominations} />
+        <GenericTable data={nominations} />
       </TableStyling>
       <Headers>Applications</Headers>
       <TableStyling>
-        <CustomTable data={applications} />
+        <GenericTable data={applications} />
       </TableStyling>
     </div>
   );
