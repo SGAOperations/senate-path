@@ -17,42 +17,54 @@ interface Entry {
 const Admin: React.FC = () => {
   const [nominations, setNominations] = useState<Entry[]>([]);
   const [applications, setApplications] = useState<Entry[]>([]);
-  const getNominations = () => {
-    fetch('http://localhost:3000/api/nominations', {
+  
+  const getData = (url: string) => {
+    fetch(url, {
       method: 'GET',
     })
     .then(response => {
       if (!response.ok) {
-        throw new Error('Failed to fetch nominations');
+        throw new Error('Failed to fetch');
       }
       return response.json();
     })
     .then(data => {
-      setNominations(data);
-    })
-    .catch(error => {
-      console.error('Error fetching nominations:', error);
-    });
-  } 
-  const getApplications = () => {
-    fetch('http://localhost:3000/api/applications', {
-      method: 'GET',
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Failed to fetch applications');
+      if (url == 'http://localhost:3000/api/nominations') {
+        setNominations(data);
+      } else {
+        setApplications(data);
       }
-      return response.json();
-    })
-    .then(data => {
-      setApplications(data);
     })
     .catch(error => {
-      console.error('Error fetching applications:', error);
+      console.error('Error fetching:', error);
     });
   } 
+  
   useEffect(getNominations, []);
   useEffect(getApplications, []);
+
+  const CustomTable = ({ data }) => (
+    <TableContainer component={Paper}>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell><b>ID</b></TableCell>
+            <TableCell><b>Full Name</b></TableCell>
+            <TableCell><b>Email</b></TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {data.map(item => (
+            <TableRow key={item.id}>
+              <TableCell>{item.id}</TableCell>
+              <TableCell>{item.fullName}</TableCell>
+              <TableCell>{item.email}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
   
   return (
     <div>
