@@ -4,9 +4,8 @@ import { Checkbox, FormControlLabel } from '@mui/material';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import Button from '@mui/material/Button';
-import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
 import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionContainer, FormTextAnswerContainer, Introduction, FormInputCheckbox, RadioButtons } from './styles';
+import SubmitPopUp from '../../components/SubmitPopUp';
 
 const Applications: React.FC = () => {
   const submitApplication = () => {
@@ -49,13 +48,7 @@ const Applications: React.FC = () => {
         console.log(error);
       });
   };
-  const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setOpen(false);
-  };
+  
   const [open, setOpen] = useState(false);
   const [fullName, setFullName] = useState<string>('');
   const [preferredName, setPreferredName] = useState<string>('');
@@ -590,18 +583,16 @@ const Applications: React.FC = () => {
         <Button variant="contained"
         onClick={submitApplication}
         >Submit</Button>
-        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-        <Alert
+        <SubmitPopUp open={open} setOpen= {setOpen}></SubmitPopUp>
+        {/* <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <FormAlert
           onClose={handleClose}
           severity="success"
           variant="filled"
-          sx={{ width: '100%' }}
         >
           Application Form Submitted!
-        </Alert>
-      </Snackbar>
-
-
+        </FormAlert>
+      </Snackbar> */}
       </HomeContainer>
       
   );
