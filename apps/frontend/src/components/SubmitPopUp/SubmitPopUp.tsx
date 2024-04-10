@@ -5,9 +5,10 @@ import Alert from '@mui/material/Alert';
 interface Props {
     open: boolean;
     setOpen: (arg0: boolean)=>void;
+    name: string;
 }
 
-const SubmitPopUp:  React.FC<Props> = ({open, setOpen}) => {
+const SubmitPopUp:  React.FC<Props> = ({open, setOpen, name}) => {
     const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
         if (reason === 'clickaway') {
           return;
@@ -23,7 +24,7 @@ const SubmitPopUp:  React.FC<Props> = ({open, setOpen}) => {
           variant="filled"
           sx={{ width: '100%' }}
         >
-          Application Form Submitted!
+          {name} Form Submitted!
         </Alert>
       </Snackbar>
     );

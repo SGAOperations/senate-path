@@ -3,6 +3,7 @@ import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionCo
 import React, { useState, useEffect } from 'react';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
+import SubmitPopUp from '../../components/SubmitPopUp';
 
 const Nominations: React.FC = () => {
   // START: fetch example
@@ -64,7 +65,7 @@ const Nominations: React.FC = () => {
       console.log("One or more fields don't pass validation");
       return;
     }
-    setOpen(true);
+    
     console.log(
       'Values:',
       fullName,
@@ -94,7 +95,8 @@ const Nominations: React.FC = () => {
     .then((data) => {
       console.log(data);
       if (data.ok) {
-        console.log('Nomination successfully submitted');        
+        console.log('Nomination successfully submitted');      
+        setOpen(true);  
       } else {
         console.log(`Nomination failed to submit: ${data.statusText}`);
       }
@@ -317,16 +319,7 @@ const Nominations: React.FC = () => {
           <Button variant="contained" onClick={handleSampleFormSubmit}>
             Submit
           </Button>
-          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-        <Alert
-          onClose={handleClose}
-          severity="success"
-          variant="filled"
-          sx={{ width: '100%' }}
-        >
-          Application Form Submitted!
-        </Alert>
-      </Snackbar>
+          <SubmitPopUp open = {open} setOpen={ setOpen} name = {'Nomination'}></SubmitPopUp>
         </HomeContainer>
       }
     </>

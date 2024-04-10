@@ -34,16 +34,15 @@ const Applications: React.FC = () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData), //PUT DATA IN HERE
     })
-      .then((data) => data.json())
-      .then((response) => {
-        console.log(response);
-        if (response.error) {
-          console.log(`Application failed to submit: ${response.message}`);
-        } else {
-          console.log('Application successfully submitted');
-          setOpen(true);
-        }
-      })
+    .then((data) => {
+      console.log(data);
+      if (data.ok) {
+        console.log('Application successfully submitted');      
+        setOpen(true);  
+      } else {
+        console.log(`Application failed to submit: ${data.statusText}`);
+      }
+    })
       .catch((error) => {
         console.log(error);
       });
@@ -583,18 +582,8 @@ const Applications: React.FC = () => {
         <Button variant="contained"
         onClick={submitApplication}
         >Submit</Button>
-        <SubmitPopUp open={open} setOpen= {setOpen}></SubmitPopUp>
-        {/* <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-        <FormAlert
-          onClose={handleClose}
-          severity="success"
-          variant="filled"
-        >
-          Application Form Submitted!
-        </FormAlert>
-      </Snackbar> */}
+        <SubmitPopUp open={open} setOpen= {setOpen} name = {'Application'}></SubmitPopUp>
       </HomeContainer>
-      
   );
 };
 
