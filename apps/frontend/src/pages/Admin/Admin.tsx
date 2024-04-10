@@ -65,7 +65,7 @@ const Admin: React.FC = () => {
     </TableContainer>
   );
 
-  const Tables = ({ nominations, applications }) => (
+  return (
     <div>
       <Headers>Nominations</Headers>
       <TableStyling>
@@ -75,12 +75,6 @@ const Admin: React.FC = () => {
       <TableStyling>
         <GenericTable data={applications} />
       </TableStyling>
-    </div>
-  );
-
-  return (
-    <div>
-      <Tables nominations={nominations} applications={applications} />
     </div>
   );
 };
