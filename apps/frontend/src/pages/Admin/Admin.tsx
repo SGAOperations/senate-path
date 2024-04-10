@@ -43,29 +43,6 @@ const Admin: React.FC = () => {
   useEffect(getNominations, []);
   useEffect(getApplications, []);
 
-  const CustomTable = ({ data }) => (
-    <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell><b>ID</b></TableCell>
-            <TableCell><b>Full Name</b></TableCell>
-            <TableCell><b>Email</b></TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {data.map(item => (
-            <TableRow key={item.id}>
-              <TableCell>{item.id}</TableCell>
-              <TableCell>{item.fullName}</TableCell>
-              <TableCell>{item.email}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  );
-  
   return (
     <div>
       <Headers>
