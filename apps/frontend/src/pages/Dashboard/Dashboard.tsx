@@ -1,6 +1,5 @@
 import { HomeContainer, Nominations } from './styles';
-import React, { useState } from 'react';
-import { ResultType } from '@remix-run/router/dist/utils';
+import React, { useState, useEffect } from 'react';
 
 const Dashboard: React.FC = () => {
   const [numOfNoms, setNumOfNoms] = useState(0);
@@ -18,7 +17,9 @@ const Dashboard: React.FC = () => {
       });
   };
 
-  receiveNominations();
+  useEffect(() => {
+    receiveNominations();
+  }, []);
 
   const setNums = import.meta.env.VITE_NUM_MIN_NOMINATIONS;
 
