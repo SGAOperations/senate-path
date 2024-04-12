@@ -13,5 +13,6 @@ export const Headers = styled.div(() => ({
 export const ButtonStyling = styled.div(() => ({
   display: 'flex',
   alignItems: 'center', 
+  justifyContent: 'center',
   paddingBottom: '2%',
 }));
