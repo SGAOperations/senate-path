@@ -9,3 +9,9 @@ export const TableStyling = styled.div(() => ({
 export const Headers = styled.div(() => ({
     paddingLeft: '2%',
 }));
+
+export const ButtonStyling = styled.div(() => ({
+  display: 'flex',
+  alignItems: 'center', 
+  paddingBottom: '2%',
+}));

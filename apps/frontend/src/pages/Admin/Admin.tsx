@@ -7,7 +7,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
-import { TableStyling, Headers } from './styles';
+import { TableStyling, Headers, ButtonStyling } from './styles';
 
 interface Entry {
   id: string;
@@ -84,16 +84,20 @@ const Admin: React.FC = () => {
       <TableStyling>
         <GenericTable data={nominations} />
       </TableStyling>
+      <ButtonStyling>
       <Button variant = "contained" onClick={() => exportToCsv(nominations, 'nominations.csv')}>
           Export Nominations to CSV
         </Button>
+      </ButtonStyling>
       <Headers>Applications</Headers>
       <TableStyling>
         <GenericTable data={applications} />
       </TableStyling>
+      <ButtonStyling>
       <Button variant = "contained" onClick={() => exportToCsv(applications, 'applications.csv')}>
           Export Applications to CSV
       </Button>
+      </ButtonStyling>
     </div>
   );
 };
