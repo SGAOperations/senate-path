@@ -65,11 +65,26 @@ const Admin: React.FC = () => {
     </TableContainer>
   );
 
+  const exportToCsv = (data: Entry[], filename: string) => {
+    const csvContent =
+      'data:text/csv;charset=utf-8,' +
+      data.map(row => Object.values(row).join(',')).join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+  };
+
   return (
     <div>
       <Headers>Nominations</Headers>
       <TableStyling>
         <GenericTable data={nominations} />
+        <button onClick={() => exportToCsv(nominations, 'nominations.csv')}>
+          Export Nominations to CSV
+        </button>
       </TableStyling>
       <Headers>Applications</Headers>
       <TableStyling>
