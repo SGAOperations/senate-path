@@ -5,6 +5,7 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import Button from '@mui/material/Button';
 import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionContainer, FormTextAnswerContainer, Introduction, FormInputCheckbox, RadioButtons } from './styles';
+import SubmitPopUp from '../../components/SubmitPopUp';
 
 const Applications: React.FC = () => {
   const submitApplication = () => {
@@ -50,19 +51,21 @@ const Applications: React.FC = () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData), //PUT DATA IN HERE
     })
-      .then((data) => data.json())
-      .then((response) => {
-        console.log(response);
-        if (response.error) {
-          console.log(`Application failed to submit: ${response.message}`);
-        } else {
-          console.log('Application successfully submitted');
-        }
-      })
+    .then((data) => {
+      console.log(data);
+      if (data.ok) {
+        console.log('Application successfully submitted');      
+        setOpen(true);  
+      } else {
+        console.log(`Application failed to submit: ${data.statusText}`);
+      }
+    })
       .catch((error) => {
         console.log(error);
       });
   };
+  
+  const [open, setOpen] = useState(false);
   const [fullName, setFullName] = useState<string>('');
   const [preferredName, setPreferredName] = useState<string>('');
   const [pronunciation, setPronunciation] = useState<string>('');
@@ -592,14 +595,11 @@ const Applications: React.FC = () => {
         </FormControl>
       </SampleForm>
       }
-
         <Button variant="contained"
         onClick={submitApplication}
         >Submit</Button>
-
-
+        <SubmitPopUp open={open} setOpen= {setOpen} name = {'Application'}></SubmitPopUp>
       </HomeContainer>
-      
   );
 };
 

@@ -1,6 +1,7 @@
 import { FormGroup, FormLabel, Box, Typography, TextField, InputLabel, Select, MenuItem, FormControl, RadioGroup, FormControlLabel, Radio, Button } from '@mui/material';
 import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionContainer, FormTextAnswerContainer, Introduction, FormInputCheckbox, FormSelect, RadioButtons, Title } from '../Nominations/styles';
 import React, { useState, useEffect } from 'react';
+import SubmitPopUp from '../../components/SubmitPopUp';
 
 const Nominations: React.FC = () => {
   // START: fetch example
@@ -41,6 +42,7 @@ const Nominations: React.FC = () => {
   const isCollegeError = college === '';
   const isMajorError = major === '';
   const isGradYearError = gradYear === 0;
+  const [open, setOpen] = useState(false);
   const handleSampleFormSubmit = () => {
     if (
       isFullNameError ||
@@ -54,7 +56,7 @@ const Nominations: React.FC = () => {
       console.log("One or more fields don't pass validation");
       return;
     }
-
+    
     console.log(
       'Values:',
       fullName,
@@ -84,7 +86,8 @@ const Nominations: React.FC = () => {
     .then((data) => {
       console.log(data);
       if (data.ok) {
-        console.log('Nomination successfully submitted');        
+        console.log('Nomination successfully submitted');      
+        setOpen(true);  
       } else {
         console.log(`Nomination failed to submit: ${data.statusText}`);
       }
@@ -307,6 +310,7 @@ const Nominations: React.FC = () => {
           <Button variant="contained" onClick={handleSampleFormSubmit}>
             Submit
           </Button>
+          <SubmitPopUp open = {open} setOpen={ setOpen} name = {'Nomination'}></SubmitPopUp>
         </HomeContainer>
       }
     </>
