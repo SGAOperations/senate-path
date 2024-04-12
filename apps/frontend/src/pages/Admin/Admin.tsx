@@ -84,14 +84,14 @@ const Admin: React.FC = () => {
       <TableStyling>
         <GenericTable data={nominations} />
       </TableStyling>
-      <Button onClick={() => exportToCsv(nominations, 'nominations.csv')}>
+      <Button variant = "contained" onClick={() => exportToCsv(nominations, 'nominations.csv')}>
           Export Nominations to CSV
         </Button>
       <Headers>Applications</Headers>
       <TableStyling>
         <GenericTable data={applications} />
       </TableStyling>
-      <Button onClick={() => exportToCsv(applications, 'applications.csv')}>
+      <Button variant = "contained" onClick={() => exportToCsv(applications, 'applications.csv')}>
           Export Applications to CSV
       </Button>
     </div>
