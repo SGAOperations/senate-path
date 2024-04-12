@@ -85,6 +85,9 @@ const Admin: React.FC = () => {
         <button onClick={() => exportToCsv(nominations, 'nominations.csv')}>
           Export Nominations to CSV
         </button>
+        <button onClick={() => exportToCsv(applications, 'applications.csv')}>
+          Export Applications to CSV
+        </button>
       </TableStyling>
       <Headers>Applications</Headers>
       <TableStyling>
