@@ -9,7 +9,6 @@ const Dashboard: React.FC = () => {
     })
       .then((response) => response.json())
       .then((result) => {
-        console.log(result.length);
         setNumOfNoms(result.length);
       })
       .catch((error) => {
@@ -24,6 +23,16 @@ const Dashboard: React.FC = () => {
   const setNums = import.meta.env.VITE_NUM_MIN_NOMINATIONS;
 
   const neededNoms = setNums - numOfNoms;
+
+  if (setNums == null) {
+    return (
+      <HomeContainer>
+        The value for NUM_MIN_NOMINATIONS is not set. Please notify SGA
+        regarding this!
+      </HomeContainer>
+    );
+  }
+
   if (neededNoms <= 0) {
     return (
       <HomeContainer>
