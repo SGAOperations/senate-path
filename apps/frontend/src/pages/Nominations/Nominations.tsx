@@ -1,6 +1,7 @@
 import { FormGroup, FormLabel, Box, Typography, TextField, InputLabel, Select, MenuItem, FormControl, RadioGroup, FormControlLabel, Radio, Button } from '@mui/material';
 import { HomeContainer, FormInput, SampleForm, FormTextContainer, FormQuestionContainer, FormTextAnswerContainer, Introduction, FormInputCheckbox, FormSelect, RadioButtons, Title } from '../Nominations/styles';
 import React, { useState, useEffect } from 'react';
+import SubmitPopUp from '../../components/SubmitPopUp';
 
 const Nominations: React.FC = () => {
   // START: fetch example
@@ -32,7 +33,7 @@ const Nominations: React.FC = () => {
   const [constituent, setConstituent] = useState('');
   const [college, setCollege] = useState('');
   const [major, setMajor] = useState('');
-  const [gradYear, setGradYear] = useState('');
+  const [gradYear, setGradYear] = useState(0);
   const [receiveInfo, setReceiveInfo] = useState(false);
   const isFullNameError = fullName === '';
   const isNortheasternEmailError = northeasternEmail === '';
@@ -40,7 +41,8 @@ const Nominations: React.FC = () => {
   const isConstituentError = constituent === '';
   const isCollegeError = college === '';
   const isMajorError = major === '';
-  const isGradYearError = gradYear === '';
+  const isGradYearError = gradYear === 0;
+  const [open, setOpen] = useState(false);
   const handleSampleFormSubmit = () => {
     if (
       isFullNameError ||
@@ -54,7 +56,7 @@ const Nominations: React.FC = () => {
       console.log("One or more fields don't pass validation");
       return;
     }
-
+    
     console.log(
       'Values:',
       fullName,
@@ -66,17 +68,33 @@ const Nominations: React.FC = () => {
       gradYear,
       receiveInfo
     );
-    const values = {fullName, northeasternEmail, nominee, constituent, college, major, gradYear, receiveInfo}
+    const values = {
+      fullName,
+      email: northeasternEmail, 
+      nominee, 
+      constituency: constituent, 
+      college, 
+      major, 
+      graduationYear: gradYear, 
+      receiveSenatorInfo: receiveInfo}
 
     fetch('http://localhost:3000/api/nominations', {
       method: 'POST',
       headers: {"Content-Type" : "application/json"},
       body: JSON.stringify(values)
-    }).then(() => {
-      console.log('Form values added');
-    }).catch((error) => {
-            console.log(error);
-          });
+    })
+    .then((data) => {
+      console.log(data);
+      if (data.ok) {
+        console.log('Nomination successfully submitted');      
+        setOpen(true);  
+      } else {
+        console.log(`Nomination failed to submit: ${data.statusText}`);
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
   };
 
 
@@ -245,17 +263,16 @@ const Nominations: React.FC = () => {
             name="year-buttons-group"
             aria-required
             onChange={(e) =>
-              setGradYear(e.target.value)
+              setGradYear(Number.parseInt(e.target.value))
             }
             /* TODO pick up radio options from env variable */
           >
-            <FormControlLabel value="2023" control={<Radio />} label="2023" />
-            <FormControlLabel value="2024" control={<Radio />} label="2024" />
-            <FormControlLabel value="2025" control={<Radio />} label="2025" />
-            <FormControlLabel value="2026" control={<Radio />} label="2026" />
-            <FormControlLabel value="2027" control={<Radio />} label="2027" />
-            <FormControlLabel value="2028" control={<Radio />} label="2028" />
-            <FormControlLabel value="other" control={<Radio />} label="Other" />
+            <FormControlLabel value={2023} control={<Radio />} label="2023" />
+            <FormControlLabel value={2024} control={<Radio />} label="2024" />
+            <FormControlLabel value={2025} control={<Radio />} label="2025" />
+            <FormControlLabel value={2026} control={<Radio />} label="2026" />
+            <FormControlLabel value={2027} control={<Radio />} label="2027" />
+            <FormControlLabel value={2028} control={<Radio />} label="2028" />
           </RadioGroup>
               </RadioButtons>
             </FormQuestionContainer>
@@ -293,6 +310,7 @@ const Nominations: React.FC = () => {
           <Button variant="contained" onClick={handleSampleFormSubmit}>
             Submit
           </Button>
+          <SubmitPopUp open = {open} setOpen={ setOpen} name = {'Nomination'}></SubmitPopUp>
         </HomeContainer>
       }
     </>
