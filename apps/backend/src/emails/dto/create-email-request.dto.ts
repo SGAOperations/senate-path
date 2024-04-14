@@ -8,6 +8,7 @@ export class CreateEmailRequestDto {
   @IsNotEmpty()
   @IsString()
   message: string;
+  @IsNotEmpty()
   @IsString()
   subject: string;
 }
