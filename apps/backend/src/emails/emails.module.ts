@@ -20,7 +20,7 @@ import { EmailsController } from './emails.controller';
         from: process.env.EMAIL_FROM,
       },
       template: {
-        dir: join(__dirname, '/src/emails/templates'),
+        dir: join(__dirname, 'emails/templates'),
         adapter: new HandlebarsAdapter(),
         options: {
           strict: false,
