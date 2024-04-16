@@ -13,6 +13,11 @@ export class NominationsController {
     return this.nominationsService.getNominations();
   }
 
+  @Get('/:email')
+  getNominationsByEmail(@Param('email') email: string) {
+    return this.nominationsService.getNominationsByEmail(email);
+  }
+
   @Post()
   createNomination(@Body() request: CreateNominationRequestDto) {
     return this.nominationsService.createNomination(request);

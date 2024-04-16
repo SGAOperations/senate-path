@@ -16,6 +16,20 @@ export class NominationsService {
     
     return data;
   }
+
+  async getNominationsByEmail(email: string): Promise<Tables<'nominations'>[]> {
+    const { data, error } = await supabase.from('nominations').select('*').eq('email', email);
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    if (data.length === 0) {
+      throw new BadRequestException(`Nominations with given email, ${email}, do not exist.`);
+    }
+    
+    return data;
+  }
   
   async createNomination({
     ...nominationsColumns
