@@ -69,15 +69,18 @@ const Admin: React.FC = () => {
   );
 
   const exportToCsv = (data: Entry[], filename: string, headers: string[]) => {
+    //add header data later
+    const someData = headers + 
+    data.map(row => Object.values(row).join(',')).join('\n')
     const csvContent =
-      'data:text/csv;charset=utf-8,' + 
-      data.map(row => Object.values(row).join(',')).unshift(headers).join('\n');
+      'data:text/csv;charset=utf-8,' + someData;
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
     link.setAttribute('href', encodedUri);
     link.setAttribute('download', filename);
     document.body.appendChild(link);
     link.click();
+    console.log("clicked")
   };
 
   return (
