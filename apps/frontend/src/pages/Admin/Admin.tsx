@@ -69,15 +69,14 @@ const Admin: React.FC = () => {
   const exportToCsv = (data: Entry[], filename: string, headers: string[]) => {
     const csvContent =
       'data:text/csv;charset=utf-8,' +
-      headers.join(',') + '\n' +
-      data.map(row => Object.values(row).join(',')).join('\n');
+      [headers.join(','), ...data.map(row => Object.values(row).join(','))].join('\n');
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
     link.setAttribute('href', encodedUri);
     link.setAttribute('download', filename);
     document.body.appendChild(link);
     link.click();
-};
+  };
 
   return (
     <div>
@@ -87,7 +86,7 @@ const Admin: React.FC = () => {
       </TableStyling>
       <ButtonStyling>
         const headers = ['id', 'created_at', 'fullName', 'email', 'nominee', 'constituency', 'college', 'major', 'graduationYear', 'recieveSenatorInfo', 'status'];
-      <Button variant = "contained" onClick={() => exportToCsv(nominations, 'nominations.csv', headers)}>
+      <Button variant = "contained" onClick={() => exportToCsv(nominations, 'nominations.csv')}>
           Export Nominations to CSV
         </Button>
       </ButtonStyling>
@@ -97,7 +96,7 @@ const Admin: React.FC = () => {
       </TableStyling>
       <ButtonStyling>
         const headers = ['id', 'created_at', 'fullName', 'preferredFullName', 'phoneticPronunciation', 'nickname', 'nuid', 'pronouns', 'email', 'phoneNumber', 'year', 'college', 'major', 'minors', 'constituency'];
-      <Button variant = "contained" onClick={() => exportToCsv(applications, 'applications.csv', headers)}>
+      <Button variant = "contained" onClick={() => exportToCsv(applications, 'applications.csv')}>
           Export Applications to CSV
       </Button>
       </ButtonStyling>
