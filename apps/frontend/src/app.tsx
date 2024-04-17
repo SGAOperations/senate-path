@@ -8,6 +8,7 @@ import Nominations from './pages/Nominations';
 import Applications from './pages/Applications';
 import Admin from './pages/Admin';
 import Dashboard from './pages/Dashboard';
+import Login from './pages/Login';
 import Navbar from './components/Navbar';
 import { muiTheme } from './theme';
 
@@ -23,6 +24,7 @@ const App: React.FC = () => {
         <Route path="applications" element={<Applications />} />
         <Route path="admin" element={<Admin />} />
         <Route path="dashboard" element={<Dashboard />} />
+        <Route path="login" element={<Login />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </MuiThemeProvider>
