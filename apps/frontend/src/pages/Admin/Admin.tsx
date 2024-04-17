@@ -18,6 +18,8 @@ interface Entry {
 const Admin: React.FC = () => {
   const [nominations, setNominations] = useState<Entry[]>([]);
   const [applications, setApplications] = useState<Entry[]>([]);
+  const headersNomination = ['id', 'created_at', 'fullName', 'email', 'nominee', 'constituency', 'college', 'major', 'graduationYear', 'recieveSenatorInfo', 'status', '\n'];
+  const headersApplication = ['id', 'created_at', 'fullName', 'preferredFullName', 'phoneticPronunciation', 'nickname', 'nuid', 'pronouns', 'email', 'phoneNumber', 'year', 'college', 'major', 'minors', 'constituency', '\n'];
   
   const getData = (url: string, setData: (data: Entry[]) => void) => {
     fetch(url)
@@ -85,8 +87,7 @@ const Admin: React.FC = () => {
         <GenericTable data={nominations} />
       </TableStyling>
       <ButtonStyling>
-        const headers = ['id', 'created_at', 'fullName', 'email', 'nominee', 'constituency', 'college', 'major', 'graduationYear', 'recieveSenatorInfo', 'status', '\n'];
-      <Button variant = "contained" onClick={() => exportToCsv(nominations, 'nominations.csv')}>
+      <Button variant = "contained" onClick={() => exportToCsv(nominations, 'nominations.csv', headersNomination)}>
           Export Nominations to CSV
         </Button>
       </ButtonStyling>
@@ -95,8 +96,7 @@ const Admin: React.FC = () => {
         <GenericTable data={applications} />
       </TableStyling>
       <ButtonStyling>
-        const headers = ['id', 'created_at', 'fullName', 'preferredFullName', 'phoneticPronunciation', 'nickname', 'nuid', 'pronouns', 'email', 'phoneNumber', 'year', 'college', 'major', 'minors', 'constituency', '\n'];
-      <Button variant = "contained" onClick={() => exportToCsv(applications, 'applications.csv')}>
+      <Button variant = "contained" onClick={() => exportToCsv(applications, 'applications.csv', headersApplication)}>
           Export Applications to CSV
       </Button>
       </ButtonStyling>
