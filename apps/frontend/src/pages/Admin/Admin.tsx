@@ -68,8 +68,8 @@ const Admin: React.FC = () => {
 
   const exportToCsv = (data: Entry[], filename: string, headers: string[]) => {
     const csvContent =
-      'data:text/csv;charset=utf-8,' + headers.map(row => Object.values(row).join(',')).join('\n') +
-      data.map(row => Object.values(row).join(',')).join('\n');
+      'data:text/csv;charset=utf-8,' + 
+      data.map(row => Object.values(row).join(',')).unshift(headers).join('\n');
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
     link.setAttribute('href', encodedUri);
@@ -85,7 +85,7 @@ const Admin: React.FC = () => {
         <GenericTable data={nominations} />
       </TableStyling>
       <ButtonStyling>
-        const headers = ['id', 'created_at', 'fullName', 'email', 'nominee', 'constituency', 'college', 'major', 'graduationYear', 'recieveSenatorInfo', 'status'];
+        const headers = ['id', 'created_at', 'fullName', 'email', 'nominee', 'constituency', 'college', 'major', 'graduationYear', 'recieveSenatorInfo', 'status', '\n'];
       <Button variant = "contained" onClick={() => exportToCsv(nominations, 'nominations.csv')}>
           Export Nominations to CSV
         </Button>
@@ -95,7 +95,7 @@ const Admin: React.FC = () => {
         <GenericTable data={applications} />
       </TableStyling>
       <ButtonStyling>
-        const headers = ['id', 'created_at', 'fullName', 'preferredFullName', 'phoneticPronunciation', 'nickname', 'nuid', 'pronouns', 'email', 'phoneNumber', 'year', 'college', 'major', 'minors', 'constituency'];
+        const headers = ['id', 'created_at', 'fullName', 'preferredFullName', 'phoneticPronunciation', 'nickname', 'nuid', 'pronouns', 'email', 'phoneNumber', 'year', 'college', 'major', 'minors', 'constituency', '\n'];
       <Button variant = "contained" onClick={() => exportToCsv(applications, 'applications.csv')}>
           Export Applications to CSV
       </Button>
