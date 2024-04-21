@@ -75,6 +75,7 @@ export type Database = {
           major: string | null
           nominee: string | null
           receiveSenatorInfo: boolean | null
+          status: string
         }
         Insert: {
           college?: string | null
@@ -87,6 +88,7 @@ export type Database = {
           major?: string | null
           nominee?: string | null
           receiveSenatorInfo?: boolean | null
+          status: string
         }
         Update: {
           college?: string | null
@@ -99,6 +101,7 @@ export type Database = {
           major?: string | null
           nominee?: string | null
           receiveSenatorInfo?: boolean | null
+          status?: string
         }
         Relationships: []
       }
@@ -107,16 +110,19 @@ export type Database = {
           firstName: string
           id: number
           lastName: string
+          role: Database["public"]["Enums"]["Role"]
         }
         Insert: {
           firstName: string
           id?: number
           lastName: string
+          role?: Database["public"]["Enums"]["Role"]
         }
         Update: {
           firstName?: string
           id?: number
           lastName?: string
+          role?: Database["public"]["Enums"]["Role"]
         }
         Relationships: []
       }
@@ -128,7 +134,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      Role: "ADMIN" | "APPLICANT" | "STANDARD"
     }
     CompositeTypes: {
       [_ in never]: never

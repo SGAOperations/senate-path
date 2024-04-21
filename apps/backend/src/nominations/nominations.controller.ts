@@ -13,6 +13,7 @@ export class NominationsController {
     return this.nominationsService.getNominations();
   }
 
+  // TODO change this endpoint to getNominationsById instead of email
   @Get('/:email')
   getNominationsByEmail(@Param('email') email: string) {
     return this.nominationsService.getNominationsByEmail(email);
@@ -24,7 +25,7 @@ export class NominationsController {
   }
 
   @Put('/:id')
-  updateApplication(
+  updateNomination(
     @Param('id') id: number,
     @Body() request: UpdateNominationRequestDto
   ) {

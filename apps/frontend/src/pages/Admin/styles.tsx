@@ -1,18 +1,18 @@
+import Button from '@mui/material/Button';
 import styled from 'styled-components';
 
-export const TableStyling = styled.div(() => ({
-    display: 'flex',
-    alignItems: 'center',
-    padding: '2%',
-  }));
-
-export const Headers = styled.div(() => ({
-    paddingLeft: '2%',
+export const AdminContainer = styled.div(() => ({
+  padding: '24px',
 }));
 
-export const ButtonStyling = styled.div(() => ({
+export const HeaderRow = styled.div(() => ({
   display: 'flex',
-  alignItems: 'center', 
+  justifyContent: 'space-between',
+}));
+
+export const ExportCSVButton = styled(Button)(() => ({
+  display: 'flex',
+  alignItems: 'center',
   justifyContent: 'center',
   paddingBottom: '2%',
 }));
