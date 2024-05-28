@@ -46,9 +46,6 @@ Then, install the dependencies
 ```bash
 yarn
 ```
-```
-yarn install
-```
 
 ## Running the app
 
