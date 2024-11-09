@@ -13,13 +13,19 @@ export class NominationsController {
     return this.nominationsService.getNominations();
   }
 
+  // TODO change this endpoint to getNominationsById instead of email
+  @Get('/:email')
+  getNominationsByEmail(@Param('email') email: string) {
+    return this.nominationsService.getNominationsByEmail(email);
+  }
+
   @Post()
   createNomination(@Body() request: CreateNominationRequestDto) {
     return this.nominationsService.createNomination(request);
   }
 
   @Put('/:id')
-  updateApplication(
+  updateNomination(
     @Param('id') id: number,
     @Body() request: UpdateNominationRequestDto
   ) {

@@ -2,29 +2,21 @@ import { HomeContainer, Nominations } from './styles';
 import React, { useState, useEffect } from 'react';
 
 const Dashboard: React.FC = () => {
-  const [numOfNoms, setNumOfNoms] = useState(0);
-  const receiveNominations = () => {
-    fetch('http://localhost:3000/api/nominations', {
-      method: 'GET',
-    })
+  const [numNominations, setNumNominations] = useState<number>();
+
+  useEffect(() => {
+    fetch('http://localhost:3000/api/nominations')
       .then((response) => response.json())
       .then((result) => {
-        setNumOfNoms(result.length);
+        setNumNominations(result.length);
       })
       .catch((error) => {
         console.log(error);
       });
-  };
-
-  useEffect(() => {
-    receiveNominations();
   }, []);
 
-  const setNums = import.meta.env.VITE_NUM_MIN_NOMINATIONS;
-
-  const neededNoms = setNums - numOfNoms;
-
-  if (setNums == null) {
+  const minNoms = import.meta.env.VITE_NUM_MIN_NOMINATIONS;
+  if (minNoms == null) {
     return (
       <HomeContainer>
         The value for NUM_MIN_NOMINATIONS is not set. Please notify SGA
@@ -32,6 +24,17 @@ const Dashboard: React.FC = () => {
       </HomeContainer>
     );
   }
+
+  if (numNominations == null) {
+    return (
+      <HomeContainer>
+        {/* TODO add loading spinner here */}
+        <h1>Loading...</h1>
+      </HomeContainer>
+    );
+  }
+
+  const neededNoms = minNoms - numNominations;
 
   if (neededNoms <= 0) {
     return (
@@ -46,7 +49,7 @@ const Dashboard: React.FC = () => {
       <HomeContainer>
         <Nominations>
           <h1>Nominations</h1>
-          <h3>{numOfNoms}</h3>
+          <h3>{numNominations}</h3>
         </Nominations>
         <Nominations>
           <h1>Nominations Needed</h1>

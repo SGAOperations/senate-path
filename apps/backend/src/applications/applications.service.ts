@@ -19,16 +19,25 @@ export class ApplicationsService {
   }
 
   async getNominationForms(): Promise<GetNominationFormDTO> {
-    const { data: nominees, error: nomineesError } = await supabase.from('applications').select('fullName, email');
-    const { data: constituencies, error: constituencyError } = await supabase.from('applications').select('constituency');
+    const { data: nominees, error: nomineesError } = await supabase
+      .from('applications')
+      .select('fullName, email');
+    const { data: constituencies, error: constituencyError } = await supabase
+      .from('applications')
+      .select('constituency');
 
     if (nomineesError || constituencyError) {
       throw new Error(nomineesError.message + constituencyError.message);
     }
-    
-    return {"nominees": nominees, "constituencies": [...new Set(constituencies.map(item => item.constituency))]};
+
+    return {
+      nominees: nominees,
+      constituencies: [
+        ...new Set(constituencies.map((item) => item.constituency)),
+      ],
+    };
   }
-  
+
   async createApplication(
     applicationColumns: CreateApplicationRequestDto
   ): Promise<void> {

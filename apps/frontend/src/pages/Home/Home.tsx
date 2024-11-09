@@ -1,12 +1,3 @@
-import { useState } from 'react';
-import Button from '@mui/material/Button';
-import FormControl from '@mui/material/FormControl';
-import MenuItem from '@mui/material/MenuItem';
-
-import { MENU_ITEMS } from './constants';
-import { HomeContainer, SampleForm, FormInput } from './styles';
-import { SampleFormData } from './types';
-
 const Home: React.FC = () => {
   const [{ textField, dropdown }, setFormData] = useState<SampleFormData>({
     textField: '',
@@ -87,6 +78,7 @@ const Home: React.FC = () => {
       </HomeContainer>
     </>
   );
+  return <div>This is the home page</div>;
 };
 
 export default Home;

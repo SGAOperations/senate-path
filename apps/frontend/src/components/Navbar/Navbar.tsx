@@ -1,4 +1,5 @@
-import { AppBar, Button } from '@mui/material';
+import AppBar from '@mui/material/AppBar';
+import Button from '@mui/material/Button';
 import { NAVBAR_MENUS } from './constants';
 
 import { NavbarLink, SGALogo, StyledToolbar } from './styles';

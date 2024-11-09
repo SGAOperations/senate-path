@@ -1,8 +1,4 @@
-import {
-  IsEmail,
-  IsString,
-  IsPositive,
-} from 'class-validator';
+import { IsEmail, IsString, IsPositive } from 'class-validator';
 
 export class CreateApplicationRequestDto {
   @IsString()

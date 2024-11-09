@@ -1,9 +1,4 @@
-import {
-  IsEmail,
-  IsString,
-  IsPositive,
-  IsBoolean
-} from 'class-validator';
+import { IsEmail, IsString, IsPositive, IsBoolean } from 'class-validator';
 
 export class CreateNominationRequestDto {
   @IsString()
