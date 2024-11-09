@@ -117,6 +117,7 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
       isAttestationError
     ) {
       // TODO show error popup with message
+      console.log('error message here')
       return;
     }
 
@@ -150,6 +151,7 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
           setIsPopupOpen(true);
         } else {
           // TODO show error popup with below message
+          // LEGIT SHOW ERROR MESSAGE HERE
           console.log(`Application failed to submit: ${data.statusText}`);
         }
       })

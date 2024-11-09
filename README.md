@@ -73,7 +73,4 @@ The frontend will be at http://localhost:4200/ and the backend will be at http:/
 - [ ] Add better responses from form backends than just 'Bad Request'
 - [ ] Add Pop Up for error message for invalid form responses based on invalid frontend data
 - [ ] Encode user permission functionality
-- [ ] See status of application
-- [ ] Inspo: https://www.northeasternsga.com/
-
 

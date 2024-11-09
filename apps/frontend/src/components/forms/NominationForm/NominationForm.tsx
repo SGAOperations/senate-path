@@ -50,6 +50,7 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
       isGraduationYearError
     ) {
       // TODO show error popup with message
+      console.log('invalid inputs')
       return;
     }
 
@@ -73,7 +74,7 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
         if (data.ok) {
           setIsPopupOpen(true);
         } else {
-          // TODO show error popup with below message
+          // LIKE LEGIT ACTUALLY SHOW MESSAGE HERE
           console.log(`Nomination failed to submit: ${data.statusText}`);
         }
       })
@@ -328,7 +329,9 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
         </FormQuestionContainer>
       </SampleForm>
 
-      <Button variant="contained" onClick={handleSampleFormSubmit}>
+      <Button variant="contained" onClick={handleSampleFormSubmit
+      
+      }>
         Submit
       </Button>
     </>

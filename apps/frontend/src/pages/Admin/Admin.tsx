@@ -15,11 +15,16 @@ const Admin: React.FC = () => {
     fetch(url)
       .then((response) => {
         if (!response.ok) {
+          console.log('errored')
           throw new Error('Failed to fetch data');
         }
-        return response.json();
+        console.log('didnt error')
+        const out = response.json()
+        console.log(out)
+        return out;
       })
       .then((data) => {
+        console.log('data:', data)
         setData(data);
       })
       .catch((error) => {
