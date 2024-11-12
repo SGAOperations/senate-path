@@ -8,6 +8,7 @@ import { TableEntry } from '../../components/tables/AdminTable/types';
 import AdminTable from '../../components/tables/AdminTable';
 
 const Admin: React.FC = () => {
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [nominations, setNominations] = useState<TableEntry[]>([]);
   const [applications, setApplications] = useState<TableEntry[]>([]);
 
@@ -15,16 +16,16 @@ const Admin: React.FC = () => {
     fetch(url)
       .then((response) => {
         if (!response.ok) {
-          console.log('errored')
+          console.log('errored');
           throw new Error('Failed to fetch data');
         }
-        console.log('didnt error')
-        const out = response.json()
-        console.log(out)
+        console.log('didnt error');
+        const out = response.json();
+        console.log(out);
         return out;
       })
       .then((data) => {
-        console.log('data:', data)
+        console.log('data:', data);
         setData(data);
       })
       .catch((error) => {
