@@ -1,10 +1,11 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, NotFoundException, InternalServerErrorException } from '@nestjs/common';
 import { CreateNominationRequestDto } from './dto/create-nomination-request.dto';
 import { UpdateNominationRequestDto } from './dto/update-nomination-request.dto';
 
 import supabase from '../supabase/client';
 import { Tables } from '../supabase/database.types';
 import { Status } from './nominations.types';
+import { validateOrReject, ValidationError } from 'class-validator';
 
 @Injectable()
 export class NominationsService {
@@ -12,7 +13,7 @@ export class NominationsService {
     const { data, error } = await supabase.from('nominations').select('*');
 
     if (error) {
-      throw new Error(error.message);
+      throw new InternalServerErrorException(`Failed to fetch nominations: ${error.message}`);
     }
 
     return data;
@@ -25,7 +26,7 @@ export class NominationsService {
       .eq('email', email);
 
     if (error) {
-      throw new Error(error.message);
+      throw new InternalServerErrorException(`Failed to fetch nominations: ${error.message}`);
     }
 
     if (data.length === 0) {
@@ -40,6 +41,15 @@ export class NominationsService {
   async createNomination({
     ...nominationsColumns
   }: CreateNominationRequestDto): Promise<void> {
+    try {
+      await validateOrReject(nominationsColumns);
+    } catch (errors) {
+      throw new BadRequestException(this.formatValidationErrors(errors));
+    }
+    if (nominationsColumns.fullName === nominationsColumns.nominee) {
+      throw new BadRequestException('You cannot nominate yourself for Senator.');
+    }
+
     let status = Status.APPROVED;
     const { data: nominationData } = await supabase
       .from('nominations')
@@ -50,8 +60,11 @@ export class NominationsService {
     const valid = nominationData.every(
       (nomination) => nomination.nominee !== nominationsColumns.nominee
     );
-    if (!valid || nominationsColumns.fullName === nominationsColumns.nominee) {
+    if (!valid) {
       status = Status.DENIED;
+      throw new BadRequestException(
+        `This nominator has already nominated the nominee: ${nominationsColumns.nominee}.`
+      );
     }
 
     const { error } = await supabase.from('nominations').insert({
@@ -60,8 +73,14 @@ export class NominationsService {
     });
 
     if (error) {
-      throw new Error(error.message);
+      throw new BadRequestException(`Failed to create nomination: ${error.message}`);
     }
+  }
+
+  private formatValidationErrors(errors: ValidationError[]): string {
+    return errors
+      .map((err) => `${err.property}: ${Object.values(err.constraints).join(', ')}`)
+      .join('; ');
   }
 
   async updateNomination({
@@ -76,7 +95,7 @@ export class NominationsService {
       .eq('id', id);
 
     if (nominationData.length === 0) {
-      throw new BadRequestException(
+      throw new NotFoundException(
         `Nominations with given id, ${id}, does not exist.`
       );
     }
@@ -89,7 +108,7 @@ export class NominationsService {
       .eq('id', id);
 
     if (error) {
-      throw new Error(error.message);
+      throw new InternalServerErrorException(`Failed to update nomination: ${error.message}`);
     }
   }
 }

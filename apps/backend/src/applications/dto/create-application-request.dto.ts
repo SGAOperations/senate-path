@@ -1,30 +1,56 @@
-import { IsEmail, IsString, IsPositive } from 'class-validator';
+import { IsEmail, IsString, IsPositive, IsNotEmpty, IsOptional, Matches, Min, Max } from 'class-validator';
 
 export class CreateApplicationRequestDto {
-  @IsString()
+  @IsNotEmpty({ message: 'You must input a full name.' })
+  @IsString({ message: 'Please enter a valid string for full name.' })
   fullName: string;
-  @IsString()
+
+  @IsOptional()
+  @IsString({ message: 'Please enter a valid string for preferred full name.' })
   preferredFullName: string;
-  @IsString()
+
+  @IsOptional()
+  @IsString({ message: 'Please enter a valid string for phonetic pronunciation.' })
   phoneticPronunciation: string;
-  @IsString()
+
+  @IsOptional()
+  @IsString({ message: 'Please enter a valid string for nickname.' })
   nickname: string;
-  @IsString()
+
+  @IsNotEmpty({ message: 'You must input an NUID.' })
+  @Matches(/^\d{9}$/, { message: 'An NUID must be exactly 9 digits long' })
   nuid: string;
-  @IsString()
+
+  @IsOptional()
+  @IsString({ message: 'Please enter a valid string for pronouns.' })
   pronouns: string;
-  @IsEmail()
+
+  @IsNotEmpty()
+  @IsEmail({}, { message: 'Please enter a valid email address.' })
   email: string;
-  @IsString()
+
+  @IsOptional()
+  @Matches(/^\+?\d{10,15}$/, { message: 'Phone number must be between 10 and 15 digits, optionally starting with "+".'})
   phoneNumber: string;
-  @IsPositive()
+
+  @IsNotEmpty()
+  @Min(1, { message: 'Year must be between 1 and 5. The inputted year is less than 1' })
+  @Max(5, { message: 'Year must be between 1 and 5. The inputted year is more than 5' })
   year: number;
-  @IsString()
+
+  @IsNotEmpty({ message: 'You must input a college name.' })
+  @IsString({ message: 'Please enter a valid string for college name.' })
   college: string;
-  @IsString()
+
+  @IsNotEmpty({ message: 'You must input a major.' })
+  @IsString({ message: 'Please enter a valid string for your major.' })
   major: string;
-  @IsString()
+
+  @IsOptional()
+  @IsString({ message: 'Please enter a valid string for your minor.' })
   minors: string;
-  @IsString()
+  
+  @IsNotEmpty({ message: 'You must input constituency.' })
+  @IsString({ message: 'Please enter a valid string for constituency.' })
   constituency: string;
 }

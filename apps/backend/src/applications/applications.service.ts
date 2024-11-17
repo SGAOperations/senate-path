@@ -1,10 +1,11 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { UpdateApplicationRequestDto } from './dto/update-application-request.dto';
 import { GetNominationFormDTO } from './dto/get-nomination-forms-request.dto';
 
 import supabase from '../supabase/client';
 import { Tables } from '../supabase/database.types';
 import { CreateApplicationRequestDto } from './dto/create-application-request.dto';
+import { validateOrReject, ValidationError } from 'class-validator';
 
 @Injectable()
 export class ApplicationsService {
@@ -12,7 +13,7 @@ export class ApplicationsService {
     const { data, error } = await supabase.from('applications').select('*');
 
     if (error) {
-      throw new Error(error.message);
+      throw new InternalServerErrorException(`Failed to fetch applications: ${error.message}`);
     }
 
     return data;
@@ -27,7 +28,10 @@ export class ApplicationsService {
       .select('constituency');
 
     if (nomineesError || constituencyError) {
-      throw new Error(nomineesError.message + constituencyError.message);
+      throw new InternalServerErrorException([
+        nomineesError ? `Nominee data fetch failed: ${nomineesError.message}` : '',
+        constituencyError ? `Constituency data fetch failed: ${constituencyError.message}` : '',
+      ].filter(Boolean).join(' | '));
     }
 
     return {
@@ -41,13 +45,25 @@ export class ApplicationsService {
   async createApplication(
     applicationColumns: CreateApplicationRequestDto
   ): Promise<void> {
+    try {
+      await validateOrReject(applicationColumns);
+    } catch (errors) {
+      throw new BadRequestException(this.formatValidationErrors(errors));
+    }
+    
     const { error } = await supabase
       .from('applications')
       .insert(applicationColumns);
 
     if (error) {
-      throw new Error(error.message);
+      throw new BadRequestException(`Failed to create application: ${error.message}`);
     }
+  }
+
+  private formatValidationErrors(errors: ValidationError[]): string {
+    return errors
+      .map((err) => `${err.property}: ${Object.values(err.constraints).join(', ')}`)
+      .join('; ');
   }
 
   async updateApplication({
@@ -62,7 +78,7 @@ export class ApplicationsService {
       .eq('id', id);
 
     if (applicationData.length === 0) {
-      throw new BadRequestException(
+      throw new NotFoundException(
         `Application with given id, ${id}, does not exist.`
       );
     }
@@ -73,7 +89,7 @@ export class ApplicationsService {
       .eq('id', id);
 
     if (error) {
-      throw new Error(error.message);
+      throw new InternalServerErrorException(`Failed to update application: ${error.message}`);
     }
   }
 }
