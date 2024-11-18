@@ -6,11 +6,14 @@ import {
 } from '../../components/tables/AdminTable/constants';
 import { TableEntry } from '../../components/tables/AdminTable/types';
 import AdminTable from '../../components/tables/AdminTable';
+import LoginForm from '../../components/forms/LoginForm';
 
 const Admin: React.FC = () => {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [nominations, setNominations] = useState<TableEntry[]>([]);
   const [applications, setApplications] = useState<TableEntry[]>([]);
+
+  if (!loggedIn) return <LoginForm />;
 
   const getData = (url: string, setData: (data: TableEntry[]) => void) => {
     fetch(url)

@@ -1,7 +1,9 @@
-interface Props {
-  setIsPopupOpen: (open: boolean) => void;
-}
+interface Props {}
 
-export const LoginForm: React.FC<Props> = ({ setIsPopupOpen }) => {
-  return <><input /></>;
+export const LoginForm: React.FC<Props> = () => {
+  return (
+    <>
+      <input />
+    </>
+  );
 };
