@@ -13,7 +13,7 @@ const Admin: React.FC = () => {
   const [nominations, setNominations] = useState<TableEntry[]>([]);
   const [applications, setApplications] = useState<TableEntry[]>([]);
 
-  if (!loggedIn) return <LoginForm />;
+  if (!loggedIn) return <LoginForm setLoginStatus={setLoggedIn} />;
 
   const getData = (url: string, setData: (data: TableEntry[]) => void) => {
     fetch(url)
