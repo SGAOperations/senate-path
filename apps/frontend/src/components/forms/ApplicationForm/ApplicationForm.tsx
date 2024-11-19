@@ -5,6 +5,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import Button from '@mui/material/Button';
+import { FormHelperText } from '@mui/material';
 
 import {
   FormInput,
@@ -80,6 +81,28 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
     }
   };
 
+  const [errors, setErrors] = useState<{
+    fullName?: string;
+    preferredFullName?: string;
+    phoneticPronunciation?: string;
+    nickname?: string;
+    northeasternID?: string;
+    email?: string;
+    phoneNumber?: string;
+    college?: string;
+    major?: string;
+    minors?: string;
+    constituencyName?: string;
+    year?: string;
+    constituency?: string;
+    selectedConstituencyType?: string;
+    selectedReturningType?: string;
+    selectedAttestation?: string;
+    pronouns?: string;
+  }>({});
+
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+
   const isTextFieldError = fullName === '';
   const isPreferredFullNameError = preferredFullName === '';
   const isPhoneticPronunciationError = phoneticPronunciation === '';
@@ -98,6 +121,7 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
   const isAttestationError = attestation !== 'agree';
 
   const submitApplication = () => {
+    setIsSubmitted(true);
     if (
       isTextFieldError ||
       isPreferredFullNameError ||
@@ -117,8 +141,56 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
       isAttestationError
     ) {
       // TODO show error popup with message
-      console.log('error message here')
+
+      const newErrors: {
+        fullName?: string;
+        preferredFullName?: string;
+        phoneticPronunciation?: string;
+        nickname?: string;
+        northeasternID?: string;
+        email?: string;
+        phoneNumber?: string;
+        college?: string;
+        major?: string;
+        minors?: string;
+        constituencyName?: string;
+        year?: string;
+        constituency?: string;
+        selectedConstituencyType?: string;
+        selectedReturningType?: string;
+        selectedAttestation?: string;
+        pronouns?: string;
+      } = {};
+      if (isTextFieldError) newErrors.fullName = 'Name is mandatory';
+      if (isPreferredFullNameError)
+        newErrors.preferredFullName = 'Preferred Name is mandatory';
+      if (isPhoneticPronunciationError)
+        newErrors.phoneticPronunciation = 'Pronunciation is mandatory';
+      if (isNicknameError) newErrors.nickname = 'Nickname is mandatory';
+      if (isNortheasternIDError) newErrors.northeasternID = 'NUID is mandatory';
+      if (isEmailError) newErrors.email = 'Email is mandatory';
+      if (isPhoneNumberError)
+        newErrors.phoneNumber = 'Phone Number is mandatory';
+      if (isCollegeError) newErrors.college = 'College is mandatory';
+      if (isMinorError) newErrors.minors = 'Minor is mandatory';
+      if (isMajorError) newErrors.major = 'Major is mandatory';
+      if (isconstituencyNameError)
+        newErrors.constituencyName = 'Constituency Name is mandatory';
+      if (isYearError) newErrors.year = 'Year is mandatory';
+      if (isConstituencyError)
+        newErrors.constituency = 'Constituency is mandatory';
+      if (isConstituencyTypeError)
+        newErrors.selectedConstituencyType = 'Constituency Type is mandatory';
+      if (isReturningSenatorError)
+        newErrors.selectedReturningType = 'Field is mandatory';
+      if (isAttestationError)
+        newErrors.selectedAttestation = 'Please accept the acknowledgement';
+
+      setErrors(newErrors);
+      // if (!validateForm()) {
+      console.log('error message here');
       return;
+      // }
     }
 
     const formData = {
@@ -196,7 +268,7 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
       </SampleForm>
 
       <SampleForm>
-        <FormControl>
+        <FormControl error={isSubmitted && !!errors.fullName}>
           <FormQuestionContainer>
             <FormTextContainer>
               What is your full name?
@@ -212,7 +284,8 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
                 required
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                error={isTextFieldError}
+                error={isSubmitted && !!isTextFieldError}
+                helperText={isSubmitted && errors.fullName}
               />
             </FormTextAnswerContainer>
           </FormQuestionContainer>
@@ -220,7 +293,7 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
       </SampleForm>
 
       <SampleForm>
-        <FormControl>
+        <FormControl error={isSubmitted && !!errors.preferredFullName}>
           <FormQuestionContainer>
             <FormTextContainer>
               What is your preferred name?
@@ -237,7 +310,8 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
                 placeholder="Your Preferred Name"
                 value={preferredFullName}
                 onChange={(e) => setPreferredFullName(e.target.value)}
-                error={isPreferredFullNameError}
+                error={isSubmitted && !!isPreferredFullNameError}
+                helperText={isSubmitted && errors.preferredFullName}
               />
             </FormTextAnswerContainer>
           </FormQuestionContainer>
@@ -245,7 +319,7 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
       </SampleForm>
 
       <SampleForm>
-        <FormControl>
+        <FormControl error={isSubmitted && !!errors.phoneticPronunciation}>
           <FormQuestionContainer>
             <FormTextContainer>
               What is the phonetic pronunciation of your name?
@@ -260,7 +334,8 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
                 placeholder="Name Pronunciation"
                 value={phoneticPronunciation}
                 onChange={(e) => setPhoneticPronunciation(e.target.value)}
-                error={isPhoneticPronunciationError}
+                error={isSubmitted && !!isPhoneticPronunciationError}
+                helperText={isSubmitted && errors.phoneticPronunciation}
               />
             </FormTextAnswerContainer>
           </FormQuestionContainer>
@@ -268,7 +343,7 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
       </SampleForm>
 
       <SampleForm>
-        <FormControl>
+        <FormControl error={isSubmitted && !!errors.nickname}>
           <FormQuestionContainer>
             <FormTextContainer>
               What is your nickname?
@@ -282,7 +357,8 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
                 placeholder="Nickname"
                 value={nickname}
                 onChange={(e) => setNickname(e.target.value)}
-                error={isNicknameError}
+                error={isSubmitted && !!isNicknameError}
+                helperText={isSubmitted && errors.nickname}
               />
             </FormTextAnswerContainer>
           </FormQuestionContainer>
@@ -290,7 +366,7 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
       </SampleForm>
 
       <SampleForm>
-        <FormControl>
+        <FormControl error={isSubmitted && !!errors.northeasternID}>
           <FormQuestionContainer>
             <FormTextContainer>
               What is your NUID?
@@ -303,7 +379,8 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
                 placeholder="NUID"
                 value={northeasternID}
                 onChange={(e) => setNortheasternID(e.target.value)}
-                error={isNortheasternIDError}
+                error={isSubmitted && !!isNortheasternIDError}
+                helperText={isSubmitted && errors.northeasternID}
               />
               <br />
             </FormTextAnswerContainer>
@@ -312,7 +389,7 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
       </SampleForm>
 
       <SampleForm>
-        <FormControl>
+        <FormControl error={isSubmitted && !!errors.pronouns}>
           <FormQuestionContainer>
             <FormTextContainer>What pronouns do you use?</FormTextContainer>
             <FormInputCheckbox>
@@ -350,11 +427,14 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
               />
             </FormInputCheckbox>
           </FormQuestionContainer>
+          {errors.pronouns && (
+            <FormHelperText>{errors.pronouns}</FormHelperText>
+          )}
         </FormControl>
       </SampleForm>
 
       <SampleForm>
-        <FormControl>
+        <FormControl error={isSubmitted && !!errors.email}>
           <FormQuestionContainer>
             <FormTextContainer>
               What is your Northeastern email?
@@ -368,7 +448,8 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
                 placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                error={isEmailError}
+                error={isSubmitted && !!isEmailError}
+                helperText={isSubmitted && errors.email}
               />
             </FormTextAnswerContainer>
           </FormQuestionContainer>
@@ -376,7 +457,7 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
       </SampleForm>
 
       <SampleForm>
-        <FormControl>
+        <FormControl error={isSubmitted && !!errors.phoneNumber}>
           <FormQuestionContainer>
             <FormTextContainer>
               What is your phone number?
@@ -394,7 +475,8 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
                 placeholder="Phone Number"
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
-                error={isPhoneNumberError}
+                error={isSubmitted && !!isPhoneNumberError}
+                helperText={isSubmitted && errors.phoneNumber}
               />
             </FormTextAnswerContainer>
           </FormQuestionContainer>
@@ -402,7 +484,7 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
       </SampleForm>
 
       <SampleForm>
-        <FormControl>
+        <FormControl error={isSubmitted && !!errors.year}>
           <FormQuestionContainer>
             <FormTextContainer>
               What is your year?*
@@ -441,12 +523,13 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
                 />
               </RadioGroup>
             </RadioButtons>
+            {errors.year && <FormHelperText>{errors.year}</FormHelperText>}
           </FormQuestionContainer>
         </FormControl>
       </SampleForm>
 
       <SampleForm>
-        <FormControl>
+        <FormControl error={isSubmitted && !!errors.college}>
           <FormQuestionContainer>
             <FormTextContainer>
               What is your college?
@@ -463,7 +546,8 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
                 placeholder="College"
                 value={college}
                 onChange={(e) => setCollege(e.target.value)}
-                error={isCollegeError}
+                error={isSubmitted && !!isCollegeError}
+                helperText={isSubmitted && errors.college}
               />
               <br />
             </FormTextAnswerContainer>
@@ -472,7 +556,7 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
       </SampleForm>
 
       <SampleForm>
-        <FormControl>
+        <FormControl error={isSubmitted && !!errors.major}>
           <FormQuestionContainer>
             <FormTextContainer>What is your major?</FormTextContainer>
             <FormTextAnswerContainer>
@@ -482,7 +566,8 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
                 placeholder="Major"
                 value={major}
                 onChange={(e) => setMajor(e.target.value)}
-                error={isMajorError}
+                error={isSubmitted && !!isMajorError}
+                helperText={isSubmitted && errors.major}
               />
               <br />
             </FormTextAnswerContainer>
@@ -491,7 +576,7 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
       </SampleForm>
 
       <SampleForm>
-        <FormControl>
+        <FormControl error={isSubmitted && !!errors.minors}>
           <FormQuestionContainer>
             <FormTextContainer>What are your minors?</FormTextContainer>
             <FormTextAnswerContainer>
@@ -499,7 +584,8 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
                 placeholder="Minors"
                 value={minors}
                 onChange={(e) => setMinors(e.target.value)}
-                error={isMinorError}
+                error={isSubmitted && !!isMinorError}
+                helperText={isSubmitted && errors.minors}
               />
               <br />
             </FormTextAnswerContainer>
@@ -508,7 +594,7 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
       </SampleForm>
 
       <SampleForm>
-        <FormControl>
+        <FormControl error={isSubmitted && !!errors.constituency}>
           <FormQuestionContainer>
             <FormTextContainer>
               What is your constituency?*
@@ -550,6 +636,9 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
               </RadioGroup>
             </RadioButtons>
           </FormQuestionContainer>
+          {errors.constituency && (
+            <FormHelperText>{errors.constituency}</FormHelperText>
+          )}
         </FormControl>
       </SampleForm>
 
@@ -565,7 +654,7 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
       </SampleForm>
 
       <SampleForm>
-        <FormControl>
+        <FormControl error={isSubmitted && !!errors.selectedConstituencyType}>
           <FormQuestionContainer>
             <FormTextContainer>
               What type of constituency would you like to represent?*
@@ -589,11 +678,14 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
               </RadioGroup>
             </RadioButtons>
           </FormQuestionContainer>
+          {errors.selectedConstituencyType && (
+            <FormHelperText>{errors.selectedConstituencyType}</FormHelperText>
+          )}
         </FormControl>
       </SampleForm>
 
       <SampleForm>
-        <FormControl>
+        <FormControl error={isSubmitted && !!errors.constituencyName}>
           <FormQuestionContainer>
             <FormTextContainer>
               What is the name of your constituency?
@@ -609,7 +701,8 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
                 placeholder="Constituency Name"
                 value={constituencyName}
                 onChange={(e) => setConstituencyName(e.target.value)}
-                error={isconstituencyNameError}
+                error={isSubmitted && !!isconstituencyNameError}
+                helperText={isSubmitted && errors.constituencyName}
               />
               <br />
             </FormTextAnswerContainer>
@@ -650,7 +743,7 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
       </SampleForm>
 
       <SampleForm>
-        <FormControl>
+        <FormControl error={isSubmitted && !!errors.selectedAttestation}>
           <FormQuestionContainer>
             <FormTextContainer>
               Acknowledgment and Attestation*
@@ -677,6 +770,9 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
                   label="I have carefully read and fully agree to the statement above."
                 />
               </RadioGroup>
+              {isSubmitted && errors.selectedAttestation && (
+                <FormHelperText>{errors.selectedAttestation}</FormHelperText>
+              )}
             </RadioButtons>
           </FormQuestionContainer>
         </FormControl>
