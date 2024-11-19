@@ -6,6 +6,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import TextField from '@mui/material/TextField';
+import { FormHelperText } from '@mui/material';
 
 import {
   SampleForm,
@@ -39,7 +40,20 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
   const isMajorError = major === '';
   const isGraduationYearError = graduationYear === 0;
 
+  const [errors, setErrors] = useState<{
+    fullName?: string;
+    email?: string;
+    nominee?: string;
+    constituency?: string;
+    college?: string;
+    major?: string;
+    graduationYear?: string;
+  }>({});
+
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+
   const handleSampleFormSubmit = () => {
+    setIsSubmitted(true);
     if (
       isFullNameError ||
       isEmailError ||
@@ -50,7 +64,30 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
       isGraduationYearError
     ) {
       // TODO show error popup with message
-      console.log('invalid inputs')
+
+      const newErrors: {
+        fullName?: string;
+        email?: string;
+        nominee?: string;
+        constituency?: string;
+        college?: string;
+        major?: string;
+        graduationYear?: string;
+      } = {};
+
+      if (isFullNameError) newErrors.fullName = 'Name is mandatory';
+      if (isEmailError) newErrors.email = 'Email is mandatory';
+      if (isNomineeError) newErrors.nominee = 'Nominee is mandatory';
+      if (isConstituencyError)
+        newErrors.constituency = 'Constituency is mandatory';
+      if (isCollegeError) newErrors.college = 'College is mandatory';
+      if (isMajorError) newErrors.major = 'Major is mandatory';
+      if (isGraduationYearError)
+        newErrors.graduationYear = 'Graduation Year is mandatory';
+
+      setErrors(newErrors);
+
+      console.log('invalid inputs');
       return;
     }
 
@@ -128,7 +165,7 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
       </SampleForm>
 
       <SampleForm>
-        <FormControl required>
+        <FormControl required error={isSubmitted && !!errors.fullName}>
           <FormQuestionContainer>
             <FormTextContainer>
               <h1>What is your full name?</h1>
@@ -144,6 +181,8 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
                 label="Required"
                 defaultValue=""
                 onChange={(e) => setFullName(e.target.value)}
+                error={isSubmitted && !!isFullNameError}
+                helperText={isSubmitted && errors.fullName}
               />
             </FormTextAnswerContainer>
           </FormQuestionContainer>
@@ -151,169 +190,226 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
       </SampleForm>
 
       <SampleForm>
-        <FormQuestionContainer>
-          <FormTextContainer>
-            <h1>What is your Northeastern email?</h1>
-            <p>
-              We may contact you to verify the authenticity of this nomination.
-            </p>
-          </FormTextContainer>
-          <FormTextAnswerContainer>
-            <TextField
-              required
-              id="outlined-required"
-              label="Required"
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </FormTextAnswerContainer>
-        </FormQuestionContainer>
+        <FormControl required error={isSubmitted && !!errors.email}>
+          <FormQuestionContainer>
+            <FormTextContainer>
+              <h1>What is your Northeastern email?</h1>
+              <p>
+                We may contact you to verify the authenticity of this
+                nomination.
+              </p>
+            </FormTextContainer>
+            <FormTextAnswerContainer>
+              <TextField
+                required
+                id="outlined-required"
+                label="Required"
+                onChange={(e) => setEmail(e.target.value)}
+                error={isSubmitted && !!isEmailError}
+                helperText={isSubmitted && errors.email}
+              />
+            </FormTextAnswerContainer>
+          </FormQuestionContainer>
+        </FormControl>
       </SampleForm>
 
       <SampleForm>
-        <FormQuestionContainer>
-          <FormTextContainer>
-            <h1>Select the name of the person you are nominating</h1>
-          </FormTextContainer>
-          <FormTextAnswerContainer>
-            <FormSelect
-              required
-              label="nominee"
-              onChange={(e) => setNominee(e.target.value as string)}
-            >
-              {/* TODO Insert MenuItems using database of nominees */}
-              <MenuItem value={'Name1'}>Name1</MenuItem>
-              <MenuItem value={'Name2'}>Name2</MenuItem>
-              <MenuItem value={'Name3'}>Name3</MenuItem>
-              <MenuItem value={'Name4'}>Name4</MenuItem>
-            </FormSelect>
-          </FormTextAnswerContainer>
-        </FormQuestionContainer>
-      </SampleForm>
-
-      <SampleForm>
-        <FormQuestionContainer>
-          <FormTextContainer>
-            <h1>
-              Please confirm you are one of the prospective senator's
-              constituents.
-            </h1>
-            <p>
-              Select a college, organization, or program from the list below to
-              confirm you are one of the prospective senator's constituents.{' '}
-              <span style={{ fontWeight: 'bold' }}>
-                You must select the same constituency as the prospective senator
-                for this nomination to be processed.
-              </span>
-            </p>
-          </FormTextContainer>
-          <FormTextAnswerContainer>
-            <FormSelect
-              required
-              onChange={(e) => setConstituency(e.target.value as string)}
-            >
-              {/* TODO Insert MenuItems using database of Constituents */}
-              <MenuItem value={'Alpha Chi Omega Sorority'}>
-                Alpha Chi Omega Sorority
-              </MenuItem>
-              <MenuItem value={'Alpha Epsilon Phi'}>Alpha Epsilon Phi</MenuItem>
-              <MenuItem value={'Alpha Epsilon Pi'}>Alpha Epsilon Pi</MenuItem>
-              <MenuItem value={'Bouvé College of Health Sciences'}>
-                Bouvé College of Health Sciences
-              </MenuItem>
-              <MenuItem value={'College of Science'}>
-                College of Science
-              </MenuItem>
-              <MenuItem value={'College of Social Sciences and Humanities'}>
-                College of Social Sciences and Humanities
-              </MenuItem>
-              <MenuItem value={"D'Amore-McKim School of Business"}>
-                D'Amore-McKim School of Business
-              </MenuItem>
-              <MenuItem value={'Delta Phi Epsilon'}>Delta Phi Epsilon</MenuItem>
-              <MenuItem value={'Delta Tau Delta'}>Delta Tau Delta</MenuItem>
-              <MenuItem value={'Delta Zeta'}>Delta Zeta</MenuItem>
-              <MenuItem value={'Global Scholars program'}>
-                Global Scholars program
-              </MenuItem>
-              <MenuItem value={'Honors program'}>Honors program</MenuItem>
-              <MenuItem value={'Kappa Delta'}>Kappa Delta</MenuItem>
-              <MenuItem value={'Khoury College of Computer Sciences'}>
-                Khoury College of Computer Sciences
-              </MenuItem>
-              <MenuItem
-                value={'Northeastern University Real Estate Club (NURE)'}
+        <FormControl required error={isSubmitted && !!errors.fullName}>
+          <FormQuestionContainer>
+            <FormTextContainer>
+              <h1>Select the name of the person you are nominating</h1>
+            </FormTextContainer>
+            <FormTextAnswerContainer>
+              <FormSelect
+                required
+                label="nominee"
+                onChange={(e) => setNominee(e.target.value as string)}
               >
-                Northeastern University Real Estate Club (NURE)
-              </MenuItem>
-              <MenuItem value={'NU Immerse'}>NU Immerse</MenuItem>
-              <MenuItem value={'Phi Sigma Rho'}>Phi Sigma Rho</MenuItem>
-              <MenuItem value={'Sandbox'}>Sandbox</MenuItem>
-            </FormSelect>
-          </FormTextAnswerContainer>
-        </FormQuestionContainer>
+                {/* TODO Insert MenuItems using database of nominees */}
+                <MenuItem value={'Name1'}>Name1</MenuItem>
+                <MenuItem value={'Name2'}>Name2</MenuItem>
+                <MenuItem value={'Name3'}>Name3</MenuItem>
+                <MenuItem value={'Name4'}>Name4</MenuItem>
+              </FormSelect>
+            </FormTextAnswerContainer>
+            {isSubmitted && errors.nominee && (
+              <FormHelperText>{errors.nominee}</FormHelperText>
+            )}
+          </FormQuestionContainer>
+        </FormControl>
       </SampleForm>
 
       <SampleForm>
-        <FormQuestionContainer>
-          <FormTextContainer>
-            <h1>What is your college?</h1>
-            <p>
-              Note: For combined majors (a single major listed in the course
-              catalog that spans two disciplines), list only the home college.
-              For double majors (two distinct majors listed separately in the
-              course catalog), include both colleges.
-            </p>
-          </FormTextContainer>
-          <FormTextAnswerContainer>
-            <TextField
-              required
-              id="outlined-required"
-              label="Required"
-              onChange={(e) => setCollege(e.target.value)}
-            />
-          </FormTextAnswerContainer>
-        </FormQuestionContainer>
+        <FormControl required error={isSubmitted && !!errors.constituency}>
+          <FormQuestionContainer>
+            <FormTextContainer>
+              <h1>
+                Please confirm you are one of the prospective senator's
+                constituents.
+              </h1>
+              <p>
+                Select a college, organization, or program from the list below
+                to confirm you are one of the prospective senator's
+                constituents.{' '}
+                <span style={{ fontWeight: 'bold' }}>
+                  You must select the same constituency as the prospective
+                  senator for this nomination to be processed.
+                </span>
+              </p>
+            </FormTextContainer>
+            <FormTextAnswerContainer>
+              <FormSelect
+                required
+                onChange={(e) => setConstituency(e.target.value as string)}
+              >
+                {/* TODO Insert MenuItems using database of Constituents */}
+                <MenuItem value={'Alpha Chi Omega Sorority'}>
+                  Alpha Chi Omega Sorority
+                </MenuItem>
+                <MenuItem value={'Alpha Epsilon Phi'}>
+                  Alpha Epsilon Phi
+                </MenuItem>
+                <MenuItem value={'Alpha Epsilon Pi'}>Alpha Epsilon Pi</MenuItem>
+                <MenuItem value={'Bouvé College of Health Sciences'}>
+                  Bouvé College of Health Sciences
+                </MenuItem>
+                <MenuItem value={'College of Science'}>
+                  College of Science
+                </MenuItem>
+                <MenuItem value={'College of Social Sciences and Humanities'}>
+                  College of Social Sciences and Humanities
+                </MenuItem>
+                <MenuItem value={"D'Amore-McKim School of Business"}>
+                  D'Amore-McKim School of Business
+                </MenuItem>
+                <MenuItem value={'Delta Phi Epsilon'}>
+                  Delta Phi Epsilon
+                </MenuItem>
+                <MenuItem value={'Delta Tau Delta'}>Delta Tau Delta</MenuItem>
+                <MenuItem value={'Delta Zeta'}>Delta Zeta</MenuItem>
+                <MenuItem value={'Global Scholars program'}>
+                  Global Scholars program
+                </MenuItem>
+                <MenuItem value={'Honors program'}>Honors program</MenuItem>
+                <MenuItem value={'Kappa Delta'}>Kappa Delta</MenuItem>
+                <MenuItem value={'Khoury College of Computer Sciences'}>
+                  Khoury College of Computer Sciences
+                </MenuItem>
+                <MenuItem
+                  value={'Northeastern University Real Estate Club (NURE)'}
+                >
+                  Northeastern University Real Estate Club (NURE)
+                </MenuItem>
+                <MenuItem value={'NU Immerse'}>NU Immerse</MenuItem>
+                <MenuItem value={'Phi Sigma Rho'}>Phi Sigma Rho</MenuItem>
+                <MenuItem value={'Sandbox'}>Sandbox</MenuItem>
+              </FormSelect>
+            </FormTextAnswerContainer>
+            {isSubmitted && errors.constituency && (
+              <FormHelperText>{errors.constituency}</FormHelperText>
+            )}
+          </FormQuestionContainer>
+        </FormControl>
       </SampleForm>
 
       <SampleForm>
-        <FormQuestionContainer>
-          <FormTextContainer>
-            <h1>What is your major?</h1>
-          </FormTextContainer>
-          <FormTextAnswerContainer>
-            <TextField
-              required
-              id="outlined-required"
-              label="Required"
-              onChange={(e) => setMajor(e.target.value)}
-            />
-          </FormTextAnswerContainer>
-        </FormQuestionContainer>
+        <FormControl required error={isSubmitted && !!errors.college}>
+          <FormQuestionContainer>
+            <FormTextContainer>
+              <h1>What is your college?</h1>
+              <p>
+                Note: For combined majors (a single major listed in the course
+                catalog that spans two disciplines), list only the home college.
+                For double majors (two distinct majors listed separately in the
+                course catalog), include both colleges.
+              </p>
+            </FormTextContainer>
+            <FormTextAnswerContainer>
+              <TextField
+                required
+                id="outlined-required"
+                label="Required"
+                onChange={(e) => setCollege(e.target.value)}
+                error={isSubmitted && !!isCollegeError}
+                helperText={isSubmitted && errors.college}
+              />
+            </FormTextAnswerContainer>
+          </FormQuestionContainer>
+        </FormControl>
       </SampleForm>
 
       <SampleForm>
-        <FormQuestionContainer>
-          <FormTextContainer>
-            <h1>What is your expected graduation year?</h1>
-          </FormTextContainer>
-          <RadioButtons>
-            <RadioGroup
-              name="year-buttons-group"
-              aria-required
-              onChange={(e) =>
-                setGraduationYear(Number.parseInt(e.target.value))
-              }
-              /* TODO pick up radio options from env variable */
-            >
-              <FormControlLabel value={2023} control={<Radio />} label="2023" />
-              <FormControlLabel value={2024} control={<Radio />} label="2024" />
-              <FormControlLabel value={2025} control={<Radio />} label="2025" />
-              <FormControlLabel value={2026} control={<Radio />} label="2026" />
-              <FormControlLabel value={2027} control={<Radio />} label="2027" />
-              <FormControlLabel value={2028} control={<Radio />} label="2028" />
-            </RadioGroup>
-          </RadioButtons>
-        </FormQuestionContainer>
+        <FormControl required error={isSubmitted && !!errors.major}>
+          <FormQuestionContainer>
+            <FormTextContainer>
+              <h1>What is your major?</h1>
+            </FormTextContainer>
+            <FormTextAnswerContainer>
+              <TextField
+                required
+                id="outlined-required"
+                label="Required"
+                onChange={(e) => setMajor(e.target.value)}
+                error={isSubmitted && !!isMajorError}
+                helperText={isSubmitted && errors.major}
+              />
+            </FormTextAnswerContainer>
+          </FormQuestionContainer>
+        </FormControl>
+      </SampleForm>
+
+      <SampleForm>
+        <FormControl error={isSubmitted && !!errors.graduationYear}>
+          <FormQuestionContainer>
+            <FormTextContainer>
+              <h1>What is your expected graduation year?</h1>
+            </FormTextContainer>
+            <RadioButtons>
+              <RadioGroup
+                name="year-buttons-group"
+                aria-required
+                onChange={(e) =>
+                  setGraduationYear(Number.parseInt(e.target.value))
+                }
+                /* TODO pick up radio options from env variable */
+              >
+                <FormControlLabel
+                  value={2023}
+                  control={<Radio />}
+                  label="2023"
+                />
+                <FormControlLabel
+                  value={2024}
+                  control={<Radio />}
+                  label="2024"
+                />
+                <FormControlLabel
+                  value={2025}
+                  control={<Radio />}
+                  label="2025"
+                />
+                <FormControlLabel
+                  value={2026}
+                  control={<Radio />}
+                  label="2026"
+                />
+                <FormControlLabel
+                  value={2027}
+                  control={<Radio />}
+                  label="2027"
+                />
+                <FormControlLabel
+                  value={2028}
+                  control={<Radio />}
+                  label="2028"
+                />
+              </RadioGroup>
+            </RadioButtons>
+            {isSubmitted && errors.graduationYear && (
+              <FormHelperText>{errors.graduationYear}</FormHelperText>
+            )}
+          </FormQuestionContainer>
+        </FormControl>
       </SampleForm>
 
       <SampleForm>
@@ -341,9 +437,7 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
         </FormQuestionContainer>
       </SampleForm>
 
-      <Button variant="contained" onClick={handleSampleFormSubmit
-      
-      }>
+      <Button variant="contained" onClick={handleSampleFormSubmit}>
         Submit
       </Button>
     </>
