@@ -42,14 +42,16 @@ export class NominationsService {
     ...nominationsColumns
   }: CreateNominationRequestDto): Promise<void> {
     try {
+      console.log('here')
       await validateOrReject(nominationsColumns);
     } catch (errors) {
+      console.log(errors)
       throw new BadRequestException(this.formatValidationErrors(errors));
     }
     if (nominationsColumns.fullName === nominationsColumns.nominee) {
       throw new BadRequestException('You cannot nominate yourself for Senator.');
     }
-
+    console.log('hereee')
     let status = Status.APPROVED;
     const { data: nominationData } = await supabase
       .from('nominations')
@@ -62,6 +64,7 @@ export class NominationsService {
     );
     if (!valid) {
       status = Status.DENIED;
+      console.log('what')
       throw new BadRequestException(
         `This nominator has already nominated the nominee: ${nominationsColumns.nominee}.`
       );
