@@ -153,6 +153,18 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
           // TODO show error popup with below message
           // LEGIT SHOW ERROR MESSAGE HERE
           console.log(`Application failed to submit: ${data.statusText}`);
+          data.json()
+        .then((responseBody) => {
+          // Extract and log the 'message' property from the response
+          if (responseBody && responseBody.message) {
+            console.log('Error Message:', responseBody.message);
+          } else {
+            console.log('Unexpected response format:', responseBody);
+          }
+        })
+        .catch((error) => {
+          console.error('Error reading response body as JSON:', error);
+        });
         }
       })
       .catch((error) => {
