@@ -11,8 +11,11 @@ const Applications: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState('')
   return (
     <HomeContainer>
-      <ApplicationForm setIsPopupOpen={setIsPopupOpen} />
-
+      <ApplicationForm 
+      setIsPopupOpen={setIsPopupOpen} 
+      setErrorMessage={setErrorMessage} 
+      setErrorOpen={setErrorOpen}
+      />
       <SubmitPopUp
         open={isPopupOpen}
         setOpen={setIsPopupOpen}
