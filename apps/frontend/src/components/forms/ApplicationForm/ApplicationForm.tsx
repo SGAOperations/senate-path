@@ -123,6 +123,7 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, set
   const isAttestationError = attestation !== 'agree';
 
   const submitApplication = () => {
+    setErrorOpen(false)
     setIsSubmitted(true);
     if (
       isTextFieldError ||

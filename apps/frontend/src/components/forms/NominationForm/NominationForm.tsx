@@ -55,6 +55,7 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
 
   const handleSampleFormSubmit = () => {
+    setErrorOpen(false)
     setIsSubmitted(true);
     if (
       isFullNameError ||
