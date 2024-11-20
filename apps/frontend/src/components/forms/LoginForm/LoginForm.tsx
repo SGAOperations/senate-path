@@ -34,6 +34,7 @@ export const LoginForm: React.FC<Props> = ({ setLoginStatus }) => {
         margin: '30px auto',
       }}
     >
+      <h1>Log In</h1>
       <FormControl>
         <TextField
           label="Username"
