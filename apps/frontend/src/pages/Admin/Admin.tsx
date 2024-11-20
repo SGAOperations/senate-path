@@ -8,13 +8,12 @@ import { TableEntry } from '../../components/tables/AdminTable/types';
 import AdminTable from '../../components/tables/AdminTable';
 import LoginForm from '../../components/forms/LoginForm';
 
+
+
 const Admin: React.FC = () => {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [nominations, setNominations] = useState<TableEntry[]>([]);
   const [applications, setApplications] = useState<TableEntry[]>([]);
-
-  if (!loggedIn) return <LoginForm setLoginStatus={setLoggedIn} />;
-
   const getData = (url: string, setData: (data: TableEntry[]) => void) => {
     fetch(url)
       .then((response) => {
@@ -35,14 +34,17 @@ const Admin: React.FC = () => {
         console.error('Error fetching:', error);
       });
   };
-
   useEffect(() => {
     getData('http://localhost:3000/api/nominations', setNominations);
   }, []);
-
   useEffect(() => {
     getData('http://localhost:3000/api/applications', setApplications);
   }, []);
+
+  if (!loggedIn) return <LoginForm setLoginStatus={setLoggedIn} />;
+  
+  console.log('HEREEE')
+  
 
   const exportToCsv = (
     data: TableEntry[],
