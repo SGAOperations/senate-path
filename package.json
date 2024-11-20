@@ -25,7 +25,8 @@
     "rxjs": "^7.8.0",
     "styled-components": "^6.1.8",
     "tslib": "^2.3.0",
-    "typeorm": "^0.3.20"
+    "typeorm": "^0.3.20",
+    "yarn": "^1.22.22"
   },
   "devDependencies": {
     "@nestjs/schematics": "^10.0.1",
