@@ -13,10 +13,14 @@ interface Props {
 }
 
 export const LoginForm: React.FC<Props> = ({ setLoginStatus }) => {
-  const username = useState<string>('');
-  const password = useState<string>('');
+  const [username, setUsername] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
 
-  const onSubmit = () => {};
+  const onSubmit = () => {
+    if (username === 'username' && password === 'password') {
+      setLoginStatus(true);
+    }
+  };
 
   return (
     <>
@@ -25,9 +29,7 @@ export const LoginForm: React.FC<Props> = ({ setLoginStatus }) => {
           label="Username"
           required
           placeholder="Username"
-          onChange={(e) =>
-            e.target.value == 'password' ? setLoginStatus(true) : null
-          }
+          onChange={(e) => setUsername(e.target.value)}
         />
       </FormControl>
       <FormControl>
@@ -36,9 +38,7 @@ export const LoginForm: React.FC<Props> = ({ setLoginStatus }) => {
           label="Password"
           required
           placeholder="Password"
-          onChange={(e) =>
-            e.target.value == 'password' ? setLoginStatus(true) : null
-          }
+          onChange={(e) => setPassword(e.target.value)}
         />
       </FormControl>
       <Button variant="contained" onClick={onSubmit}>
