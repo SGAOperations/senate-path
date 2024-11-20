@@ -6,6 +6,8 @@ import NominationForm from '../../components/forms/NominationForm';
 
 const Nominations: React.FC = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isErrorOpen, setErrorOpen] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
 
   return (
     <HomeContainer>
@@ -15,6 +17,12 @@ const Nominations: React.FC = () => {
         open={isPopupOpen}
         setOpen={setIsPopupOpen}
         name="Nomination"
+      />
+
+  <ErrorPopUp 
+      open = {isErrorOpen}
+      setOpen={setErrorOpen}
+      message={errorMessage}
       />
     </HomeContainer>
   );

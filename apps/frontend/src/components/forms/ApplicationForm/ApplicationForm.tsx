@@ -20,9 +20,11 @@ import {
 
 interface Props {
   setIsPopupOpen: (open: boolean) => void;
+  setErrorMessage: (message: string) => void;
+  setErrorOpen: (open: boolean) => void;
 }
 
-const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
+const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setErrorOpen }) => {
   const [fullName, setFullName] = useState<string>('');
   const [preferredFullName, setPreferredFullName] = useState<string>('');
   const [phoneticPronunciation, setPhoneticPronunciation] =
@@ -230,6 +232,8 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
           // Extract and log the 'message' property from the response
           if (responseBody && responseBody.message) {
             console.log('Error Message:', responseBody.message);
+            setErrorMessage(responseBody.message)
+            setErrorOpen(true)
           } else {
             console.log('Unexpected response format:', responseBody);
           }
