@@ -1,63 +1,80 @@
-import { HomeContainer, Nominations } from './styles';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import {
+  HomeContainer,
+  Nominations,
+  InputContainer,
+  SubmitButton,
+} from './styles';
 
 const Dashboard: React.FC = () => {
-  const [numNominations, setNumNominations] = useState<number>();
+  const [nuid, setNuid] = useState<string>('');
+  const [nominationStatus, setNominationStatus] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetch('http://localhost:3000/api/nominations')
-      .then((response) => response.json())
-      .then((result) => {
-        setNumNominations(result.length);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
+  // Dummy nomination data to display
+  const dummyNominationData = {
+    message: 'You need more nominations!',
+    numNominations: 3,
+    neededNominations: 2,
+  };
 
-  const minNoms = import.meta.env.VITE_NUM_MIN_NOMINATIONS;
-  if (minNoms == null) {
-    return (
-      <HomeContainer>
-        The value for NUM_MIN_NOMINATIONS is not set. Please notify SGA
-        regarding this!
-      </HomeContainer>
-    );
-  }
+  const handleSubmit = async () => {
+    setError(null);
 
-  if (numNominations == null) {
-    return (
-      <HomeContainer>
-        {/* TODO add loading spinner here */}
-        <h1>Loading...</h1>
-      </HomeContainer>
-    );
-  }
+    // Simulate fetching nomination data
+    // Replace with actual API call when ready
+    /*
+    try {
+      const response = await fetch(`http://localhost:3000/api/nominations/${nuid}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch nomination status');
+      }
+      const result = await response.json();
+      setNominationStatus(result);
+    } catch (err: any) {
+      setError(err.message || 'An unknown error occurred');
+    }
+    */
 
-  const neededNoms = minNoms - numNominations;
+    // Use dummy data for now
+    setNominationStatus(dummyNominationData);
+  };
 
-  if (neededNoms <= 0) {
-    return (
-      <HomeContainer>
-        <h1>
-          Congratulations! You have met the required amount of nominations.
-        </h1>
-      </HomeContainer>
-    );
-  } else {
-    return (
-      <HomeContainer>
+  return (
+    <HomeContainer>
+      <InputContainer>
+        <h1>SGA Nomination Dashboard</h1>
+        <label htmlFor="nuid">Enter your NUID:</label>
+        <input
+          id="nuid"
+          type="text"
+          value={nuid}
+          onChange={(e) => setNuid(e.target.value)}
+          placeholder="e.g., 001234567"
+          required
+        />
+        <SubmitButton onClick={handleSubmit}>Submit</SubmitButton>
+      </InputContainer>
+
+      {error && <h2 style={{ color: 'red' }}>{error}</h2>}
+
+      {nominationStatus && (
         <Nominations>
-          <h1>Nominations</h1>
-          <h3>{numNominations}</h3>
+          <h1>Nomination Status</h1>
+          <h3>{nominationStatus.message}</h3>
+          <p>Total Nominations: {nominationStatus.numNominations}</p>
+          {nominationStatus.neededNominations > 0 ? (
+            <p>
+              You need {nominationStatus.neededNominations} more nominations to
+              meet the minimum requirement.
+            </p>
+          ) : (
+            <p>You have met the required number of nominations!</p>
+          )}
         </Nominations>
-        <Nominations>
-          <h1>Nominations Needed</h1>
-          <h3>{neededNoms}</h3>
-        </Nominations>
-      </HomeContainer>
-    );
-  }
+      )}
+    </HomeContainer>
+  );
 };
 
 export default Dashboard;
