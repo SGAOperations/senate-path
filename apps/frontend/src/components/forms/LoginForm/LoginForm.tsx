@@ -2,6 +2,7 @@ import {
   Button,
   FormControl,
   FormControlLabel,
+  FormGroup,
   Input,
   InputLabel,
   TextField,
@@ -23,7 +24,16 @@ export const LoginForm: React.FC<Props> = ({ setLoginStatus }) => {
   };
 
   return (
-    <>
+    <FormGroup
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        rowGap: 16,
+        width: '50%',
+        paddingBottom: '2%',
+        margin: '30px auto',
+      }}
+    >
       <FormControl>
         <TextField
           label="Username"
@@ -44,6 +54,6 @@ export const LoginForm: React.FC<Props> = ({ setLoginStatus }) => {
       <Button variant="contained" onClick={onSubmit}>
         Submit
       </Button>
-    </>
+    </FormGroup>
   );
 };
