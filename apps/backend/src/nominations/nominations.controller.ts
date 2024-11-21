@@ -15,7 +15,7 @@ export class NominationsController {
 
   // TODO change this endpoint to getNominationsById instead of email
   @Get('/:email')
-  getNominationsByEmail(@Param('email') email: string) {
+  ngetNominationsByEmail(@Param('email') email: string) {
     return this.nominationsService.getNominationsByEmail(email);
   }
 
