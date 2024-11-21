@@ -16,6 +16,7 @@ import {
   FormSelect,
   RadioButtons,
   Title,
+  Introduction,
 } from './styles';
 
 interface Props {
@@ -140,7 +141,8 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
   return (
     <>
       <SampleForm>
-        <Title>SGA Senator Nomination Form</Title>
+        <Introduction>
+        <h2>SGA Senator Nomination Form</h2>
         <p>
           Complete this form to nominate a person to become a senator in the
           Student Government Association (SGA). SGA serves as the voice of the
@@ -167,6 +169,7 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
           Please contact Cassidy Donoghue at donoghue.ca@northeastern.edu with
           any questions.
         </p>
+        </Introduction>
       </SampleForm>
 
       <SampleForm>
