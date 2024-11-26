@@ -230,7 +230,7 @@ const Home: React.FC = () => {
   }}
   onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#A00E24')} // Darker red on hover
   onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#C8102E')} // Reset to original color
-  href="https://www.northeasternsga.com/become-a-senator" 
+  href="https://www.northeasternsga.com/senate" 
   target="_blank" 
   rel="noopener noreferrer" 
 >
