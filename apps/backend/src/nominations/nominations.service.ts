@@ -20,17 +20,19 @@ export class NominationsService {
   }
 
   async getNominationsByName(name: string): Promise<number> {
+    console.log('name:' + name)
     const { count, error } = await supabase
       .from('nominations')
       .select('*', { count: 'exact' })
       .eq('nominee', name)
       .eq('status', Status.APPROVED);
-
+    console.log('count', count)
+    console.log('error', error)
     if (error) {
       throw new InternalServerErrorException(`Failed to fetch nominations for ${name}: ${error.message}`);
     }
 
-    return count || 0;
+    return count;
   }
 
 
@@ -41,6 +43,7 @@ export class NominationsService {
       .eq('nuid', nuid)
       .single();
 
+      console.log('error', error)
     if (error || !data) {
       throw new NotFoundException(`No application found for NUID ${nuid}`);
     }
@@ -50,8 +53,11 @@ export class NominationsService {
 
 
   async getNominationsByNuid(nuid: string): Promise<number> {
+    console.log('nuid' + nuid)
     const name = await this.getNameByNuid(nuid);
-    return this.getNominationsByName(name);
+    const count = await this.getNominationsByName(name);
+    console.log('final count', count)
+    return count
   }
 
   async getNominationsByEmail(email: string): Promise<Tables<'nominations'>[]> {
