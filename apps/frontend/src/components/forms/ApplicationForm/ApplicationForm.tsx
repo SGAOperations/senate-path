@@ -40,6 +40,9 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
   const handleYearChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(event.target.value);
     setYear(value);
+    if (errors.year) {
+      errors.year = '';
+    }
   };
 
   const [constituency, setConstituency] = useState<string>('academic');
@@ -47,6 +50,9 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setConstituency(event.target.value);
+    if (errors.constituency) {
+      errors.constituency = '';
+    }
   };
 
   const [constituencyType, setConstituencyType] = useState<string>('club');
@@ -54,6 +60,9 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setConstituencyType(event.target.value);
+    if (errors.selectedConstituencyType) {
+      errors.selectedConstituencyType = '';
+    }
   };
 
   const [returningSenatorType, setReturningSenatorType] =
@@ -69,6 +78,9 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setAttestation(event.target.value);
+    if (errors.selectedAttestation) {
+      errors.selectedAttestation = '';
+    }
   };
 
   const [pronouns, setPronouns] = useState<string[]>([]);
@@ -225,18 +237,19 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
           // TODO show error popup with below message
           // LEGIT SHOW ERROR MESSAGE HERE
           console.log(`Application failed to submit: ${data.statusText}`);
-          data.json()
-        .then((responseBody) => {
-          // Extract and log the 'message' property from the response
-          if (responseBody && responseBody.message) {
-            console.log('Error Message:', responseBody.message);
-          } else {
-            console.log('Unexpected response format:', responseBody);
-          }
-        })
-        .catch((error) => {
-          console.error('Error reading response body as JSON:', error);
-        });
+          data
+            .json()
+            .then((responseBody) => {
+              // Extract and log the 'message' property from the response
+              if (responseBody && responseBody.message) {
+                console.log('Error Message:', responseBody.message);
+              } else {
+                console.log('Unexpected response format:', responseBody);
+              }
+            })
+            .catch((error) => {
+              console.error('Error reading response body as JSON:', error);
+            });
         }
       })
       .catch((error) => {
@@ -295,7 +308,12 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
                 placeholder="Your Full Name"
                 required
                 value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
+                onChange={(e) => {
+                  setFullName(e.target.value);
+                  if (errors.fullName) {
+                    errors.fullName = '';
+                  }
+                }}
                 error={isSubmitted && !!isTextFieldError}
                 helperText={isSubmitted && errors.fullName}
               />
@@ -321,7 +339,12 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
                 required
                 placeholder="Your Preferred Name"
                 value={preferredFullName}
-                onChange={(e) => setPreferredFullName(e.target.value)}
+                onChange={(e) => {
+                  setPreferredFullName(e.target.value);
+                  if (errors.preferredFullName) {
+                    errors.preferredFullName = '';
+                  }
+                }}
                 error={isSubmitted && !!isPreferredFullNameError}
                 helperText={isSubmitted && errors.preferredFullName}
               />
@@ -345,7 +368,12 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
                 required
                 placeholder="Name Pronunciation"
                 value={phoneticPronunciation}
-                onChange={(e) => setPhoneticPronunciation(e.target.value)}
+                onChange={(e) => {
+                  setPhoneticPronunciation(e.target.value);
+                  if (errors.phoneticPronunciation) {
+                    errors.phoneticPronunciation = '';
+                  }
+                }}
                 error={isSubmitted && !!isPhoneticPronunciationError}
                 helperText={isSubmitted && errors.phoneticPronunciation}
               />
@@ -368,7 +396,12 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
               <FormInput
                 placeholder="Nickname"
                 value={nickname}
-                onChange={(e) => setNickname(e.target.value)}
+                onChange={(e) => {
+                  setNickname(e.target.value);
+                  if (errors.nickname) {
+                    errors.nickname = '';
+                  }
+                }}
                 error={isSubmitted && !!isNicknameError}
                 helperText={isSubmitted && errors.nickname}
               />
@@ -390,7 +423,12 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
                 required
                 placeholder="NUID"
                 value={northeasternID}
-                onChange={(e) => setNortheasternID(e.target.value)}
+                onChange={(e) => {
+                  setNortheasternID(e.target.value);
+                  if (errors.northeasternID) {
+                    errors.northeasternID = '';
+                  }
+                }}
                 error={isSubmitted && !!isNortheasternIDError}
                 helperText={isSubmitted && errors.northeasternID}
               />
@@ -459,7 +497,12 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
                 required
                 placeholder="Email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (errors.email) {
+                    errors.email = '';
+                  }
+                }}
                 error={isSubmitted && !!isEmailError}
                 helperText={isSubmitted && errors.email}
               />
@@ -486,7 +529,12 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
                 required
                 placeholder="Phone Number"
                 value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
+                onChange={(e) => {
+                  setPhoneNumber(e.target.value);
+                  if (errors.phoneNumber) {
+                    errors.phoneNumber = '';
+                  }
+                }}
                 error={isSubmitted && !!isPhoneNumberError}
                 helperText={isSubmitted && errors.phoneNumber}
               />
@@ -557,7 +605,12 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
                 required
                 placeholder="College"
                 value={college}
-                onChange={(e) => setCollege(e.target.value)}
+                onChange={(e) => {
+                  setCollege(e.target.value);
+                  if (errors.college) {
+                    errors.college = '';
+                  }
+                }}
                 error={isSubmitted && !!isCollegeError}
                 helperText={isSubmitted && errors.college}
               />
@@ -577,7 +630,12 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
                 required
                 placeholder="Major"
                 value={major}
-                onChange={(e) => setMajor(e.target.value)}
+                onChange={(e) => {
+                  setMajor(e.target.value);
+                  if (errors.major) {
+                    errors.major = '';
+                  }
+                }}
                 error={isSubmitted && !!isMajorError}
                 helperText={isSubmitted && errors.major}
               />
@@ -595,7 +653,12 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
               <FormInput
                 placeholder="Minors"
                 value={minors}
-                onChange={(e) => setMinors(e.target.value)}
+                onChange={(e) => {
+                  setMinors(e.target.value);
+                  if (errors.minors) {
+                    errors.minors = '';
+                  }
+                }}
                 error={isSubmitted && !!isMinorError}
                 helperText={isSubmitted && errors.minors}
               />
@@ -712,7 +775,12 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
                 required
                 placeholder="Constituency Name"
                 value={constituencyName}
-                onChange={(e) => setConstituencyName(e.target.value)}
+                onChange={(e) => {
+                  setConstituencyName(e.target.value);
+                  if (errors.constituencyName) {
+                    errors.constituencyName = '';
+                  }
+                }}
                 error={isSubmitted && !!isconstituencyNameError}
                 helperText={isSubmitted && errors.constituencyName}
               />
@@ -781,10 +849,10 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
                   control={<Radio />}
                   label="I have carefully read and fully agree to the statement above."
                 />
+                {isSubmitted && errors.selectedAttestation && (
+                  <FormHelperText>{errors.selectedAttestation}</FormHelperText>
+                )}
               </RadioGroup>
-              {isSubmitted && errors.selectedAttestation && (
-                <FormHelperText>{errors.selectedAttestation}</FormHelperText>
-              )}
             </RadioButtons>
           </FormQuestionContainer>
         </FormControl>
