@@ -28,9 +28,12 @@ const Dashboard: React.FC = () => {
     // Replace with actual API call when ready
     
     try {
-      fetch(`http://localhost:3000/api/nominations/${nuid}`).then((data)=>{
+      fetch(`/api/nominations/${nuid}`).then((data)=>{
         if(data.ok){
           console.log('okay request')
+          const out = data.json();
+        console.log(out);
+        return out;
         }else{
           data
             .json()
@@ -56,7 +59,12 @@ const Dashboard: React.FC = () => {
             });
         }
       
+      }).then((data) => {
+        console.log('data:', data);
       })
+      .catch((error) => {
+        console.error('Error fetching:', error);
+      });
     } catch (err: any) {
       setError(err.message || 'An unknown error occurred');
     }
