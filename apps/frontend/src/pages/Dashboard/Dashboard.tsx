@@ -10,9 +10,12 @@ const Dashboard: React.FC = () => {
   const [nuid, setNuid] = useState<string>('');
   const [nominationStatus, setNominationStatus] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
+  const [message, setMessage] = useState<string>('')
+  const [numNominations, setNumNominations] = useState<number>()
+
 
   // Dummy nomination data to display
-  const dummyNominationData = {
+  let dummyNominationData = {
     message: 'You need more nominations!',
     numNominations: 3,
     neededNominations: 2,
@@ -23,21 +26,50 @@ const Dashboard: React.FC = () => {
 
     // Simulate fetching nomination data
     // Replace with actual API call when ready
-    /*
+    
     try {
-      const response = await fetch(`http://localhost:3000/api/nominations/${nuid}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch nomination status');
-      }
-      const result = await response.json();
-      setNominationStatus(result);
+      fetch(`http://localhost:3000/api/nominations/${nuid}`).then((data)=>{
+        if(data.ok){
+          console.log('okay request')
+        }else{
+          data
+            .json()
+            .then((responseBody) => {
+              // Extract and log the 'message' property from the response
+              if (responseBody && responseBody.message) {
+                console.log('Error Message : ', responseBody.message);
+                 setMessage('Error Message:' + responseBody.message)
+                 setNumNominations(0)
+                 const errorResult = {
+                  message: 'Error Message:' + responseBody.message,
+                  numNominations: 0, 
+                  neededNominations: 30,
+                };
+                dummyNominationData = errorResult
+                console.log(dummyNominationData)
+              } else {
+                console.log('Unexpected response format:', responseBody);
+              }
+            })
+            .catch((error) => {
+              console.error('Error reading response body as JSON:', error);
+            });
+        }
+      
+      })
     } catch (err: any) {
       setError(err.message || 'An unknown error occurred');
     }
-    */
-
+    
+    console.log('submitting')
+    console.log(dummyNominationData)
     // Use dummy data for now
-    setNominationStatus(dummyNominationData);
+    setNominationStatus({
+      message,
+      numNominations,
+      neededNominations: 30
+    })
+    //setNominationStatus(dummyNominationData);
   };
 
   return (

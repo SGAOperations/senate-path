@@ -34,4 +34,15 @@ export class NominationsController {
       ...request,
     });
   }
+
+  @Get('/:name')
+  async getNominationsByName(@Param('name') name: string) {
+    return this.nominationsService.getNominationsByName(name);
+  }
+
+  @Get('/:nuid')
+  async getNominationsByNuid(@Param('nuid') nuid: string) {
+    return this.nominationsService.getNominationsByNuid(nuid);
+  }
+  
 }
