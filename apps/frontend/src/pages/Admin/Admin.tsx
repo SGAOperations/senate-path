@@ -6,39 +6,45 @@ import {
 } from '../../components/tables/AdminTable/constants';
 import { TableEntry } from '../../components/tables/AdminTable/types';
 import AdminTable from '../../components/tables/AdminTable';
+import LoginForm from '../../components/forms/LoginForm';
+
+
 
 const Admin: React.FC = () => {
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [nominations, setNominations] = useState<TableEntry[]>([]);
   const [applications, setApplications] = useState<TableEntry[]>([]);
-
   const getData = (url: string, setData: (data: TableEntry[]) => void) => {
     fetch(url)
       .then((response) => {
         if (!response.ok) {
-          console.log('errored')
+          console.log('errored');
           throw new Error('Failed to fetch data');
         }
-        console.log('didnt error')
-        const out = response.json()
-        console.log(out)
+        console.log('didnt error');
+        const out = response.json();
+        console.log(out);
         return out;
       })
       .then((data) => {
-        console.log('data:', data)
+        console.log('data:', data);
         setData(data);
       })
       .catch((error) => {
         console.error('Error fetching:', error);
       });
   };
-
   useEffect(() => {
     getData('http://localhost:3000/api/nominations', setNominations);
   }, []);
-
   useEffect(() => {
     getData('http://localhost:3000/api/applications', setApplications);
   }, []);
+
+  if (!loggedIn) return <LoginForm setLoginStatus={setLoggedIn} />;
+  
+  console.log('HEREEE')
+  
 
   const exportToCsv = (
     data: TableEntry[],

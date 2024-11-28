@@ -20,9 +20,11 @@ import {
 
 interface Props {
   setIsPopupOpen: (open: boolean) => void;
+  setErrorMessage: (message: string) => void;
+  setErrorOpen: (open: boolean) => void;
 }
 
-const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
+const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setErrorOpen }) => {
   const [fullName, setFullName] = useState<string>('');
   const [preferredFullName, setPreferredFullName] = useState<string>('');
   const [phoneticPronunciation, setPhoneticPronunciation] =
@@ -133,6 +135,7 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
   const isAttestationError = attestation !== 'agree';
 
   const submitApplication = () => {
+    setErrorOpen(false)
     setIsSubmitted(true);
     if (
       isTextFieldError ||
@@ -250,6 +253,20 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
             .catch((error) => {
               console.error('Error reading response body as JSON:', error);
             });
+          data.json()
+        .then((responseBody) => {
+          // Extract and log the 'message' property from the response
+          if (responseBody && responseBody.message) {
+            console.log('Error Message:', responseBody.message);
+            setErrorMessage(responseBody.message)
+            setErrorOpen(true)
+          } else {
+            console.log('Unexpected response format:', responseBody);
+          }
+        })
+        .catch((error) => {
+          console.error('Error reading response body as JSON:', error);
+        });
         }
       })
       .catch((error) => {

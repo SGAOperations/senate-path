@@ -70,7 +70,9 @@ nx run-many -t serve -p frontend backend
 The frontend will be at http://localhost:4200/ and the backend will be at http://localhost:3000/.
 
 ## To Do List:
-- [ ] Add better responses from form backends than just 'Bad Request'
-- [ ] Add Pop Up for error message for invalid form responses based on invalid frontend data
-- [ ] Encode user permission functionality
+- [x] Add better responses from form backends than just 'Bad Request'
+- [x] Add Pop Up for error message for invalid form responses based on invalid frontend data
+- [x] Encode user permission functionality
+- [ ] Encode dashboard backend functionality
+- [ ] Create SGA theme colors and logos
 

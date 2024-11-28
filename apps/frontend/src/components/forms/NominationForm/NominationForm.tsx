@@ -16,13 +16,16 @@ import {
   FormSelect,
   RadioButtons,
   Title,
+  Introduction,
 } from './styles';
 
 interface Props {
   setIsPopupOpen: (open: boolean) => void;
+  setErrorMessage: (message: string) => void;
+  setErrorOpen: (open: boolean) => void;
 }
 
-const NominationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
+const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setErrorOpen }) => {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [nominee, setNominee] = useState('');
@@ -53,6 +56,7 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
 
   const handleSampleFormSubmit = () => {
+    setErrorOpen(false)
     setIsSubmitted(true);
     if (
       isFullNameError ||
@@ -126,6 +130,20 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
             .catch((error) => {
               console.error('Error reading response body as JSON:', error);
             });
+          data.json()
+        .then((responseBody) => {
+          // Extract and log the 'message' property from the response
+          if (responseBody && responseBody.message) {
+            console.log('Error Message:', responseBody.message);
+            setErrorMessage(responseBody.message)
+            setErrorOpen(true)
+          } else {
+            console.log('Unexpected response format:', responseBody);
+          }
+        })
+        .catch((error) => {
+          console.error('Error reading response body as JSON:', error);
+        });
         }
       })
       .catch((error) => {
@@ -136,7 +154,8 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
   return (
     <>
       <SampleForm>
-        <Title>SGA Senator Nomination Form</Title>
+        <Introduction>
+        <h2>SGA Senator Nomination Form</h2>
         <p>
           Complete this form to nominate a person to become a senator in the
           Student Government Association (SGA). SGA serves as the voice of the
@@ -163,17 +182,18 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
           Please contact Cassidy Donoghue at donoghue.ca@northeastern.edu with
           any questions.
         </p>
+        </Introduction>
       </SampleForm>
 
       <SampleForm>
         <FormControl required error={isSubmitted && !!errors.fullName}>
           <FormQuestionContainer>
             <FormTextContainer>
-              <h1>What is your full name?</h1>
-              <p>
+              What is your full name?
+              <br/>
                 Please enter your first and last name as they appear in the
                 official university records.
-              </p>
+              
             </FormTextContainer>
             <FormTextAnswerContainer>
               <TextField
@@ -199,11 +219,10 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
         <FormControl required error={isSubmitted && !!errors.email}>
           <FormQuestionContainer>
             <FormTextContainer>
-              <h1>What is your Northeastern email?</h1>
-              <p>
+              What is your Northeastern email?
+                <br/>
                 We may contact you to verify the authenticity of this
                 nomination.
-              </p>
             </FormTextContainer>
             <FormTextAnswerContainer>
               <TextField
@@ -228,7 +247,7 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
         <FormControl required error={isSubmitted && !!errors.nominee}>
           <FormQuestionContainer>
             <FormTextContainer>
-              <h1>Select the name of the person you are nominating</h1>
+              Select the name of the person you are nominating
             </FormTextContainer>
             <FormTextAnswerContainer>
               <FormSelect
@@ -259,11 +278,9 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
         <FormControl required error={isSubmitted && !!errors.constituency}>
           <FormQuestionContainer>
             <FormTextContainer>
-              <h1>
                 Please confirm you are one of the prospective senator's
                 constituents.
-              </h1>
-              <p>
+              <br/>
                 Select a college, organization, or program from the list below
                 to confirm you are one of the prospective senator's
                 constituents.{' '}
@@ -271,7 +288,6 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
                   You must select the same constituency as the prospective
                   senator for this nomination to be processed.
                 </span>
-              </p>
             </FormTextContainer>
             <FormTextAnswerContainer>
               <FormSelect
@@ -337,13 +353,12 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
         <FormControl required error={isSubmitted && !!errors.college}>
           <FormQuestionContainer>
             <FormTextContainer>
-              <h1>What is your college?</h1>
-              <p>
+                What is your college?
+                <br/>
                 Note: For combined majors (a single major listed in the course
                 catalog that spans two disciplines), list only the home college.
                 For double majors (two distinct majors listed separately in the
                 course catalog), include both colleges.
-              </p>
             </FormTextContainer>
             <FormTextAnswerContainer>
               <TextField
@@ -368,7 +383,7 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
         <FormControl required error={isSubmitted && !!errors.major}>
           <FormQuestionContainer>
             <FormTextContainer>
-              <h1>What is your major?</h1>
+              What is your major?
             </FormTextContainer>
             <FormTextAnswerContainer>
               <TextField
@@ -393,7 +408,7 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
         <FormControl error={isSubmitted && !!errors.graduationYear}>
           <FormQuestionContainer>
             <FormTextContainer>
-              <h1>What is your expected graduation year?</h1>
+              What is your expected graduation year?
             </FormTextContainer>
             <RadioButtons>
               <RadioGroup
@@ -449,14 +464,11 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen }) => {
       <SampleForm>
         <FormQuestionContainer>
           <FormTextContainer>
-            <h1>
               Would you like to receive information about how to become a
               senator?
-            </h1>
-            <p>
+            <br/>
               Becoming a senator is an excellent, rewarding opportunity to serve
               and improve the Northeastern community.
-            </p>
           </FormTextContainer>
           <RadioButtons>
             <RadioGroup
