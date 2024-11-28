@@ -246,6 +246,8 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, set
               // Extract and log the 'message' property from the response
               if (responseBody && responseBody.message) {
                 console.log('Error Message:', responseBody.message);
+                setErrorMessage(responseBody.message)
+                setErrorOpen(true)
               } else {
                 console.log('Unexpected response format:', responseBody);
               }
@@ -253,20 +255,6 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, set
             .catch((error) => {
               console.error('Error reading response body as JSON:', error);
             });
-          data.json()
-        .then((responseBody) => {
-          // Extract and log the 'message' property from the response
-          if (responseBody && responseBody.message) {
-            console.log('Error Message:', responseBody.message);
-            setErrorMessage(responseBody.message)
-            setErrorOpen(true)
-          } else {
-            console.log('Unexpected response format:', responseBody);
-          }
-        })
-        .catch((error) => {
-          console.error('Error reading response body as JSON:', error);
-        });
         }
       })
       .catch((error) => {
