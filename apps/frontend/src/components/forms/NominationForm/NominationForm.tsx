@@ -117,6 +117,19 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
         } else {
           // LIKE LEGIT ACTUALLY SHOW MESSAGE HERE
           console.log(`Nomination failed to submit: ${data.statusText}`);
+          data
+            .json()
+            .then((responseBody) => {
+              // Extract and log the 'message' property from the response
+              if (responseBody && responseBody.message) {
+                console.log('Error Message:', responseBody.message);
+              } else {
+                console.log('Unexpected response format:', responseBody);
+              }
+            })
+            .catch((error) => {
+              console.error('Error reading response body as JSON:', error);
+            });
           data.json()
         .then((responseBody) => {
           // Extract and log the 'message' property from the response
@@ -188,7 +201,12 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
                 id="outlined-required"
                 label="Required"
                 defaultValue=""
-                onChange={(e) => setFullName(e.target.value)}
+                onChange={(e) => {
+                  setFullName(e.target.value);
+                  if (errors.fullName) {
+                    errors.fullName = '';
+                  }
+                }}
                 error={isSubmitted && !!isFullNameError}
                 helperText={isSubmitted && errors.fullName}
               />
@@ -211,7 +229,12 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
                 required
                 id="outlined-required"
                 label="Required"
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (errors.email) {
+                    errors.email = '';
+                  }
+                }}
                 error={isSubmitted && !!isEmailError}
                 helperText={isSubmitted && errors.email}
               />
@@ -221,7 +244,7 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
       </SampleForm>
 
       <SampleForm>
-        <FormControl required error={isSubmitted && !!errors.fullName}>
+        <FormControl required error={isSubmitted && !!errors.nominee}>
           <FormQuestionContainer>
             <FormTextContainer>
               Select the name of the person you are nominating
@@ -230,7 +253,12 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
               <FormSelect
                 required
                 label="nominee"
-                onChange={(e) => setNominee(e.target.value as string)}
+                onChange={(e) => {
+                  setNominee(e.target.value as string);
+                  if (errors.nominee) {
+                    errors.nominee = '';
+                  }
+                }}
               >
                 {/* TODO Insert MenuItems using database of nominees */}
                 <MenuItem value={'Name1'}>Name1</MenuItem>
@@ -264,7 +292,12 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
             <FormTextAnswerContainer>
               <FormSelect
                 required
-                onChange={(e) => setConstituency(e.target.value as string)}
+                onChange={(e) => {
+                  setConstituency(e.target.value as string);
+                  if (errors.constituency) {
+                    errors.constituency = '';
+                  }
+                }}
               >
                 {/* TODO Insert MenuItems using database of Constituents */}
                 <MenuItem value={'Alpha Chi Omega Sorority'}>
@@ -332,7 +365,12 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
                 required
                 id="outlined-required"
                 label="Required"
-                onChange={(e) => setCollege(e.target.value)}
+                onChange={(e) => {
+                  setCollege(e.target.value);
+                  if (errors.college) {
+                    errors.college = '';
+                  }
+                }}
                 error={isSubmitted && !!isCollegeError}
                 helperText={isSubmitted && errors.college}
               />
@@ -352,7 +390,12 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
                 required
                 id="outlined-required"
                 label="Required"
-                onChange={(e) => setMajor(e.target.value)}
+                onChange={(e) => {
+                  setMajor(e.target.value);
+                  if (errors.major) {
+                    errors.major = '';
+                  }
+                }}
                 error={isSubmitted && !!isMajorError}
                 helperText={isSubmitted && errors.major}
               />
@@ -371,9 +414,12 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
               <RadioGroup
                 name="year-buttons-group"
                 aria-required
-                onChange={(e) =>
-                  setGraduationYear(Number.parseInt(e.target.value))
-                }
+                onChange={(e) => {
+                  setGraduationYear(Number.parseInt(e.target.value));
+                  if (errors.graduationYear) {
+                    errors.graduationYear = '';
+                  }
+                }}
                 /* TODO pick up radio options from env variable */
               >
                 <FormControlLabel
