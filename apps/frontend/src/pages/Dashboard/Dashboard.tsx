@@ -30,6 +30,7 @@ const Dashboard: React.FC = () => {
               if (responseBody && responseBody.message) {
                  setMessage('Error Message : ' + responseBody.message)
                  setNumNominations(0)
+                 setNeededNominations(30)
               } else {
                 console.log('Unexpected response format:', responseBody);
               }
