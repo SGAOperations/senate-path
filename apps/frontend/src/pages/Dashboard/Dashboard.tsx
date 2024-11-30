@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   HomeContainer,
   Nominations,
@@ -8,37 +8,67 @@ import {
 
 const Dashboard: React.FC = () => {
   const [nuid, setNuid] = useState<string>('');
-  const [nominationStatus, setNominationStatus] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
-
-  // Dummy nomination data to display
-  const dummyNominationData = {
-    message: 'You need more nominations!',
-    numNominations: 3,
-    neededNominations: 2,
-  };
+  const [message, setMessage] = useState<string>('')
+  const [numNominations, setNumNominations] = useState<number>()
+  const [neededNominations, setNeededNominations] = useState<number>(30)
+  const [showResult, setShowResult] = useState<boolean>(false)
 
   const handleSubmit = async () => {
     setError(null);
-
-    // Simulate fetching nomination data
-    // Replace with actual API call when ready
-    /*
     try {
-      const response = await fetch(`http://localhost:3000/api/nominations/${nuid}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch nomination status');
-      }
-      const result = await response.json();
-      setNominationStatus(result);
+      fetch(`http://localhost:3000/api/nominations/${nuid}`).then((data)=>{
+        if(data.ok){
+          console.log('okay request')
+          const out = data.json();
+        console.log(out);
+        return out;
+        } else {
+          data
+            .json()
+            .then((responseBody) => {
+              if (responseBody && responseBody.message) {
+                 setMessage('Error Message : ' + responseBody.message)
+                 setNumNominations(0)
+              } else {
+                console.log('Unexpected response format:', responseBody);
+              }
+            })
+            .catch((error) => {
+              console.error('Error reading response body as JSON:', error);
+            });
+        }
+      
+      }).then((data) => {
+        if (data !== undefined) {
+          setNumNominations(data)
+          if ( 30 - data > 0) {
+            setNeededNominations(30 - data)
+            setMessage('You need more nominations!')
+          }else{
+            setNeededNominations(0)
+            setMessage('You have the required amount of nominations! Congrats on becoming a Senator!')
+          }
+        }
+        setShowResult(true)
+      })
+      .catch((error) => {
+        console.error('Error fetching:', error);
+      });
     } catch (err: any) {
       setError(err.message || 'An unknown error occurred');
     }
-    */
-
-    // Use dummy data for now
-    setNominationStatus(dummyNominationData);
   };
+
+  useEffect(() => {
+    console.log('message:', message);
+  }, [message]);
+  useEffect(() => {
+    console.log('num nom updated:', numNominations);
+  }, [numNominations]);
+  useEffect(() => {
+    console.log('num needed nom updated:', neededNominations);
+  }, [neededNominations]);
 
   return (
     <HomeContainer>
@@ -58,14 +88,14 @@ const Dashboard: React.FC = () => {
 
       {error && <h2 style={{ color: 'red' }}>{error}</h2>}
 
-      {nominationStatus && (
+      {showResult && (
         <Nominations>
           <h1>Nomination Status</h1>
-          <h3>{nominationStatus.message}</h3>
-          <p>Total Nominations: {nominationStatus.numNominations}</p>
-          {nominationStatus.neededNominations > 0 ? (
+          <h3>{message}</h3>
+          <p>Total Nominations: {numNominations}</p>
+          {neededNominations > 0 ? (
             <p>
-              You need {nominationStatus.neededNominations} more nominations to
+              You need {neededNominations} more nominations to
               meet the minimum requirement.
             </p>
           ) : (
