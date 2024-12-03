@@ -1,14 +1,21 @@
 import AppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
 import { NAVBAR_MENUS } from './constants';
+import senateLogo from '../../assets/senate-logo.png';
 
-import { NavbarLink, SGALogo, StyledToolbar } from './styles';
+import { NavbarLink, StyledToolbar } from './styles';
 
 const Navbar: React.FC = () => {
   return (
-    <AppBar position="static">
+    <AppBar position="static" color="secondary">
       <StyledToolbar>
-        <SGALogo>SGA Logo</SGALogo>
+        <img
+          src={senateLogo}
+          alt="Senate Logo"
+          style={{
+            height: '80px',
+          }}
+        />
 
         {NAVBAR_MENUS.map((menu) => (
           <Button key={menu.text}>
