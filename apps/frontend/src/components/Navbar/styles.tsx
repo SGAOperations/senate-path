@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 export const StyledToolbar = styled(Toolbar)(() => ({
   display: 'flex',
+  justifyContent: 'space-between',
 }));
 
 export const NavbarLink = styled(Link)(() => ({

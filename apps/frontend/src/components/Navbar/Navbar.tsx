@@ -17,11 +17,13 @@ const Navbar: React.FC = () => {
           }}
         />
 
-        {NAVBAR_MENUS.map((menu) => (
-          <Button key={menu.text}>
-            <NavbarLink to={menu.path}>{menu.text}</NavbarLink>
-          </Button>
-        ))}
+        <div>
+          {NAVBAR_MENUS.map((menu) => (
+            <Button key={menu.text}>
+              <NavbarLink to={menu.path}>{menu.text}</NavbarLink>
+            </Button>
+          ))}
+        </div>
       </StyledToolbar>
     </AppBar>
   );
