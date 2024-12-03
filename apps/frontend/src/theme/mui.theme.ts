@@ -15,4 +15,7 @@ export default createTheme({
     warning: { main: '#ff0000' },
     success: { main: '#66bb6a' },
   },
+  typography: {
+    fontFamily: ['Verdana', 'sans-serif'].join(','),
+  },
 });
