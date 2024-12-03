@@ -4,11 +4,14 @@ export default createTheme({
   palette: {
     primary: {
       main: '#c8102e',
-      contrastText: '#ffffff',
+      contrastText: '#fff',
     },
     secondary: {
       main: '#000000',
-      contrastText: '#ffffff',
+      contrastText: '#fff',
     },
+    info: { main: '#29b6f6' },
+    warning: { main: '#ff0000' },
+    success: { main: '#66bb6a' },
   },
 });
