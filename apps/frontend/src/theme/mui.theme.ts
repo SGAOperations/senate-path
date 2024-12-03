@@ -8,6 +8,7 @@ export default createTheme({
     },
     secondary: {
       main: '#000000',
+      light: '#9c9999',
       contrastText: '#fff',
     },
     info: { main: '#29b6f6' },
