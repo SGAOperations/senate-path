@@ -21,6 +21,7 @@ export const LoginForm: React.FC<Props> = ({ setLoginStatus }) => {
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [userNameError, setuserNameError] = useState(false);
   const [passwordError, setpasswordError] = useState(false);
+  const [loginError, setLoginError] = useState(false);
 
   const onSubmit = () => {
     setIsSubmitted(true);
@@ -30,6 +31,8 @@ export const LoginForm: React.FC<Props> = ({ setLoginStatus }) => {
 
     if (username === 'username' && password === 'password') {
       setLoginStatus(true);
+    } else {
+      setLoginError(true)
     }
   };
 
@@ -69,6 +72,7 @@ export const LoginForm: React.FC<Props> = ({ setLoginStatus }) => {
           }}
         />
         {passwordError && <FormHelperText>Password is required</FormHelperText>}
+        {loginError && <FormHelperText error>Your Username or Password was incorrect</FormHelperText>}
       </FormControl>
       <Button variant="contained" onClick={onSubmit}>
         Submit
