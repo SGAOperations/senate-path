@@ -6,6 +6,7 @@ import {
   Input,
   InputLabel,
   TextField,
+  FormHelperText,
 } from '@mui/material';
 import { useState } from 'react';
 
@@ -17,7 +18,16 @@ export const LoginForm: React.FC<Props> = ({ setLoginStatus }) => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+  const [userNameError, setuserNameError] = useState(false);
+  const [passwordError, setpasswordError] = useState(false);
+
   const onSubmit = () => {
+    setIsSubmitted(true);
+
+    if (username.trim() === '') setuserNameError(true);
+    if (password.trim() === '') setpasswordError(true);
+
     if (username === 'username' && password === 'password') {
       setLoginStatus(true);
     }
@@ -35,22 +45,30 @@ export const LoginForm: React.FC<Props> = ({ setLoginStatus }) => {
       }}
     >
       <h1>Log In</h1>
-      <FormControl>
+      <FormControl error={isSubmitted && userNameError}>
         <TextField
           label="Username"
           required
           placeholder="Username"
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={(e) => {
+            setUsername(e.target.value);
+            if (userNameError) setuserNameError(false);
+          }}
         />
+        {userNameError && <FormHelperText>Username is required</FormHelperText>}
       </FormControl>
-      <FormControl>
+      <FormControl error={isSubmitted && passwordError}>
         <TextField
           type="password"
           label="Password"
           required
           placeholder="Password"
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e) => {
+            setPassword(e.target.value);
+            if (passwordError) setpasswordError(false);
+          }}
         />
+        {passwordError && <FormHelperText>Password is required</FormHelperText>}
       </FormControl>
       <Button variant="contained" onClick={onSubmit}>
         Submit
