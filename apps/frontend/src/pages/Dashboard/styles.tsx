@@ -39,7 +39,7 @@ export const InputContainer = styled.div(() => ({
 
 export const SubmitButton = styled.button(() => ({
   padding: '10px 20px',
-  backgroundColor: '#007bff',
+  backgroundColor: '#c8102e',
   color: '#fff',
   border: 'none',
   borderRadius: '5px',
@@ -47,6 +47,6 @@ export const SubmitButton = styled.button(() => ({
   fontSize: '16px',
   marginTop: '10px',
   '&:hover': {
-    backgroundColor: '#0056b3',
+    backgroundColor: '#000000',
   },
 }));
