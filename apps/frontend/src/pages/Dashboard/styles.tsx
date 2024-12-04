@@ -6,7 +6,6 @@ export const HomeContainer = styled.div(() => ({
   alignItems: 'center',
   justifyContent: 'flex-start', // Align children to the top
   padding: '20px',
-  backgroundColor: '#f7f9fc',
   minHeight: '100vh',
 }));
 
