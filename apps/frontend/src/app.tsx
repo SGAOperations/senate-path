@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { CssBaseline } from '@mui/material';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
 
@@ -14,6 +14,8 @@ import { muiTheme } from './theme';
 import Footer from './components/Footer';
 
 const App: React.FC = () => {
+  const location = useLocation();
+
   return (
     <MuiThemeProvider theme={muiTheme}>
       <CssBaseline />
@@ -31,7 +33,7 @@ const App: React.FC = () => {
         <Route path="*" element={<NotFound />} />
       </Routes>
       </div>
-      <Footer />
+      {location.pathname !== '/' && <Footer />}
     </MuiThemeProvider>
   );
 };
