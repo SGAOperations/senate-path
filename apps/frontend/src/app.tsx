@@ -11,11 +11,14 @@ import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 import Navbar from './components/Navbar';
 import { muiTheme } from './theme';
+import Footer from './components/Footer';
 
 const App: React.FC = () => {
   return (
     <MuiThemeProvider theme={muiTheme}>
       <CssBaseline />
+      <div style={{ display: 'flex', flexDirection: 'column', minHeight: '90vh' }}>
+
       <Navbar />
 
       <Routes>
@@ -27,6 +30,8 @@ const App: React.FC = () => {
         <Route path="login" element={<Login />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
+      </div>
+      <Footer />
     </MuiThemeProvider>
   );
 };
