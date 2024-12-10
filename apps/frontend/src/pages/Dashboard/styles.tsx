@@ -6,7 +6,6 @@ export const HomeContainer = styled.div(() => ({
   alignItems: 'center',
   justifyContent: 'flex-start', // Align children to the top
   padding: '20px',
-  minHeight: '100vh',
 }));
 
 export const Nominations = styled.div(() => ({

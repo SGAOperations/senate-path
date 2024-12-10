@@ -73,7 +73,7 @@ const Dashboard: React.FC = () => {
   }, [neededNominations]);
 
   return (
-    <HomeContainer>
+    <HomeContainer >
       <InputContainer>
         <h1>SGA Nomination Dashboard</h1>
         <label htmlFor="nuid">Enter your NUID:</label>
