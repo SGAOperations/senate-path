@@ -1,3 +1,4 @@
+import Button from '@mui/material/Button';
 import styled from 'styled-components';
 
 export const HomeContainer = styled.div(() => ({
@@ -28,24 +29,22 @@ export const InputContainer = styled.div(() => ({
   alignItems: 'center',
   gap: '10px',
   width: '80%',
-  maxWidth: '500px',
   padding: '15px 20px',
   borderRadius: '8px',
-  position: 'sticky', // Keeps it in view while scrolling
   top: '0', // Positions it at the top
   zIndex: '1000', // Ensures it stays above other content
 }));
 
 export const SubmitButton = styled.button(() => ({
   padding: '10px 20px',
-  backgroundColor: '#c8102e',
-  color: '#fff',
+  backgroundColor: 'rgb(200, 16, 46)',
+  color: 'white',
   border: 'none',
   borderRadius: '5px',
   cursor: 'pointer',
   fontSize: '16px',
   marginTop: '10px',
   '&:hover': {
-    backgroundColor: '#000000',
+    backgroundColor: '#A00E24',
   },
 }));

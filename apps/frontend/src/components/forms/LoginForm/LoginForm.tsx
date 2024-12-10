@@ -29,7 +29,7 @@ export const LoginForm: React.FC<Props> = ({ setLoginStatus }) => {
     if (username.trim() === '') setuserNameError(true);
     if (password.trim() === '') setpasswordError(true);
 
-    if (username === 'username' && password === 'password') {
+    if (username === 'sga-admin-user' && password === 'E94W2xjMJbJK') {
       setLoginStatus(true);
     } else {
       setLoginError(true)

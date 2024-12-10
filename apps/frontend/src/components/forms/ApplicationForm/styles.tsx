@@ -7,7 +7,7 @@ export const SampleForm = styled(FormGroup)(() => ({
   display: 'flex',
   flexDirection: 'column',
   rowGap: 16,
-  width: '50%',
+  width: '70%',
   paddingBottom: '2%',
 }));
 
@@ -44,6 +44,8 @@ export const FormQuestionContainer = styled.div(() => ({
 
 export const FormTextContainer = styled.div(() => ({
   padding: '3%',
+  justifyContent: 'center',
+  alignItems: 'center',
 }));
 
 export const FormTextAnswerContainer = styled.div(() => ({
