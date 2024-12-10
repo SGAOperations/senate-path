@@ -8,7 +8,7 @@ import { TableEntry } from '../../components/tables/AdminTable/types';
 import AdminTable from '../../components/tables/AdminTable';
 import LoginForm from '../../components/forms/LoginForm';
 
-import { getFullPath } from '@/utils';
+import { getFullPath } from './../../utils';
 
 
 const Admin: React.FC = () => {

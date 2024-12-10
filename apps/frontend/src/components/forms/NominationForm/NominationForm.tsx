@@ -8,7 +8,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 import TextField from '@mui/material/TextField';
 import { FormHelperText } from '@mui/material';
 
-import { getFullPath } from '@/utils';
+import { getFullPath } from './../../../utils';
 
 import {
   SampleForm,

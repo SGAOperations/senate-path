@@ -7,7 +7,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 import Button from '@mui/material/Button';
 import { FormHelperText } from '@mui/material';
 
-import { getFullPath } from '@/utils';
+import { getFullPath } from './../../../utils';
 
 import {
   FormInput,

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getFullPath } from '@/utils';
+import { getFullPath } from './../../utils';
 import {
   HomeContainer,
   Nominations,
