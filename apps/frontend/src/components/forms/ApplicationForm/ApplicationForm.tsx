@@ -266,22 +266,20 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, set
     <>
       <SampleForm>
         <Introduction>
-          <h2>SGA Senator Application</h2>
+          <h2>SGA Senator Application Form</h2>
           Thank you for your interest in joining the Student Government
           Association (SGA)! SGA serves as the voice of the undergraduate
           student body and strives to promote student interests in the
           university and its surrounding communities. We have many active
-          projects and initiatives. Read more about our work at
-          northeasternsga.com.
-          <br />
+          projects and initiatives. Read more about our work <a href="https://northeasternsga.com" target="_blank" rel="noopener noreferrer">here</a>.
+          <br></br>
+          <br></br>
           Any undergraduate student in good academic and judicial standing is
           eligible to apply to become a senator. There are no elections. Read
-          more about the process to become a senator in the frequently asked
-          questions document
-          (https://docs.google.com/document/d/1xDyzPBpnlzlHmPL9pd2mGsKhzQCl_Cs9EPlFb0G-Y_o/edit)
-          and please contact Senate Speaker Donoghue at
+          more about the process to become a senator in the <a href="https://docs.google.com/document/d/1xDyzPBpnlzlHmPL9pd2mGsKhzQCl_Cs9EPlFb0G-Y_o/edit" target="_blank" rel="noopener noreferrer"> frequently asked questions document</a> and please contact Senate Speaker Donoghue at
           Donoghue.ca@northeastern.edu with any questions.
-          <br />
+          <br></br>
+          <br></br>
           This form is the first step in becoming a senator, the second step is
           to gather signatures. For your application to be accepted, you need to
           collect at least 30 nominations from students in your constituency. If
@@ -291,9 +289,9 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, set
           your name can be automatically added to the signature collection form.
           Both forms will stop accepting submissions on January 30th at 11:59 pm
           EST.
-          <br />
+          <br></br>
+          <br></br>
           Welcome to SGA!
-          <br />
         </Introduction>
       </SampleForm>
 
@@ -301,7 +299,7 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, set
         <FormControl error={isSubmitted && !!errors.fullName}>
           <FormQuestionContainer>
             <FormTextContainer>
-              What is your full name?
+              <b>What is your full name?</b>
               <br />
               Please enter your full name as it appears in the university
               records. This name will only be used in official communications
@@ -331,7 +329,7 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, set
         <FormControl error={isSubmitted && !!errors.preferredFullName}>
           <FormQuestionContainer>
             <FormTextContainer>
-              What is your preferred name?
+            <b>What is your preferred name?</b>
               <br />
               Please enter your preferred first and last name. Do not enter any
               nicknames in this field. This name will be used for all official
@@ -362,7 +360,7 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, set
         <FormControl error={isSubmitted && !!errors.phoneticPronunciation}>
           <FormQuestionContainer>
             <FormTextContainer>
-              What is the phonetic pronunciation of your name?
+            <b>What is the phonetic pronunciation of your name?</b>
               <br />
               Please enter how to pronounce your name. This pronunciation will
               be used during roll-call votes.
@@ -391,7 +389,7 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, set
         <FormControl error={isSubmitted && !!errors.nickname}>
           <FormQuestionContainer>
             <FormTextContainer>
-              What is your nickname?
+            <b>What is your nickname?</b>
               <br />
               If you have a nickname, please enter it here. This name will not
               be used in official SGA business, but it will be used informally
@@ -419,7 +417,7 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, set
         <FormControl error={isSubmitted && !!errors.northeasternID}>
           <FormQuestionContainer>
             <FormTextContainer>
-              What is your NUID?
+            <b>What is your NUID?</b>
               <br />
             </FormTextContainer>
             <FormTextAnswerContainer>
@@ -446,7 +444,9 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, set
       <SampleForm>
         <FormControl error={isSubmitted && !!errors.pronouns}>
           <FormQuestionContainer>
-            <FormTextContainer>What pronouns do you use?</FormTextContainer>
+            <FormTextContainer>
+              <b>What pronouns do you use?</b>
+            </FormTextContainer>
             <FormInputCheckbox>
               <FormControlLabel
                 required
@@ -492,7 +492,7 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, set
         <FormControl error={isSubmitted && !!errors.email}>
           <FormQuestionContainer>
             <FormTextContainer>
-              What is your Northeastern email?
+            <b>What is your Northeastern email?</b>
               <br />
               All email communications will be sent to this address.
             </FormTextContainer>
@@ -520,7 +520,7 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, set
         <FormControl error={isSubmitted && !!errors.phoneNumber}>
           <FormQuestionContainer>
             <FormTextContainer>
-              What is your phone number?
+            <b>What is your phone number?</b>
               <br />
               Please enter your cell phone number. If you do not have a phone
               that can receive calls and texts in the United States, note so
@@ -552,7 +552,7 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, set
         <FormControl error={isSubmitted && !!errors.year}>
           <FormQuestionContainer>
             <FormTextContainer>
-              What is your year?*
+            <b>What is your year?</b>
               <br />
             </FormTextContainer>
             <RadioButtons>
@@ -597,7 +597,7 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, set
         <FormControl error={isSubmitted && !!errors.college}>
           <FormQuestionContainer>
             <FormTextContainer>
-              What is your college?
+            <b>What is your college?</b>
               <br />
               For combined majors (a single major listed in the course catalog
               that spans two disciplines), list only the home college. For
@@ -628,7 +628,9 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, set
       <SampleForm>
         <FormControl error={isSubmitted && !!errors.major}>
           <FormQuestionContainer>
-            <FormTextContainer>What is your major?</FormTextContainer>
+            <FormTextContainer>
+              <b>What is your major?</b>
+            </FormTextContainer>
             <FormTextAnswerContainer>
               <FormInput
                 label="Required"
@@ -653,7 +655,9 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, set
       <SampleForm>
         <FormControl error={isSubmitted && !!errors.minors}>
           <FormQuestionContainer>
-            <FormTextContainer>What are your minors?</FormTextContainer>
+            <FormTextContainer>
+              <b>What are your minors?</b>
+            </FormTextContainer>
             <FormTextAnswerContainer>
               <FormInput
                 placeholder="Minors"
@@ -677,7 +681,7 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, set
         <FormControl error={isSubmitted && !!errors.constituency}>
           <FormQuestionContainer>
             <FormTextContainer>
-              What is your constituency?*
+              <b>What is your constituency?</b>
               <br />
               Academic senators represent an official Northeastern academic
               college or program. Example constituencies include the College of
@@ -737,7 +741,7 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, set
         <FormControl error={isSubmitted && !!errors.selectedConstituencyType}>
           <FormQuestionContainer>
             <FormTextContainer>
-              What type of constituency would you like to represent?*
+            <b>What type of constituency would you like to represent?</b>
             </FormTextContainer>
             <RadioButtons>
               <RadioGroup
@@ -768,7 +772,7 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, set
         <FormControl error={isSubmitted && !!errors.constituencyName}>
           <FormQuestionContainer>
             <FormTextContainer>
-              What is the name of your constituency?
+            <b>What is the name of your constituency?</b>
               <br />
               Please enter the name of the organization as recognized by the
               Student Involvement Board. Only recognized student organizations
@@ -807,7 +811,7 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, set
         <FormControl>
           <FormQuestionContainer>
             <FormTextContainer>
-              Are you a returning senator?*
+            <b>Are you a returning senator?</b>
               <br />
               Select "yes" only if you have completed the Senator Education and
               Training Program (STEP) and remained a senator in good standing
@@ -831,7 +835,7 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, set
         <FormControl error={isSubmitted && !!errors.selectedAttestation}>
           <FormQuestionContainer>
             <FormTextContainer>
-              Acknowledgment and Attestation*
+              <b>Acknowledgment and Attestation</b>
               <br />
               Please carefully read the following statement and select the
               button below if you agree: I attest that I am the undergraduate
