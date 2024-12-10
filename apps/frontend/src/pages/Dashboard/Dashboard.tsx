@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button } from '@mui/material';
+import { getFullPath } from '@/utils';
 import {
   HomeContainer,
   Nominations,
@@ -10,53 +10,56 @@ import {
 const Dashboard: React.FC = () => {
   const [nuid, setNuid] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
-  const [message, setMessage] = useState<string>('')
-  const [numNominations, setNumNominations] = useState<number>()
-  const [neededNominations, setNeededNominations] = useState<number>(30)
-  const [showResult, setShowResult] = useState<boolean>(false)
+  const [message, setMessage] = useState<string>('');
+  const [numNominations, setNumNominations] = useState<number>();
+  const [neededNominations, setNeededNominations] = useState<number>(30);
+  const [showResult, setShowResult] = useState<boolean>(false);
 
   const handleSubmit = async () => {
     setError(null);
     try {
-      fetch(`http://localhost:3000/api/nominations/${nuid}`).then((data)=>{
-        if(data.ok){
-          console.log('okay request')
-          const out = data.json();
-        console.log(out);
-        return out;
-        } else {
-          data
-            .json()
-            .then((responseBody) => {
-              if (responseBody && responseBody.message) {
-                 setMessage('Error Message : ' + responseBody.message)
-                 setNumNominations(0)
-                 setNeededNominations(30)
-              } else {
-                console.log('Unexpected response format:', responseBody);
-              }
-            })
-            .catch((error) => {
-              console.error('Error reading response body as JSON:', error);
-            });
-        }
-      
-      }).then((data) => {
-        if (data !== undefined) {
-          setNumNominations(data)
-          if ( 30 - data > 0) {
-            setNeededNominations(30 - data)
-            setMessage('You need more nominations!')
-          }else{
-            setNeededNominations(0)
-            setMessage('You have the required amount of nominations! Congrats on becoming a Senator!')
+      fetch(getFullPath(`/api/nominations/${nuid}`))
+        .then((data) => {
+          if (data.ok) {
+            console.log('okay request');
+            const out = data.json();
+            console.log(out);
+            return out;
+          } else {
+            data
+              .json()
+              .then((responseBody) => {
+                if (responseBody && responseBody.message) {
+                  setMessage('Error Message : ' + responseBody.message);
+                  setNumNominations(0);
+                  setNeededNominations(30);
+                } else {
+                  console.log('Unexpected response format:', responseBody);
+                }
+              })
+              .catch((error) => {
+                console.error('Error reading response body as JSON:', error);
+              });
           }
-        }
-        setShowResult(true)
-      })
-      .catch((error) => {
-        console.error('Error fetching:', error);
-      });
+        })
+        .then((data) => {
+          if (data !== undefined) {
+            setNumNominations(data);
+            if (30 - data > 0) {
+              setNeededNominations(30 - data);
+              setMessage('You need more nominations!');
+            } else {
+              setNeededNominations(0);
+              setMessage(
+                'You have the required amount of nominations! Congrats on becoming a Senator!'
+              );
+            }
+          }
+          setShowResult(true);
+        })
+        .catch((error) => {
+          console.error('Error fetching:', error);
+        });
     } catch (err: any) {
       setError(err.message || 'An unknown error occurred');
     }
@@ -73,7 +76,7 @@ const Dashboard: React.FC = () => {
   }, [neededNominations]);
 
   return (
-    <HomeContainer >
+    <HomeContainer>
       <InputContainer>
         <h1>SGA Nomination Dashboard</h1>
         <label htmlFor="nuid">Enter your NUID:</label>
@@ -97,8 +100,8 @@ const Dashboard: React.FC = () => {
           <p>Total Nominations: {numNominations}</p>
           {neededNominations > 0 ? (
             <p>
-              You need {neededNominations} more nominations to
-              meet the minimum requirement.
+              You need {neededNominations} more nominations to meet the minimum
+              requirement.
             </p>
           ) : (
             <p>You have met the required number of nominations!</p>
