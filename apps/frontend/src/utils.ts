@@ -1,3 +1,3 @@
 export function getFullPath(path: string): string {
-  return process.env.API_URL + path;
+  return import.meta.env.VITE_API_URL + '/' + path;
 }
