@@ -1,8 +1,9 @@
-import { Body, Controller, Post, Get, Put, Param, BadRequestException } from '@nestjs/common';
+import { Body, Controller, Post, Get, Put, Param, BadRequestException, InternalServerErrorException } from '@nestjs/common';
 
 import { NominationsService } from './nominations.service';
 import { CreateNominationRequestDto } from './dto/create-nomination-request.dto';
 import { UpdateNominationRequestDto } from './dto/update-nomination-request.dto';
+import supabase from '../supabase/client';
 
 @Controller('/nominations')
 export class NominationsController {
@@ -52,6 +53,28 @@ export class NominationsController {
     });
   }
 
-  
+  // Controller Method
+@Get('/:unique-nominees')
+async getUniqueNominees(): Promise<any[]> {
+  const { data: applicants, error } = await supabase
+    .from('applications') // actual table name?? no errors so i think so
+    .select('fullName, updatedAt')
+    .order('updatedAt', { ascending: false });
+
+  if (error) {
+    throw new InternalServerErrorException('Error fetching nominees: ' + error.message);
+  }
+
+  // is using a map the best way to get unique nominees?
+  const uniqueNominees = new Map();
+  for (const applicant of applicants) {
+    if (!uniqueNominees.has(applicant.fullName)) {
+      uniqueNominees.set(applicant.fullName, applicant);
+    }
+  }
+
+  return Array.from(uniqueNominees.values()).map((applicant) => applicant.fullName);
+}
+
   
 }
