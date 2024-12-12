@@ -20,19 +20,21 @@ export class NominationsService {
   }
 
   async getNominationsByName(name: string): Promise<number> {
+    console.log('name:' + name)
     const { count, error } = await supabase
       .from('nominations')
       .select('*', { count: 'exact' })
       .eq('nominee', name)
       .eq('status', Status.APPROVED);
-  
+    console.log('count', count)
+    console.log('error', error)
     if (error) {
       throw new InternalServerErrorException(`Failed to fetch nominations for ${name}: ${error.message}`);
     }
-  
-    return count || 0;
+
+    return count;
   }
-  
+
 
   private async getNameByNuid(nuid: string): Promise<string> {
     const { data, error } = await supabase
@@ -40,18 +42,22 @@ export class NominationsService {
       .select('fullName')
       .eq('nuid', nuid)
       .single();
-  
+
+      console.log('error', error)
     if (error || !data) {
       throw new NotFoundException(`No application found for NUID ${nuid}`);
     }
-  
+
     return data.fullName;
   }
-  
-  
+
+
   async getNominationsByNuid(nuid: string): Promise<number> {
+    console.log('nuid' + nuid)
     const name = await this.getNameByNuid(nuid);
-    return this.getNominationsByName(name);
+    const count = await this.getNominationsByName(name);
+    console.log('final count', count)
+    return count
   }
 
   async getNominationsByEmail(email: string): Promise<Tables<'nominations'>[]> {
@@ -77,14 +83,16 @@ export class NominationsService {
     ...nominationsColumns
   }: CreateNominationRequestDto): Promise<void> {
     try {
+      console.log('here')
       await validateOrReject(nominationsColumns);
     } catch (errors) {
+      console.log(errors)
       throw new BadRequestException(this.formatValidationErrors(errors));
     }
     if (nominationsColumns.fullName === nominationsColumns.nominee) {
       throw new BadRequestException('You cannot nominate yourself for Senator.');
     }
-
+    console.log('hereee')
     let status = Status.APPROVED;
     const { data: nominationData } = await supabase
       .from('nominations')
@@ -97,6 +105,7 @@ export class NominationsService {
     );
     if (!valid) {
       status = Status.DENIED;
+      console.log('what')
       throw new BadRequestException(
         `This nominator has already nominated the nominee: ${nominationsColumns.nominee}.`
       );

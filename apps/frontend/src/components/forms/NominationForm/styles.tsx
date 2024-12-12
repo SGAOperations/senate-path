@@ -7,7 +7,7 @@ export const SampleForm = styled(FormGroup)(() => ({
   display: 'flex',
   flexDirection: 'column',
   rowGap: 16,
-  width: '50%',
+  width: '70%',
   paddingBottom: '2%',
 }));
 

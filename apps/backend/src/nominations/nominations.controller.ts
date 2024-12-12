@@ -13,19 +13,26 @@ export class NominationsController {
     return this.nominationsService.getNominations();
   }
 
+  @Get('/:nuid')
+  async getNominationsByNuid(@Param('nuid') nuid: string) {
+    console.log('nuid' + nuid)
+    const result = await this.nominationsService.getNominationsByNuid(nuid);
+    console.log('result', result)
+    return result
+  }
+
   @Get('/:name')
   async getNominationsByName(@Param('name') name: string) {
+    console.log('name', name)
     return this.nominationsService.getNominationsByName(name);
   }
 
-  @Get('/:nuid')
-  async getNominationsByNuid(@Param('nuid') nuid: string) {
-    return this.nominationsService.getNominationsByNuid(nuid);
-  }
+  
 
   // TODO change this endpoint to getNominationsById instead of email
   @Get('/:email')
-  getNominationsByEmail(@Param('email') email: string) {
+  ngetNominationsByEmail(@Param('email') email: string) {
+    console.log('email' + email)
     return this.nominationsService.getNominationsByEmail(email);
   }
 
@@ -44,4 +51,7 @@ export class NominationsController {
       ...request,
     });
   }
+
+  
+  
 }

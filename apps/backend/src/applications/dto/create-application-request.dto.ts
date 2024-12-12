@@ -26,7 +26,7 @@ export class CreateApplicationRequestDto {
   pronouns: string;
 
   @IsNotEmpty()
-  @IsEmail({}, { message: 'Please enter a valid email address.' })
+  @IsEmail({}, { message: 'Please enter a valid northeastern email address.' })
   email: string;
 
   @IsOptional()
