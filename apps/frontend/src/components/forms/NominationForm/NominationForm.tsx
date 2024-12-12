@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -54,6 +54,29 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
   }>({});
 
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+
+  const getData = (url: string) => {
+    fetch(url)
+      .then((response) => {
+        if (!response.ok) {
+          console.log('errored');
+          throw new Error('Failed to fetch data');
+        }
+        console.log('didnt error');
+        const out = response.json();
+        console.log(out);
+        return out;
+      })
+      .then((data) => {
+        console.log('data:', data);
+      })
+      .catch((error) => {
+        console.error('Error fetching:', error);
+      });
+  };
+  useEffect(() => {
+    getData('http://localhost:3000/api/nominations/');
+  }, []);
 
   const handleSampleFormSubmit = () => {
     setErrorOpen(false)

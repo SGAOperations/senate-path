@@ -14,7 +14,7 @@ export class NominationsController {
     return this.nominationsService.getNominations();
   }
 
-  @Get('/:nuid')
+  @Get('/nuid/:nuid')
   async getNominationsByNuid(@Param('nuid') nuid: string) {
     console.log('nuid' + nuid)
     const result = await this.nominationsService.getNominationsByNuid(nuid);
@@ -22,7 +22,7 @@ export class NominationsController {
     return result
   }
 
-  @Get('/:name')
+  @Get('/name/:name')
   async getNominationsByName(@Param('name') name: string) {
     console.log('name', name)
     return this.nominationsService.getNominationsByName(name);
@@ -31,7 +31,7 @@ export class NominationsController {
   
 
   // TODO change this endpoint to getNominationsById instead of email
-  @Get('/:email')
+  @Get('/email/:email')
   ngetNominationsByEmail(@Param('email') email: string) {
     console.log('email' + email)
     return this.nominationsService.getNominationsByEmail(email);
@@ -42,7 +42,7 @@ export class NominationsController {
     return this.nominationsService.createNomination(request);
   }
 
-  @Put('/:id')
+  @Put('/id/:id')
   updateNomination(
     @Param('id') id: number,
     @Body() request: UpdateNominationRequestDto
@@ -55,25 +55,8 @@ export class NominationsController {
 
   // Controller Method
 @Get('/:unique-nominees')
-async getUniqueNominees(): Promise<any[]> {
-  const { data: applicants, error } = await supabase
-    .from('applications') // actual table name?? no errors so i think so
-    .select('fullName, updatedAt')
-    .order('updatedAt', { ascending: false });
-
-  if (error) {
-    throw new InternalServerErrorException('Error fetching nominees: ' + error.message);
-  }
-
-  // is using a map the best way to get unique nominees?
-  const uniqueNominees = new Map();
-  for (const applicant of applicants) {
-    if (!uniqueNominees.has(applicant.fullName)) {
-      uniqueNominees.set(applicant.fullName, applicant);
-    }
-  }
-
-  return Array.from(uniqueNominees.values()).map((applicant) => applicant.fullName);
+getUniqueNominees() {
+  return this.nominationsService.getUniqueNominees()
 }
 
   
