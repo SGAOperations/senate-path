@@ -78,46 +78,69 @@ export class NominationsService {
 
     return data;
   }
-
+  
   async createNomination({
     ...nominationsColumns
   }: CreateNominationRequestDto): Promise<void> {
     try {
-      console.log('here')
+      console.log('here');
       await validateOrReject(nominationsColumns);
     } catch (errors) {
-      console.log(errors)
+      console.log(errors);
       throw new BadRequestException(this.formatValidationErrors(errors));
     }
+  
     if (nominationsColumns.fullName === nominationsColumns.nominee) {
       throw new BadRequestException('You cannot nominate yourself for Senator.');
     }
-    console.log('hereee')
+  
+    // **Constituency Validation**: New helper function call
+    await this.validateConstituency(nominationsColumns.nominee, nominationsColumns.constituency);
+  
+    console.log('hereee');
     let status = Status.APPROVED;
     const { data: nominationData } = await supabase
       .from('nominations')
       .select('*')
       .eq('email', nominationsColumns.email);
-
+  
     // Has this nominator already nominated this nominee?
     const valid = nominationData.every(
       (nomination) => nomination.nominee !== nominationsColumns.nominee
     );
     if (!valid) {
       status = Status.DENIED;
-      console.log('what')
+      console.log('what');
       throw new BadRequestException(
         `This nominator has already nominated the nominee: ${nominationsColumns.nominee}.`
       );
     }
-
+  
     const { error } = await supabase.from('nominations').insert({
       ...nominationsColumns,
       status,
     });
-
+  
     if (error) {
       throw new BadRequestException(`Failed to create nomination: ${error.message}`);
+    }
+  }
+
+  private async validateConstituency(nominee: string, constituency: string): Promise<void> {
+    const { data: nomineeData, error: nomineeError } = await supabase
+      .from('applications') // this is the name of the table right??
+      .select('constituency')
+      .eq('fullName', nominee)
+      .single();
+  
+    if (nomineeError || !nomineeData) {
+      throw new NotFoundException(`Nominee ${nominee} not found.`);
+    }
+  
+    if (nomineeData.constituency !== constituency) {
+      throw new BadRequestException(
+        `The nominator must belong to the same constituency as the nominee.`
+      );
     }
   }
 
