@@ -7,6 +7,8 @@ import RadioGroup from '@mui/material/RadioGroup';
 import Button from '@mui/material/Button';
 import { FormHelperText } from '@mui/material';
 
+import { getFullPath } from './../../../utils';
+
 import {
   FormInput,
   SampleForm,
@@ -24,7 +26,11 @@ interface Props {
   setErrorOpen: (open: boolean) => void;
 }
 
-const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setErrorOpen }) => {
+const ApplicationForm: React.FC<Props> = ({
+  setIsPopupOpen,
+  setErrorMessage,
+  setErrorOpen,
+}) => {
   const [fullName, setFullName] = useState<string>('');
   const [preferredFullName, setPreferredFullName] = useState<string>('');
   const [phoneticPronunciation, setPhoneticPronunciation] =
@@ -135,7 +141,7 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, set
   const isAttestationError = attestation !== 'agree';
 
   const submitApplication = () => {
-    setErrorOpen(false)
+    setErrorOpen(false);
     setIsSubmitted(true);
     if (
       isTextFieldError ||
@@ -228,7 +234,7 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, set
       pronouns: pronouns.join(', '),
     };
 
-    fetch('http://localhost:3000/api/applications', {
+    fetch(getFullPath('/api/applications'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData),
@@ -246,8 +252,8 @@ const ApplicationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, set
               // Extract and log the 'message' property from the response
               if (responseBody && responseBody.message) {
                 console.log('Error Message:', responseBody.message);
-                setErrorMessage(responseBody.message)
-                setErrorOpen(true)
+                setErrorMessage(responseBody.message);
+                setErrorOpen(true);
               } else {
                 console.log('Unexpected response format:', responseBody);
               }
