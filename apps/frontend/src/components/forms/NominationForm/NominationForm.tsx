@@ -167,7 +167,7 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
         <p>
           SGA senator applications are currently open. To apply for a
           {/* TODO include valid url to senator applications form */}
-          senatorship, visit <a href="#">Senator Applications</a>
+          senatorship, visit <a href="http://localhost:4200/applications">Senator Applications</a>
         </p>
         <p>
           Please contact Cassidy Donoghue at donoghue.ca@northeastern.edu with
@@ -180,7 +180,7 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
         <FormControl required error={isSubmitted && !!errors.fullName}>
           <FormQuestionContainer>
             <FormTextContainer>
-              What is your full name?
+              <b>What is your full name?</b>
               <br/>
                 Please enter your first and last name as they appear in the
                 official university records.
@@ -210,7 +210,7 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
         <FormControl required error={isSubmitted && !!errors.email}>
           <FormQuestionContainer>
             <FormTextContainer>
-              What is your Northeastern email?
+              <b>What is your Northeastern email?</b>
                 <br/>
                 We may contact you to verify the authenticity of this
                 nomination.
@@ -238,7 +238,7 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
         <FormControl required error={isSubmitted && !!errors.nominee}>
           <FormQuestionContainer>
             <FormTextContainer>
-              Select the name of the person you are nominating
+              <b>Select the name of the person you are nominating</b>
             </FormTextContainer>
             <FormTextAnswerContainer>
               <FormSelect
@@ -269,16 +269,16 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
         <FormControl required error={isSubmitted && !!errors.constituency}>
           <FormQuestionContainer>
             <FormTextContainer>
-                Please confirm you are one of the prospective senator's
-                constituents.
-              <br/>
-                Select a college, organization, or program from the list below
+              <b>Select a college, organization, or program from the list below
                 to confirm you are one of the prospective senator's
-                constituents.{' '}
-                <span style={{ fontWeight: 'bold' }}>
+                constituents.</b>
+                {' '}
+                <br/>
+                Select the name of the person you are nominating.
                   You must select the same constituency as the prospective
-                  senator for this nomination to be processed.
-                </span>
+                  senator for this nomination to be processed. Please confirm you are one of the prospective senator's
+                  constituents.
+                
             </FormTextContainer>
             <FormTextAnswerContainer>
               <FormSelect
@@ -344,7 +344,7 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
         <FormControl required error={isSubmitted && !!errors.college}>
           <FormQuestionContainer>
             <FormTextContainer>
-                What is your college?
+              <b>What is your college?</b>
                 <br/>
                 Note: For combined majors (a single major listed in the course
                 catalog that spans two disciplines), list only the home college.
@@ -374,7 +374,7 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
         <FormControl required error={isSubmitted && !!errors.major}>
           <FormQuestionContainer>
             <FormTextContainer>
-              What is your major?
+              <b>What is your major?</b>
             </FormTextContainer>
             <FormTextAnswerContainer>
               <TextField
@@ -399,7 +399,7 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
         <FormControl error={isSubmitted && !!errors.graduationYear}>
           <FormQuestionContainer>
             <FormTextContainer>
-              What is your expected graduation year?
+              <b>What is your expected graduation year?</b>
             </FormTextContainer>
             <RadioButtons>
               <RadioGroup
@@ -455,8 +455,8 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
       <SampleForm>
         <FormQuestionContainer>
           <FormTextContainer>
-              Would you like to receive information about how to become a
-              senator?
+            <b>Would you like to receive information about how to become a
+            senator?</b> 
             <br/>
               Becoming a senator is an excellent, rewarding opportunity to serve
               and improve the Northeastern community.
