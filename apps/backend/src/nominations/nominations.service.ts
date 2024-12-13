@@ -94,7 +94,6 @@ export class NominationsService {
       throw new BadRequestException('You cannot nominate yourself for Senator.');
     }
   
-    // **Constituency Validation**: New helper function call
     await this.validateConstituency(nominationsColumns.nominee, nominationsColumns.constituency);
   
     console.log('hereee');

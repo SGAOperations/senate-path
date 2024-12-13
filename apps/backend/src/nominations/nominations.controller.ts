@@ -32,7 +32,7 @@ export class NominationsController {
 
   // TODO change this endpoint to getNominationsById instead of email
   @Get('/email/:email')
-  ngetNominationsByEmail(@Param('email') email: string) {
+  getNominationsByEmail(@Param('email') email: string) {
     console.log('email' + email)
     return this.nominationsService.getNominationsByEmail(email);
   }
@@ -53,11 +53,10 @@ export class NominationsController {
     });
   }
 
-  // Controller Method
-@Get('/:unique-nominees')
-getUniqueNominees() {
-  return this.nominationsService.getUniqueNominees()
-}
+  @Get('/:unique-nominees')
+  getUniqueNominees() {
+    return this.nominationsService.getUniqueNominees()
+  }
 
   
 }
