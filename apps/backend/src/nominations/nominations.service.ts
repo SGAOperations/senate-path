@@ -180,20 +180,23 @@ export class NominationsService {
   }
   async getUniqueNominees() {
     const { data: applicants, error } = await supabase
-    .from('applications') // actual table name?? no errors so i think so
-    .select('fullName')
-  console.log(applicants)
-  if (error) {
-    throw new InternalServerErrorException('Error fetching nomineespenis: ' + error.message);
+      .from('applications')
+      .select('id, fullName')
+      .order('id', { ascending: false });
+  
+    if (error) {
+      throw new InternalServerErrorException('Error fetching nominees: ' + error.message);
+    }
+  
+    const uniqueNominees = new Map<string, { id: number; fullName: string }>();
+  
+    for (const applicant of applicants) {
+      if (!uniqueNominees.has(applicant.fullName)) {
+        uniqueNominees.set(applicant.fullName, applicant);
+      }
+    }
+  
+    return Array.from(uniqueNominees.values()).map((applicant) => applicant.fullName);
   }
-  // is using a map the best way to get unique nominees?
-  // const uniqueNominees = new Map();
-  // for (const applicant of applicants) {
-  //   if (!uniqueNominees.has(applicant.fullName)) {
-  //     uniqueNominees.set(applicant.fullName, applicant);
-  //   }
-  // }
-
-  // return Array.from(uniqueNominees.values()).map((applicant) => applicant.fullName);
-  }
+  
 }
