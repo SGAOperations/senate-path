@@ -8,6 +8,8 @@ import RadioGroup from '@mui/material/RadioGroup';
 import TextField from '@mui/material/TextField';
 import { FormHelperText } from '@mui/material';
 
+import { getFullPath } from './../../../utils';
+
 import {
   SampleForm,
   FormTextContainer,
@@ -132,7 +134,7 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
       receiveSenatorInfo,
     };
 
-    fetch('http://localhost:3000/api/nominations', {
+    fetch(getFullPath('/api/nominations'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formValues),
