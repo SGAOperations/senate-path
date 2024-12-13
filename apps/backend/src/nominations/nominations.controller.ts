@@ -1,8 +1,9 @@
-import { Body, Controller, Post, Get, Put, Param } from '@nestjs/common';
+import { Body, Controller, Post, Get, Put, Param, BadRequestException, InternalServerErrorException } from '@nestjs/common';
 
 import { NominationsService } from './nominations.service';
 import { CreateNominationRequestDto } from './dto/create-nomination-request.dto';
 import { UpdateNominationRequestDto } from './dto/update-nomination-request.dto';
+import supabase from '../supabase/client';
 
 @Controller('/nominations')
 export class NominationsController {
@@ -13,7 +14,7 @@ export class NominationsController {
     return this.nominationsService.getNominations();
   }
 
-  @Get('/:nuid')
+  @Get('/nuid/:nuid')
   async getNominationsByNuid(@Param('nuid') nuid: string) {
     console.log('nuid' + nuid)
     const result = await this.nominationsService.getNominationsByNuid(nuid);
@@ -21,7 +22,7 @@ export class NominationsController {
     return result
   }
 
-  @Get('/:name')
+  @Get('/name/:name')
   async getNominationsByName(@Param('name') name: string) {
     console.log('name', name)
     return this.nominationsService.getNominationsByName(name);
@@ -30,7 +31,7 @@ export class NominationsController {
   
 
   // TODO change this endpoint to getNominationsById instead of email
-  @Get('/:email')
+  @Get('/email/:email')
   ngetNominationsByEmail(@Param('email') email: string) {
     console.log('email' + email)
     return this.nominationsService.getNominationsByEmail(email);
@@ -41,7 +42,7 @@ export class NominationsController {
     return this.nominationsService.createNomination(request);
   }
 
-  @Put('/:id')
+  @Put('/id/:id')
   updateNomination(
     @Param('id') id: number,
     @Body() request: UpdateNominationRequestDto
@@ -52,6 +53,11 @@ export class NominationsController {
     });
   }
 
-  
+  // Controller Method
+@Get('/:unique-nominees')
+getUniqueNominees() {
+  return this.nominationsService.getUniqueNominees()
+}
+
   
 }

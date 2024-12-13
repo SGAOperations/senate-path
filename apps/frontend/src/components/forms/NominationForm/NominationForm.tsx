@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -36,6 +36,7 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
   const [major, setMajor] = useState('');
   const [graduationYear, setGraduationYear] = useState(0);
   const [receiveSenatorInfo, setReceiveSenatorInfo] = useState(false);
+  const [nomineeNames, setNomineeNames] = useState([])
 
   const isFullNameError = fullName === '';
   const isEmailError = email === '';
@@ -56,6 +57,31 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
   }>({});
 
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+
+  const getData = (url: string) => {
+    fetch(url)
+      .then((response) => {
+        if (!response.ok) {
+          console.log('errored');
+          throw new Error('Failed to fetch data');
+        }
+        console.log('didnt error');
+        const out = response.json();
+        console.log(out);
+        return out;
+      })
+      .then((data) => {
+        console.log('data:', data);
+        setNomineeNames(data)
+        console.log('nominees:', nomineeNames)
+      })
+      .catch((error) => {
+        console.error('Error fetching:', error);
+      });
+  };
+  useEffect(() => {
+    getData('http://localhost:3000/api/nominations/unique-nominees');
+  }, );
 
   const handleSampleFormSubmit = () => {
     setErrorOpen(false)
@@ -251,11 +277,11 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
                   }
                 }}
               >
-                {/* TODO Insert MenuItems using database of nominees */}
-                <MenuItem value={'Name1'}>Name1</MenuItem>
-                <MenuItem value={'Name2'}>Name2</MenuItem>
-                <MenuItem value={'Name3'}>Name3</MenuItem>
-                <MenuItem value={'Name4'}>Name4</MenuItem>
+                {
+                  nomineeNames.map((name, index)=> (
+                    <MenuItem key={index} value={name}>{name}</MenuItem>
+                  ))
+                }
               </FormSelect>
             </FormTextAnswerContainer>
             {isSubmitted && errors.nominee && (

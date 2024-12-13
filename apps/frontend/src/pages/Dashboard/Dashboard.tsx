@@ -17,9 +17,13 @@ const Dashboard: React.FC = () => {
 
   const handleSubmit = async () => {
     setError(null);
-    if (!nuidRegex.test(nuid)) {
+    try {
+      fetch(`http://localhost:3000/api/nominations/nuid/${nuid}`).then((data)=>{
+
+        const nuidRegex = /^\d{9}$/;
+        if (!nuidRegex.test(nuid)) {
           setError('NUID must be 9 digits long and contain only numbers');
-          return nothing;
+          return;
         }
     try {
       fetch(getFullPath(`/api/nominations/${nuid}`))
