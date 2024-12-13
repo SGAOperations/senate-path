@@ -75,4 +75,11 @@ The frontend will be at http://localhost:4200/ and the backend will be at http:/
 - [x] Encode user permission functionality
 - [x] Encode dashboard backend functionality
 - [ ] Create SGA theme colors and logos
+- [ ] Add relative imports
+- [ ] Remove console log error messaging
+- [ ] Clean up code
+- [ ] Make use of libraries (for ex. use in application form)
+- [ ] Reduce file length, split into multiple files
+- [ ] Improve reusability of code
+- [ ] Standardize styling with general style guide and usage (colors as well), potentially use styling library like tailwind?
 

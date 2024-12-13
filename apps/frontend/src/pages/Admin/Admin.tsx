@@ -8,6 +8,7 @@ import { TableEntry } from '../../components/tables/AdminTable/types';
 import AdminTable from '../../components/tables/AdminTable';
 import LoginForm from '../../components/forms/LoginForm';
 
+import { getFullPath } from './../../utils';
 
 
 const Admin: React.FC = () => {
@@ -35,10 +36,10 @@ const Admin: React.FC = () => {
       });
   };
   useEffect(() => {
-    getData('http://localhost:3000/api/nominations', setNominations);
+    getData(getFullPath('/api/nominations'), setNominations);
   }, []);
   useEffect(() => {
-    getData('http://localhost:3000/api/applications', setApplications);
+    getData(getFullPath('/api/applications'), setApplications);
   }, []);
 
   if (!loggedIn) return <LoginForm setLoginStatus={setLoggedIn} />;
