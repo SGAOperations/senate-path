@@ -34,6 +34,7 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
   const [major, setMajor] = useState('');
   const [graduationYear, setGraduationYear] = useState(0);
   const [receiveSenatorInfo, setReceiveSenatorInfo] = useState(false);
+  const [nomineeNames, setNomineeNames] = useState([])
 
   const isFullNameError = fullName === '';
   const isEmailError = email === '';
@@ -69,14 +70,16 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
       })
       .then((data) => {
         console.log('data:', data);
+        setNomineeNames(data)
+        console.log('nominees:', nomineeNames)
       })
       .catch((error) => {
         console.error('Error fetching:', error);
       });
   };
   useEffect(() => {
-    getData('http://localhost:3000/api/nominations/');
-  }, []);
+    getData('http://localhost:3000/api/nominations/unique-nominees');
+  }, );
 
   const handleSampleFormSubmit = () => {
     setErrorOpen(false)
@@ -272,11 +275,11 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
                   }
                 }}
               >
-                {/* TODO Insert MenuItems using database of nominees */}
-                <MenuItem value={'Name1'}>Name1</MenuItem>
-                <MenuItem value={'Name2'}>Name2</MenuItem>
-                <MenuItem value={'Name3'}>Name3</MenuItem>
-                <MenuItem value={'Name4'}>Name4</MenuItem>
+                {
+                  nomineeNames.map((name, index)=> (
+                    <MenuItem key={index} value={name}>{name}</MenuItem>
+                  ))
+                }
               </FormSelect>
             </FormTextAnswerContainer>
             {isSubmitted && errors.nominee && (
