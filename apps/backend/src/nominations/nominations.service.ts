@@ -7,6 +7,10 @@ import { Tables } from '../supabase/database.types';
 import { Status } from './nominations.types';
 import { validateOrReject, ValidationError } from 'class-validator';
 
+interface NomineeData {
+  constituencyName: string;
+}
+
 @Injectable()
 export class NominationsService {
   async getNominations(): Promise<Tables<'nominations'>[]> {
@@ -126,18 +130,22 @@ export class NominationsService {
     }
   }
 
+  
   private async validateConstituency(nominee: string, constituency: string): Promise<void> {
     const { data: nomineeData, error: nomineeError } = await supabase
       .from('applications') // this is the name of the table right??
-      .select('constituency')
+      .select('constituencyName')
       .eq('fullName', nominee)
-      .single();
+      .single<{ constituencyName: string }>();
   
     if (nomineeError || !nomineeData) {
       throw new NotFoundException(`Nominee ${nominee} not found.`);
     }
-  
-    if (nomineeData.constituency !== constituency) {
+    console.log(nomineeData)
+    if (nomineeData.constituencyName !== constituency) {
+      console.log(nomineeData.constituencyName)
+      console.log(constituency)
+      console.log((nomineeData.constituencyName !== constituency))
       throw new BadRequestException(
         `The nominator must belong to the same constituency as the nominee.`
       );

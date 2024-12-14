@@ -53,4 +53,20 @@ export class CreateApplicationRequestDto {
   @IsNotEmpty({ message: 'You must input constituency.' })
   @IsString({ message: 'Please enter a valid string for constituency.' })
   constituency: string;
+
+  @IsNotEmpty({ message: 'You must input constituencyName.' })
+  @IsString({ message: 'Please enter a valid string for constituencyName.' })
+  constituencyName: string;
+
+  @IsNotEmpty({ message: 'You must input selectedConstituencyType.' })
+  @IsString({ message: 'Please enter a valid string for selectedConstituencyType.' })
+  selectedConstituencyType: string;
+
+  @IsNotEmpty({ message: 'You must input selectedReturningType.' })
+  @IsString({ message: 'Please enter a valid string for selectedReturningType.' })
+  selectedReturningType: string;
+
+  @IsNotEmpty({ message: 'You must input selectedAttestation.' })
+  @IsString({ message: 'Please enter a valid string for selectedAttestation.' })
+  selectedAttestation: string;
 }
