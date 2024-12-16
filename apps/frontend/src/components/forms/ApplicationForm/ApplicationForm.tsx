@@ -225,7 +225,7 @@ const ApplicationForm: React.FC<Props> = ({
       college,
       major,
       minors,
-      constituencyName,
+      constituencyName: constituencyName,
       year: year,
       constituency: constituency,
       selectedConstituencyType: constituencyType,
@@ -233,7 +233,7 @@ const ApplicationForm: React.FC<Props> = ({
       selectedAttestation: attestation,
       pronouns: pronouns.join(', '),
     };
-
+    console.log(JSON.stringify(formData))
     fetch(getFullPath('/api/applications'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -243,8 +243,6 @@ const ApplicationForm: React.FC<Props> = ({
         if (data.ok) {
           setIsPopupOpen(true);
         } else {
-          // TODO show error popup with below message
-          // LEGIT SHOW ERROR MESSAGE HERE
           console.log(`Application failed to submit: ${data.statusText}`);
           data
             .json()

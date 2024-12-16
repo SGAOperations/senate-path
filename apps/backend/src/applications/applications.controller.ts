@@ -20,6 +20,7 @@ export class ApplicationsController {
 
   @Post()
   createApplication(@Body() request: CreateApplicationRequestDto) {
+    console.log(request)
     return this.applicationsService.createApplication(request);
   }
 

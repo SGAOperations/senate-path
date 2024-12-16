@@ -47,6 +47,7 @@ export class ApplicationsService {
   ): Promise<void> {
     try {
       await validateOrReject(applicationColumns);
+      console.log('columns', applicationColumns)
     } catch (errors) {
       throw new BadRequestException(this.formatValidationErrors(errors));
     }
