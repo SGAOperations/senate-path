@@ -139,6 +139,7 @@ export class NominationsService {
       .single<{ constituencyName: string }>();
   
     if (nomineeError || !nomineeData) {
+      console.log('error', nomineeError)
       throw new NotFoundException(`Nominee ${nominee} not found.`);
     }
     console.log(nomineeData)
