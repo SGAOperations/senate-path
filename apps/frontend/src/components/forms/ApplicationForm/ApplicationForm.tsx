@@ -6,6 +6,8 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import Button from '@mui/material/Button';
 import { FormHelperText } from '@mui/material';
+import MenuItem from '@mui/material/MenuItem';
+
 
 import { getFullPath } from './../../../utils';
 
@@ -16,6 +18,7 @@ import {
   FormQuestionContainer,
   FormTextAnswerContainer,
   Introduction,
+  FormSelect,
   FormInputCheckbox,
   RadioButtons,
 } from './styles';
@@ -696,6 +699,8 @@ const ApplicationForm: React.FC<Props> = ({
               students can only apply to be NUin senators as first-semester
               students. Most senators are academic senators.
               <br />
+              <br />
+
               Special interest senators are selected by the members and
               executive board of the organization they intend to represent.
               Example constituencies include Greek life organizations and clubs.
@@ -773,35 +778,79 @@ const ApplicationForm: React.FC<Props> = ({
       </SampleForm>
 
       <SampleForm>
-        <FormControl error={isSubmitted && !!errors.constituencyName}>
+        <FormControl required error={isSubmitted && !!errors.constituency}>
           <FormQuestionContainer>
             <FormTextContainer>
-            <b>What is the name of your constituency?</b>
-              <br />
-              Please enter the name of the organization as recognized by the
-              Student Involvement Board. Only recognized student organizations
-              may have a special interest senator.
+              <b>Select a college, organization, or program from the list below
+                of the name of your constituency</b>
+                {' '}
+                <br/>
+                Only recognized student organizations may have a special interest senator.
+                
             </FormTextContainer>
             <FormTextAnswerContainer>
-              <FormInput
-                label="Required"
+              <FormSelect
                 required
-                placeholder="Constituency Name"
-                value={constituencyName}
                 onChange={(e) => {
-                  setConstituencyName(e.target.value);
-                  if (errors.constituencyName) {
-                    errors.constituencyName = '';
+                  setConstituency(e.target.value as string);
+                  if (errors.constituency) {
+                    errors.constituency = '';
                   }
                 }}
-                error={isSubmitted && !!isconstituencyNameError}
-                helperText={isSubmitted && errors.constituencyName}
-              />
-              <br />
+              >
+                {/* TODO Insert MenuItems using database of Constituents */}
+                <MenuItem value={'Alpha Chi Omega Sorority'}>
+                  Alpha Chi Omega Sorority
+                </MenuItem>
+                <MenuItem value={'Alpha Epsilon Phi'}>
+                  Alpha Epsilon Phi
+                </MenuItem>
+                <MenuItem value={'Alpha Epsilon Pi'}>Alpha Epsilon Pi</MenuItem>
+                <MenuItem value={'Bouvé College of Health Sciences'}>
+                  Bouvé College of Health Sciences
+                </MenuItem>
+                <MenuItem value={'College of Science'}>
+                  College of Science
+                </MenuItem>
+                <MenuItem value={'College of Social Sciences and Humanities'}>
+                  College of Social Sciences and Humanities
+                </MenuItem>
+                <MenuItem value={"D'Amore-McKim School of Business"}>
+                  D'Amore-McKim School of Business
+                </MenuItem>
+                <MenuItem value={'Delta Phi Epsilon'}>
+                  Delta Phi Epsilon
+                </MenuItem>
+                <MenuItem value={'Delta Tau Delta'}>Delta Tau Delta</MenuItem>
+                <MenuItem value={'Delta Zeta'}>Delta Zeta</MenuItem>
+                <MenuItem value={'Global Scholars program'}>
+                  Global Scholars program
+                </MenuItem>
+                <MenuItem value={'Honors program'}>Honors program</MenuItem>
+                <MenuItem value={'Kappa Delta'}>Kappa Delta</MenuItem>
+                <MenuItem value={'Khoury College of Computer Sciences'}>
+                  Khoury College of Computer Sciences
+                </MenuItem>
+                <MenuItem
+                  value={'Northeastern University Real Estate Club (NURE)'}
+                >
+                  Northeastern University Real Estate Club (NURE)
+                </MenuItem>
+                <MenuItem value={'NU Immerse'}>NU Immerse</MenuItem>
+                <MenuItem value={'Phi Sigma Rho'}>Phi Sigma Rho</MenuItem>
+                <MenuItem value={'Sandbox'}>Sandbox</MenuItem>
+              </FormSelect>
             </FormTextAnswerContainer>
+            {isSubmitted && errors.constituency && (
+              <FormHelperText>{errors.constituency}</FormHelperText>
+            )}
           </FormQuestionContainer>
         </FormControl>
       </SampleForm>
+
+      
+
+      
 
       <SampleForm>
         <FormControl>
