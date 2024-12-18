@@ -792,9 +792,9 @@ const ApplicationForm: React.FC<Props> = ({
               <FormSelect
                 required
                 onChange={(e) => {
-                  setConstituency(e.target.value as string);
-                  if (errors.constituency) {
-                    errors.constituency = '';
+                  setConstituencyName(e.target.value as string);
+                  if (errors.constituencyName) {
+                    errors.constituencyName = '';
                   }
                 }}
               >
