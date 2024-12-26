@@ -67,6 +67,11 @@ To run both the frontend and backend with one command,
 nx run-many -t serve -p frontend backend
 ```
 
+## Serving the app using docker
+```bash
+docker-compose up --build
+```
+
 The frontend will be at http://localhost:4200/ and the backend will be at http://localhost:3000/.
 
 ## To Do List:
