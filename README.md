@@ -95,4 +95,5 @@ The frontend will be at http://localhost:4200/ and the backend will be at http:/
 - [ ] Hide API keys and backend import paths
 - [ ] Try to not have all code public..?
 - [ ] Remove print statements
+- [ ] Either notify user that sites slow during inactivity or not have site slow down during inactivity
 
