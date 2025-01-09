@@ -79,12 +79,11 @@ The frontend will be at http://localhost:4200/ and the backend will be at http:/
 - [x] Add Pop Up for error message for invalid form responses based on invalid frontend data
 - [x] Encode user permission functionality
 - [x] Encode dashboard backend functionality
-- [ ] Make constituencyName on application same as on nomination, dont make user type out
+- [x] Make constituencyName on application same as on nomination, dont make user type out
 - [ ] Make sure that constituencyName is actually being put in the db
 - [ ] Not have nomineeName be updated literally every second
-- [ ] Create SGA theme colors and logos
-- [ ] Add relative imports
-- [ ] Remove console log error messaging
+- [x] Create SGA theme colors and logos
+- [x] Add relative imports
 - [ ] Clean up code
 - [ ] Make use of libraries (for ex. use in application form)
 - [ ] Reduce file length, split into multiple files
