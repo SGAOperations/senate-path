@@ -22,6 +22,11 @@ Backend:
 - Framework: [NestJS](https://nestjs.com/)
 - Database: TBD
 
+## Deployment
+( Deployed separatedly )
+- Deployed frontend on static site of Render
+- Deployed backend on web app site of Render
+
 ## Setting up the development environment
 
 Prerequisites: make sure everything is installed
