@@ -23,6 +23,7 @@ const Dashboard: React.FC = () => {
           setError('NUID must be 9 digits long and contain only numbers');
           return;
         }
+        //localhost:3000/api/nominations/nuid/${nuid}
       fetch(`https://nomination-system-2.onrender.com/api/nominations/nuid/${nuid}`)
         .then((data) => {
           if (data.ok) {
