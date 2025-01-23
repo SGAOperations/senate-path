@@ -37,7 +37,7 @@ Prerequisites: make sure everything is installed
 First, clone the repo and `cd` into the directory
 
 ```bash
-git clone https://github.com/SGAOperationalAffairs/nomination-system.git
+git clone https://github.com/jakewc12/nomination-system.git
 cd nomination-system
 ```
 
@@ -87,4 +87,5 @@ The frontend will be at http://localhost:4200/ and the backend will be at http:/
 - [ ] Standardize styling with general style guide and usage (colors as well), potentially use styling library like tailwind?
 - [ ] Fix spacing in applications and nominations forms
 - [ ] Make the website look good on mobile
+- [ ] Use a local/dev database as well as prod database
 

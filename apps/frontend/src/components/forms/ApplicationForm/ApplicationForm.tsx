@@ -237,7 +237,7 @@ const ApplicationForm: React.FC<Props> = ({
       pronouns: pronouns.join(', '),
     };
     console.log(JSON.stringify(formData))
-    fetch(getFullPath('/api/applications'), {
+    fetch('https://nomination-system-2.onrender.com/api/applications', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData),
@@ -839,6 +839,7 @@ const ApplicationForm: React.FC<Props> = ({
                 <MenuItem value={'NU Immerse'}>NU Immerse</MenuItem>
                 <MenuItem value={'Phi Sigma Rho'}>Phi Sigma Rho</MenuItem>
                 <MenuItem value={'Sandbox'}>Sandbox</MenuItem>
+                <MenuItem value={'Islamic Society of Northeastern University'}>Islamic Society of Northeastern University</MenuItem>
               </FormSelect>
             </FormTextAnswerContainer>
             {isSubmitted && errors.constituency && (

@@ -79,7 +79,7 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
       });
   };
   useEffect(() => {
-    getData(getFullPath('/api/nominations/unique-nominees'));
+    getData('https://nomination-system-2.onrender.com/api/nominations/unique-nominees');
   }, );
   //getData(getFullPath('/api/nominations'), setNominations);
 
@@ -134,7 +134,7 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
       receiveSenatorInfo,
     };
 
-    fetch(getFullPath('/api/nominations'), {
+    fetch('https://nomination-system-2.onrender.com/api/nominations', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formValues),
@@ -357,6 +357,7 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
                 <MenuItem value={'NU Immerse'}>NU Immerse</MenuItem>
                 <MenuItem value={'Phi Sigma Rho'}>Phi Sigma Rho</MenuItem>
                 <MenuItem value={'Sandbox'}>Sandbox</MenuItem>
+                <MenuItem value={'Islamic Society of Northeastern University'}>Islamic Society of Northeastern University</MenuItem>
               </FormSelect>
             </FormTextAnswerContainer>
             {isSubmitted && errors.constituency && (
