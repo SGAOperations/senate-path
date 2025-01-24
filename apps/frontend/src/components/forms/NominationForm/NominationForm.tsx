@@ -193,10 +193,10 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
         <p>
           SGA senator applications are currently open. To apply for a
           {/* TODO include valid url to senator applications form */}
-          senatorship, visit <a href="http://localhost:4200/applications">Senator Applications</a>
+          senatorship, visit <a href="https://senate.northeasternsga.com/applications">Senator Applications</a>
         </p>
         <p>
-          Please contact Cassidy Donoghue at donoghue.ca@northeastern.edu with
+          Please contact the Senate Speaker at sgaSenateSpeaker@northeastern.edu with
           any questions.
         </p>
         </Introduction>
