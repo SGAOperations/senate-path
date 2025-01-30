@@ -7,7 +7,6 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import TextField from '@mui/material/TextField';
 import { FormHelperText } from '@mui/material';
-
 import { getFullPath } from './../../../utils';
 
 import {
@@ -80,8 +79,9 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
       });
   };
   useEffect(() => {
-    getData('http://localhost:3000/api/nominations/unique-nominees');
+    getData(getFullPath('/api/nominations/unique-nominees'));
   }, );
+  //getData(getFullPath('/api/nominations'), setNominations);
 
   const handleSampleFormSubmit = () => {
     setErrorOpen(false)
