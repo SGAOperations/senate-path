@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -8,7 +9,7 @@ import { NominationsModule } from '../nominations/nominations.module';
 import { EmailsModule } from '../emails/emails.module';
 
 @Module({
-  imports: [UsersModule, ApplicationsModule, NominationsModule, EmailsModule],
+  imports: [ConfigModule.forRoot(), UsersModule, ApplicationsModule, NominationsModule, EmailsModule],
   controllers: [AppController],
   providers: [AppService],
 })
