@@ -283,8 +283,8 @@ const ApplicationForm: React.FC<Props> = ({
           <br></br>
           Any undergraduate student in good academic and judicial standing is
           eligible to apply to become a senator. There are no elections. Read
-          more about the process to become a senator in the <a href="https://docs.google.com/document/d/1xDyzPBpnlzlHmPL9pd2mGsKhzQCl_Cs9EPlFb0G-Y_o/edit" target="_blank" rel="noopener noreferrer"> frequently asked questions document</a> and please contact Senate Speaker Donoghue at
-          Donoghue.ca@northeastern.edu with any questions.
+          more about the process to become a senator in the <a href="https://docs.google.com/document/d/1xDyzPBpnlzlHmPL9pd2mGsKhzQCl_Cs9EPlFb0G-Y_o/edit" target="_blank" rel="noopener noreferrer"> frequently asked questions document</a> and please contact the Senate Speaker at
+          sgaSenateSpeaker@northeastern.edu with any questions.
           <br></br>
           <br></br>
           This form is the first step in becoming a senator, the second step is

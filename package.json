@@ -24,6 +24,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "express": "^4.21.2",
+    "jsonc-parser": "^3.3.1",
     "mdb-react-ui-kit": "^9.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
