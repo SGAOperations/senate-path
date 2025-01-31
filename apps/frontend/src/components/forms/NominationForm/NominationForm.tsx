@@ -191,9 +191,9 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
           nominate senators for the NUin program, etc).
         </p>
         <p>
-          SGA senator applications are currently open. To apply for a
-          {/* TODO include valid url to senator applications form */}
-          senatorship, visit <a href="https://senate.northeasternsga.com/applications">Senator Applications</a>
+          SGA senator applications are currently open. To apply for a senatorship
+          {/* TODO include valid url to senator applications form */} 
+          , visit <a href="https://senate.northeasternsga.com/applications">Senator Applications</a>
         </p>
         <p>
           Please contact the Senate Speaker at sgaSenateSpeaker@northeastern.edu with
