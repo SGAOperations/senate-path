@@ -42,7 +42,7 @@ Prerequisites: make sure everything is installed
 First, clone the repo and `cd` into the directory
 
 ```bash
-git clone https://github.com/SGAOperationalAffairs/nomination-system.git
+git clone https://github.com/jakewc12/nomination-system.git
 cd nomination-system
 ```
 
@@ -80,11 +80,7 @@ docker-compose up --build
 The frontend will be at http://localhost:4200/ and the backend will be at http://localhost:3000/.
 
 ## To Do List:
-- [x] Add better responses from form backends than just 'Bad Request'
-- [x] Add Pop Up for error message for invalid form responses based on invalid frontend data
-- [x] Encode user permission functionality
-- [x] Encode dashboard backend functionality
-- [x] Make constituencyName on application same as on nomination, dont make user type out
+- [ ] Make constituencyName on application same as on nomination, dont make user type out
 - [ ] Make sure that constituencyName is actually being put in the db
 - [ ] Not have nomineeName be updated literally every second
 - [x] Create SGA theme colors and logos
@@ -96,6 +92,8 @@ The frontend will be at http://localhost:4200/ and the backend will be at http:/
 - [ ] Standardize styling with general style guide and usage (colors as well), potentially use styling library like tailwind?
 - [ ] Fix spacing in applications and nominations forms
 - [ ] Make the website look good on mobile
+- [ ] Use a local/dev database as well as prod database
+- [ ] Have all constituencies be in a constants.ts files to remove duplicate code in ApplicationForm and NominationForm
 - [ ] Use caching for gathering nominees on nomination form
 - [ ] Hide API keys and backend import paths
 - [ ] Try to not have all code public..?

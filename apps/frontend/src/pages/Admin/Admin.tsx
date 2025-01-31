@@ -36,10 +36,10 @@ const Admin: React.FC = () => {
       });
   };
   useEffect(() => {
-    getData(getFullPath('/api/nominations'), setNominations);
+    getData('https://nomination-system-2.onrender.com/api/nominations', setNominations);
   }, []);
   useEffect(() => {
-    getData(getFullPath('/api/applications'), setApplications);
+    getData('https://nomination-system-2.onrender.com/api/applications', setApplications);
   }, []);
 
   if (!loggedIn) return <LoginForm setLoginStatus={setLoggedIn} />;

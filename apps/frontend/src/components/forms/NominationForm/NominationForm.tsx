@@ -79,7 +79,7 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
       });
   };
   useEffect(() => {
-    getData(getFullPath('/api/nominations/unique-nominees'));
+    getData('https://nomination-system-2.onrender.com/api/nominations/unique-nominees');
   }, );
   //getData(getFullPath('/api/nominations'), setNominations);
 
@@ -134,7 +134,7 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
       receiveSenatorInfo,
     };
 
-    fetch(getFullPath('/api/nominations'), {
+    fetch('https://nomination-system-2.onrender.com/api/nominations', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formValues),
@@ -193,10 +193,10 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
         <p>
           SGA senator applications are currently open. To apply for a
           {/* TODO include valid url to senator applications form */}
-          senatorship, visit <a href="http://localhost:4200/applications">Senator Applications</a>
+          senatorship, visit <a href="https://senate.northeasternsga.com/applications">Senator Applications</a>
         </p>
         <p>
-          Please contact Cassidy Donoghue at donoghue.ca@northeastern.edu with
+          Please contact the Senate Speaker at sgaSenateSpeaker@northeastern.edu with
           any questions.
         </p>
         </Introduction>
@@ -357,6 +357,7 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
                 <MenuItem value={'NU Immerse'}>NU Immerse</MenuItem>
                 <MenuItem value={'Phi Sigma Rho'}>Phi Sigma Rho</MenuItem>
                 <MenuItem value={'Sandbox'}>Sandbox</MenuItem>
+                <MenuItem value={'Islamic Society of Northeastern University'}>Islamic Society of Northeastern University</MenuItem>
               </FormSelect>
             </FormTextAnswerContainer>
             {isSubmitted && errors.constituency && (
