@@ -283,7 +283,8 @@ const ApplicationForm: React.FC<Props> = ({
           <br></br>
           Any undergraduate student in good academic and judicial standing is
           eligible to apply to become a senator. There are no elections. Read
-          more about the process to become a senator in the <a href="https://docs.google.com/document/d/1xDyzPBpnlzlHmPL9pd2mGsKhzQCl_Cs9EPlFb0G-Y_o/edit" target="_blank" rel="noopener noreferrer"> frequently asked questions document</a> and please contact the Senate Speaker at
+          more about the process to become a senator in the frequently asked questions document and please contact the Senate Speaker at
+
           sgaSenateSpeaker@northeastern.edu with any questions.
           <br></br>
           <br></br>
@@ -706,8 +707,7 @@ const ApplicationForm: React.FC<Props> = ({
               Example constituencies include Greek life organizations and clubs.
               More information about the difference between academic and special
               interest senators is available in the frequently asked questions
-              document located at
-              https://docs.google.com/document/d/1xDyzPBpnlzlHmPL9pd2mGsKhzQCl_Cs9EPlFb0G-Y_o/edit.
+              document.
               <br />
             </FormTextContainer>
             <RadioButtons>
