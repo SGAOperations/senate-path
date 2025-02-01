@@ -47,7 +47,8 @@ export class NominationsService {
 
   private async notifyAdmin(nominee: string, count: number): Promise<void> {
     const emailRequest = {
-      recipients: ['collins.jami@northeastern.edu'],
+      // TODO: Update this to Jamira's
+      recipients: ['wu-chen.j@northeastern.edu'],
       subject: `Nominee ${nominee} Reached ${count} Nominations`,
       message: `The nominee "${nominee}" has now reached ${count} nominations. Please review their application.`,
     };

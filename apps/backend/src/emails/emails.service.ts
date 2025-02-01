@@ -8,11 +8,13 @@ export class EmailsService {
 
   async createEmail(request: CreateEmailRequestDto): Promise<void> {
     try {
+      console.log('')
       await this.mailerService.sendMail({
-        to: process.env.EMAIL_USER,
+        to: request.recipients,
         from: process.env.EMAIL_FROM,
         bcc: request.recipients,
         subject: request.subject,
+        template:'email-template',
         text: request.message,
       });
       console.log(`Email sent successfully to ${request.recipients}`);
