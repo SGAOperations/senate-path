@@ -79,7 +79,7 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
       });
   };
   useEffect(() => {
-    getData('https://nomination-system-2.onrender.com/api/nominations/unique-nominees');
+    getData(getFullPath('/api/nominations/unique-nominees'));
   }, );
   //getData(getFullPath('/api/nominations'), setNominations);
 
@@ -134,7 +134,7 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
       receiveSenatorInfo,
     };
 
-    fetch('https://nomination-system-2.onrender.com/api/nominations', {
+    fetch(getFullPath('/api/nominations'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formValues),
@@ -191,12 +191,12 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
           nominate senators for the NUin program, etc).
         </p>
         <p>
-          SGA senator applications are currently open. To apply for a senatorship
-          {/* TODO include valid url to senator applications form */} 
-          , visit <a href="https://senate.northeasternsga.com/applications">Senator Applications</a>
+          SGA senator applications are currently open. To apply for a
+          {/* TODO include valid url to senator applications form */}
+          senatorship, visit <a href="http://localhost:4200/applications">Senator Applications</a>
         </p>
         <p>
-          Please contact the Senate Speaker at sgaSenateSpeaker@northeastern.edu with
+          Please contact Cassidy Donoghue at donoghue.ca@northeastern.edu with
           any questions.
         </p>
         </Introduction>
@@ -357,7 +357,6 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
                 <MenuItem value={'NU Immerse'}>NU Immerse</MenuItem>
                 <MenuItem value={'Phi Sigma Rho'}>Phi Sigma Rho</MenuItem>
                 <MenuItem value={'Sandbox'}>Sandbox</MenuItem>
-                <MenuItem value={'Islamic Society of Northeastern University'}>Islamic Society of Northeastern University</MenuItem>
               </FormSelect>
             </FormTextAnswerContainer>
             {isSubmitted && errors.constituency && (

@@ -6,6 +6,7 @@ import supabase from '../supabase/client';
 import { Tables } from '../supabase/database.types';
 import { Status } from './nominations.types';
 import { validateOrReject, ValidationError } from 'class-validator';
+import { EmailsService } from '../emails/emails.service';
 
 interface NomineeData {
   constituencyName: string;
@@ -13,6 +14,7 @@ interface NomineeData {
 
 @Injectable()
 export class NominationsService {
+  constructor(private readonly emailsService: EmailsService) {}
   async getNominations(): Promise<Tables<'nominations'>[]> {
     const { data, error } = await supabase.from('nominations').select('*');
 
@@ -36,10 +38,28 @@ export class NominationsService {
       throw new InternalServerErrorException(`Failed to fetch nominations for ${name}: ${error.message}`);
     }
 
+    if (count === 30) {
+      await this.notifyAdmin(name, count);
+    }
+
     return count;
   }
 
+  private async notifyAdmin(nominee: string, count: number): Promise<void> {
+    const emailRequest = {
+      // TODO: Update this to Jamira's
+      recipients: ['wu-chen.j@northeastern.edu'],
+      subject: `Nominee ${nominee} Reached ${count} Nominations`,
+      message: `The nominee "${nominee}" has now reached ${count} nominations. Please review their application.`,
+    };
 
+    try {
+      await this.emailsService.createEmail(emailRequest);
+      console.log(`Notification email sent to ${emailRequest.recipients}`);
+    } catch (error) {
+      console.error('Failed to send notification email:', error);
+    }
+  }
   private async getNameByNuid(nuid: string): Promise<string> {
     const { data, error } = await supabase
       .from('applications')
@@ -98,7 +118,6 @@ export class NominationsService {
       throw new BadRequestException('You cannot nominate yourself for Senator.');
     }
   
-    // **Constituency Validation**: New helper function call
     await this.validateConstituency(nominationsColumns.nominee, nominationsColumns.constituency);
   
     console.log('hereee');

@@ -237,7 +237,7 @@ const ApplicationForm: React.FC<Props> = ({
       pronouns: pronouns.join(', '),
     };
     console.log(JSON.stringify(formData))
-    fetch('https://nomination-system-2.onrender.com/api/applications', {
+    fetch(getFullPath('/api/applications'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData),
@@ -283,9 +283,8 @@ const ApplicationForm: React.FC<Props> = ({
           <br></br>
           Any undergraduate student in good academic and judicial standing is
           eligible to apply to become a senator. There are no elections. Read
-          more about the process to become a senator in the frequently asked questions document and please contact the Senate Speaker at
-
-          sgaSenateSpeaker@northeastern.edu with any questions.
+          more about the process to become a senator in the <a href="https://docs.google.com/document/d/1xDyzPBpnlzlHmPL9pd2mGsKhzQCl_Cs9EPlFb0G-Y_o/edit" target="_blank" rel="noopener noreferrer"> frequently asked questions document</a> and please contact Senate Speaker Donoghue at
+          Donoghue.ca@northeastern.edu with any questions.
           <br></br>
           <br></br>
           This form is the first step in becoming a senator, the second step is
@@ -707,7 +706,8 @@ const ApplicationForm: React.FC<Props> = ({
               Example constituencies include Greek life organizations and clubs.
               More information about the difference between academic and special
               interest senators is available in the frequently asked questions
-              document.
+              document located at
+              https://docs.google.com/document/d/1xDyzPBpnlzlHmPL9pd2mGsKhzQCl_Cs9EPlFb0G-Y_o/edit.
               <br />
             </FormTextContainer>
             <RadioButtons>
@@ -839,7 +839,6 @@ const ApplicationForm: React.FC<Props> = ({
                 <MenuItem value={'NU Immerse'}>NU Immerse</MenuItem>
                 <MenuItem value={'Phi Sigma Rho'}>Phi Sigma Rho</MenuItem>
                 <MenuItem value={'Sandbox'}>Sandbox</MenuItem>
-                <MenuItem value={'Islamic Society of Northeastern University'}>Islamic Society of Northeastern University</MenuItem>
               </FormSelect>
             </FormTextAnswerContainer>
             {isSubmitted && errors.constituency && (
