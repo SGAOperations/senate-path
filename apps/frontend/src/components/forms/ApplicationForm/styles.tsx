@@ -11,6 +11,11 @@ export const SampleForm = styled(FormGroup)(() => ({
   paddingBottom: '2%',
 }));
 
+export const FormQuestionText = styled.h2(()=> ({
+  //marginBottom:"-1rem",
+
+}))
+
 export const FormInput = styled(TextField)(() => ({
   display: 'flex',
   justifyContent: 'center',
@@ -22,13 +27,6 @@ export const FormInput = styled(TextField)(() => ({
 export const FormSelect = styled(Select)(() => ({
   width: '50%',
   justifyContent: 'center',
-}));
-
-export const FormText = styled.div(() => ({
-  border: '1px',
-  boxShadow: '2px 2px 5px #ccc',
-  borderRadius: '5px',
-  margin: '10px',
 }));
 
 export const FormQuestionContainer = styled.div(() => ({
@@ -43,7 +41,7 @@ export const FormQuestionContainer = styled.div(() => ({
 }));
 
 export const FormTextContainer = styled.div(() => ({
-  padding: '3%',
+  padding: '0%',
   justifyContent: 'center',
   alignItems: 'center',
 }));
@@ -52,7 +50,7 @@ export const FormTextAnswerContainer = styled.div(() => ({
   display: 'flex',
   paddingBottom: '3%',
   width: '100%',
-  justifyContent: 'center',
+  justifyContent: 'left',
 }));
 
 export const Introduction = styled('div')({

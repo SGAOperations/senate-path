@@ -15,6 +15,7 @@ import {
   FormInput,
   SampleForm,
   FormTextContainer,
+  FormQuestionText,
   FormQuestionContainer,
   FormTextAnswerContainer,
   Introduction,
@@ -48,6 +49,7 @@ const ApplicationForm: React.FC<Props> = ({
   const [constituencyName, setConstituencyName] = useState<string>('');
 
   const [year, setYear] = useState<number>();
+
   const handleYearChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(event.target.value);
     setYear(value);
@@ -104,6 +106,25 @@ const ApplicationForm: React.FC<Props> = ({
     }
   };
 
+  const [nameErrors, setNameErrors] = useState<{
+    fullName?: string;
+    preferredFullName?: string;
+    phoneticPronunciation?: string;
+    nickname?: string;
+  }>({});
+
+  const validateNameInputs = () => {
+    return (
+      isFullNameError ||
+      isPreferredFullNameError ||
+      isPhoneticPronunciationError ||
+      isNicknameError
+    );
+  };
+  const validatePronounInputs = () => {
+    return isPronounError
+  }
+
   const [errors, setErrors] = useState<{
     fullName?: string;
     preferredFullName?: string;
@@ -124,12 +145,16 @@ const ApplicationForm: React.FC<Props> = ({
     pronouns?: string;
   }>({});
 
+
+
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
 
-  const isTextFieldError = fullName === '';
+
+  const isFullNameError = fullName === '';
   const isPreferredFullNameError = preferredFullName === '';
   const isPhoneticPronunciationError = phoneticPronunciation === '';
   const isNicknameError = nickname === '';
+  const isPronounError = pronouns.length < 1
   const isNortheasternIDError = northeasternID === '';
   const isEmailError = email === '';
   const isPhoneNumberError = phoneNumber === '';
@@ -147,10 +172,8 @@ const ApplicationForm: React.FC<Props> = ({
     setErrorOpen(false);
     setIsSubmitted(true);
     if (
-      isTextFieldError ||
-      isPreferredFullNameError ||
-      isPhoneticPronunciationError ||
-      isNicknameError ||
+      validateNameInputs() ||
+      validatePronounInputs() ||
       isNortheasternIDError ||
       isEmailError ||
       isPhoneNumberError ||
@@ -185,12 +208,13 @@ const ApplicationForm: React.FC<Props> = ({
         selectedAttestation?: string;
         pronouns?: string;
       } = {};
-      if (isTextFieldError) newErrors.fullName = 'Name is mandatory';
+      if (isFullNameError) newErrors.fullName = 'Name is mandatory';
       if (isPreferredFullNameError)
         newErrors.preferredFullName = 'Preferred Name is mandatory';
       if (isPhoneticPronunciationError)
         newErrors.phoneticPronunciation = 'Pronunciation is mandatory';
       if (isNicknameError) newErrors.nickname = 'Nickname is mandatory';
+      if (isPronounError) newErrors.pronouns = 'Pronouns are mandatory'
       if (isNortheasternIDError) newErrors.northeasternID = 'NUID is mandatory';
       if (isEmailError) newErrors.email = 'Email is mandatory';
       if (isPhoneNumberError)
@@ -269,9 +293,11 @@ const ApplicationForm: React.FC<Props> = ({
       });
   };
 
-  return (
-    <>
-      <SampleForm>
+  const [isNext, setIsNext] = useState(false);
+
+  const FormIntro = () => {
+    return (<>
+          <SampleForm>
         <Introduction>
           <h2>SGA Senator Application Form</h2>
           Thank you for your interest in joining the Student Government
@@ -301,13 +327,22 @@ const ApplicationForm: React.FC<Props> = ({
           Welcome to SGA!
         </Introduction>
       </SampleForm>
+      <Button variant="contained" onClick={() => {handleNextForm()}}>
+        Start Application
+      </Button>
+    </>
 
+    )
+  }
+
+  const NameSubForm = () => {
+    return (
+      <>
       <SampleForm>
-        <FormControl error={isSubmitted && !!errors.fullName}>
+        <FormControl error={isNext && !!errors.fullName}>
           <FormQuestionContainer>
             <FormTextContainer>
-              <b>What is your full name?</b>
-              <br />
+              <FormQuestionText>What is your full name?</FormQuestionText>
               Please enter your full name as it appears in the university
               records. This name will only be used in official communications
               between SGA leadership and university administrators.
@@ -324,20 +359,16 @@ const ApplicationForm: React.FC<Props> = ({
                     errors.fullName = '';
                   }
                 }}
-                error={isSubmitted && !!isTextFieldError}
-                helperText={isSubmitted && errors.fullName}
+                error={isNext && !!isFullNameError}
+                helperText={isNext && errors.fullName}
               />
             </FormTextAnswerContainer>
           </FormQuestionContainer>
         </FormControl>
-      </SampleForm>
-
-      <SampleForm>
-        <FormControl error={isSubmitted && !!errors.preferredFullName}>
+        <FormControl error={isNext && !!errors.preferredFullName}>
           <FormQuestionContainer>
             <FormTextContainer>
-            <b>What is your preferred name?</b>
-              <br />
+              <FormQuestionText>What is your preferred name?</FormQuestionText>
               Please enter your preferred first and last name. Do not enter any
               nicknames in this field. This name will be used for all official
               SGA business. It will be posted on the website and printed on your
@@ -355,20 +386,18 @@ const ApplicationForm: React.FC<Props> = ({
                     errors.preferredFullName = '';
                   }
                 }}
-                error={isSubmitted && !!isPreferredFullNameError}
-                helperText={isSubmitted && errors.preferredFullName}
+                error={isNext && !!isPreferredFullNameError}
+                helperText={isNext && errors.preferredFullName}
               />
             </FormTextAnswerContainer>
           </FormQuestionContainer>
         </FormControl>
-      </SampleForm>
-
-      <SampleForm>
-        <FormControl error={isSubmitted && !!errors.phoneticPronunciation}>
+        <FormControl error={isNext && !!errors.phoneticPronunciation}>
           <FormQuestionContainer>
             <FormTextContainer>
-            <b>What is the phonetic pronunciation of your name?</b>
-              <br />
+              <FormQuestionText>
+                What is the phonetic pronunciation of your name?
+              </FormQuestionText>
               Please enter how to pronounce your name. This pronunciation will
               be used during roll-call votes.
             </FormTextContainer>
@@ -384,20 +413,16 @@ const ApplicationForm: React.FC<Props> = ({
                     errors.phoneticPronunciation = '';
                   }
                 }}
-                error={isSubmitted && !!isPhoneticPronunciationError}
-                helperText={isSubmitted && errors.phoneticPronunciation}
+                error={isNext && !!isPhoneticPronunciationError}
+                helperText={isNext && errors.phoneticPronunciation}
               />
             </FormTextAnswerContainer>
           </FormQuestionContainer>
         </FormControl>
-      </SampleForm>
-
-      <SampleForm>
-        <FormControl error={isSubmitted && !!errors.nickname}>
+        <FormControl error={isNext && !!errors.nickname}>
           <FormQuestionContainer>
             <FormTextContainer>
-            <b>What is your nickname?</b>
-              <br />
+              <FormQuestionText>What is your nickname?</FormQuestionText>
               If you have a nickname, please enter it here. This name will not
               be used in official SGA business, but it will be used informally
               when appropriate.
@@ -412,13 +437,102 @@ const ApplicationForm: React.FC<Props> = ({
                     errors.nickname = '';
                   }
                 }}
-                error={isSubmitted && !!isNicknameError}
-                helperText={isSubmitted && errors.nickname}
+                error={isNext && !!isNicknameError}
+                helperText={isNext && errors.nickname}
               />
             </FormTextAnswerContainer>
           </FormQuestionContainer>
         </FormControl>
       </SampleForm>
+      <Button variant="contained" onClick={() => {handleNameNext()}}>
+        Next
+      </Button>
+      </>
+    );
+  };
+
+  const handleNameNext = () => {
+    setIsNext(true)
+    if (!validateNameInputs()){
+      handleNextForm()
+    }
+  }
+
+  const handleNextForm = () => {
+    
+    if ((subFormIndex < SubForms.length)) {
+      setSubFormIndex(subFormIndex + 1)
+      setIsNext(false)
+    }
+  }
+
+  const handlePronounsNext = () => {
+    setIsNext(true)
+    if (!validatePronounInputs()){
+      handleNextForm()
+    }
+  }
+  
+  const PronounsSubForm = () => {
+    return (
+      <SampleForm>
+      <FormControl error={isSubmitted && !!errors.pronouns}>
+        <FormQuestionContainer>
+          <FormTextContainer>
+            <FormQuestionContainer>What pronouns do you use?</FormQuestionContainer>
+          </FormTextContainer>
+          <FormInputCheckbox>
+            <FormControlLabel
+              required
+              control={<Checkbox />}
+              onChange={handleCheckboxChange}
+              label="She/her/her"
+              value="She/her/her"
+              checked={pronouns.includes('She/her/her')}
+            />
+            <FormControlLabel
+              required
+              control={<Checkbox />}
+              onChange={handleCheckboxChange}
+              label="He/him/his"
+              value="He/him/his"
+              checked={pronouns.includes('He/him/his')}
+            />
+            <FormControlLabel
+              required
+              control={<Checkbox />}
+              onChange={handleCheckboxChange}
+              label="They/them/their"
+              value="They/them/their"
+              checked={pronouns.includes('They/them/their')}
+            />
+            <FormControlLabel
+              required
+              control={<Checkbox />}
+              onChange={handleCheckboxChange}
+              label="Other"
+              value="Other"
+              checked={pronouns.includes('Other')}
+            />
+          </FormInputCheckbox>
+        </FormQuestionContainer>
+        {errors.pronouns && (
+          <FormHelperText>{errors.pronouns}</FormHelperText>
+        )}
+      </FormControl>
+      <Button variant="contained" onClick={() => {handlePronounsNext()}}>
+        Next
+      </Button>
+    </SampleForm>
+    )
+  }
+
+  const SubForms = [FormIntro, NameSubForm, PronounsSubForm]
+  const [subFormIndex, setSubFormIndex] = useState(0);
+
+  return (
+    <>
+    {SubForms[subFormIndex]()}
 
       <SampleForm>
         <FormControl error={isSubmitted && !!errors.northeasternID}>
@@ -445,53 +559,6 @@ const ApplicationForm: React.FC<Props> = ({
               <br />
             </FormTextAnswerContainer>
           </FormQuestionContainer>
-        </FormControl>
-      </SampleForm>
-
-      <SampleForm>
-        <FormControl error={isSubmitted && !!errors.pronouns}>
-          <FormQuestionContainer>
-            <FormTextContainer>
-              <b>What pronouns do you use?</b>
-            </FormTextContainer>
-            <FormInputCheckbox>
-              <FormControlLabel
-                required
-                control={<Checkbox />}
-                onChange={handleCheckboxChange}
-                label="She/her/her"
-                value="She/her/her"
-                checked={pronouns.includes('She/her/her')}
-              />
-              <FormControlLabel
-                required
-                control={<Checkbox />}
-                onChange={handleCheckboxChange}
-                label="He/him/his"
-                value="He/him/his"
-                checked={pronouns.includes('He/him/his')}
-              />
-              <FormControlLabel
-                required
-                control={<Checkbox />}
-                onChange={handleCheckboxChange}
-                label="They/them/their"
-                value="They/them/their"
-                checked={pronouns.includes('They/them/their')}
-              />
-              <FormControlLabel
-                required
-                control={<Checkbox />}
-                onChange={handleCheckboxChange}
-                label="Other"
-                value="Other"
-                checked={pronouns.includes('Other')}
-              />
-            </FormInputCheckbox>
-          </FormQuestionContainer>
-          {errors.pronouns && (
-            <FormHelperText>{errors.pronouns}</FormHelperText>
-          )}
         </FormControl>
       </SampleForm>
 
