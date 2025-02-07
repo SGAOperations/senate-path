@@ -28,20 +28,20 @@ const Admin: React.FC = () => {
     fetch(url)
       .then((response) => {
         if (!response.ok) {
-          console.log('errored');
+          console.log('OVER 20:');
           throw new Error('Failed to fetch data');
         }
-        console.log('didnt error');
+        console.log('OVER 20:');
         const out = response.json();
         console.log(out);
         return out;
       })
       .then((data) => {
-        console.log('data:', data);
+        console.log('OVER 20:', data);
         setData(data);
       })
       .catch((error) => {
-        console.error('Error fetching:', error);
+        console.error('OVER 20:', error);
       });
   };
 
@@ -67,19 +67,19 @@ const Admin: React.FC = () => {
   };
   useEffect(() => {
     getDataForNominees(
-      'https://localhost:3000/api/nominations/over/20',
+      getFullPath('api/nominations/over/20'),
       setNominees
     );
   }, []);
   useEffect(() => {
     getData(
-      'https://localhost:3000/api/nominations',
+      getFullPath('/api/nominations'),
       setNominations
     );
   }, []);
   useEffect(() => {
     getData(
-      'https://localhost:3000/api/applications',
+      getFullPath('/api/applications'),
       setApplications
     );
   }, []);
