@@ -1,0 +1,20 @@
+export const CONSTITUENCIES = [
+    "Alpha Chi Omega Sorority",
+    "Alpha Epsilon Phi",
+    "Alpha Epsilon Pi",
+    "Bouvé College of Health Sciences",
+    "College of Science",
+    "College of Social Sciences and Humanities",
+    "D'Amore-McKim School of Business",
+    "Delta Phi Epsilon",
+    "Delta Tau Delta",
+    "Delta Zeta",
+    "Global Scholars program",
+    "Honors program",
+    "Kappa Delta",
+    "Khoury College of Computer Sciences",
+    "Northeastern University Real Estate Club (NURE)",
+    "NU Immerse",
+    "Phi Sigma Rho",
+    "Sandbox"
+  ];
