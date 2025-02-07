@@ -69,4 +69,8 @@ export class CreateApplicationRequestDto {
   @IsNotEmpty({ message: 'You must input selectedAttestation.' })
   @IsString({ message: 'Please enter a valid string for selectedAttestation.' })
   selectedAttestation: string;
+
+  @IsOptional()
+  @IsString({ message: 'Please enter a valid string for semester.' })
+  semester?: string;
 }
