@@ -3,3 +3,9 @@ export interface TableEntry {
   fullName: string;
   email: string;
 }
+
+export interface NomineeTableEntry {
+  nominee: string;
+  constituency: string;
+  count: number;
+}

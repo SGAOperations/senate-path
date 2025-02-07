@@ -58,5 +58,9 @@ export class NominationsController {
     return this.nominationsService.getUniqueNominees()
   }
 
-  
+  @Get('/over/:votes')
+  getNomineesOverVotes(@Param('votes') votes: number) {
+    console.log('votes' + votes)
+    return this.nominationsService.getNomineesWithVotes(votes);
+  }
 }
