@@ -10,7 +10,12 @@ import MenuItem from '@mui/material/MenuItem';
 
 
 import { getFullPath } from './../../../utils';
-import { CONSTITUENCIES } from './../../../constants/constants';
+import { 
+  CONSTITUENCIES, 
+  PRONOUNS, YEAR_OPTIONS, 
+  SENATOR_OPTIONS, 
+  CONSTITUENCY_TYPES 
+} from './../../../constants/constants';
 
 import {
   FormInput,
@@ -456,38 +461,17 @@ const ApplicationForm: React.FC<Props> = ({
               <b>What pronouns do you use?</b>
             </FormTextContainer>
             <FormInputCheckbox>
+            {PRONOUNS.map((option) => (
               <FormControlLabel
+                key={option}
                 required
                 control={<Checkbox />}
                 onChange={handleCheckboxChange}
-                label="She/her/her"
-                value="She/her/her"
-                checked={pronouns.includes('She/her/her')}
+                label={option}
+                value={option}
+                checked={pronouns.includes(option)}
               />
-              <FormControlLabel
-                required
-                control={<Checkbox />}
-                onChange={handleCheckboxChange}
-                label="He/him/his"
-                value="He/him/his"
-                checked={pronouns.includes('He/him/his')}
-              />
-              <FormControlLabel
-                required
-                control={<Checkbox />}
-                onChange={handleCheckboxChange}
-                label="They/them/their"
-                value="They/them/their"
-                checked={pronouns.includes('They/them/their')}
-              />
-              <FormControlLabel
-                required
-                control={<Checkbox />}
-                onChange={handleCheckboxChange}
-                label="Other"
-                value="Other"
-                checked={pronouns.includes('Other')}
-              />
+            ))}
             </FormInputCheckbox>
           </FormQuestionContainer>
           {errors.pronouns && (
@@ -569,31 +553,14 @@ const ApplicationForm: React.FC<Props> = ({
                 value={year?.toString()}
                 onChange={handleYearChange}
               >
-                <FormControlLabel
-                  value="1"
-                  control={<Radio />}
-                  label="Undergraduate first year"
-                />
-                <FormControlLabel
-                  value="2"
-                  control={<Radio />}
-                  label="Undergraduate second year"
-                />
-                <FormControlLabel
-                  value="3"
-                  control={<Radio />}
-                  label="Undergraduate third year"
-                />
-                <FormControlLabel
-                  value="4"
-                  control={<Radio />}
-                  label="Undergraduate fourth year"
-                />
-                <FormControlLabel
-                  value="5"
-                  control={<Radio />}
-                  label="Undergraduate fifth+ year"
-                />
+                 {YEAR_OPTIONS.map((option) => (
+                  <FormControlLabel
+                    key={option.value}
+                    value={option.value}
+                    control={<Radio />}
+                    label={option.label}
+                  />
+                ))}
               </RadioGroup>
             </RadioButtons>
             {errors.year && <FormHelperText>{errors.year}</FormHelperText>}
@@ -717,16 +684,14 @@ const ApplicationForm: React.FC<Props> = ({
                 value={constituency}
                 onChange={handleConstituencyChange}
               >
-                <FormControlLabel
-                  value="academic"
-                  control={<Radio />}
-                  label="Academic senator"
-                />
-                <FormControlLabel
-                  value="special"
-                  control={<Radio />}
-                  label="Special interest senator"
-                />
+                 {SENATOR_OPTIONS.map((option) => (
+                  <FormControlLabel
+                    key={option.value}
+                    value={option.value}
+                    control={<Radio />}
+                    label={option.label}
+                  />
+                ))}
               </RadioGroup>
             </RadioButtons>
           </FormQuestionContainer>
@@ -759,16 +724,14 @@ const ApplicationForm: React.FC<Props> = ({
                 value={constituencyType}
                 onChange={handleConstituencyTypeChange}
               >
-                <FormControlLabel
-                  value="club"
-                  control={<Radio />}
-                  label="Official club"
-                />
-                <FormControlLabel
-                  value="greek"
-                  control={<Radio />}
-                  label="Greek organization"
-                />
+                {CONSTITUENCY_TYPES.map(( option ) => (
+                  <FormControlLabel
+                    key={option.value}
+                    value={option.value}
+                    control={<Radio />}
+                    label={option.label}
+                  />
+                ))}
               </RadioGroup>
             </RadioButtons>
           </FormQuestionContainer>
