@@ -67,7 +67,7 @@ const Admin: React.FC = () => {
   };
   useEffect(() => {
     getDataForNominees(
-      getFullPath('/capi/nominations/over/20'),
+      getFullPath('/api/nominations/over/20'),
       setNominees
     );
   }, []);
