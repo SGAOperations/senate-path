@@ -18,3 +18,30 @@ export const CONSTITUENCIES = [
     "Phi Sigma Rho",
     "Sandbox"
   ];
+
+  export const PRONOUNS = [
+    'She/her/her',
+    'He/him/his',
+    'They/them/their',
+    'Other'
+  ];
+
+  export const YEAR_OPTIONS = [
+    { value: '1', label: 'Undergraduate first year' },
+    { value: '2', label: 'Undergraduate second year' },
+    { value: '3', label: 'Undergraduate third year' },
+    { value: '4', label: 'Undergraduate fourth year' },
+    { value: '5', label: 'Undergraduate fifth+ year' },
+  ];
+
+  export const SENATOR_OPTIONS = [
+    { value: 'academic', label: 'Academic senator' },
+    { value: 'special', label: 'Special interest senator' },
+  ];
+
+  export const CONSTITUENCY_TYPES = [
+    { value: 'club', label: 'Official club' },
+    { value: 'greek', label: 'Greek organization' },
+  ];
+
+  export const GRADUATION_YEARS = [2023, 2024, 2025, 2026, 2027, 2028];

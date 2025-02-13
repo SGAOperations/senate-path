@@ -8,7 +8,10 @@ import RadioGroup from '@mui/material/RadioGroup';
 import TextField from '@mui/material/TextField';
 import { FormHelperText } from '@mui/material';
 import { getFullPath } from './../../../utils';
-import { CONSTITUENCIES } from './../../../constants/constants';
+import { 
+  CONSTITUENCIES,
+  GRADUATION_YEARS 
+} from './../../../constants/constants';
 
 import {
   SampleForm,
@@ -402,38 +405,15 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
                     errors.graduationYear = '';
                   }
                 }}
-                /* TODO pick up radio options from env variable */
               >
-                <FormControlLabel
-                  value={2023}
-                  control={<Radio />}
-                  label="2023"
-                />
-                <FormControlLabel
-                  value={2024}
-                  control={<Radio />}
-                  label="2024"
-                />
-                <FormControlLabel
-                  value={2025}
-                  control={<Radio />}
-                  label="2025"
-                />
-                <FormControlLabel
-                  value={2026}
-                  control={<Radio />}
-                  label="2026"
-                />
-                <FormControlLabel
-                  value={2027}
-                  control={<Radio />}
-                  label="2027"
-                />
-                <FormControlLabel
-                  value={2028}
-                  control={<Radio />}
-                  label="2028"
-                />
+                 {GRADUATION_YEARS.map((year) => (
+                  <FormControlLabel
+                    key={year}
+                    value={year}
+                    control={<Radio />}
+                    label={year.toString()}
+                  />
+                ))}     
               </RadioGroup>
             </RadioButtons>
             {isSubmitted && errors.graduationYear && (
