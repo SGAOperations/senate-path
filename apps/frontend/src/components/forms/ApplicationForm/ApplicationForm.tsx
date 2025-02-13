@@ -171,8 +171,7 @@ const ApplicationForm: React.FC<Props> = ({
       isReturningSenatorError ||
       isAttestationError
     ) {
-      // TODO show error popup with message
-
+    setIsPopupOpen(true);
       const newErrors: {
         fullName?: string;
         preferredFullName?: string;
@@ -220,6 +219,9 @@ const ApplicationForm: React.FC<Props> = ({
       setErrors(newErrors);
       // if (!validateForm()) {
       console.log('error message here');
+      // error message pop up
+      setErrorMessage(Object.values(newErrors).join(", "));
+      setErrorOpen(true);
       return;
       // }
     }
@@ -751,7 +753,7 @@ const ApplicationForm: React.FC<Props> = ({
                 {' '}
                 <br/>
                 Only recognized student organizations may have a special interest senator.
-                
+
             </FormTextContainer>
             <FormTextAnswerContainer>
               <FormSelect
@@ -777,9 +779,9 @@ const ApplicationForm: React.FC<Props> = ({
         </FormControl>
       </SampleForm>
 
-      
 
-      
+
+
 
       <SampleForm>
         <FormControl>
