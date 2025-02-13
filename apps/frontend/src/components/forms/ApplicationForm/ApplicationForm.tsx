@@ -8,7 +8,6 @@ import Button from '@mui/material/Button';
 import { FormHelperText } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 
-
 import { getFullPath } from './../../../utils';
 
 import {
@@ -30,11 +29,54 @@ interface Props {
   setErrorOpen: (open: boolean) => void;
 }
 
+export interface ApplicationFormData {
+  fullName: string;
+  preferredFullName: string;
+  phoneticPronunciation: string;
+  nickname: string;
+  northeasternID: string;
+  email: string;
+  phoneNumber: string;
+  college: string;
+  major: string;
+  minor: string;
+  constituencyName: string;
+  year?: number;
+  attestation: string;
+  constituency: string;
+  constituencyType: string;
+  pronouns: string[];
+  returningSenatorType: string;
+}
+
+export interface ErrorMessages {
+  
+}
+
 const ApplicationForm: React.FC<Props> = ({
   setIsPopupOpen,
   setErrorMessage,
   setErrorOpen,
 }) => {
+  const [FormData, setFormData] = useState<ApplicationFormData>({
+    fullName: '',
+    preferredFullName: '',
+    phoneticPronunciation: '',
+    nickname: '',
+    northeasternID: '',
+    email: '',
+    phoneNumber: '',
+    college: '',
+    major: '',
+    minor: '',
+    constituencyName: '',
+    attestation: '',
+    constituency: '',
+    constituencyType: '',
+    pronouns: [],
+    returningSenatorType: 'no',
+  });
+
   const [fullName, setFullName] = useState<string>('');
   const [preferredFullName, setPreferredFullName] = useState<string>('');
   const [phoneticPronunciation, setPhoneticPronunciation] =
@@ -106,13 +148,6 @@ const ApplicationForm: React.FC<Props> = ({
     }
   };
 
-  const [nameErrors, setNameErrors] = useState<{
-    fullName?: string;
-    preferredFullName?: string;
-    phoneticPronunciation?: string;
-    nickname?: string;
-  }>({});
-
   const validateNameInputs = () => {
     return (
       isFullNameError ||
@@ -122,8 +157,12 @@ const ApplicationForm: React.FC<Props> = ({
     );
   };
   const validatePronounInputs = () => {
-    return isPronounError
-  }
+    return isPronounError;
+  };
+
+  const validatePersonalInfoInputs = () => {
+    return isNortheasternIDError || isEmailError || isPhoneNumberError;
+  };
 
   const [errors, setErrors] = useState<{
     fullName?: string;
@@ -145,16 +184,13 @@ const ApplicationForm: React.FC<Props> = ({
     pronouns?: string;
   }>({});
 
-
-
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
-
 
   const isFullNameError = fullName === '';
   const isPreferredFullNameError = preferredFullName === '';
   const isPhoneticPronunciationError = phoneticPronunciation === '';
   const isNicknameError = nickname === '';
-  const isPronounError = pronouns.length < 1
+  const isPronounError = pronouns.length < 1;
   const isNortheasternIDError = northeasternID === '';
   const isEmailError = email === '';
   const isPhoneNumberError = phoneNumber === '';
@@ -174,9 +210,7 @@ const ApplicationForm: React.FC<Props> = ({
     if (
       validateNameInputs() ||
       validatePronounInputs() ||
-      isNortheasternIDError ||
-      isEmailError ||
-      isPhoneNumberError ||
+      validatePersonalInfoInputs() ||
       isCollegeError ||
       isMinorError ||
       isMajorError ||
@@ -214,7 +248,7 @@ const ApplicationForm: React.FC<Props> = ({
       if (isPhoneticPronunciationError)
         newErrors.phoneticPronunciation = 'Pronunciation is mandatory';
       if (isNicknameError) newErrors.nickname = 'Nickname is mandatory';
-      if (isPronounError) newErrors.pronouns = 'Pronouns are mandatory'
+      if (isPronounError) newErrors.pronouns = 'Pronouns are mandatory';
       if (isNortheasternIDError) newErrors.northeasternID = 'NUID is mandatory';
       if (isEmailError) newErrors.email = 'Email is mandatory';
       if (isPhoneNumberError)
@@ -260,7 +294,7 @@ const ApplicationForm: React.FC<Props> = ({
       selectedAttestation: attestation,
       pronouns: pronouns.join(', '),
     };
-    console.log(JSON.stringify(formData))
+    console.log(JSON.stringify(formData));
     fetch('https://nomination-system-2.onrender.com/api/applications', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -296,337 +330,383 @@ const ApplicationForm: React.FC<Props> = ({
   const [isNext, setIsNext] = useState(false);
 
   const FormIntro = () => {
-    return (<>
-          <SampleForm>
-        <Introduction>
-          <h2>SGA Senator Application Form</h2>
-          Thank you for your interest in joining the Student Government
-          Association (SGA)! SGA serves as the voice of the undergraduate
-          student body and strives to promote student interests in the
-          university and its surrounding communities. We have many active
-          projects and initiatives. Read more about our work <a href="https://northeasternsga.com" target="_blank" rel="noopener noreferrer">here</a>.
-          <br></br>
-          <br></br>
-          Any undergraduate student in good academic and judicial standing is
-          eligible to apply to become a senator. There are no elections. Read
-          more about the process to become a senator in the <a href="https://docs.google.com/document/d/1xDyzPBpnlzlHmPL9pd2mGsKhzQCl_Cs9EPlFb0G-Y_o/edit" target="_blank" rel="noopener noreferrer"> frequently asked questions document</a> and please contact the Senate Speaker at
-          sgaSenateSpeaker@northeastern.edu with any questions.
-          <br></br>
-          <br></br>
-          This form is the first step in becoming a senator, the second step is
-          to gather signatures. For your application to be accepted, you need to
-          collect at least 30 nominations from students in your constituency. If
-          you are applying to be a special interest senator and your
-          organization has less than 40 members, you must get three fourths of
-          the organization’s members’ signatures. This form must be submitted so
-          your name can be automatically added to the signature collection form.
-          Both forms will stop accepting submissions on January 30th at 11:59 pm
-          EST.
-          <br></br>
-          <br></br>
-          Welcome to SGA!
-        </Introduction>
-      </SampleForm>
-      <Button variant="contained" onClick={() => {handleNextForm()}}>
-        Start Application
-      </Button>
-    </>
-
-    )
-  }
+    return (
+      <>
+        <SampleForm>
+          <Introduction>
+            <h2>SGA Senator Application Form</h2>
+            Thank you for your interest in joining the Student Government
+            Association (SGA)! SGA serves as the voice of the undergraduate
+            student body and strives to promote student interests in the
+            university and its surrounding communities. We have many active
+            projects and initiatives. Read more about our work{' '}
+            <a
+              href="https://northeasternsga.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              here
+            </a>
+            .<br></br>
+            <br></br>
+            Any undergraduate student in good academic and judicial standing is
+            eligible to apply to become a senator. There are no elections. Read
+            more about the process to become a senator in the{' '}
+            <a
+              href="https://docs.google.com/document/d/1xDyzPBpnlzlHmPL9pd2mGsKhzQCl_Cs9EPlFb0G-Y_o/edit"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {' '}
+              frequently asked questions document
+            </a>{' '}
+            and please contact the Senate Speaker at
+            sgaSenateSpeaker@northeastern.edu with any questions.
+            <br></br>
+            <br></br>
+            This form is the first step in becoming a senator, the second step
+            is to gather signatures. For your application to be accepted, you
+            need to collect at least 30 nominations from students in your
+            constituency. If you are applying to be a special interest senator
+            and your organization has less than 40 members, you must get three
+            fourths of the organization’s members’ signatures. This form must be
+            submitted so your name can be automatically added to the signature
+            collection form. Both forms will stop accepting submissions on
+            January 30th at 11:59 pm EST.
+            <br></br>
+            <br></br>
+            Welcome to SGA!
+          </Introduction>
+        </SampleForm>
+        <Button
+          variant="contained"
+          onClick={() => {
+            handleNextForm();
+          }}
+        >
+          Start Application
+        </Button>
+      </>
+    );
+  };
 
   const NameSubForm = () => {
     return (
       <>
-      <SampleForm>
-        <FormControl error={isNext && !!errors.fullName}>
-          <FormQuestionContainer>
-            <FormTextContainer>
-              <FormQuestionText>What is your full name?</FormQuestionText>
-              Please enter your full name as it appears in the university
-              records. This name will only be used in official communications
-              between SGA leadership and university administrators.
-            </FormTextContainer>
-            <FormTextAnswerContainer>
-              <FormInput
-                label="Required"
-                placeholder="Your Full Name"
-                required
-                value={fullName}
-                onChange={(e) => {
-                  setFullName(e.target.value);
-                  if (errors.fullName) {
-                    errors.fullName = '';
-                  }
-                }}
-                error={isNext && !!isFullNameError}
-                helperText={isNext && errors.fullName}
-              />
-            </FormTextAnswerContainer>
-          </FormQuestionContainer>
-        </FormControl>
-        <FormControl error={isNext && !!errors.preferredFullName}>
-          <FormQuestionContainer>
-            <FormTextContainer>
-              <FormQuestionText>What is your preferred name?</FormQuestionText>
-              Please enter your preferred first and last name. Do not enter any
-              nicknames in this field. This name will be used for all official
-              SGA business. It will be posted on the website and printed on your
-              senator placard.
-            </FormTextContainer>
-            <FormTextAnswerContainer>
-              <FormInput
-                label="Required"
-                required
-                placeholder="Your Preferred Name"
-                value={preferredFullName}
-                onChange={(e) => {
-                  setPreferredFullName(e.target.value);
-                  if (errors.preferredFullName) {
-                    errors.preferredFullName = '';
-                  }
-                }}
-                error={isNext && !!isPreferredFullNameError}
-                helperText={isNext && errors.preferredFullName}
-              />
-            </FormTextAnswerContainer>
-          </FormQuestionContainer>
-        </FormControl>
-        <FormControl error={isNext && !!errors.phoneticPronunciation}>
-          <FormQuestionContainer>
-            <FormTextContainer>
-              <FormQuestionText>
-                What is the phonetic pronunciation of your name?
-              </FormQuestionText>
-              Please enter how to pronounce your name. This pronunciation will
-              be used during roll-call votes.
-            </FormTextContainer>
-            <FormTextAnswerContainer>
-              <FormInput
-                label="Required"
-                required
-                placeholder="Name Pronunciation"
-                value={phoneticPronunciation}
-                onChange={(e) => {
-                  setPhoneticPronunciation(e.target.value);
-                  if (errors.phoneticPronunciation) {
-                    errors.phoneticPronunciation = '';
-                  }
-                }}
-                error={isNext && !!isPhoneticPronunciationError}
-                helperText={isNext && errors.phoneticPronunciation}
-              />
-            </FormTextAnswerContainer>
-          </FormQuestionContainer>
-        </FormControl>
-        <FormControl error={isNext && !!errors.nickname}>
-          <FormQuestionContainer>
-            <FormTextContainer>
-              <FormQuestionText>What is your nickname?</FormQuestionText>
-              If you have a nickname, please enter it here. This name will not
-              be used in official SGA business, but it will be used informally
-              when appropriate.
-            </FormTextContainer>
-            <FormTextAnswerContainer>
-              <FormInput
-                placeholder="Nickname"
-                value={nickname}
-                onChange={(e) => {
-                  setNickname(e.target.value);
-                  if (errors.nickname) {
-                    errors.nickname = '';
-                  }
-                }}
-                error={isNext && !!isNicknameError}
-                helperText={isNext && errors.nickname}
-              />
-            </FormTextAnswerContainer>
-          </FormQuestionContainer>
-        </FormControl>
-      </SampleForm>
-      <Button variant="contained" onClick={() => {handleNameNext()}}>
-        Next
-      </Button>
+        <SampleForm>
+          <FormControl error={isNext && !!errors.fullName}>
+            <FormQuestionContainer>
+              <FormTextContainer>
+                <FormQuestionText>What is your full name?</FormQuestionText>
+                Please enter your full name as it appears in the university
+                records. This name will only be used in official communications
+                between SGA leadership and university administrators.
+              </FormTextContainer>
+              <FormTextAnswerContainer>
+                <FormInput
+                  label="Required"
+                  placeholder="Your Full Name"
+                  required
+                  value={fullName}
+                  onChange={(e) => {
+                    setFullName(e.target.value);
+                    if (errors.fullName) {
+                      errors.fullName = '';
+                    }
+                  }}
+                  error={isNext && !!isFullNameError}
+                  helperText={isNext && errors.fullName}
+                />
+              </FormTextAnswerContainer>
+            </FormQuestionContainer>
+          </FormControl>
+          <FormControl error={isNext && !!errors.preferredFullName}>
+            <FormQuestionContainer>
+              <FormTextContainer>
+                <FormQuestionText>
+                  What is your preferred name?
+                </FormQuestionText>
+                Please enter your preferred first and last name. Do not enter
+                any nicknames in this field. This name will be used for all
+                official SGA business. It will be posted on the website and
+                printed on your senator placard.
+              </FormTextContainer>
+              <FormTextAnswerContainer>
+                <FormInput
+                  label="Required"
+                  required
+                  placeholder="Your Preferred Name"
+                  value={preferredFullName}
+                  onChange={(e) => {
+                    setPreferredFullName(e.target.value);
+                    if (errors.preferredFullName) {
+                      errors.preferredFullName = '';
+                    }
+                  }}
+                  error={isNext && !!isPreferredFullNameError}
+                  helperText={isNext && errors.preferredFullName}
+                />
+              </FormTextAnswerContainer>
+            </FormQuestionContainer>
+          </FormControl>
+          <FormControl error={isNext && !!errors.phoneticPronunciation}>
+            <FormQuestionContainer>
+              <FormTextContainer>
+                <FormQuestionText>
+                  What is the phonetic pronunciation of your name?
+                </FormQuestionText>
+                Please enter how to pronounce your name. This pronunciation will
+                be used during roll-call votes.
+              </FormTextContainer>
+              <FormTextAnswerContainer>
+                <FormInput
+                  label="Required"
+                  required
+                  placeholder="Name Pronunciation"
+                  value={phoneticPronunciation}
+                  onChange={(e) => {
+                    setPhoneticPronunciation(e.target.value);
+                    if (errors.phoneticPronunciation) {
+                      errors.phoneticPronunciation = '';
+                    }
+                  }}
+                  error={isNext && !!isPhoneticPronunciationError}
+                  helperText={isNext && errors.phoneticPronunciation}
+                />
+              </FormTextAnswerContainer>
+            </FormQuestionContainer>
+          </FormControl>
+          <FormControl error={isNext && !!errors.nickname}>
+            <FormQuestionContainer>
+              <FormTextContainer>
+                <FormQuestionText>What is your nickname?</FormQuestionText>
+                If you have a nickname, please enter it here. This name will not
+                be used in official SGA business, but it will be used informally
+                when appropriate.
+              </FormTextContainer>
+              <FormTextAnswerContainer>
+                <FormInput
+                  placeholder="Nickname"
+                  value={nickname}
+                  onChange={(e) => {
+                    setNickname(e.target.value);
+                    if (errors.nickname) {
+                      errors.nickname = '';
+                    }
+                  }}
+                  error={isNext && !!isNicknameError}
+                  helperText={isNext && errors.nickname}
+                />
+              </FormTextAnswerContainer>
+            </FormQuestionContainer>
+          </FormControl>
+        </SampleForm>
+        <Button
+          variant="contained"
+          onClick={() => {
+            handleNameNext();
+          }}
+        >
+          Next
+        </Button>
       </>
     );
   };
 
   const handleNameNext = () => {
-    setIsNext(true)
-    if (!validateNameInputs()){
-      handleNextForm()
+    setIsNext(true);
+    if (!validateNameInputs()) {
+      handleNextForm();
     }
-  }
-
-  const handleNextForm = () => {
-    
-    if ((subFormIndex < SubForms.length)) {
-      setSubFormIndex(subFormIndex + 1)
-      setIsNext(false)
-    }
-  }
+  };
 
   const handlePronounsNext = () => {
-    setIsNext(true)
-    if (!validatePronounInputs()){
-      handleNextForm()
+    setIsNext(true);
+    if (!validatePronounInputs()) {
+      handleNextForm();
     }
-  }
-  
+  };
+
   const PronounsSubForm = () => {
     return (
       <SampleForm>
-      <FormControl error={isSubmitted && !!errors.pronouns}>
-        <FormQuestionContainer>
-          <FormTextContainer>
-            <FormQuestionContainer>What pronouns do you use?</FormQuestionContainer>
-          </FormTextContainer>
-          <FormInputCheckbox>
-            <FormControlLabel
-              required
-              control={<Checkbox />}
-              onChange={handleCheckboxChange}
-              label="She/her/her"
-              value="She/her/her"
-              checked={pronouns.includes('She/her/her')}
-            />
-            <FormControlLabel
-              required
-              control={<Checkbox />}
-              onChange={handleCheckboxChange}
-              label="He/him/his"
-              value="He/him/his"
-              checked={pronouns.includes('He/him/his')}
-            />
-            <FormControlLabel
-              required
-              control={<Checkbox />}
-              onChange={handleCheckboxChange}
-              label="They/them/their"
-              value="They/them/their"
-              checked={pronouns.includes('They/them/their')}
-            />
-            <FormControlLabel
-              required
-              control={<Checkbox />}
-              onChange={handleCheckboxChange}
-              label="Other"
-              value="Other"
-              checked={pronouns.includes('Other')}
-            />
-          </FormInputCheckbox>
-        </FormQuestionContainer>
-        {errors.pronouns && (
-          <FormHelperText>{errors.pronouns}</FormHelperText>
-        )}
-      </FormControl>
-      <Button variant="contained" onClick={() => {handlePronounsNext()}}>
-        Next
-      </Button>
-    </SampleForm>
-    )
-  }
+        <FormControl error={isNext && !!errors.pronouns}>
+          <FormQuestionContainer>
+            <FormTextContainer>
+              <FormQuestionContainer>
+                What pronouns do you use?
+              </FormQuestionContainer>
+            </FormTextContainer>
+            <FormInputCheckbox>
+              <FormControlLabel
+                required
+                control={<Checkbox />}
+                onChange={handleCheckboxChange}
+                label="She/her/her"
+                value="She/her/her"
+                checked={pronouns.includes('She/her/her')}
+              />
+              <FormControlLabel
+                required
+                control={<Checkbox />}
+                onChange={handleCheckboxChange}
+                label="He/him/his"
+                value="He/him/his"
+                checked={pronouns.includes('He/him/his')}
+              />
+              <FormControlLabel
+                required
+                control={<Checkbox />}
+                onChange={handleCheckboxChange}
+                label="They/them/their"
+                value="They/them/their"
+                checked={pronouns.includes('They/them/their')}
+              />
+              <FormControlLabel
+                required
+                control={<Checkbox />}
+                onChange={handleCheckboxChange}
+                label="Other"
+                value="Other"
+                checked={pronouns.includes('Other')}
+              />
+            </FormInputCheckbox>
+          </FormQuestionContainer>
+          {errors.pronouns && (
+            <FormHelperText>{errors.pronouns}</FormHelperText>
+          )}
+        </FormControl>
+        <Button
+          variant="contained"
+          onClick={() => {
+            handlePronounsNext();
+          }}
+        >
+          Next
+        </Button>
+      </SampleForm>
+    );
+  };
 
-  const SubForms = [FormIntro, NameSubForm, PronounsSubForm]
+  const handlePersonalInfoNext = () => {
+    setIsNext(true);
+    if (!validatePersonalInfoInputs()) {
+      handleNextForm();
+    }
+  };
+  const PersonalInfoSubForm = () => {
+    return (
+      <>
+        <SampleForm>
+          <FormControl error={isNext && !!errors.northeasternID}>
+            <FormQuestionContainer>
+              <FormTextContainer>
+                <b>What is your NUID?</b>
+                <br />
+              </FormTextContainer>
+              <FormTextAnswerContainer>
+                <FormInput
+                  label="Required"
+                  required
+                  placeholder="NUID"
+                  value={northeasternID}
+                  onChange={(e) => {
+                    setNortheasternID(e.target.value);
+                    if (errors.northeasternID) {
+                      errors.northeasternID = '';
+                    }
+                  }}
+                  error={isNext && !!isNortheasternIDError}
+                  helperText={isNext && errors.northeasternID}
+                />
+                <br />
+              </FormTextAnswerContainer>
+            </FormQuestionContainer>
+          </FormControl>
+          <FormControl error={isNext && !!errors.email}>
+            <FormQuestionContainer>
+              <FormTextContainer>
+                <b>What is your Northeastern email?</b>
+                <br />
+                All email communications will be sent to this address.
+              </FormTextContainer>
+              <FormTextAnswerContainer>
+                <FormInput
+                  label="Required"
+                  required
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (errors.email) {
+                      errors.email = '';
+                    }
+                  }}
+                  error={isNext && !!isEmailError}
+                  helperText={isNext && errors.email}
+                />
+              </FormTextAnswerContainer>
+            </FormQuestionContainer>
+          </FormControl>
+          <FormControl error={isNext && !!errors.phoneNumber}>
+            <FormQuestionContainer>
+              <FormTextContainer>
+                <b>What is your phone number?</b>
+                <br />
+                Please enter your cell phone number. If you do not have a phone
+                that can receive calls and texts in the United States, note so
+                here. Make sure to include the country code if your phone number
+                has a country code other than 1 (most North American countries
+                and islands).
+              </FormTextContainer>
+              <FormTextAnswerContainer>
+                <FormInput
+                  label="Required"
+                  required
+                  placeholder="Phone Number"
+                  value={phoneNumber}
+                  onChange={(e) => {
+                    setPhoneNumber(e.target.value);
+                    if (errors.phoneNumber) {
+                      errors.phoneNumber = '';
+                    }
+                  }}
+                  error={isNext && !!isPhoneNumberError}
+                  helperText={isNext && errors.phoneNumber}
+                />
+              </FormTextAnswerContainer>
+            </FormQuestionContainer>
+          </FormControl>
+        </SampleForm>
+        <Button
+          variant="contained"
+          onClick={() => {
+            handlePersonalInfoNext();
+          }}
+        >
+          Next
+        </Button>
+      </>
+    );
+  };
+
+  const SubForms = [
+    FormIntro,
+    NameSubForm,
+    PronounsSubForm,
+    PersonalInfoSubForm,
+  ];
   const [subFormIndex, setSubFormIndex] = useState(0);
 
   return (
     <>
-    {SubForms[subFormIndex]()}
-
-      <SampleForm>
-        <FormControl error={isSubmitted && !!errors.northeasternID}>
-          <FormQuestionContainer>
-            <FormTextContainer>
-            <b>What is your NUID?</b>
-              <br />
-            </FormTextContainer>
-            <FormTextAnswerContainer>
-              <FormInput
-                label="Required"
-                required
-                placeholder="NUID"
-                value={northeasternID}
-                onChange={(e) => {
-                  setNortheasternID(e.target.value);
-                  if (errors.northeasternID) {
-                    errors.northeasternID = '';
-                  }
-                }}
-                error={isSubmitted && !!isNortheasternIDError}
-                helperText={isSubmitted && errors.northeasternID}
-              />
-              <br />
-            </FormTextAnswerContainer>
-          </FormQuestionContainer>
-        </FormControl>
-      </SampleForm>
-
-      <SampleForm>
-        <FormControl error={isSubmitted && !!errors.email}>
-          <FormQuestionContainer>
-            <FormTextContainer>
-            <b>What is your Northeastern email?</b>
-              <br />
-              All email communications will be sent to this address.
-            </FormTextContainer>
-            <FormTextAnswerContainer>
-              <FormInput
-                label="Required"
-                required
-                placeholder="Email"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  if (errors.email) {
-                    errors.email = '';
-                  }
-                }}
-                error={isSubmitted && !!isEmailError}
-                helperText={isSubmitted && errors.email}
-              />
-            </FormTextAnswerContainer>
-          </FormQuestionContainer>
-        </FormControl>
-      </SampleForm>
-
-      <SampleForm>
-        <FormControl error={isSubmitted && !!errors.phoneNumber}>
-          <FormQuestionContainer>
-            <FormTextContainer>
-            <b>What is your phone number?</b>
-              <br />
-              Please enter your cell phone number. If you do not have a phone
-              that can receive calls and texts in the United States, note so
-              here. Make sure to include the country code if your phone number
-              has a country code other than 1 (most North American countries and
-              islands).
-            </FormTextContainer>
-            <FormTextAnswerContainer>
-              <FormInput
-                label="Required"
-                required
-                placeholder="Phone Number"
-                value={phoneNumber}
-                onChange={(e) => {
-                  setPhoneNumber(e.target.value);
-                  if (errors.phoneNumber) {
-                    errors.phoneNumber = '';
-                  }
-                }}
-                error={isSubmitted && !!isPhoneNumberError}
-                helperText={isSubmitted && errors.phoneNumber}
-              />
-            </FormTextAnswerContainer>
-          </FormQuestionContainer>
-        </FormControl>
-      </SampleForm>
+      {SubForms[subFormIndex]()}
 
       <SampleForm>
         <FormControl error={isSubmitted && !!errors.year}>
           <FormQuestionContainer>
             <FormTextContainer>
-            <b>What is your year?</b>
+              <b>What is your year?</b>
               <br />
             </FormTextContainer>
             <RadioButtons>
@@ -671,7 +751,7 @@ const ApplicationForm: React.FC<Props> = ({
         <FormControl error={isSubmitted && !!errors.college}>
           <FormQuestionContainer>
             <FormTextContainer>
-            <b>What is your college?</b>
+              <b>What is your college?</b>
               <br />
               For combined majors (a single major listed in the course catalog
               that spans two disciplines), list only the home college. For
@@ -767,7 +847,6 @@ const ApplicationForm: React.FC<Props> = ({
               students. Most senators are academic senators.
               <br />
               <br />
-
               Special interest senators are selected by the members and
               executive board of the organization they intend to represent.
               Example constituencies include Greek life organizations and clubs.
@@ -817,7 +896,7 @@ const ApplicationForm: React.FC<Props> = ({
         <FormControl error={isSubmitted && !!errors.selectedConstituencyType}>
           <FormQuestionContainer>
             <FormTextContainer>
-            <b>What type of constituency would you like to represent?</b>
+              <b>What type of constituency would you like to represent?</b>
             </FormTextContainer>
             <RadioButtons>
               <RadioGroup
@@ -848,12 +927,13 @@ const ApplicationForm: React.FC<Props> = ({
         <FormControl required error={isSubmitted && !!errors.constituency}>
           <FormQuestionContainer>
             <FormTextContainer>
-              <b>Select a college, organization, or program from the list below
-                of the name of your constituency</b>
-                {' '}
-                <br/>
-                Only recognized student organizations may have a special interest senator.
-                
+              <b>
+                Select a college, organization, or program from the list below
+                of the name of your constituency
+              </b>{' '}
+              <br />
+              Only recognized student organizations may have a special interest
+              senator.
             </FormTextContainer>
             <FormTextAnswerContainer>
               <FormSelect
@@ -906,7 +986,9 @@ const ApplicationForm: React.FC<Props> = ({
                 <MenuItem value={'NU Immerse'}>NU Immerse</MenuItem>
                 <MenuItem value={'Phi Sigma Rho'}>Phi Sigma Rho</MenuItem>
                 <MenuItem value={'Sandbox'}>Sandbox</MenuItem>
-                <MenuItem value={'Islamic Society of Northeastern University'}>Islamic Society of Northeastern University</MenuItem>
+                <MenuItem value={'Islamic Society of Northeastern University'}>
+                  Islamic Society of Northeastern University
+                </MenuItem>
               </FormSelect>
             </FormTextAnswerContainer>
             {isSubmitted && errors.constituency && (
@@ -915,10 +997,6 @@ const ApplicationForm: React.FC<Props> = ({
           </FormQuestionContainer>
         </FormControl>
       </SampleForm>
-
-      
-
-      
 
       <SampleForm>
         <FormControl>
@@ -932,7 +1010,7 @@ const ApplicationForm: React.FC<Props> = ({
         <FormControl>
           <FormQuestionContainer>
             <FormTextContainer>
-            <b>Are you a returning senator?</b>
+              <b>Are you a returning senator?</b>
               <br />
               Select "yes" only if you have completed the Senator Education and
               Training Program (STEP) and remained a senator in good standing
