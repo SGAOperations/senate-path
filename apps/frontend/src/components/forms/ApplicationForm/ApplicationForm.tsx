@@ -12,7 +12,8 @@ import MenuItem from '@mui/material/MenuItem';
 import { getFullPath } from './../../../utils';
 import { 
   CONSTITUENCIES, 
-  PRONOUNS, YEAR_OPTIONS, 
+  PRONOUNS, 
+  YEAR_OPTIONS, 
   SENATOR_OPTIONS, 
   CONSTITUENCY_TYPES 
 } from './../../../constants/constants';
