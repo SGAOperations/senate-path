@@ -4,7 +4,11 @@ import {
   APPLICATION_TABLE_HEADERS,
   NOMINATION_TABLE_HEADERS,
 } from '../../components/tables/AdminTable/constants';
-import { TableEntry } from '../../components/tables/AdminTable/types';
+import {
+  TableEntry,
+  NomineeTableEntry,
+} from '../../components/tables/AdminTable/types';
+import NomineeTable from '../../components/tables/AdminTable/NomineeTable';
 import AdminTable from '../../components/tables/AdminTable';
 import LoginForm from '../../components/forms/LoginForm';
 
@@ -15,6 +19,32 @@ const Admin: React.FC = () => {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [nominations, setNominations] = useState<TableEntry[]>([]);
   const [applications, setApplications] = useState<TableEntry[]>([]);
+  const [nominees, setNominees] = useState<NomineeTableEntry[]>([]);
+
+  const getDataForNominees = (
+    url: string,
+    setData: (data: NomineeTableEntry[]) => void
+  ) => {
+    fetch(url)
+      .then((response) => {
+        if (!response.ok) {
+          console.log('OVER 20:');
+          throw new Error('Failed to fetch data');
+        }
+        console.log('OVER 20:');
+        const out = response.json();
+        console.log(out);
+        return out;
+      })
+      .then((data) => {
+        console.log('OVER 20:', data);
+        setData(data);
+      })
+      .catch((error) => {
+        console.error('OVER 20:', error);
+      });
+  };
+
   const getData = (url: string, setData: (data: TableEntry[]) => void) => {
     fetch(url)
       .then((response) => {
@@ -36,10 +66,22 @@ const Admin: React.FC = () => {
       });
   };
   useEffect(() => {
-    getData(getFullPath('/api/nominations'), setNominations);
+    getDataForNominees(
+      getFullPath('/api/nominations/over/20'),
+      setNominees
+    );
   }, []);
   useEffect(() => {
-    getData(getFullPath('/api/applications'), setApplications);
+    getData(
+      getFullPath('/api/nominations'),
+      setNominations
+    );
+  }, []);
+  useEffect(() => {
+    getData(
+      getFullPath('/api/applications'),
+      setApplications
+    );
   }, []);
 
   if (!loggedIn) return <LoginForm setLoginStatus={setLoggedIn} />;
@@ -66,6 +108,9 @@ const Admin: React.FC = () => {
 
   return (
     <AdminContainer>
+      <HeaderRow>20+ Nominations</HeaderRow>
+      <NomineeTable data={nominees} />
+
       <HeaderRow>
         Applications
         <ExportCSVButton

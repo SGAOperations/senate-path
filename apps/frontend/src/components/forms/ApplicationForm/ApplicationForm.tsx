@@ -10,6 +10,13 @@ import MenuItem from '@mui/material/MenuItem';
 
 
 import { getFullPath } from './../../../utils';
+import { 
+  CONSTITUENCIES, 
+  PRONOUNS, 
+  YEAR_OPTIONS, 
+  SENATOR_OPTIONS, 
+  CONSTITUENCY_TYPES 
+} from './../../../constants/constants';
 
 import {
   FormInput,
@@ -164,8 +171,7 @@ const ApplicationForm: React.FC<Props> = ({
       isReturningSenatorError ||
       isAttestationError
     ) {
-      // TODO show error popup with message
-
+    setIsPopupOpen(true);
       const newErrors: {
         fullName?: string;
         preferredFullName?: string;
@@ -213,6 +219,9 @@ const ApplicationForm: React.FC<Props> = ({
       setErrors(newErrors);
       // if (!validateForm()) {
       console.log('error message here');
+      // error message pop up
+      setErrorMessage(Object.values(newErrors).join(", "));
+      setErrorOpen(true);
       return;
       // }
     }
@@ -455,38 +464,17 @@ const ApplicationForm: React.FC<Props> = ({
               <b>What pronouns do you use?</b>
             </FormTextContainer>
             <FormInputCheckbox>
+            {PRONOUNS.map((option) => (
               <FormControlLabel
+                key={option}
                 required
                 control={<Checkbox />}
                 onChange={handleCheckboxChange}
-                label="She/her/her"
-                value="She/her/her"
-                checked={pronouns.includes('She/her/her')}
+                label={option}
+                value={option}
+                checked={pronouns.includes(option)}
               />
-              <FormControlLabel
-                required
-                control={<Checkbox />}
-                onChange={handleCheckboxChange}
-                label="He/him/his"
-                value="He/him/his"
-                checked={pronouns.includes('He/him/his')}
-              />
-              <FormControlLabel
-                required
-                control={<Checkbox />}
-                onChange={handleCheckboxChange}
-                label="They/them/their"
-                value="They/them/their"
-                checked={pronouns.includes('They/them/their')}
-              />
-              <FormControlLabel
-                required
-                control={<Checkbox />}
-                onChange={handleCheckboxChange}
-                label="Other"
-                value="Other"
-                checked={pronouns.includes('Other')}
-              />
+            ))}
             </FormInputCheckbox>
           </FormQuestionContainer>
           {errors.pronouns && (
@@ -568,31 +556,14 @@ const ApplicationForm: React.FC<Props> = ({
                 value={year?.toString()}
                 onChange={handleYearChange}
               >
-                <FormControlLabel
-                  value="1"
-                  control={<Radio />}
-                  label="Undergraduate first year"
-                />
-                <FormControlLabel
-                  value="2"
-                  control={<Radio />}
-                  label="Undergraduate second year"
-                />
-                <FormControlLabel
-                  value="3"
-                  control={<Radio />}
-                  label="Undergraduate third year"
-                />
-                <FormControlLabel
-                  value="4"
-                  control={<Radio />}
-                  label="Undergraduate fourth year"
-                />
-                <FormControlLabel
-                  value="5"
-                  control={<Radio />}
-                  label="Undergraduate fifth+ year"
-                />
+                 {YEAR_OPTIONS.map((option) => (
+                  <FormControlLabel
+                    key={option.value}
+                    value={option.value}
+                    control={<Radio />}
+                    label={option.label}
+                  />
+                ))}
               </RadioGroup>
             </RadioButtons>
             {errors.year && <FormHelperText>{errors.year}</FormHelperText>}
@@ -716,16 +687,14 @@ const ApplicationForm: React.FC<Props> = ({
                 value={constituency}
                 onChange={handleConstituencyChange}
               >
-                <FormControlLabel
-                  value="academic"
-                  control={<Radio />}
-                  label="Academic senator"
-                />
-                <FormControlLabel
-                  value="special"
-                  control={<Radio />}
-                  label="Special interest senator"
-                />
+                 {SENATOR_OPTIONS.map((option) => (
+                  <FormControlLabel
+                    key={option.value}
+                    value={option.value}
+                    control={<Radio />}
+                    label={option.label}
+                  />
+                ))}
               </RadioGroup>
             </RadioButtons>
           </FormQuestionContainer>
@@ -758,16 +727,14 @@ const ApplicationForm: React.FC<Props> = ({
                 value={constituencyType}
                 onChange={handleConstituencyTypeChange}
               >
-                <FormControlLabel
-                  value="club"
-                  control={<Radio />}
-                  label="Official club"
-                />
-                <FormControlLabel
-                  value="greek"
-                  control={<Radio />}
-                  label="Greek organization"
-                />
+                {CONSTITUENCY_TYPES.map(( option ) => (
+                  <FormControlLabel
+                    key={option.value}
+                    value={option.value}
+                    control={<Radio />}
+                    label={option.label}
+                  />
+                ))}
               </RadioGroup>
             </RadioButtons>
           </FormQuestionContainer>
@@ -786,7 +753,7 @@ const ApplicationForm: React.FC<Props> = ({
                 {' '}
                 <br/>
                 Only recognized student organizations may have a special interest senator.
-                
+
             </FormTextContainer>
             <FormTextAnswerContainer>
               <FormSelect
@@ -798,47 +765,11 @@ const ApplicationForm: React.FC<Props> = ({
                   }
                 }}
               >
-                {/* TODO Insert MenuItems using database of Constituents */}
-                <MenuItem value={'Alpha Chi Omega Sorority'}>
-                  Alpha Chi Omega Sorority
+                {CONSTITUENCIES.map((constituency) => (
+                  <MenuItem key={constituency} value={constituency}>
+                  {constituency}
                 </MenuItem>
-                <MenuItem value={'Alpha Epsilon Phi'}>
-                  Alpha Epsilon Phi
-                </MenuItem>
-                <MenuItem value={'Alpha Epsilon Pi'}>Alpha Epsilon Pi</MenuItem>
-                <MenuItem value={'Bouvé College of Health Sciences'}>
-                  Bouvé College of Health Sciences
-                </MenuItem>
-                <MenuItem value={'College of Science'}>
-                  College of Science
-                </MenuItem>
-                <MenuItem value={'College of Social Sciences and Humanities'}>
-                  College of Social Sciences and Humanities
-                </MenuItem>
-                <MenuItem value={"D'Amore-McKim School of Business"}>
-                  D'Amore-McKim School of Business
-                </MenuItem>
-                <MenuItem value={'Delta Phi Epsilon'}>
-                  Delta Phi Epsilon
-                </MenuItem>
-                <MenuItem value={'Delta Tau Delta'}>Delta Tau Delta</MenuItem>
-                <MenuItem value={'Delta Zeta'}>Delta Zeta</MenuItem>
-                <MenuItem value={'Global Scholars program'}>
-                  Global Scholars program
-                </MenuItem>
-                <MenuItem value={'Honors program'}>Honors program</MenuItem>
-                <MenuItem value={'Kappa Delta'}>Kappa Delta</MenuItem>
-                <MenuItem value={'Khoury College of Computer Sciences'}>
-                  Khoury College of Computer Sciences
-                </MenuItem>
-                <MenuItem
-                  value={'Northeastern University Real Estate Club (NURE)'}
-                >
-                  Northeastern University Real Estate Club (NURE)
-                </MenuItem>
-                <MenuItem value={'NU Immerse'}>NU Immerse</MenuItem>
-                <MenuItem value={'Phi Sigma Rho'}>Phi Sigma Rho</MenuItem>
-                <MenuItem value={'Sandbox'}>Sandbox</MenuItem>
+                ))}
               </FormSelect>
             </FormTextAnswerContainer>
             {isSubmitted && errors.constituency && (
@@ -848,9 +779,9 @@ const ApplicationForm: React.FC<Props> = ({
         </FormControl>
       </SampleForm>
 
-      
 
-      
+
+
 
       <SampleForm>
         <FormControl>

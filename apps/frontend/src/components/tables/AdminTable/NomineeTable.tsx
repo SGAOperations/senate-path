@@ -6,14 +6,13 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { TableEntry } from './types';
+import { NomineeTableEntry } from './types';
 import { StyledTableContainer } from './styles';
 
 interface Props {
-  data: TableEntry[];
+  data: NomineeTableEntry[];
 }
-
-const AdminTable: React.FC<Props> = ({ data }) => {
+const NomineeTable: React.FC<Props> = ({ data }) => {
   return (
     <StyledTableContainer>
       <TableContainer component={Paper}>
@@ -21,22 +20,22 @@ const AdminTable: React.FC<Props> = ({ data }) => {
           <TableHead>
             <TableRow>
               <TableCell>
-                <b>ID</b>
-              </TableCell>
-              <TableCell>
                 <b>Full Name</b>
               </TableCell>
               <TableCell>
-                <b>Email</b>
+                <b>Constituency</b>
+              </TableCell>
+              <TableCell>
+                <b>Nominations</b>
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {data.map((item) => (
-              <TableRow key={item.id}>
-                <TableCell>{item.id}</TableCell>
-                <TableCell>{item.fullName}</TableCell>
-                <TableCell>{item.email}</TableCell>
+              <TableRow>
+                <TableCell>{item.nominee}</TableCell>
+                <TableCell>{item.constituency}</TableCell>
+                <TableCell>{item.count}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -45,5 +44,4 @@ const AdminTable: React.FC<Props> = ({ data }) => {
     </StyledTableContainer>
   );
 };
-
-export default AdminTable;
+export default NomineeTable;

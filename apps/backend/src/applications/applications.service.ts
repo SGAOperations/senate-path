@@ -51,10 +51,15 @@ export class ApplicationsService {
     } catch (errors) {
       throw new BadRequestException(this.formatValidationErrors(errors));
     }
+
+    const applicationData = {
+      ...applicationColumns,
+      semester: applicationColumns.semester || 'Spring 2025',
+    };
     
     const { error } = await supabase
       .from('applications')
-      .insert(applicationColumns);
+      .insert(applicationData);
 
     if (error) {
       throw new BadRequestException(`Failed to create application: ${error.message}`);
