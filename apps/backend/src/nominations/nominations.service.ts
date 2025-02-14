@@ -228,5 +228,35 @@ export class NominationsService {
   
     return Array.from(uniqueNominees.values()).map((applicant) => applicant.fullName);
   }
+
+  async getNomineesWithVotes(votes: number) {
+    // Step 1: Fetch nominee counts and constituency
+    const { data, error } = await supabase
+        .from('nominations')
+        .select('nominee, constituency')
+    
+    if (error) {
+        throw new InternalServerErrorException(`Failed to fetch nominations: ${error.message}`);
+    }
+    if (!data || data.length === 0) {
+        console.log("No data found");
+        return [];
+    }
+    // Step 2: Count occurrences of each nominee
+    const nomineeCounts: Record<string, { count: number; constituency: string }> = {};
+    data.forEach(({ nominee, constituency }) => {
+        if (!nomineeCounts[nominee]) {
+            nomineeCounts[nominee] = { count: 0, constituency };
+        }
+        nomineeCounts[nominee].count += 1;
+    });
+    // Step 3: Filter nominees with votes greater than the threshold and sort results
+    const finalResult = Object.entries(nomineeCounts)
+        .filter(([_, { count }]) => count >= votes)
+        .map(([nominee, { count, constituency }]) => ({ nominee, constituency, count }))
+        .sort((a, b) => b.count - a.count); // Sort by highest to lowest count
+    console.log(finalResult);
+    return finalResult;
+}
   
 }
