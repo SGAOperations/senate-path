@@ -5,15 +5,6 @@ import {
   Nominations,
   InputContainer,
   SubmitButton,
-  Title,
-  Subtitle,
-  InputNUID,
-  NUIDInput,
-  NUIDLabel,
-  NominationBoxes,
-  NominationBox,
-  NominationTitle,
-  NominationValue,
 } from './styles';
 
 const Dashboard: React.FC = () => {
@@ -28,14 +19,12 @@ const Dashboard: React.FC = () => {
     setError(null);
     try {
       const nuidRegex = /^\d{9}$/;
-      if (!nuidRegex.test(nuid)) {
-        setError('NUID must be 9 digits long and contain only numbers');
-        return;
-      }
-      
-      fetch(
-        getFullPath(`/api/nominations/nuid/${nuid}`)
-      )
+        if (!nuidRegex.test(nuid)) {
+          setError('NUID must be 9 digits long and contain only numbers');
+          return;
+        }
+      fetch(getFullPath(`/api/nominations/nuid/${nuid}`))
+
         .then((data) => {
           if (data.ok) {
             console.log('okay request');
@@ -95,25 +84,17 @@ const Dashboard: React.FC = () => {
   return (
     <HomeContainer>
       <InputContainer>
-        <Title>SGA Nomination Dashboard</Title>
-        <Subtitle>
-          View the total number of nominations collected so far and track
-          campaign support for student government candidates
-        </Subtitle>
-        {!showResult && (
-          <InputNUID>
-            <NUIDLabel htmlFor="nuid">* NUID (required)</NUIDLabel>
-            <NUIDInput
-              id="nuid"
-              type="text"
-              value={nuid}
-              onChange={(e) => setNuid(e.target.value)}
-              placeholder="e.g., 001234567"
-              required
-            />
-            <SubmitButton onClick={handleSubmit}>Submit</SubmitButton>
-          </InputNUID>
-        )}
+        <h1>SGA Nomination Dashboard</h1>
+        <label htmlFor="nuid">Enter your NUID:</label>
+        <input
+          id="nuid"
+          type="text"
+          value={nuid}
+          onChange={(e) => setNuid(e.target.value)}
+          placeholder="e.g., 001234567"
+          required
+        />
+        <SubmitButton onClick={handleSubmit}>Submit</SubmitButton>
       </InputContainer>
 
       {error && <h2 style={{ color: 'red' }}>{error}</h2>}
@@ -122,28 +103,19 @@ const Dashboard: React.FC = () => {
         <Nominations>
           <h1>Nomination Status</h1>
           <h3>{message}</h3>
-
-          <NominationBoxes>
-            <NominationBox>
-              <NominationTitle>Total Nominations</NominationTitle>
-              <NominationValue>{numNominations} / 30</NominationValue>
-            </NominationBox>
-
-            <NominationBox>
-              <NominationTitle>Nominations Needed</NominationTitle>
-              {neededNominations > 0 ? (
-                <NominationValue>{neededNominations}</NominationValue>
-              ) : (
-                <NominationValue>
-                  You have met the required number of nominations!
-                </NominationValue>
-              )}
-            </NominationBox>
-          </NominationBoxes>
+          <p>Total Nominations: {numNominations}</p>
+          {neededNominations > 0 ? (
+            <p>
+              You need {neededNominations} more nominations to meet the minimum
+              requirement.
+            </p>
+          ) : (
+            <p>You have met the required number of nominations!</p>
+          )}
         </Nominations>
       )}
     </HomeContainer>
   );
-};
+}
 
 export default Dashboard;

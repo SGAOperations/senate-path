@@ -12,16 +12,11 @@ interface NomineeData {
   constituencyName: string;
 }
 
-interface NomineeCount {
-  nominee: string;
-  count: number;
-}
-
 @Injectable()
 export class NominationsService {
   constructor(private readonly emailsService: EmailsService) {}
   async getNominations(): Promise<Tables<'nominations'>[]> {
-    const { data, error } = await supabase.from('nominations').select('*');
+    const { data, error } = await supabase.from('nominations').select('*').eq('semester', 'Spring 2025');
 
     if (error) {
       throw new InternalServerErrorException(`Failed to fetch nominations: ${error.message}`);
@@ -36,6 +31,7 @@ export class NominationsService {
       .from('nominations')
       .select('*', { count: 'exact' })
       .eq('nominee', name)
+      .eq('semester', 'Spring 2025')
       .eq('status', Status.APPROVED);
     console.log('count', count)
     console.log('error', error)
@@ -52,7 +48,6 @@ export class NominationsService {
 
   private async notifyAdmin(nominee: string, count: number): Promise<void> {
     const emailRequest = {
-      // TODO: Update this to Jamira's
       recipients: ['wu-chen.j@northeastern.edu'],
       subject: `Nominee ${nominee} Reached ${count} Nominations`,
       message: `The nominee "${nominee}" has now reached ${count} nominations. Please review their application.`,
@@ -146,6 +141,7 @@ export class NominationsService {
   
     const { error } = await supabase.from('nominations').insert({
       ...nominationsColumns,
+      semester: 'Spring 2025',
       status,
     });
   
@@ -215,6 +211,7 @@ export class NominationsService {
     const { data: applicants, error } = await supabase
       .from('applications')
       .select('id, fullName')
+      .eq('semester', 'Spring 2025')
       .order('id', { ascending: false });
   
     if (error) {
