@@ -14,7 +14,6 @@ import LoginForm from '../../components/forms/LoginForm';
 
 import { getFullPath } from './../../utils';
 
-
 const Admin: React.FC = () => {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [nominations, setNominations] = useState<TableEntry[]>([]);
@@ -66,28 +65,18 @@ const Admin: React.FC = () => {
       });
   };
   useEffect(() => {
-    getDataForNominees(
-      getFullPath('/api/nominations/over/20'),
-      setNominees
-    );
+    getDataForNominees(getFullPath('/api/nominations/over/20'), setNominees);
   }, []);
   useEffect(() => {
-    getData(
-      getFullPath('/api/nominations'),
-      setNominations
-    );
+    getData(getFullPath('/api/nominations'), setNominations);
   }, []);
   useEffect(() => {
-    getData(
-      getFullPath('/api/applications'),
-      setApplications
-    );
+    getData(getFullPath('/api/applications'), setApplications);
   }, []);
 
   if (!loggedIn) return <LoginForm setLoginStatus={setLoggedIn} />;
-  
-  console.log('HEREEE')
-  
+
+  console.log('HEREEE');
 
   const exportToCsv = (
     data: TableEntry[],
@@ -108,6 +97,11 @@ const Admin: React.FC = () => {
 
   return (
     <AdminContainer>
+      <label htmlFor="semester">Choose a semester:</label>
+
+      <select name="semester" id="semester">
+        <option value="Spring2025">Spring 2025</option>
+      </select>
       <HeaderRow>20+ Nominations</HeaderRow>
       <NomineeTable data={nominees} />
 
