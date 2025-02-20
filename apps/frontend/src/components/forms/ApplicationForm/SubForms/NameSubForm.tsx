@@ -1,32 +1,76 @@
 import React from 'react';
 import {
   SampleForm,
+  FormInput,
   FormQuestionContainer,
   FormTextContainer,
   FormQuestionText,
   FormTextAnswerContainer,
-} from './styles';
-import { FormControl } from '@mui/material';
-import { ApplicationFormData } from './ApplicationForm';
+} from '../styles';
+import { useState } from 'react';
+import { FormControl, Button } from '@mui/material';
+import { SubFormProps } from './SubForm';
 
-interface Props {
-  isNext: boolean;
-  errors: unknown;
-  formData: ApplicationFormData;
-  setFormData: () => void;
-  handleNext: () => void;
-}
-
-const NameSubForm: React.FC<Props> = ({
-  isNext,
-  errors,
+export const NameSubForm: React.FC<SubFormProps> = ({
   formData,
   setFormData,
+  updateErrors,
+  errors,
+  errorMessages,
+  handleNext,
+  handlePrev,
 }) => {
+  const [isNext, setIsNext] = useState(false);
+
+  const handleNameNext = () => {
+    setIsNext(true);
+    if (
+      !(
+        errors.fullName ||
+        errors.preferredFullName ||
+        errors.phoneticPronunciation ||
+        errors.nickname
+      )
+    ) {
+      handleNext();
+    }
+  };
+
+  const handleFullNameChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const value = event.target.value;
+    setFormData((prev) => ({ ...prev, fullName: value }));
+    updateErrors('fullName', !value);
+  };
+
+  const handlePreferredNameChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const value = event.target.value;
+    setFormData((prev) => ({ ...prev, preferredFullName: value }));
+    updateErrors('preferredFullName', !value);
+  };
+
+  const handlePhoneticPronunciationChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const value = event.target.value;
+    setFormData((prev) => ({ ...prev, phoneticPronunciation: value }));
+    updateErrors('phoneticPronunciation', !value);
+  };
+
+  const handleNicknameChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const value = event.target.value;
+    setFormData((prev) => ({ ...prev, nickname: value }));
+    updateErrors('nickname', !value);
+  };
   return (
     <>
       <SampleForm>
-        <FormControl error={isNext && !!errors.fullName}>
+        <FormControl error={isNext && errors.fullName}>
           <FormQuestionContainer>
             <FormTextContainer>
               <FormQuestionText>What is your full name?</FormQuestionText>
@@ -41,18 +85,15 @@ const NameSubForm: React.FC<Props> = ({
                 required
                 value={formData.fullName}
                 onChange={(e) => {
-                  setFullName(e.target.value);
-                  if (errors.fullName) {
-                    errors.fullName = '';
-                  }
+                  handleFullNameChange(e);
                 }}
-                error={isNext && !!isFullNameError}
-                helperText={isNext && errors.fullName}
+                error={isNext && errors.fullName}
+                helperText={isNext && errors.fullName && errorMessages.fullName}
               />
             </FormTextAnswerContainer>
           </FormQuestionContainer>
         </FormControl>
-        <FormControl error={isNext && !!errors.preferredFullName}>
+        <FormControl error={isNext && errors.preferredFullName}>
           <FormQuestionContainer>
             <FormTextContainer>
               <FormQuestionText>What is your preferred name?</FormQuestionText>
@@ -68,18 +109,19 @@ const NameSubForm: React.FC<Props> = ({
                 placeholder="Your Preferred Name"
                 value={formData.preferredFullName}
                 onChange={(e) => {
-                  setPreferredFullName(e.target.value);
-                  if (errors.preferredFullName) {
-                    errors.preferredFullName = '';
-                  }
+                  handlePreferredNameChange(e);
                 }}
-                error={isNext && !!isPreferredFullNameError}
-                helperText={isNext && errors.preferredFullName}
+                error={isNext && errors.preferredFullName}
+                helperText={
+                  isNext &&
+                  errors.preferredFullName &&
+                  errorMessages.preferredFullName
+                }
               />
             </FormTextAnswerContainer>
           </FormQuestionContainer>
         </FormControl>
-        <FormControl error={isNext && !!errors.phoneticPronunciation}>
+        <FormControl error={isNext && errors.phoneticPronunciation}>
           <FormQuestionContainer>
             <FormTextContainer>
               <FormQuestionText>
@@ -95,18 +137,19 @@ const NameSubForm: React.FC<Props> = ({
                 placeholder="Name Pronunciation"
                 value={formData.phoneticPronunciation}
                 onChange={(e) => {
-                  setPhoneticPronunciation(e.target.value);
-                  if (errors.phoneticPronunciation) {
-                    errors.phoneticPronunciation = '';
-                  }
+                  handlePhoneticPronunciationChange(e);
                 }}
-                error={isNext && !!isPhoneticPronunciationError}
-                helperText={isNext && errors.phoneticPronunciation}
+                error={isNext && errors.phoneticPronunciation}
+                helperText={
+                  isNext &&
+                  errors.phoneticPronunciation &&
+                  errorMessages.phoneticPronunciation
+                }
               />
             </FormTextAnswerContainer>
           </FormQuestionContainer>
         </FormControl>
-        <FormControl error={isNext && !!errors.nickname}>
+        <FormControl error={isNext && errors.nickname}>
           <FormQuestionContainer>
             <FormTextContainer>
               <FormQuestionText>What is your nickname?</FormQuestionText>
@@ -119,18 +162,23 @@ const NameSubForm: React.FC<Props> = ({
                 placeholder="Nickname"
                 value={formData.nickname}
                 onChange={(e) => {
-                  setNickname(e.target.value);
-                  if (errors.nickname) {
-                    errors.nickname = '';
-                  }
+                  handleNicknameChange(e);
                 }}
-                error={isNext && !!isNicknameError}
-                helperText={isNext && errors.nickname}
+                error={isNext && errors.nickname}
+                helperText={isNext && errors.nickname && errorMessages.nickname}
               />
             </FormTextAnswerContainer>
           </FormQuestionContainer>
         </FormControl>
       </SampleForm>
+      <Button
+        variant="contained"
+        onClick={() => {
+          handlePrev();
+        }}
+      >
+        Previous
+      </Button>
       <Button
         variant="contained"
         onClick={() => {
