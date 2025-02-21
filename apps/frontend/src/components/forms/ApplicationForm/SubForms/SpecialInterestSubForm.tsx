@@ -123,6 +123,7 @@ export const SpecialInterestSubForm: React.FC<SubFormProps> = ({
             <FormTextAnswerContainer>
               <FormSelect
                 required
+                value={formData.constituencyName}
                 onChange={(e) => {
                   handleConstituencyNameChange(e.target.value);
                 }}

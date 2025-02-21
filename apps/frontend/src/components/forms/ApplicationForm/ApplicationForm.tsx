@@ -1,34 +1,13 @@
 import { useState } from 'react';
-import Checkbox from '@mui/material/Checkbox';
-import FormControl from '@mui/material/FormControl';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import Button from '@mui/material/Button';
-import { FormHelperText } from '@mui/material';
-import MenuItem from '@mui/material/MenuItem';
 import { NameSubForm } from './SubForms/NameSubForm';
 import { FormIntro } from './SubForms/FormIntro';
 import { PersonalInfoSubForm } from './SubForms/PersonalInfoSubForm';
 import { ApplicationErrors, ErrorMessages } from './ApplicationErrors';
-
-import { getFullPath } from './../../../utils';
-
-import {
-  FormInput,
-  SampleForm,
-  FormTextContainer,
-  FormQuestionText,
-  FormQuestionContainer,
-  FormTextAnswerContainer,
-  Introduction,
-  FormSelect,
-  FormInputCheckbox,
-  RadioButtons,
-} from './styles';
 import { PronounSubForm } from './SubForms/PronounsSubForm';
 import { AcademicsSubForm } from './SubForms/AcademicsSubForm';
 import { SpecialInterestSubForm } from './SubForms/SpecialInterestSubForm';
+import { NominationSubForm } from './SubForms/NominationSubForm';
+import { Button } from '@mui/material';
 
 interface Props {
   setIsPopupOpen: (open: boolean) => void;
@@ -97,7 +76,7 @@ const ApplicationForm: React.FC<Props> = ({
       constituency: true,
       constituencyType: true,
       constituencyName: true,
-      returningSenatorType: true,
+      returningSenatorType: false,
       attestation: true,
     }
   );
@@ -105,6 +84,10 @@ const ApplicationForm: React.FC<Props> = ({
   const updateErrors = (field: keyof ApplicationErrors, value: boolean) => {
     setApplicationErrors((prev) => ({ ...prev, [field]: value }));
   };
+
+  const hasErrors = Object.values(applicationErrors).some(
+    (value) => value === true
+  );
 
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
 
@@ -285,85 +268,26 @@ const ApplicationForm: React.FC<Props> = ({
       handleNext={handleNextForm}
       handlePrev={handlePrevForm}
     />,
+    <NominationSubForm
+      formData={FormData}
+      setFormData={setFormData}
+      updateErrors={updateErrors}
+      errors={applicationErrors}
+      errorMessages={ErrorMessages}
+      handleNext={handleNextForm}
+      handlePrev={handlePrevForm}
+    />,
   ];
   const [subFormIndex, setSubFormIndex] = useState(0);
 
   return (
     <>
       {SubForms[subFormIndex]}
-      {/* 
-
-      <SampleForm>
-        <FormControl>
-          <FormTextContainer>
-            <h3>SGA Senator Nomination Form</h3>
-          </FormTextContainer>
-        </FormControl>
-      </SampleForm>
-
-      <SampleForm>
-        <FormControl>
-          <FormQuestionContainer>
-            <FormTextContainer>
-              <b>Are you a returning senator?</b>
-              <br />
-              Select "yes" only if you have completed the Senator Education and
-              Training Program (STEP) and remained a senator in good standing
-              for at least one entire semester.
-            </FormTextContainer>
-            <RadioButtons>
-              <RadioGroup
-                name="returning-type-buttons-group"
-                value={returningSenatorType}
-                onChange={handleReturningTypeChange}
-              >
-                <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                <FormControlLabel value="no" control={<Radio />} label="No" />
-              </RadioGroup>
-            </RadioButtons>
-          </FormQuestionContainer>
-        </FormControl>
-      </SampleForm>
-
-      <SampleForm>
-        <FormControl error={isSubmitted && !!errors.selectedAttestation}>
-          <FormQuestionContainer>
-            <FormTextContainer>
-              <b>Acknowledgment and Attestation</b>
-              <br />
-              Please carefully read the following statement and select the
-              button below if you agree: I attest that I am the undergraduate
-              student in good academic and judicial standing listed on this form
-              and that all information I am submitting is completely truthful
-              and accurately presented; I authorize the Northeastern University
-              Student Government Association to verify the information on this
-              form, and I agree to abide by every responsibility and expectation
-              of a senator, including attending weekly senate meetings and
-              maintaining effective communication with my constituents.
-            </FormTextContainer>
-            <RadioButtons>
-              <RadioGroup
-                name="attestation-buttons-group"
-                value={attestation}
-                onChange={handleAttestationChange}
-              >
-                <FormControlLabel
-                  value="agree"
-                  control={<Radio />}
-                  label="I have carefully read and fully agree to the statement above."
-                />
-                {isSubmitted && errors.selectedAttestation && (
-                  <FormHelperText>{errors.selectedAttestation}</FormHelperText>
-                )}
-              </RadioGroup>
-            </RadioButtons>
-          </FormQuestionContainer>
-        </FormControl>
-      </SampleForm> */}
-
-      <Button variant="contained" onClick={submitApplication}>
-        Submit
-      </Button>
+      {!hasErrors && (
+        <Button variant="contained" onClick={submitApplication}>
+          Submit
+        </Button>
+      )}
     </>
   );
 };
