@@ -1,11 +1,11 @@
-import { SampleForm, Introduction } from '../styles';
+import { SampleForm, Introduction } from './styles';
 import { Button } from '@mui/material';
 
 interface Props {
   handleNext: () => void;
 }
 
-export const FormIntro: React.FC<Props> = ({ handleNext }) => {
+export const ApplicationFormIntro: React.FC<Props> = ({ handleNext }) => {
   return (
     <>
       <SampleForm>

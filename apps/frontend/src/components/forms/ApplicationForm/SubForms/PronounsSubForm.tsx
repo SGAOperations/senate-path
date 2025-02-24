@@ -12,7 +12,7 @@ import {
   Checkbox,
   FormHelperText,
 } from '@mui/material';
-import { SubFormProps } from './SubForm';
+import { SubFormProps } from './SubFormProps';
 import { useState } from 'react';
 
 export const PronounSubForm: React.FC<SubFormProps> = ({

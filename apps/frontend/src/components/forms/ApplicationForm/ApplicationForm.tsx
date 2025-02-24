@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { NameSubForm } from './SubForms/NameSubForm';
-import { FormIntro } from './SubForms/FormIntro';
+import { ApplicationFormIntro } from './ApplicationFormIntro';
 import { PersonalInfoSubForm } from './SubForms/PersonalInfoSubForm';
 import { ApplicationErrors, ErrorMessages } from './ApplicationErrors';
 import { PronounSubForm } from './SubForms/PronounsSubForm';
@@ -40,7 +40,9 @@ const ApplicationForm: React.FC<Props> = ({
   setErrorMessage,
   setErrorOpen,
 }) => {
-  const [FormData, setFormData] = useState<ApplicationFormData>({
+  
+  // The state of data in each form.
+  const [formData, setFormData] = useState<ApplicationFormData>({
     fullName: '',
     preferredFullName: '',
     phoneticPronunciation: '',
@@ -59,6 +61,7 @@ const ApplicationForm: React.FC<Props> = ({
     attestation: '',
   });
 
+  // The state of errors for each formData field.
   const [applicationErrors, setApplicationErrors] = useState<ApplicationErrors>(
     {
       fullName: true,
@@ -81,111 +84,40 @@ const ApplicationForm: React.FC<Props> = ({
     }
   );
 
+  /**
+   * Update the error state of a form field.
+   * @param field The error key to be changed.
+   * @param value The value to change it to.
+   */
   const updateErrors = (field: keyof ApplicationErrors, value: boolean) => {
     setApplicationErrors((prev) => ({ ...prev, [field]: value }));
   };
 
-  const hasErrors = Object.values(applicationErrors).some(
-    (value) => value === true
-  );
+  /**
+   * @returns Are there any errors in the form?
+   */
+  const hasAnyErrors = () => {
+    return Object.values(applicationErrors).some((value) => value === true);
+  };
 
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
 
   const submitApplication = () => {
     setErrorOpen(false);
     setIsSubmitted(true);
-    if (
-      validateNameInputs() ||
-      validatePronounInputs() ||
-      validatePersonalInfoInputs() ||
-      isCollegeError ||
-      isMinorError ||
-      isMajorError ||
-      isconstituencyNameError ||
-      isYearError ||
-      isConstituencyError ||
-      isConstituencyTypeError ||
-      isReturningSenatorError ||
-      isAttestationError
-    ) {
-      // TODO show error popup with message
-
-      const newErrors: {
-        fullName?: string;
-        preferredFullName?: string;
-        phoneticPronunciation?: string;
-        nickname?: string;
-        northeasternID?: string;
-        email?: string;
-        phoneNumber?: string;
-        college?: string;
-        major?: string;
-        minors?: string;
-        constituencyName?: string;
-        year?: string;
-        constituency?: string;
-        selectedConstituencyType?: string;
-        selectedReturningType?: string;
-        selectedAttestation?: string;
-        pronouns?: string;
-      } = {};
-      if (isFullNameError) newErrors.fullName = 'Name is mandatory';
-      if (isPreferredFullNameError)
-        newErrors.preferredFullName = 'Preferred Name is mandatory';
-      if (isPhoneticPronunciationError)
-        newErrors.phoneticPronunciation = 'Pronunciation is mandatory';
-      if (isNicknameError) newErrors.nickname = 'Nickname is mandatory';
-      if (isPronounError) newErrors.pronouns = 'Pronouns are mandatory';
-      if (isNortheasternIDError) newErrors.northeasternID = 'NUID is mandatory';
-      if (isEmailError) newErrors.email = 'Email is mandatory';
-      if (isPhoneNumberError)
-        newErrors.phoneNumber = 'Phone Number is mandatory';
-      if (isCollegeError) newErrors.college = 'College is mandatory';
-      if (isMinorError) newErrors.minors = 'Minor is mandatory';
-      if (isMajorError) newErrors.major = 'Major is mandatory';
-      if (isconstituencyNameError)
-        newErrors.constituencyName = 'Constituency Name is mandatory';
-      if (isYearError) newErrors.year = 'Year is mandatory';
-      if (isConstituencyError)
-        newErrors.constituency = 'Constituency is mandatory';
-      if (isConstituencyTypeError)
-        newErrors.selectedConstituencyType = 'Constituency Type is mandatory';
-      if (isReturningSenatorError)
-        newErrors.selectedReturningType = 'Field is mandatory';
-      if (isAttestationError)
-        newErrors.selectedAttestation = 'Please accept the acknowledgement';
-
-      setErrors(newErrors);
-      // if (!validateForm()) {
-      console.log('error message here');
+    if (hasAnyErrors()) {
+      // Add warning
       return;
-      // }
     }
-
-    const formData = {
-      fullName,
-      preferredFullName,
-      phoneticPronunciation,
-      nickname,
-      nuid: northeasternID,
-      email,
-      phoneNumber,
-      college,
-      major,
-      minors,
-      constituencyName: constituencyName,
-      year: year,
-      constituency: constituency,
-      selectedConstituencyType: constituencyType,
-      selectedReturningType: returningSenatorType,
-      selectedAttestation: attestation,
-      pronouns: pronouns.join(', '),
+    const data = {
+      ...formData,
+      pronouns: formData.pronouns.join(', '),
     };
-    console.log(JSON.stringify(formData));
+    console.log(JSON.stringify(data));
     fetch('https://nomination-system-2.onrender.com/api/applications', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData),
+      body: JSON.stringify(data),
     })
       .then((data) => {
         if (data.ok) {
@@ -220,70 +152,30 @@ const ApplicationForm: React.FC<Props> = ({
   const handlePrevForm = () => {
     setSubFormIndex((prev) => prev - 1);
   };
-  const SubForms = [
-    <FormIntro handleNext={handleNextForm} />,
-
-    <NameSubForm
-      formData={FormData}
-      setFormData={setFormData}
-      updateErrors={updateErrors}
-      errors={applicationErrors}
-      errorMessages={ErrorMessages}
-      handleNext={handleNextForm}
-      handlePrev={handlePrevForm}
-    />,
-    <PersonalInfoSubForm
-      formData={FormData}
-      setFormData={setFormData}
-      updateErrors={updateErrors}
-      errors={applicationErrors}
-      errorMessages={ErrorMessages}
-      handleNext={handleNextForm}
-      handlePrev={handlePrevForm}
-    />,
-    <PronounSubForm
-      formData={FormData}
-      setFormData={setFormData}
-      updateErrors={updateErrors}
-      errors={applicationErrors}
-      errorMessages={ErrorMessages}
-      handleNext={handleNextForm}
-      handlePrev={handlePrevForm}
-    />,
-    <AcademicsSubForm
-      formData={FormData}
-      setFormData={setFormData}
-      updateErrors={updateErrors}
-      errors={applicationErrors}
-      errorMessages={ErrorMessages}
-      handleNext={handleNextForm}
-      handlePrev={handlePrevForm}
-    />,
-    <SpecialInterestSubForm
-      formData={FormData}
-      setFormData={setFormData}
-      updateErrors={updateErrors}
-      errors={applicationErrors}
-      errorMessages={ErrorMessages}
-      handleNext={handleNextForm}
-      handlePrev={handlePrevForm}
-    />,
-    <NominationSubForm
-      formData={FormData}
-      setFormData={setFormData}
-      updateErrors={updateErrors}
-      errors={applicationErrors}
-      errorMessages={ErrorMessages}
-      handleNext={handleNextForm}
-      handlePrev={handlePrevForm}
-    />,
-  ];
   const [subFormIndex, setSubFormIndex] = useState(0);
+  const subFormProps = {
+    formData: formData,
+    setFormData: setFormData,
+    updateErrors: updateErrors,
+    errors: applicationErrors,
+    errorMessages: ErrorMessages,
+    handleNext: handleNextForm,
+    handlePrev: handlePrevForm,
+  };
+  const SubForms = [
+    <ApplicationFormIntro handleNext={handleNextForm} />,
+    <NameSubForm {...subFormProps} />,
+    <PersonalInfoSubForm {...subFormProps} />,
+    <PronounSubForm {...subFormProps} />,
+    <AcademicsSubForm {...subFormProps} />,
+    <SpecialInterestSubForm {...subFormProps} />,
+    <NominationSubForm {...subFormProps} />,
+  ];
 
   return (
     <>
       {SubForms[subFormIndex]}
-      {!hasErrors && (
+      {!hasAnyErrors() && (
         <Button variant="contained" onClick={submitApplication}>
           Submit
         </Button>

@@ -16,7 +16,7 @@ import {
   FormHelperText,
   Radio,
 } from '@mui/material';
-import { SubFormProps } from './SubForm';
+import { SubFormProps } from './SubFormProps';
 
 export const YEAR_OPTIONS = [
   { value: '1', label: 'Undergraduate first year' },

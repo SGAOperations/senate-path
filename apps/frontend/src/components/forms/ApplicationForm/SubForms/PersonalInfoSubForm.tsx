@@ -7,7 +7,7 @@ import {
   FormTextAnswerContainer,
 } from '../styles';
 import { FormControl, Button } from '@mui/material';
-import { SubFormProps } from './SubForm';
+import { SubFormProps } from './SubFormProps';
 import { useState } from 'react';
 
 export const PersonalInfoSubForm: React.FC<SubFormProps> = ({

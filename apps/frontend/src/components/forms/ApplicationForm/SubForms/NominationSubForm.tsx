@@ -16,7 +16,7 @@ import {
   FormHelperText,
   Radio,
 } from '@mui/material';
-import { SubFormProps } from './SubForm';
+import { SubFormProps } from './SubFormProps';
 
 export const NominationSubForm: React.FC<SubFormProps> = ({
   formData,

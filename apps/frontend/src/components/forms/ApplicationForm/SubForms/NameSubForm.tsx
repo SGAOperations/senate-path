@@ -9,7 +9,7 @@ import {
 } from '../styles';
 import { useState } from 'react';
 import { FormControl, Button } from '@mui/material';
-import { SubFormProps } from './SubForm';
+import { SubFormProps } from './SubFormProps';
 
 export const NameSubForm: React.FC<SubFormProps> = ({
   formData,

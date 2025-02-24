@@ -16,7 +16,7 @@ import {
   FormHelperText,
   Radio,
 } from '@mui/material';
-import { SubFormProps } from './SubForm';
+import { SubFormProps } from './SubFormProps';
 import { useState } from 'react';
 export const CONSTITUENCY_TYPES = [
   { value: 'club', label: 'Official club' },
