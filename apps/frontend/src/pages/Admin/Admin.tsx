@@ -27,16 +27,12 @@ const Admin: React.FC = () => {
     fetch(url)
       .then((response) => {
         if (!response.ok) {
-          console.log('OVER 20:');
           throw new Error('Failed to fetch data');
         }
-        console.log('OVER 20:');
         const out = response.json();
-        console.log(out);
         return out;
       })
       .then((data) => {
-        console.log('OVER 20:', data);
         setData(data);
       })
       .catch((error) => {
@@ -48,16 +44,12 @@ const Admin: React.FC = () => {
     fetch(url)
       .then((response) => {
         if (!response.ok) {
-          console.log('errored');
           throw new Error('Failed to fetch data');
         }
-        console.log('didnt error');
         const out = response.json();
-        console.log(out);
         return out;
       })
       .then((data) => {
-        console.log('data:', data);
         setData(data);
       })
       .catch((error) => {
@@ -75,8 +67,6 @@ const Admin: React.FC = () => {
   }, []);
 
   if (!loggedIn) return <LoginForm setLoginStatus={setLoggedIn} />;
-
-  console.log('HEREEE');
 
   const exportToCsv = (
     data: TableEntry[],

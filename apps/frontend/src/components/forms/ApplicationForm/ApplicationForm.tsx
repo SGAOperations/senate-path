@@ -218,7 +218,6 @@ const ApplicationForm: React.FC<Props> = ({
 
       setErrors(newErrors);
       // if (!validateForm()) {
-      console.log('error message here');
       // error message pop up
       setErrorMessage(Object.values(newErrors).join(", "));
       setErrorOpen(true);
@@ -245,7 +244,6 @@ const ApplicationForm: React.FC<Props> = ({
       selectedAttestation: attestation,
       pronouns: pronouns.join(', '),
     };
-    console.log(JSON.stringify(formData))
     fetch(getFullPath('/api/applications'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -255,17 +253,13 @@ const ApplicationForm: React.FC<Props> = ({
         if (data.ok) {
           setIsPopupOpen(true);
         } else {
-          console.log(`Application failed to submit: ${data.statusText}`);
           data
             .json()
             .then((responseBody) => {
               // Extract and log the 'message' property from the response
               if (responseBody && responseBody.message) {
-                console.log('Error Message:', responseBody.message);
                 setErrorMessage(responseBody.message);
                 setErrorOpen(true);
-              } else {
-                console.log('Unexpected response format:', responseBody);
               }
             })
             .catch((error) => {
@@ -274,7 +268,7 @@ const ApplicationForm: React.FC<Props> = ({
         }
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   };
 
