@@ -65,18 +65,13 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
     fetch(url)
       .then((response) => {
         if (!response.ok) {
-          console.log('errored');
           throw new Error('Failed to fetch data');
         }
-        console.log('didnt error');
         const out = response.json();
-        console.log(out);
         return out;
       })
       .then((data) => {
-        console.log('data:', data);
         setNomineeNames(data)
-        console.log('nominees:', nomineeNames)
       })
       .catch((error) => {
         console.error('Error fetching:', error);
@@ -122,8 +117,6 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
         newErrors.graduationYear = 'Graduation Year is mandatory';
 
       setErrors(newErrors);
-
-      console.log('invalid inputs');
       return;
     }
 
@@ -147,17 +140,12 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
         if (data.ok) {
           setIsPopupOpen(true);
         } else {
-          // LIKE LEGIT ACTUALLY SHOW MESSAGE HERE
-          console.log(`Nomination failed to submit: ${data.statusText}`);
           data.json()
         .then((responseBody) => {
           // Extract and log the 'message' property from the response
           if (responseBody && responseBody.message) {
-            console.log('Error Message:', responseBody.message);
             setErrorMessage(responseBody.message)
             setErrorOpen(true)
-          } else {
-            console.log('Unexpected response format:', responseBody);
           }
         })
         .catch((error) => {
@@ -168,7 +156,7 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
         }
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   };
 

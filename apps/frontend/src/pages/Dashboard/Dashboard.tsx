@@ -27,9 +27,7 @@ const Dashboard: React.FC = () => {
 
         .then((data) => {
           if (data.ok) {
-            console.log('okay request');
             const out = data.json();
-            console.log(out);
             return out;
           } else {
             data
@@ -39,8 +37,6 @@ const Dashboard: React.FC = () => {
                   setMessage('Error Message : ' + responseBody.message);
                   setNumNominations(0);
                   setNeededNominations(30);
-                } else {
-                  console.log('Unexpected response format:', responseBody);
                 }
               })
               .catch((error) => {
@@ -70,16 +66,6 @@ const Dashboard: React.FC = () => {
       setError(err.message || 'An unknown error occurred');
     }
   };
-
-  useEffect(() => {
-    console.log('message:', message);
-  }, [message]);
-  useEffect(() => {
-    console.log('num nom updated:', numNominations);
-  }, [numNominations]);
-  useEffect(() => {
-    console.log('num needed nom updated:', neededNominations);
-  }, [neededNominations]);
 
   return (
     <HomeContainer>
