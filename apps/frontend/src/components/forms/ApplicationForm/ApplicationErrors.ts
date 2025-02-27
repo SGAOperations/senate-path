@@ -22,7 +22,7 @@ export interface ApplicationErrors {
   preferredFullName: boolean;
   phoneticPronunciation: boolean;
   nickname: boolean;
-  northeasternID: boolean;
+  nuid: boolean;
   pronouns: boolean;
   email: boolean;
   phoneNumber: boolean;

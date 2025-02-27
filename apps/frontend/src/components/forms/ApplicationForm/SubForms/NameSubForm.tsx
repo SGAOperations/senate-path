@@ -6,6 +6,8 @@ import {
   FormTextContainer,
   FormQuestionText,
   FormTextAnswerContainer,
+  FormControls,
+  FormDescriptionText,
 } from '../styles';
 import { useState } from 'react';
 import { FormControl, Button } from '@mui/material';
@@ -74,9 +76,11 @@ export const NameSubForm: React.FC<SubFormProps> = ({
           <FormQuestionContainer>
             <FormTextContainer>
               <FormQuestionText>What is your full name?</FormQuestionText>
-              Please enter your full name as it appears in the university
-              records. This name will only be used in official communications
-              between SGA leadership and university administrators.
+              <FormDescriptionText>
+                Please enter your full name as it appears in the university
+                records. This name will only be used in official communications
+                between SGA leadership and university administrators.
+              </FormDescriptionText>
             </FormTextContainer>
             <FormTextAnswerContainer>
               <FormInput
@@ -97,10 +101,12 @@ export const NameSubForm: React.FC<SubFormProps> = ({
           <FormQuestionContainer>
             <FormTextContainer>
               <FormQuestionText>What is your preferred name?</FormQuestionText>
-              Please enter your preferred first and last name. Do not enter any
-              nicknames in this field. This name will be used for all official
-              SGA business. It will be posted on the website and printed on your
-              senator placard.
+              <FormDescriptionText>
+                Please enter your preferred first and last name. Do not enter
+                any nicknames in this field. This name will be used for all
+                official SGA business. It will be posted on the website and
+                printed on your senator placard.
+              </FormDescriptionText>
             </FormTextContainer>
             <FormTextAnswerContainer>
               <FormInput
@@ -127,8 +133,10 @@ export const NameSubForm: React.FC<SubFormProps> = ({
               <FormQuestionText>
                 What is the phonetic pronunciation of your name?
               </FormQuestionText>
-              Please enter how to pronounce your name. This pronunciation will
-              be used during roll-call votes.
+              <FormDescriptionText>
+                Please enter how to pronounce your name. This pronunciation will
+                be used during roll-call votes.
+              </FormDescriptionText>
             </FormTextContainer>
             <FormTextAnswerContainer>
               <FormInput
@@ -153,9 +161,11 @@ export const NameSubForm: React.FC<SubFormProps> = ({
           <FormQuestionContainer>
             <FormTextContainer>
               <FormQuestionText>What is your nickname?</FormQuestionText>
-              If you have a nickname, please enter it here. This name will not
-              be used in official SGA business, but it will be used informally
-              when appropriate.
+              <FormDescriptionText>
+                If you have a nickname, please enter it here. This name will not
+                be used in official SGA business, but it will be used informally
+                when appropriate.
+              </FormDescriptionText>
             </FormTextContainer>
             <FormTextAnswerContainer>
               <FormInput
@@ -171,22 +181,28 @@ export const NameSubForm: React.FC<SubFormProps> = ({
           </FormQuestionContainer>
         </FormControl>
       </SampleForm>
-      <Button
-        variant="contained"
-        onClick={() => {
-          handlePrev();
-        }}
-      >
-        Previous
-      </Button>
-      <Button
-        variant="contained"
-        onClick={() => {
-          handleNameNext();
-        }}
-      >
-        Next
-      </Button>
+      <FormControls>
+        <Button
+          variant="contained"
+          sx={{ width: '45%' }}
+          size="large"
+          onClick={() => {
+            handlePrev();
+          }}
+        >
+          Previous
+        </Button>
+        <Button
+          sx={{ width: '45%' }}
+          size="large"
+          variant="contained"
+          onClick={() => {
+            handleNameNext();
+          }}
+        >
+          Next
+        </Button>
+      </FormControls>
     </>
   );
 };

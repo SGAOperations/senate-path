@@ -1,11 +1,11 @@
 import React from 'react';
 import {
   SampleForm,
-  FormInput,
   FormQuestionContainer,
   FormTextContainer,
-  FormTextAnswerContainer,
   RadioButtons,
+  FormQuestionText,
+  FormDescriptionText,
 } from '../styles';
 import { useState } from 'react';
 import {
@@ -29,12 +29,6 @@ export const NominationSubForm: React.FC<SubFormProps> = ({
 }) => {
   const [isNext, setIsNext] = useState(false);
 
-  // const handleNominationNext = () => {
-  //   setIsNext(true);
-  //   if (!(errors.returningSenatorType || errors.attestation)) {
-  //     handleNext();
-  //   }
-  // };
   const handleReturningTypeChange = (value: string) => {
     setFormData((prev) => ({ ...prev, returningSenatorType: value }));
     updateErrors('returningSenatorType', !value);
@@ -49,17 +43,18 @@ export const NominationSubForm: React.FC<SubFormProps> = ({
       <SampleForm>
         <FormControl>
           <FormTextContainer>
-            <h3>SGA Senator Nomination Form</h3>
+            <h2>SGA Senator Nomination Form</h2>
           </FormTextContainer>
         </FormControl>
         <FormControl error={isNext && errors.returningSenatorType}>
           <FormQuestionContainer>
             <FormTextContainer>
-              <b>Are you a returning senator?</b>
-              <br />
-              Select "yes" only if you have completed the Senator Education and
-              Training Program (STEP) and remained a senator in good standing
-              for at least one entire semester.
+              <FormQuestionText>Are you a returning senator?</FormQuestionText>
+              <FormDescriptionText>
+                Select "yes" only if you have completed the Senator Education
+                and Training Program (STEP) and remained a senator in good
+                standing for at least one entire semester.
+              </FormDescriptionText>
             </FormTextContainer>
             <RadioButtons>
               <RadioGroup
@@ -76,17 +71,21 @@ export const NominationSubForm: React.FC<SubFormProps> = ({
         <FormControl error={isNext && errors.attestation}>
           <FormQuestionContainer>
             <FormTextContainer>
-              <b>Acknowledgment and Attestation</b>
-              <br />
-              Please carefully read the following statement and select the
-              button below if you agree: I attest that I am the undergraduate
-              student in good academic and judicial standing listed on this form
-              and that all information I am submitting is completely truthful
-              and accurately presented; I authorize the Northeastern University
-              Student Government Association to verify the information on this
-              form, and I agree to abide by every responsibility and expectation
-              of a senator, including attending weekly senate meetings and
-              maintaining effective communication with my constituents.
+              <FormQuestionText>
+                Acknowledgment and Attestation
+              </FormQuestionText>
+              <FormDescriptionText>
+                Please carefully read the following statement and select the
+                button below if you agree: I attest that I am the undergraduate
+                student in good academic and judicial standing listed on this
+                form and that all information I am submitting is completely
+                truthful and accurately presented; I authorize the Northeastern
+                University Student Government Association to verify the
+                information on this form, and I agree to abide by every
+                responsibility and expectation of a senator, including attending
+                weekly senate meetings and maintaining effective communication
+                with my constituents.
+              </FormDescriptionText>
             </FormTextContainer>
             <RadioButtons>
               <RadioGroup
@@ -107,9 +106,9 @@ export const NominationSubForm: React.FC<SubFormProps> = ({
           </FormQuestionContainer>
         </FormControl>
       </SampleForm>
-
       <Button
         variant="contained"
+        size="large"
         onClick={() => {
           handlePrev();
         }}

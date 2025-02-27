@@ -55,6 +55,7 @@ export const ApplicationFormIntro: React.FC<Props> = ({ handleNext }) => {
         </Introduction>
       </SampleForm>
       <Button
+        size="large"
         variant="contained"
         onClick={() => {
           handleNext();

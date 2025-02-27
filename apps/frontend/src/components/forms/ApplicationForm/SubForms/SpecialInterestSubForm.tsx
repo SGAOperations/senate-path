@@ -6,6 +6,9 @@ import {
   FormTextContainer,
   FormTextAnswerContainer,
   RadioButtons,
+  FormControls,
+  FormQuestionText,
+  FormDescriptionText,
 } from '../styles';
 import {
   FormControl,
@@ -18,12 +21,13 @@ import {
 } from '@mui/material';
 import { SubFormProps } from './SubFormProps';
 import { useState } from 'react';
-export const CONSTITUENCY_TYPES = [
+
+const CONSTITUENCY_TYPES = [
   { value: 'club', label: 'Official club' },
   { value: 'greek', label: 'Greek organization' },
 ];
 
-export const CONSTITUENCIES = [
+const CONSTITUENCIES = [
   'Alpha Chi Omega Sorority',
   'Alpha Epsilon Phi',
   'Alpha Epsilon Pi',
@@ -74,16 +78,21 @@ export const SpecialInterestSubForm: React.FC<SubFormProps> = ({
       <SampleForm>
         <FormControl>
           <FormTextContainer>
-            <h3>Special Interest Senator Constituency Information</h3>
-            Note: Special interest senators applying from a student organization
-            with less than 30 members must submit a paper nomination. Paper
-            applications are available to pick up at the SGA office, 332 Curry.
+            <h2>Special Interest Senator Constituency Information</h2>
+            <FormDescriptionText>
+              Note: Special interest senators applying from a student
+              organization with less than 30 members must submit a paper
+              nomination. Paper applications are available to pick up at the SGA
+              office, 332 Curry.
+            </FormDescriptionText>
           </FormTextContainer>
         </FormControl>
         <FormControl error={isNext && errors.constituencyType}>
           <FormQuestionContainer>
             <FormTextContainer>
-              <b>What type of constituency would you like to represent?</b>
+              <FormQuestionText>
+                What type of constituency would you like to represent?
+              </FormQuestionText>
             </FormTextContainer>
             <RadioButtons>
               <RadioGroup
@@ -112,20 +121,21 @@ export const SpecialInterestSubForm: React.FC<SubFormProps> = ({
         <FormControl required error={isNext && errors.constituencyName}>
           <FormQuestionContainer>
             <FormTextContainer>
-              <b>
+              <FormQuestionText>
                 Select a college, organization, or program from the list below
                 of the name of your constituency
-              </b>{' '}
-              <br />
-              Only recognized student organizations may have a special interest
-              senator.
+              </FormQuestionText>
+              <FormDescriptionText>
+                Only recognized student organizations may have a special
+                interest senator.
+              </FormDescriptionText>
             </FormTextContainer>
             <FormTextAnswerContainer>
               <FormSelect
                 required
                 value={formData.constituencyName}
                 onChange={(e) => {
-                  handleConstituencyNameChange(e.target.value);
+                  handleConstituencyNameChange(e.target.value as string);
                 }}
               >
                 {CONSTITUENCIES.map((constituency) => (
@@ -141,23 +151,28 @@ export const SpecialInterestSubForm: React.FC<SubFormProps> = ({
           </FormQuestionContainer>
         </FormControl>
       </SampleForm>
-
-      <Button
-        variant="contained"
-        onClick={() => {
-          handlePrev();
-        }}
-      >
-        Previous
-      </Button>
-      <Button
-        variant="contained"
-        onClick={() => {
-          handleSpecialInterestNext();
-        }}
-      >
-        Next
-      </Button>
+      <FormControls>
+        <Button
+          variant="contained"
+          sx={{ width: '45%' }}
+          size="large"
+          onClick={() => {
+            handlePrev();
+          }}
+        >
+          Previous
+        </Button>
+        <Button
+          sx={{ width: '45%' }}
+          size="large"
+          variant="contained"
+          onClick={() => {
+            handleSpecialInterestNext();
+          }}
+        >
+          Next
+        </Button>
+      </FormControls>
     </>
   );
 };

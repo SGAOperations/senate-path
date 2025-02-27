@@ -7,7 +7,7 @@ import { PronounSubForm } from './SubForms/PronounsSubForm';
 import { AcademicsSubForm } from './SubForms/AcademicsSubForm';
 import { SpecialInterestSubForm } from './SubForms/SpecialInterestSubForm';
 import { NominationSubForm } from './SubForms/NominationSubForm';
-import { Button } from '@mui/material';
+import { Box, Button } from '@mui/material';
 
 interface Props {
   setIsPopupOpen: (open: boolean) => void;
@@ -20,7 +20,7 @@ export interface ApplicationFormData {
   preferredFullName: string;
   phoneticPronunciation: string;
   nickname: string;
-  northeasternID: string;
+  nuid: string;
   pronouns: string[];
   email: string;
   phoneNumber: string;
@@ -40,14 +40,13 @@ const ApplicationForm: React.FC<Props> = ({
   setErrorMessage,
   setErrorOpen,
 }) => {
-  
   // The state of data in each form.
   const [formData, setFormData] = useState<ApplicationFormData>({
     fullName: '',
     preferredFullName: '',
     phoneticPronunciation: '',
     nickname: '',
-    northeasternID: '',
+    nuid: '',
     pronouns: [],
     email: '',
     phoneNumber: '',
@@ -68,7 +67,7 @@ const ApplicationForm: React.FC<Props> = ({
       preferredFullName: true,
       phoneticPronunciation: true,
       nickname: true,
-      northeasternID: true,
+      nuid: true,
       pronouns: true,
       email: true,
       phoneNumber: true,
@@ -106,12 +105,15 @@ const ApplicationForm: React.FC<Props> = ({
     setErrorOpen(false);
     setIsSubmitted(true);
     if (hasAnyErrors()) {
-      // Add warning
+      // Handle form error
       return;
     }
     const data = {
       ...formData,
       pronouns: formData.pronouns.join(', '),
+      selectedConstituencyType: formData.constituencyType,
+      selectedReturningType: formData.returningSenatorType,
+      selectedAttestation: formData.attestation,
     };
     console.log(JSON.stringify(data));
     fetch('https://nomination-system-2.onrender.com/api/applications', {
@@ -152,6 +154,11 @@ const ApplicationForm: React.FC<Props> = ({
   const handlePrevForm = () => {
     setSubFormIndex((prev) => prev - 1);
   };
+
+  const isLastPage = () => {
+    return subFormIndex === SubForms.length - 1;
+  };
+
   const [subFormIndex, setSubFormIndex] = useState(0);
   const subFormProps = {
     formData: formData,
@@ -175,10 +182,21 @@ const ApplicationForm: React.FC<Props> = ({
   return (
     <>
       {SubForms[subFormIndex]}
-      {!hasAnyErrors() && (
-        <Button variant="contained" onClick={submitApplication}>
-          Submit
-        </Button>
+      {isLastPage() && (
+        <Box
+          sx={{
+            marginTop: '3%',
+          }}
+        >
+          <Button
+            variant="contained"
+            onClick={submitApplication}
+            size="large"
+            disabled={hasAnyErrors()}
+          >
+            Submit
+          </Button>
+        </Box>
       )}
     </>
   );

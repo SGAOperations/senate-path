@@ -5,6 +5,9 @@ import {
   FormQuestionContainer,
   FormTextContainer,
   FormTextAnswerContainer,
+  FormQuestionText,
+  FormDescriptionText,
+  FormControls,
 } from '../styles';
 import { FormControl, Button } from '@mui/material';
 import { SubFormProps } from './SubFormProps';
@@ -23,14 +26,14 @@ export const PersonalInfoSubForm: React.FC<SubFormProps> = ({
 
   const handlePersonalInfoNext = () => {
     setIsNext(true);
-    if (!(errors.northeasternID || errors.email || errors.phoneNumber)) {
+    if (!(errors.nuid || errors.email || errors.phoneNumber)) {
       handleNext();
     }
   };
 
   const handleNUIDChange = (value: string) => {
-    setFormData((prev) => ({ ...prev, northeasternID: value }));
-    updateErrors('northeasternID', !value);
+    setFormData((prev) => ({ ...prev, nuid: value }));
+    updateErrors('nuid', !value);
   };
 
   const handleEmailChange = (value: string) => {
@@ -45,26 +48,23 @@ export const PersonalInfoSubForm: React.FC<SubFormProps> = ({
   return (
     <>
       <SampleForm>
-        <FormControl error={isNext && errors.northeasternID}>
+        <FormControl error={isNext && errors.nuid}>
           <FormQuestionContainer>
             <FormTextContainer>
-              <b>What is your NUID?</b>
-              <br />
+              <FormQuestionText>What is your NUID?</FormQuestionText>
             </FormTextContainer>
             <FormTextAnswerContainer>
               <FormInput
                 label="Required"
                 required
                 placeholder="NUID"
-                value={formData.northeasternID}
+                value={formData.nuid}
                 onChange={(e) => {
                   handleNUIDChange(e.target.value);
                 }}
-                error={isNext && errors.northeasternID}
+                error={isNext && errors.nuid}
                 helperText={
-                  isNext &&
-                  errors.northeasternID &&
-                  errorMessages.northeasternID
+                  isNext && errors.nuid && errorMessages.northeasternID
                 }
               />
               <br />
@@ -74,9 +74,13 @@ export const PersonalInfoSubForm: React.FC<SubFormProps> = ({
         <FormControl error={isNext && errors.email}>
           <FormQuestionContainer>
             <FormTextContainer>
-              <b>What is your Northeastern email?</b>
+              <FormQuestionText>
+                What is your Northeastern email?
+              </FormQuestionText>
               <br />
-              All email communications will be sent to this address.
+              <FormDescriptionText>
+                All email communications will be sent to this address.
+              </FormDescriptionText>
             </FormTextContainer>
             <FormTextAnswerContainer>
               <FormInput
@@ -96,13 +100,15 @@ export const PersonalInfoSubForm: React.FC<SubFormProps> = ({
         <FormControl error={isNext && errors.phoneNumber}>
           <FormQuestionContainer>
             <FormTextContainer>
-              <b>What is your phone number?</b>
+              <FormQuestionText>What is your phone number?</FormQuestionText>
               <br />
-              Please enter your cell phone number. If you do not have a phone
-              that can receive calls and texts in the United States, note so
-              here. Make sure to include the country code if your phone number
-              has a country code other than 1 (most North American countries and
-              islands).
+              <FormDescriptionText>
+                Please enter your cell phone number. If you do not have a phone
+                that can receive calls and texts in the United States, note so
+                here. Make sure to include the country code if your phone number
+                has a country code other than 1 (most North American countries
+                and islands).
+              </FormDescriptionText>
             </FormTextContainer>
             <FormTextAnswerContainer>
               <FormInput
@@ -122,22 +128,28 @@ export const PersonalInfoSubForm: React.FC<SubFormProps> = ({
           </FormQuestionContainer>
         </FormControl>
       </SampleForm>
-      <Button
-        variant="contained"
-        onClick={() => {
-          handlePrev();
-        }}
-      >
-        Previous
-      </Button>
-      <Button
-        variant="contained"
-        onClick={() => {
-          handlePersonalInfoNext();
-        }}
-      >
-        Next
-      </Button>
+      <FormControls>
+        <Button
+          variant="contained"
+          sx={{ width: '45%' }}
+          size="large"
+          onClick={() => {
+            handlePrev();
+          }}
+        >
+          Previous
+        </Button>
+        <Button
+          sx={{ width: '45%' }}
+          size="large"
+          variant="contained"
+          onClick={() => {
+            handlePersonalInfoNext();
+          }}
+        >
+          Next
+        </Button>
+      </FormControls>
     </>
   );
 };

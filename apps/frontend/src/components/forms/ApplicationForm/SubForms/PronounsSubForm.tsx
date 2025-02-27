@@ -4,6 +4,8 @@ import {
   FormQuestionContainer,
   FormTextContainer,
   FormInputCheckbox,
+  FormControls,
+  FormQuestionText,
 } from '../styles';
 import {
   FormControl,
@@ -14,6 +16,8 @@ import {
 } from '@mui/material';
 import { SubFormProps } from './SubFormProps';
 import { useState } from 'react';
+
+const PRONOUNS = ['She/her/her', 'He/him/his', 'They/them/their', 'Other'];
 
 export const PronounSubForm: React.FC<SubFormProps> = ({
   formData,
@@ -48,69 +52,56 @@ export const PronounSubForm: React.FC<SubFormProps> = ({
     });
   };
   return (
-    <SampleForm>
-      <FormControl error={isNext && errors.pronouns}>
-        <FormQuestionContainer>
-          <FormTextContainer>
-            <FormQuestionContainer>
-              What pronouns do you use?
-            </FormQuestionContainer>
-          </FormTextContainer>
-          <FormInputCheckbox>
-            <FormControlLabel
-              required
-              control={<Checkbox />}
-              onChange={handlePronounChange}
-              label="She/her/her"
-              value="She/her/her"
-              checked={formData.pronouns.includes('She/her/her')}
-            />
-            <FormControlLabel
-              required
-              control={<Checkbox />}
-              onChange={handlePronounChange}
-              label="He/him/his"
-              value="He/him/his"
-              checked={formData.pronouns.includes('He/him/his')}
-            />
-            <FormControlLabel
-              required
-              control={<Checkbox />}
-              onChange={handlePronounChange}
-              label="They/them/their"
-              value="They/them/their"
-              checked={formData.pronouns.includes('They/them/their')}
-            />
-            <FormControlLabel
-              required
-              control={<Checkbox />}
-              onChange={handlePronounChange}
-              label="Other"
-              value="Other"
-              checked={formData.pronouns.includes('Other')}
-            />
-          </FormInputCheckbox>
-        </FormQuestionContainer>
-        {errors.pronouns && isNext && (
-          <FormHelperText>{errorMessages.pronouns}</FormHelperText>
-        )}
-      </FormControl>
-      <Button
-        variant="contained"
-        onClick={() => {
-          handlePrev();
-        }}
-      >
-        Previous
-      </Button>
-      <Button
-        variant="contained"
-        onClick={() => {
-          handlePronounNext();
-        }}
-      >
-        Next
-      </Button>
-    </SampleForm>
+    <>
+      <SampleForm>
+        <FormControl error={isNext && errors.pronouns}>
+          <FormQuestionContainer>
+            <FormTextContainer>
+              <FormQuestionContainer>
+                <FormQuestionText>What pronouns do you use?</FormQuestionText>
+              </FormQuestionContainer>
+            </FormTextContainer>
+            <FormInputCheckbox>
+              {PRONOUNS.map((option) => (
+                <FormControlLabel
+                  key={option}
+                  required
+                  control={<Checkbox />}
+                  onChange={handlePronounChange}
+                  label={option}
+                  value={option}
+                  checked={formData.pronouns.includes(option)}
+                />
+              ))}
+            </FormInputCheckbox>
+          </FormQuestionContainer>
+          {errors.pronouns && isNext && (
+            <FormHelperText>{errorMessages.pronouns}</FormHelperText>
+          )}
+        </FormControl>
+      </SampleForm>
+      <FormControls>
+        <Button
+          variant="contained"
+          sx={{ width: '45%' }}
+          size="large"
+          onClick={() => {
+            handlePrev();
+          }}
+        >
+          Previous
+        </Button>
+        <Button
+          sx={{ width: '45%' }}
+          size="large"
+          variant="contained"
+          onClick={() => {
+            handlePronounNext();
+          }}
+        >
+          Next
+        </Button>
+      </FormControls>
+    </>
   );
 };

@@ -6,6 +6,9 @@ import {
   FormTextContainer,
   FormTextAnswerContainer,
   RadioButtons,
+  FormControls,
+  FormQuestionText,
+  FormDescriptionText,
 } from '../styles';
 import { useState } from 'react';
 import {
@@ -18,7 +21,7 @@ import {
 } from '@mui/material';
 import { SubFormProps } from './SubFormProps';
 
-export const YEAR_OPTIONS = [
+const YEAR_OPTIONS = [
   { value: '1', label: 'Undergraduate first year' },
   { value: '2', label: 'Undergraduate second year' },
   { value: '3', label: 'Undergraduate third year' },
@@ -26,7 +29,7 @@ export const YEAR_OPTIONS = [
   { value: '5', label: 'Undergraduate fifth+ year' },
 ];
 
-export const SENATOR_OPTIONS = [
+const SENATOR_OPTIONS = [
   { value: 'academic', label: 'Academic senator' },
   { value: 'special', label: 'Special interest senator' },
 ];
@@ -78,8 +81,7 @@ export const AcademicsSubForm: React.FC<SubFormProps> = ({
         <FormControl error={isNext && errors.year}>
           <FormQuestionContainer>
             <FormTextContainer>
-              <b>What is your year?</b>
-              <br />
+              <FormQuestionText>What is your year?</FormQuestionText>
             </FormTextContainer>
             <RadioButtons>
               <RadioGroup
@@ -107,12 +109,13 @@ export const AcademicsSubForm: React.FC<SubFormProps> = ({
         <FormControl error={isNext && errors.college}>
           <FormQuestionContainer>
             <FormTextContainer>
-              <b>What is your college?</b>
-              <br />
-              For combined majors (a single major listed in the course catalog
-              that spans two disciplines), list only the home college. For
-              double majors (two distinct majors listed separately in the course
-              catalog), include both colleges.
+              <FormQuestionText>What is your college?</FormQuestionText>
+              <FormDescriptionText>
+                For combined majors (a single major listed in the course catalog
+                that spans two disciplines), list only the home college. For
+                double majors (two distinct majors listed separately in the
+                course catalog), include both colleges.
+              </FormDescriptionText>
             </FormTextContainer>
             <FormTextAnswerContainer>
               <FormInput
@@ -132,7 +135,7 @@ export const AcademicsSubForm: React.FC<SubFormProps> = ({
         <FormControl error={isNext && errors.major}>
           <FormQuestionContainer>
             <FormTextContainer>
-              <b>What is your major?</b>
+              <FormQuestionText>What is your major?</FormQuestionText>
             </FormTextContainer>
             <FormTextAnswerContainer>
               <FormInput
@@ -153,7 +156,7 @@ export const AcademicsSubForm: React.FC<SubFormProps> = ({
         <FormControl error={isNext && errors.minor}>
           <FormQuestionContainer>
             <FormTextContainer>
-              <b>What are your minors?</b>
+              <FormQuestionText>What are your minors?</FormQuestionText>
             </FormTextContainer>
             <FormTextAnswerContainer>
               <FormInput
@@ -172,26 +175,29 @@ export const AcademicsSubForm: React.FC<SubFormProps> = ({
         <FormControl error={isNext && !!errors.constituency}>
           <FormQuestionContainer>
             <FormTextContainer>
-              <b>What is your constituency?</b>
-              <br />
-              Academic senators represent an official Northeastern academic
-              college or program. Example constituencies include the College of
-              Engineering, the Global Scholars program, or the Honors program.
-              Students in specialized entrance programs can only apply to become
-              a senator representing a specialized entrance program as a
-              constituency while actively enrolled in the program. For example,
-              students can only apply to be NUin senators as first-semester
-              students. Most senators are academic senators.
-              <br />
-              <br />
-              Special interest senators are selected by the members and
-              executive board of the organization they intend to represent.
-              Example constituencies include Greek life organizations and clubs.
-              More information about the difference between academic and special
-              interest senators is available in the frequently asked questions
-              document located at
-              https://docs.google.com/document/d/1xDyzPBpnlzlHmPL9pd2mGsKhzQCl_Cs9EPlFb0G-Y_o/edit.
-              <br />
+              <FormQuestionText>What is your constituency?</FormQuestionText>
+              <FormDescriptionText>
+                Academic senators represent an official Northeastern academic
+                college or program. Example constituencies include the College
+                of Engineering, the Global Scholars program, or the Honors
+                program. Students in specialized entrance programs can only
+                apply to become a senator representing a specialized entrance
+                program as a constituency while actively enrolled in the
+                program. For example, students can only apply to be NUin
+                senators as first-semester students. Most senators are academic
+                senators.
+                <br />
+                <br />
+                Special interest senators are selected by the members and
+                executive board of the organization they intend to represent.
+                Example constituencies include Greek life organizations and
+                clubs. More information about the difference between academic
+                and special interest senators is available in the&nbsp;
+                <a href="https://docs.google.com/document/d/1xDyzPBpnlzlHmPL9pd2mGsKhzQCl_Cs9EPlFb0G-Y_o/edit">
+                  frequently asked questions document
+                </a>
+                .
+              </FormDescriptionText>
             </FormTextContainer>
             <RadioButtons>
               <RadioGroup
@@ -217,23 +223,28 @@ export const AcademicsSubForm: React.FC<SubFormProps> = ({
           )}
         </FormControl>
       </SampleForm>
-
-      <Button
-        variant="contained"
-        onClick={() => {
-          handlePrev();
-        }}
-      >
-        Previous
-      </Button>
-      <Button
-        variant="contained"
-        onClick={() => {
-          handleAcademicsNext();
-        }}
-      >
-        Next
-      </Button>
+      <FormControls>
+        <Button
+          variant="contained"
+          sx={{ width: '45%' }}
+          size="large"
+          onClick={() => {
+            handlePrev();
+          }}
+        >
+          Previous
+        </Button>
+        <Button
+          sx={{ width: '45%' }}
+          size="large"
+          variant="contained"
+          onClick={() => {
+            handleAcademicsNext();
+          }}
+        >
+          Next
+        </Button>
+      </FormControls>
     </>
   );
 };
