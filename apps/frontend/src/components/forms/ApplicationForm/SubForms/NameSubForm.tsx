@@ -30,8 +30,7 @@ export const NameSubForm: React.FC<SubFormProps> = ({
       !(
         errors.fullName ||
         errors.preferredFullName ||
-        errors.phoneticPronunciation ||
-        errors.nickname
+        errors.phoneticPronunciation
       )
     ) {
       handleNext();
@@ -67,7 +66,6 @@ export const NameSubForm: React.FC<SubFormProps> = ({
   ) => {
     const value = event.target.value;
     setFormData((prev) => ({ ...prev, nickname: value }));
-    updateErrors('nickname', !value);
   };
   return (
     <>
@@ -157,7 +155,7 @@ export const NameSubForm: React.FC<SubFormProps> = ({
             </FormTextAnswerContainer>
           </FormQuestionContainer>
         </FormControl>
-        <FormControl error={isNext && errors.nickname}>
+        <FormControl>
           <FormQuestionContainer>
             <FormTextContainer>
               <FormQuestionText>What is your nickname?</FormQuestionText>
@@ -174,8 +172,6 @@ export const NameSubForm: React.FC<SubFormProps> = ({
                 onChange={(e) => {
                   handleNicknameChange(e);
                 }}
-                error={isNext && errors.nickname}
-                helperText={isNext && errors.nickname && errorMessages.nickname}
               />
             </FormTextAnswerContainer>
           </FormQuestionContainer>

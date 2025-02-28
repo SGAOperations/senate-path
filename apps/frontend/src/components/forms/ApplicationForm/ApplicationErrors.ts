@@ -21,7 +21,6 @@ export interface ApplicationErrors {
   fullName: boolean;
   preferredFullName: boolean;
   phoneticPronunciation: boolean;
-  nickname: boolean;
   nuid: boolean;
   pronouns: boolean;
   email: boolean;
@@ -29,7 +28,6 @@ export interface ApplicationErrors {
   year: boolean;
   college: boolean;
   major: boolean;
-  minor: boolean;
   constituency: boolean;
   constituencyType: boolean;
   constituencyName: boolean;

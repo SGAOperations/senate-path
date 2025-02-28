@@ -47,7 +47,9 @@ export const AcademicsSubForm: React.FC<SubFormProps> = ({
 
   const handleAcademicsNext = () => {
     setIsNext(true);
-    if (!(errors.year || errors.college || errors.major || errors.minor)) {
+    if (
+      !(errors.year || errors.college || errors.major || errors.constituency)
+    ) {
       handleNext();
     }
   };
@@ -69,7 +71,6 @@ export const AcademicsSubForm: React.FC<SubFormProps> = ({
 
   const handleMinorChange = (value: string) => {
     setFormData((prev) => ({ ...prev, minor: value }));
-    updateErrors('minor', !value);
   };
   const handleConstituencyChange = (value: string) => {
     setFormData((prev) => ({ ...prev, constituency: value }));
@@ -149,11 +150,10 @@ export const AcademicsSubForm: React.FC<SubFormProps> = ({
                 error={isNext && errors.major}
                 helperText={isNext && errors.major && errorMessages.major}
               />
-              <br />
             </FormTextAnswerContainer>
           </FormQuestionContainer>
         </FormControl>
-        <FormControl error={isNext && errors.minor}>
+        <FormControl>
           <FormQuestionContainer>
             <FormTextContainer>
               <FormQuestionText>What are your minors?</FormQuestionText>
@@ -165,10 +165,7 @@ export const AcademicsSubForm: React.FC<SubFormProps> = ({
                 onChange={(e) => {
                   handleMinorChange(e.target.value);
                 }}
-                error={isNext && errors.minor}
-                helperText={isNext && errors.minor && errorMessages.minor}
               />
-              <br />
             </FormTextAnswerContainer>
           </FormQuestionContainer>
         </FormControl>
