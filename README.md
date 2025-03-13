@@ -23,7 +23,9 @@ Backend:
 - Database: TBD
 
 ## Deployment
+
 ( Deployed separatedly )
+
 - Deployed frontend on static site of Render
 - Deployed backend on web app site of Render
 
@@ -32,12 +34,12 @@ Backend:
 Prerequisites: make sure everything is installed
 
 1. [node/npm](https://nodejs.org/en)
-    - To check if it's installed: `node -v` and `npm -v`
-    - To install: for [mac/linux](https://github.com/nvm-sh/nvm) and [windows](https://github.com/coreybutler/nvm-windows) (setup instructions are in the link under the `Installing and Updating` and `Installation & Upgrades` sections, respectively)
-3. [yarn](https://yarnpkg.com/)
-    - To check if it's installed: `yarn -v`
-    - To install: `npm install --global yarn`
-4. [nx](https://nx.dev/): `npm add --global nx@latest`
+   - To check if it's installed: `node -v` and `npm -v`
+   - To install: for [mac/linux](https://github.com/nvm-sh/nvm) and [windows](https://github.com/coreybutler/nvm-windows) (setup instructions are in the link under the `Installing and Updating` and `Installation & Upgrades` sections, respectively)
+2. [yarn](https://yarnpkg.com/)
+   - To check if it's installed: `yarn -v`
+   - To install: `npm install --global yarn`
+3. [nx](https://nx.dev/): `npm add --global nx@latest`
 
 First, clone the repo and `cd` into the directory
 
@@ -73,6 +75,7 @@ nx run-many -t serve -p frontend backend
 ```
 
 ## Serving the app using docker
+
 ```bash
 docker-compose up --build
 ```
@@ -80,6 +83,7 @@ docker-compose up --build
 The frontend will be at http://localhost:4200/ and the backend will be at http://localhost:3000/.
 
 ## To Do List:
+
 - [x] Add better responses from form backends than just 'Bad Request'
 - [x] Add Pop Up for error message for invalid form responses based on invalid frontend data
 - [x] Encode user permission functionality
@@ -103,4 +107,3 @@ The frontend will be at http://localhost:4200/ and the backend will be at http:/
 - [ ] Either notify user that sites slow during inactivity or not have site slow down during inactivity
 - [x] Update admin page to show application correctly instead of nomination twice💀
 - [ ] Add time stamps to applications and nominations?
-
