@@ -87,13 +87,18 @@ const Admin: React.FC = () => {
 
   return (
     <AdminContainer>
-      <label htmlFor="semester">Choose a semester:</label>
-
+      <label htmlFor="semester">Choose a semester: </label>
       <select name="semester" id="semester">
         <option value="Spring2025">Spring 2025</option>
       </select>
+
+      <br />
+      <br />
+
       <HeaderRow>20+ Nominations</HeaderRow>
       <NomineeTable data={nominees} />
+
+      <br />
 
       <HeaderRow>
         Applications
@@ -111,6 +116,8 @@ const Admin: React.FC = () => {
         </ExportCSVButton>
       </HeaderRow>
       <AdminTable data={applications} />
+
+      <br />
 
       <HeaderRow>
         Nominations
