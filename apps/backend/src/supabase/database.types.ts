@@ -26,6 +26,7 @@ export type Database = {
           preferredFullName: string
           pronouns: string
           year: number
+          semester: string
         }
         Insert: {
           college: string
@@ -43,6 +44,7 @@ export type Database = {
           preferredFullName: string
           pronouns: string
           year: number
+          semester?: string
         }
         Update: {
           college?: string
@@ -60,6 +62,7 @@ export type Database = {
           preferredFullName?: string
           pronouns?: string
           year?: number
+          semester?: string
         }
         Relationships: []
       }

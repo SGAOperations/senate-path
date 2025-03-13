@@ -4,31 +4,52 @@ import {
   APPLICATION_TABLE_HEADERS,
   NOMINATION_TABLE_HEADERS,
 } from '../../components/tables/AdminTable/constants';
-import { TableEntry } from '../../components/tables/AdminTable/types';
+import {
+  TableEntry,
+  NomineeTableEntry,
+} from '../../components/tables/AdminTable/types';
+import NomineeTable from '../../components/tables/AdminTable/NomineeTable';
 import AdminTable from '../../components/tables/AdminTable';
 import LoginForm from '../../components/forms/LoginForm';
 
 import { getFullPath } from './../../utils';
 
-
 const Admin: React.FC = () => {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [nominations, setNominations] = useState<TableEntry[]>([]);
   const [applications, setApplications] = useState<TableEntry[]>([]);
+  const [nominees, setNominees] = useState<NomineeTableEntry[]>([]);
+
+  const getDataForNominees = (
+    url: string,
+    setData: (data: NomineeTableEntry[]) => void
+  ) => {
+    fetch(url)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
+        }
+        const out = response.json();
+        return out;
+      })
+      .then((data) => {
+        setData(data);
+      })
+      .catch((error) => {
+        console.error('OVER 20:', error);
+      });
+  };
+
   const getData = (url: string, setData: (data: TableEntry[]) => void) => {
     fetch(url)
       .then((response) => {
         if (!response.ok) {
-          console.log('errored');
           throw new Error('Failed to fetch data');
         }
-        console.log('didnt error');
         const out = response.json();
-        console.log(out);
         return out;
       })
       .then((data) => {
-        console.log('data:', data);
         setData(data);
       })
       .catch((error) => {
@@ -36,16 +57,16 @@ const Admin: React.FC = () => {
       });
   };
   useEffect(() => {
-    getData('https://nomination-system-2.onrender.com/api/nominations', setNominations);
+    getDataForNominees(getFullPath('/api/nominations/over/20'), setNominees);
   }, []);
   useEffect(() => {
-    getData('https://nomination-system-2.onrender.com/api/applications', setApplications);
+    getData(getFullPath('/api/nominations'), setNominations);
+  }, []);
+  useEffect(() => {
+    getData(getFullPath('/api/applications'), setApplications);
   }, []);
 
   if (!loggedIn) return <LoginForm setLoginStatus={setLoggedIn} />;
-  
-  console.log('HEREEE')
-  
 
   const exportToCsv = (
     data: TableEntry[],
@@ -66,6 +87,14 @@ const Admin: React.FC = () => {
 
   return (
     <AdminContainer>
+      <label htmlFor="semester">Choose a semester:</label>
+
+      <select name="semester" id="semester">
+        <option value="Spring2025">Spring 2025</option>
+      </select>
+      <HeaderRow>20+ Nominations</HeaderRow>
+      <NomineeTable data={nominees} />
+
       <HeaderRow>
         Applications
         <ExportCSVButton

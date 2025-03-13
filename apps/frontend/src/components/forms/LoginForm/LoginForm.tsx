@@ -15,6 +15,9 @@ interface Props {
 }
 
 export const LoginForm: React.FC<Props> = ({ setLoginStatus }) => {
+  const adminUsername = import.meta.env.VITE_ADMIN_USERNAME;
+  const adminPassword = import.meta.env.VITE_ADMIN_PASSWORD;
+
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
@@ -29,7 +32,7 @@ export const LoginForm: React.FC<Props> = ({ setLoginStatus }) => {
     if (username.trim() === '') setuserNameError(true);
     if (password.trim() === '') setpasswordError(true);
 
-    if (username === 'sga-admin-user' && password === 'E94W2xjMJbJK') {
+    if (username === adminUsername && password === adminPassword) {
       setLoginStatus(true);
     } else {
       setLoginError(true)

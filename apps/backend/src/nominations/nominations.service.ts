@@ -6,6 +6,7 @@ import supabase from '../supabase/client';
 import { Tables } from '../supabase/database.types';
 import { Status } from './nominations.types';
 import { validateOrReject, ValidationError } from 'class-validator';
+import { EmailsService } from '../emails/emails.service';
 
 interface NomineeData {
   constituencyName: string;
@@ -13,8 +14,9 @@ interface NomineeData {
 
 @Injectable()
 export class NominationsService {
+  constructor(private readonly emailsService: EmailsService) {}
   async getNominations(): Promise<Tables<'nominations'>[]> {
-    const { data, error } = await supabase.from('nominations').select('*');
+    const { data, error } = await supabase.from('nominations').select('*').eq('semester', 'Spring 2025');
 
     if (error) {
       throw new InternalServerErrorException(`Failed to fetch nominations: ${error.message}`);
@@ -29,6 +31,7 @@ export class NominationsService {
       .from('nominations')
       .select('*', { count: 'exact' })
       .eq('nominee', name)
+      .eq('semester', 'Spring 2025')
       .eq('status', Status.APPROVED);
     console.log('count', count)
     console.log('error', error)
@@ -36,10 +39,27 @@ export class NominationsService {
       throw new InternalServerErrorException(`Failed to fetch nominations for ${name}: ${error.message}`);
     }
 
+    if (count === 30) {
+      await this.notifyAdmin(name, count);
+    }
+
     return count;
   }
 
+  private async notifyAdmin(nominee: string, count: number): Promise<void> {
+    const emailRequest = {
+      recipients: ['wu-chen.j@northeastern.edu'],
+      subject: `Nominee ${nominee} Reached ${count} Nominations`,
+      message: `The nominee "${nominee}" has now reached ${count} nominations. Please review their application.`,
+    };
 
+    try {
+      await this.emailsService.createEmail(emailRequest);
+      console.log(`Notification email sent to ${emailRequest.recipients}`);
+    } catch (error) {
+      console.error('Failed to send notification email:', error);
+    }
+  }
   private async getNameByNuid(nuid: string): Promise<string> {
     const { data, error } = await supabase
       .from('applications')
@@ -98,7 +118,6 @@ export class NominationsService {
       throw new BadRequestException('You cannot nominate yourself for Senator.');
     }
   
-    // **Constituency Validation**: New helper function call
     await this.validateConstituency(nominationsColumns.nominee, nominationsColumns.constituency);
   
     console.log('hereee');
@@ -122,6 +141,7 @@ export class NominationsService {
   
     const { error } = await supabase.from('nominations').insert({
       ...nominationsColumns,
+      semester: 'Spring 2025',
       status,
     });
   
@@ -191,6 +211,7 @@ export class NominationsService {
     const { data: applicants, error } = await supabase
       .from('applications')
       .select('id, fullName')
+      .eq('semester', 'Spring 2025')
       .order('id', { ascending: false });
   
     if (error) {
@@ -207,5 +228,35 @@ export class NominationsService {
   
     return Array.from(uniqueNominees.values()).map((applicant) => applicant.fullName);
   }
+
+  async getNomineesWithVotes(votes: number) {
+    // Step 1: Fetch nominee counts and constituency
+    const { data, error } = await supabase
+        .from('nominations')
+        .select('nominee, constituency')
+    
+    if (error) {
+        throw new InternalServerErrorException(`Failed to fetch nominations: ${error.message}`);
+    }
+    if (!data || data.length === 0) {
+        console.log("No data found");
+        return [];
+    }
+    // Step 2: Count occurrences of each nominee
+    const nomineeCounts: Record<string, { count: number; constituency: string }> = {};
+    data.forEach(({ nominee, constituency }) => {
+        if (!nomineeCounts[nominee]) {
+            nomineeCounts[nominee] = { count: 0, constituency };
+        }
+        nomineeCounts[nominee].count += 1;
+    });
+    // Step 3: Filter nominees with votes greater than the threshold and sort results
+    const finalResult = Object.entries(nomineeCounts)
+        .filter(([_, { count }]) => count >= votes)
+        .map(([nominee, { count, constituency }]) => ({ nominee, constituency, count }))
+        .sort((a, b) => b.count - a.count); // Sort by highest to lowest count
+    console.log(finalResult);
+    return finalResult;
+}
   
 }

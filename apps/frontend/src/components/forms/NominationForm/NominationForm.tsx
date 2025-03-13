@@ -8,6 +8,10 @@ import RadioGroup from '@mui/material/RadioGroup';
 import TextField from '@mui/material/TextField';
 import { FormHelperText } from '@mui/material';
 import { getFullPath } from './../../../utils';
+import { 
+  CONSTITUENCIES,
+  GRADUATION_YEARS 
+} from './../../../constants/constants';
 
 import {
   SampleForm,
@@ -61,25 +65,20 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
     fetch(url)
       .then((response) => {
         if (!response.ok) {
-          console.log('errored');
           throw new Error('Failed to fetch data');
         }
-        console.log('didnt error');
         const out = response.json();
-        console.log(out);
         return out;
       })
       .then((data) => {
-        console.log('data:', data);
         setNomineeNames(data)
-        console.log('nominees:', nomineeNames)
       })
       .catch((error) => {
         console.error('Error fetching:', error);
       });
   };
   useEffect(() => {
-    getData('https://nomination-system-2.onrender.com/api/nominations/unique-nominees');
+    getData(getFullPath('/api/nominations/unique-nominees'));
   }, );
   //getData(getFullPath('/api/nominations'), setNominations);
 
@@ -118,8 +117,6 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
         newErrors.graduationYear = 'Graduation Year is mandatory';
 
       setErrors(newErrors);
-
-      console.log('invalid inputs');
       return;
     }
 
@@ -134,7 +131,7 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
       receiveSenatorInfo,
     };
 
-    fetch('https://nomination-system-2.onrender.com/api/nominations', {
+    fetch(getFullPath('/api/nominations'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formValues),
@@ -143,17 +140,12 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
         if (data.ok) {
           setIsPopupOpen(true);
         } else {
-          // LIKE LEGIT ACTUALLY SHOW MESSAGE HERE
-          console.log(`Nomination failed to submit: ${data.statusText}`);
           data.json()
         .then((responseBody) => {
           // Extract and log the 'message' property from the response
           if (responseBody && responseBody.message) {
-            console.log('Error Message:', responseBody.message);
             setErrorMessage(responseBody.message)
             setErrorOpen(true)
-          } else {
-            console.log('Unexpected response format:', responseBody);
           }
         })
         .catch((error) => {
@@ -164,7 +156,7 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
         }
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   };
 
@@ -193,10 +185,10 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
         <p>
           SGA senator applications are currently open. To apply for a
           {/* TODO include valid url to senator applications form */}
-          senatorship, visit <a href="https://senate.northeasternsga.com/applications">Senator Applications</a>
+          senatorship, visit <a href="http://localhost:4200/applications">Senator Applications</a>
         </p>
         <p>
-          Please contact the Senate Speaker at sgaSenateSpeaker@northeastern.edu with
+          Please contact Cassidy Donoghue at donoghue.ca@northeastern.edu with
           any questions.
         </p>
         </Introduction>
@@ -316,48 +308,11 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
                   }
                 }}
               >
-                {/* TODO Insert MenuItems using database of Constituents */}
-                <MenuItem value={'Alpha Chi Omega Sorority'}>
-                  Alpha Chi Omega Sorority
+                {CONSTITUENCIES.map((constituency) => (
+                  <MenuItem key={constituency} value={constituency}>
+                  {constituency}
                 </MenuItem>
-                <MenuItem value={'Alpha Epsilon Phi'}>
-                  Alpha Epsilon Phi
-                </MenuItem>
-                <MenuItem value={'Alpha Epsilon Pi'}>Alpha Epsilon Pi</MenuItem>
-                <MenuItem value={'Bouvé College of Health Sciences'}>
-                  Bouvé College of Health Sciences
-                </MenuItem>
-                <MenuItem value={'College of Science'}>
-                  College of Science
-                </MenuItem>
-                <MenuItem value={'College of Social Sciences and Humanities'}>
-                  College of Social Sciences and Humanities
-                </MenuItem>
-                <MenuItem value={"D'Amore-McKim School of Business"}>
-                  D'Amore-McKim School of Business
-                </MenuItem>
-                <MenuItem value={'Delta Phi Epsilon'}>
-                  Delta Phi Epsilon
-                </MenuItem>
-                <MenuItem value={'Delta Tau Delta'}>Delta Tau Delta</MenuItem>
-                <MenuItem value={'Delta Zeta'}>Delta Zeta</MenuItem>
-                <MenuItem value={'Global Scholars program'}>
-                  Global Scholars program
-                </MenuItem>
-                <MenuItem value={'Honors program'}>Honors program</MenuItem>
-                <MenuItem value={'Kappa Delta'}>Kappa Delta</MenuItem>
-                <MenuItem value={'Khoury College of Computer Sciences'}>
-                  Khoury College of Computer Sciences
-                </MenuItem>
-                <MenuItem
-                  value={'Northeastern University Real Estate Club (NURE)'}
-                >
-                  Northeastern University Real Estate Club (NURE)
-                </MenuItem>
-                <MenuItem value={'NU Immerse'}>NU Immerse</MenuItem>
-                <MenuItem value={'Phi Sigma Rho'}>Phi Sigma Rho</MenuItem>
-                <MenuItem value={'Sandbox'}>Sandbox</MenuItem>
-                <MenuItem value={'Islamic Society of Northeastern University'}>Islamic Society of Northeastern University</MenuItem>
+                ))}
               </FormSelect>
             </FormTextAnswerContainer>
             {isSubmitted && errors.constituency && (
@@ -438,38 +393,15 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
                     errors.graduationYear = '';
                   }
                 }}
-                /* TODO pick up radio options from env variable */
               >
-                <FormControlLabel
-                  value={2023}
-                  control={<Radio />}
-                  label="2023"
-                />
-                <FormControlLabel
-                  value={2024}
-                  control={<Radio />}
-                  label="2024"
-                />
-                <FormControlLabel
-                  value={2025}
-                  control={<Radio />}
-                  label="2025"
-                />
-                <FormControlLabel
-                  value={2026}
-                  control={<Radio />}
-                  label="2026"
-                />
-                <FormControlLabel
-                  value={2027}
-                  control={<Radio />}
-                  label="2027"
-                />
-                <FormControlLabel
-                  value={2028}
-                  control={<Radio />}
-                  label="2028"
-                />
+                 {GRADUATION_YEARS.map((year) => (
+                  <FormControlLabel
+                    key={year}
+                    value={year}
+                    control={<Radio />}
+                    label={year.toString()}
+                  />
+                ))}     
               </RadioGroup>
             </RadioButtons>
             {isSubmitted && errors.graduationYear && (
