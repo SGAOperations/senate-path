@@ -21,32 +21,8 @@ import {
 } from '@mui/material';
 import { SubFormProps } from './SubFormProps';
 import { useState } from 'react';
+import { CONSTITUENCY_TYPES, CONSTITUENCIES } from '../../../../../src/constants/constants';
 
-const CONSTITUENCY_TYPES = [
-  { value: 'club', label: 'Official club' },
-  { value: 'greek', label: 'Greek organization' },
-];
-
-const CONSTITUENCIES = [
-  'Alpha Chi Omega Sorority',
-  'Alpha Epsilon Phi',
-  'Alpha Epsilon Pi',
-  'Bouvé College of Health Sciences',
-  'College of Science',
-  'College of Social Sciences and Humanities',
-  "D'Amore-McKim School of Business",
-  'Delta Phi Epsilon',
-  'Delta Tau Delta',
-  'Delta Zeta',
-  'Global Scholars program',
-  'Honors program',
-  'Kappa Delta',
-  'Khoury College of Computer Sciences',
-  'Northeastern University Real Estate Club (NURE)',
-  'NU Immerse',
-  'Phi Sigma Rho',
-  'Sandbox',
-];
 export const SpecialInterestSubForm: React.FC<SubFormProps> = ({
   formData,
   setFormData,

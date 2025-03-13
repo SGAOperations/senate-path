@@ -16,8 +16,7 @@ import {
 } from '@mui/material';
 import { SubFormProps } from './SubFormProps';
 import { useState } from 'react';
-
-const PRONOUNS = ['She/her/her', 'He/him/his', 'They/them/their', 'Other'];
+import { PRONOUNS } from '../../../../../src/constants/constants';
 
 export const PronounSubForm: React.FC<SubFormProps> = ({
   formData,

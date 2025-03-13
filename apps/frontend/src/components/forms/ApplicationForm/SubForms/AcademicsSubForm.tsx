@@ -20,19 +20,7 @@ import {
   Radio,
 } from '@mui/material';
 import { SubFormProps } from './SubFormProps';
-
-const YEAR_OPTIONS = [
-  { value: '1', label: 'Undergraduate first year' },
-  { value: '2', label: 'Undergraduate second year' },
-  { value: '3', label: 'Undergraduate third year' },
-  { value: '4', label: 'Undergraduate fourth year' },
-  { value: '5', label: 'Undergraduate fifth+ year' },
-];
-
-const SENATOR_OPTIONS = [
-  { value: 'academic', label: 'Academic senator' },
-  { value: 'special', label: 'Special interest senator' },
-];
+import { YEAR_OPTIONS, SENATOR_OPTIONS } from '../../../../../src/constants/constants';
 
 export const AcademicsSubForm: React.FC<SubFormProps> = ({
   formData,
