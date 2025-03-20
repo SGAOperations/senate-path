@@ -9,7 +9,7 @@ import {
   FormControls,
   FormQuestionText,
   FormDescriptionText,
-} from '../styles';
+} from '../../FormStyles';
 import { useState } from 'react';
 import {
   FormControl,
@@ -20,7 +20,10 @@ import {
   Radio,
 } from '@mui/material';
 import { SubFormProps } from './SubFormProps';
-import { YEAR_OPTIONS, SENATOR_OPTIONS } from '../../../../../src/constants/constants';
+import {
+  YEAR_OPTIONS,
+  SENATOR_OPTIONS,
+} from '../../../../../src/constants/constants';
 
 export const AcademicsSubForm: React.FC<SubFormProps> = ({
   formData,

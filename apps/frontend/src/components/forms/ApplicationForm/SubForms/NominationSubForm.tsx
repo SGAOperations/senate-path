@@ -6,7 +6,7 @@ import {
   RadioButtons,
   FormQuestionText,
   FormDescriptionText,
-} from '../styles';
+} from '../../FormStyles';
 import { useState } from 'react';
 import {
   FormControl,

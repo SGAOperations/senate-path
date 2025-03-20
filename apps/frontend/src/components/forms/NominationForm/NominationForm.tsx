@@ -8,10 +8,12 @@ import RadioGroup from '@mui/material/RadioGroup';
 import TextField from '@mui/material/TextField';
 import { FormHelperText } from '@mui/material';
 import { getFullPath } from './../../../utils';
-import { 
+import {
   CONSTITUENCIES,
-  GRADUATION_YEARS 
+  GRADUATION_YEARS,
 } from './../../../constants/constants';
+
+import { NominationErrors, NominationErrorMessages } from './NominationErrors';
 
 import {
   SampleForm,
@@ -20,9 +22,10 @@ import {
   FormTextAnswerContainer,
   FormSelect,
   RadioButtons,
-  Title,
   Introduction,
-} from './styles';
+  FormQuestionText,
+  FormDescriptionText,
+} from './../FormStyles';
 
 interface Props {
   setIsPopupOpen: (open: boolean) => void;
@@ -30,38 +33,86 @@ interface Props {
   setErrorOpen: (open: boolean) => void;
 }
 
-const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setErrorOpen }) => {
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [nominee, setNominee] = useState('');
-  const [constituency, setConstituency] = useState('');
-  const [college, setCollege] = useState('');
-  const [major, setMajor] = useState('');
-  const [graduationYear, setGraduationYear] = useState(0);
-  const [receiveSenatorInfo, setReceiveSenatorInfo] = useState(false);
-  const [nomineeNames, setNomineeNames] = useState([])
+export interface NominationFormData {
+  fullName: string;
+  email: string;
+  nominee: string;
+  constituency: string;
+  college: string;
+  major: string;
+  graduationYear: number;
+  receiveSenatorInfo: boolean;
+}
 
-  const isFullNameError = fullName === '';
-  const isEmailError = email === '';
-  const isNomineeError = nominee === '';
-  const isConstituencyError = constituency === '';
-  const isCollegeError = college === '';
-  const isMajorError = major === '';
-  const isGraduationYearError = graduationYear === 0;
+const NominationForm: React.FC<Props> = ({
+  setIsPopupOpen,
+  setErrorMessage,
+  setErrorOpen,
+}) => {
+  const [formData, setFormData] = useState<NominationFormData>({
+    fullName: '',
+    email: '',
+    nominee: '',
+    constituency: '',
+    college: '',
+    major: '',
+    graduationYear: 0,
+    receiveSenatorInfo: false,
+  });
 
-  const [errors, setErrors] = useState<{
-    fullName?: string;
-    email?: string;
-    nominee?: string;
-    constituency?: string;
-    college?: string;
-    major?: string;
-    graduationYear?: string;
-  }>({});
+  /**
+   * Update the form data state
+   * @param field The field to be changed
+   * @param value The value of the field to change
+   */
+  const updateFormData = <K extends keyof NominationFormData>(
+    field: K,
+    value: NominationFormData[K]
+  ) => {
+    if (typeof value === 'string' && value === '') {
+      updateErrors(field as keyof NominationErrors, true);
+    } else if (typeof value === 'number' && value === 0) {
+      updateErrors(field as keyof NominationErrors, true);
+    } else {
+      updateErrors(field as keyof NominationErrors, false);
+    }
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  const [nominationErrors, setNominationErrors] = useState<NominationErrors>({
+    fullName: true,
+    email: true,
+    nominee: true,
+    constituency: true,
+    college: true,
+    major: true,
+    graduationYear: true,
+  });
+
+  /**
+   * Update the error state of a form field.
+   * @param field The error key to be changed.
+   * @param value The value to change it to.
+   */
+  const updateErrors = (field: keyof NominationErrors, value: boolean) => {
+    setNominationErrors((prev) => ({ ...prev, [field]: value }));
+  };
+
+  /**
+   * @returns Are there any errors in the form?
+   */
+  const hasAnyErrors = () => {
+    return Object.values(nominationErrors).some((value) => value === true);
+  };
 
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
 
-  const getData = (url: string) => {
+  const [nomineeNames, setNomineeNames] = useState([]);
+
+  const getNomineeData = (url: string) => {
     fetch(url)
       .then((response) => {
         if (!response.ok) {
@@ -71,88 +122,48 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
         return out;
       })
       .then((data) => {
-        setNomineeNames(data)
+        setNomineeNames(data);
       })
       .catch((error) => {
         console.error('Error fetching:', error);
       });
   };
   useEffect(() => {
-    getData(getFullPath('/api/nominations/unique-nominees'));
-  }, );
+    getNomineeData(getFullPath('/api/nominations/unique-nominees'));
+  });
   //getData(getFullPath('/api/nominations'), setNominations);
 
   const handleSampleFormSubmit = () => {
-    setErrorOpen(false)
+    setErrorOpen(false);
     setIsSubmitted(true);
-    if (
-      isFullNameError ||
-      isEmailError ||
-      isNomineeError ||
-      isConstituencyError ||
-      isCollegeError ||
-      isMajorError ||
-      isGraduationYearError
-    ) {
-      // TODO show error popup with message
 
-      const newErrors: {
-        fullName?: string;
-        email?: string;
-        nominee?: string;
-        constituency?: string;
-        college?: string;
-        major?: string;
-        graduationYear?: string;
-      } = {};
-
-      if (isFullNameError) newErrors.fullName = 'Name is mandatory';
-      if (isEmailError) newErrors.email = 'Email is mandatory';
-      if (isNomineeError) newErrors.nominee = 'Nominee is mandatory';
-      if (isConstituencyError)
-        newErrors.constituency = 'Constituency is mandatory';
-      if (isCollegeError) newErrors.college = 'College is mandatory';
-      if (isMajorError) newErrors.major = 'Major is mandatory';
-      if (isGraduationYearError)
-        newErrors.graduationYear = 'Graduation Year is mandatory';
-
-      setErrors(newErrors);
+    if (hasAnyErrors()) {
       return;
     }
-
-    const formValues = {
-      fullName,
-      email,
-      nominee,
-      constituency,
-      college,
-      major,
-      graduationYear,
-      receiveSenatorInfo,
-    };
 
     fetch(getFullPath('/api/nominations'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formValues),
+      body: JSON.stringify(formData),
     })
       .then((data) => {
         if (data.ok) {
           setIsPopupOpen(true);
         } else {
-          data.json()
-        .then((responseBody) => {
-          // Extract and log the 'message' property from the response
-          if (responseBody && responseBody.message) {
-            setErrorMessage(responseBody.message)
-            setErrorOpen(true)
-          }
-        })
-        .catch((error) => {
-          console.error('Error reading response body as JSON:', error);
-          setErrorMessage('Error reading response body as JSON:' + error)
-          setErrorOpen(true)
-        });
+          data
+            .json()
+            .then((responseBody) => {
+              // Extract and log the 'message' property from the response
+              if (responseBody && responseBody.message) {
+                setErrorMessage(responseBody.message);
+                setErrorOpen(true);
+              }
+            })
+            .catch((error) => {
+              console.error('Error reading response body as JSON:', error);
+              setErrorMessage('Error reading response body as JSON:' + error);
+              setErrorOpen(true);
+            });
         }
       })
       .catch((error) => {
@@ -160,282 +171,337 @@ const NominationForm: React.FC<Props> = ({ setIsPopupOpen, setErrorMessage, setE
       });
   };
 
+  const [nominationStarted, setNominationStarted] = useState(false);
+
   return (
     <>
-      <SampleForm>
-        <Introduction>
-        <h2>SGA Senator Nomination Form</h2>
-        <p>
-          Complete this form to nominate a person to become a senator in the
-          Student Government Association (SGA). SGA serves as the voice of the
-          undergraduate student body and strives to promote student interests in
-          the university and its surrounding communities. To learn more about
-          SGA, visit our website at northeasternsga.com.
-        </p>
-        <p>
-          This form is a nomination, not a vote. It is simply a statement you
-          would like to see one of your peers become a senator in SGA. You may
-          complete this form for an unlimited number of prospective senators,
-          but you may only nominate each student once. You must belong to the
-          same constituency as the prospective senator seeks to represent (so
-          only undergraduate students in the College of Engineering may nominate
-          senators for the College of Engineering, only NUin students may
-          nominate senators for the NUin program, etc).
-        </p>
-        <p>
-          SGA senator applications are currently open. To apply for a
-          {/* TODO include valid url to senator applications form */}
-          senatorship, visit <a href="http://localhost:4200/applications">Senator Applications</a>
-        </p>
-        <p>
-          Please contact Cassidy Donoghue at donoghue.ca@northeastern.edu with
-          any questions.
-        </p>
-        </Introduction>
-      </SampleForm>
+      {!nominationStarted && (
+        <>
+          <SampleForm>
+            <Introduction>
+              <h2>SGA Senator Nomination Form</h2>
+              <p>
+                Complete this form to nominate a person to become a senator in
+                the Student Government Association (SGA). SGA serves as the
+                voice of the undergraduate student body and strives to promote
+                student interests in the university and its surrounding
+                communities. To learn more about SGA, visit our website at
+                northeasternsga.com.
+              </p>
+              <p>
+                This form is a nomination, not a vote. It is simply a statement
+                you would like to see one of your peers become a senator in SGA.
+                You may complete this form for an unlimited number of
+                prospective senators, but you may only nominate each student
+                once. You must belong to the same constituency as the
+                prospective senator seeks to represent (so only undergraduate
+                students in the College of Engineering may nominate senators for
+                the College of Engineering, only NUin students may nominate
+                senators for the NUin program, etc).
+              </p>
+              <p>
+                SGA senator applications are currently open. To apply for a
+                {/* TODO include valid url to senator applications form */}
+                senatorship, visit{' '}
+                <a href="http://localhost:4200/applications">
+                  Senator Applications
+                </a>
+              </p>
+              <p>
+                Please contact Cassidy Donoghue at donoghue.ca@northeastern.edu
+                with any questions.
+              </p>
+            </Introduction>
+          </SampleForm>
+          <Button
+            size="large"
+            variant="contained"
+            onClick={() => {
+              setNominationStarted(true);
+            }}
+          >
+            Start Nomination
+          </Button>
+        </>
+      )}
 
-      <SampleForm>
-        <FormControl required error={isSubmitted && !!errors.fullName}>
-          <FormQuestionContainer>
-            <FormTextContainer>
-              <b>What is your full name?</b>
-              <br/>
-                Please enter your first and last name as they appear in the
-                official university records.
-              
-            </FormTextContainer>
-            <FormTextAnswerContainer>
-              <TextField
-                required
-                id="outlined-required"
-                label="Required"
-                defaultValue=""
-                onChange={(e) => {
-                  setFullName(e.target.value);
-                  if (errors.fullName) {
-                    errors.fullName = '';
-                  }
-                }}
-                error={isSubmitted && !!isFullNameError}
-                helperText={isSubmitted && errors.fullName}
-              />
-            </FormTextAnswerContainer>
-          </FormQuestionContainer>
-        </FormControl>
-      </SampleForm>
-
-      <SampleForm>
-        <FormControl required error={isSubmitted && !!errors.email}>
-          <FormQuestionContainer>
-            <FormTextContainer>
-              <b>What is your Northeastern email?</b>
-                <br/>
-                We may contact you to verify the authenticity of this
-                nomination.
-            </FormTextContainer>
-            <FormTextAnswerContainer>
-              <TextField
-                required
-                id="outlined-required"
-                label="Required"
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  if (errors.email) {
-                    errors.email = '';
-                  }
-                }}
-                error={isSubmitted && !!isEmailError}
-                helperText={isSubmitted && errors.email}
-              />
-            </FormTextAnswerContainer>
-          </FormQuestionContainer>
-        </FormControl>
-      </SampleForm>
-
-      <SampleForm>
-        <FormControl required error={isSubmitted && !!errors.nominee}>
-          <FormQuestionContainer>
-            <FormTextContainer>
-              <b>Select the name of the person you are nominating</b>
-            </FormTextContainer>
-            <FormTextAnswerContainer>
-              <FormSelect
-                required
-                label="nominee"
-                onChange={(e) => {
-                  setNominee(e.target.value as string);
-                  if (errors.nominee) {
-                    errors.nominee = '';
-                  }
-                }}
-              >
-                {
-                  nomineeNames.map((name, index)=> (
-                    <MenuItem key={index} value={name}>{name}</MenuItem>
-                  ))
-                }
-              </FormSelect>
-            </FormTextAnswerContainer>
-            {isSubmitted && errors.nominee && (
-              <FormHelperText>{errors.nominee}</FormHelperText>
-            )}
-          </FormQuestionContainer>
-        </FormControl>
-      </SampleForm>
-
-      <SampleForm>
-        <FormControl required error={isSubmitted && !!errors.constituency}>
-          <FormQuestionContainer>
-            <FormTextContainer>
-              <b>Select a college, organization, or program from the list below
-                to confirm you are one of the prospective senator's
-                constituents.</b>
-                {' '}
-                <br/>
-                Select the name of the person you are nominating.
-                  You must select the same constituency as the prospective
-                  senator for this nomination to be processed. Please confirm you are one of the prospective senator's
-                  constituents.
-                
-            </FormTextContainer>
-            <FormTextAnswerContainer>
-              <FormSelect
-                required
-                onChange={(e) => {
-                  setConstituency(e.target.value as string);
-                  if (errors.constituency) {
-                    errors.constituency = '';
-                  }
-                }}
-              >
-                {CONSTITUENCIES.map((constituency) => (
-                  <MenuItem key={constituency} value={constituency}>
-                  {constituency}
-                </MenuItem>
-                ))}
-              </FormSelect>
-            </FormTextAnswerContainer>
-            {isSubmitted && errors.constituency && (
-              <FormHelperText>{errors.constituency}</FormHelperText>
-            )}
-          </FormQuestionContainer>
-        </FormControl>
-      </SampleForm>
-
-      <SampleForm>
-        <FormControl required error={isSubmitted && !!errors.college}>
-          <FormQuestionContainer>
-            <FormTextContainer>
-              <b>What is your college?</b>
-                <br/>
-                Note: For combined majors (a single major listed in the course
-                catalog that spans two disciplines), list only the home college.
-                For double majors (two distinct majors listed separately in the
-                course catalog), include both colleges.
-            </FormTextContainer>
-            <FormTextAnswerContainer>
-              <TextField
-                required
-                id="outlined-required"
-                label="Required"
-                onChange={(e) => {
-                  setCollege(e.target.value);
-                  if (errors.college) {
-                    errors.college = '';
-                  }
-                }}
-                error={isSubmitted && !!isCollegeError}
-                helperText={isSubmitted && errors.college}
-              />
-            </FormTextAnswerContainer>
-          </FormQuestionContainer>
-        </FormControl>
-      </SampleForm>
-
-      <SampleForm>
-        <FormControl required error={isSubmitted && !!errors.major}>
-          <FormQuestionContainer>
-            <FormTextContainer>
-              <b>What is your major?</b>
-            </FormTextContainer>
-            <FormTextAnswerContainer>
-              <TextField
-                required
-                id="outlined-required"
-                label="Required"
-                onChange={(e) => {
-                  setMajor(e.target.value);
-                  if (errors.major) {
-                    errors.major = '';
-                  }
-                }}
-                error={isSubmitted && !!isMajorError}
-                helperText={isSubmitted && errors.major}
-              />
-            </FormTextAnswerContainer>
-          </FormQuestionContainer>
-        </FormControl>
-      </SampleForm>
-
-      <SampleForm>
-        <FormControl error={isSubmitted && !!errors.graduationYear}>
-          <FormQuestionContainer>
-            <FormTextContainer>
-              <b>What is your expected graduation year?</b>
-            </FormTextContainer>
-            <RadioButtons>
-              <RadioGroup
-                name="year-buttons-group"
-                aria-required
-                onChange={(e) => {
-                  setGraduationYear(Number.parseInt(e.target.value));
-                  if (errors.graduationYear) {
-                    errors.graduationYear = '';
-                  }
-                }}
-              >
-                 {GRADUATION_YEARS.map((year) => (
-                  <FormControlLabel
-                    key={year}
-                    value={year}
-                    control={<Radio />}
-                    label={year.toString()}
-                  />
-                ))}     
-              </RadioGroup>
-            </RadioButtons>
-            {isSubmitted && errors.graduationYear && (
-              <FormHelperText>{errors.graduationYear}</FormHelperText>
-            )}
-          </FormQuestionContainer>
-        </FormControl>
-      </SampleForm>
-
-      <SampleForm>
-        <FormQuestionContainer>
-          <FormTextContainer>
-            <b>Would you like to receive information about how to become a
-            senator?</b> 
-            <br/>
-              Becoming a senator is an excellent, rewarding opportunity to serve
-              and improve the Northeastern community.
-          </FormTextContainer>
-          <RadioButtons>
-            <RadioGroup
-              aria-required
-              name="receive-buttons-group"
-              onChange={(e) => setReceiveSenatorInfo(e.target.value === 'Yes')}
+      {nominationStarted && (
+        <>
+          <SampleForm>
+            <FormControl
+              required
+              error={isSubmitted && nominationErrors.fullName}
             >
-              <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-              <FormControlLabel value="No" control={<Radio />} label="No" />
-            </RadioGroup>
-          </RadioButtons>
-        </FormQuestionContainer>
-      </SampleForm>
-
-      <Button variant="contained" onClick={handleSampleFormSubmit}>
-        Submit
-      </Button>
+              <FormQuestionContainer>
+                <FormTextContainer>
+                  <FormQuestionText>What is your full name?</FormQuestionText>
+                  <FormDescriptionText>
+                    Please enter your first and last name as they appear in the
+                    official university records.
+                  </FormDescriptionText>
+                </FormTextContainer>
+                <FormTextAnswerContainer>
+                  <TextField
+                    required
+                    id="outlined-required"
+                    label="Required"
+                    defaultValue=""
+                    onChange={(e) => {
+                      updateFormData('fullName', e.target.value);
+                    }}
+                    error={isSubmitted && nominationErrors.fullName}
+                    helperText={
+                      isSubmitted &&
+                      nominationErrors.fullName &&
+                      NominationErrorMessages.fullName
+                    }
+                  />
+                </FormTextAnswerContainer>
+              </FormQuestionContainer>
+            </FormControl>
+          </SampleForm>
+          <SampleForm>
+            <FormControl required error={isSubmitted && nominationErrors.email}>
+              <FormQuestionContainer>
+                <FormTextContainer>
+                  <FormQuestionText>
+                    What is your Northeastern email?
+                  </FormQuestionText>
+                  <FormDescriptionText>
+                    We may contact you to verify the authenticity of this
+                    nomination.
+                  </FormDescriptionText>
+                </FormTextContainer>
+                <FormTextAnswerContainer>
+                  <TextField
+                    required
+                    id="outlined-required"
+                    label="Required"
+                    onChange={(e) => {
+                      updateFormData('email', e.target.value);
+                    }}
+                    error={isSubmitted && nominationErrors.email}
+                    helperText={
+                      isSubmitted &&
+                      nominationErrors.email &&
+                      NominationErrorMessages.email
+                    }
+                  />
+                </FormTextAnswerContainer>
+              </FormQuestionContainer>
+            </FormControl>
+          </SampleForm>
+          <SampleForm>
+            <FormControl
+              required
+              error={isSubmitted && nominationErrors.nominee}
+            >
+              <FormQuestionContainer>
+                <FormTextContainer>
+                  <FormQuestionText>
+                    Select the name of your nominee
+                  </FormQuestionText>
+                </FormTextContainer>
+                <FormTextAnswerContainer>
+                  <FormSelect
+                    required
+                    label="nominee"
+                    onChange={(e) => {
+                      updateFormData('nominee', e.target.value as string);
+                    }}
+                  >
+                    {nomineeNames.map((name, index) => (
+                      <MenuItem key={index} value={name}>
+                        {name}
+                      </MenuItem>
+                    ))}
+                  </FormSelect>
+                </FormTextAnswerContainer>
+                {isSubmitted && nominationErrors.nominee && (
+                  <FormHelperText>
+                    {NominationErrorMessages.nominee}
+                  </FormHelperText>
+                )}
+              </FormQuestionContainer>
+            </FormControl>
+          </SampleForm>
+          <SampleForm>
+            <FormControl
+              required
+              error={isSubmitted && nominationErrors.constituency}
+            >
+              <FormQuestionContainer>
+                <FormTextContainer>
+                  <FormQuestionText>
+                    Select a college, organization, or program from the list
+                    below to confirm you are one of the prospective senator's
+                    constituents.
+                  </FormQuestionText>{' '}
+                  <FormDescriptionText>
+                    {' '}
+                    Select the name of the person you are nominating. You must
+                    select the same constituency as the prospective senator for
+                    this nomination to be processed. Please confirm you are one
+                    of the prospective senator's constituents.
+                  </FormDescriptionText>
+                </FormTextContainer>
+                <FormTextAnswerContainer>
+                  <FormSelect
+                    required
+                    onChange={(e) => {
+                      updateFormData('constituency', e.target.value as string);
+                    }}
+                  >
+                    {CONSTITUENCIES.map((constituency) => (
+                      <MenuItem key={constituency} value={constituency}>
+                        {constituency}
+                      </MenuItem>
+                    ))}
+                  </FormSelect>
+                </FormTextAnswerContainer>
+                {isSubmitted && nominationErrors.constituency && (
+                  <FormHelperText>
+                    {NominationErrorMessages.constituency}
+                  </FormHelperText>
+                )}
+              </FormQuestionContainer>
+            </FormControl>
+          </SampleForm>
+          <SampleForm>
+            <FormControl
+              required
+              error={isSubmitted && nominationErrors.college}
+            >
+              <FormQuestionContainer>
+                <FormTextContainer>
+                  <FormQuestionText>What is your college?</FormQuestionText>
+                  <FormDescriptionText>
+                    Note: For combined majors (a single major listed in the
+                    course catalog that spans two disciplines), list only the
+                    home college. For double majors (two distinct majors listed
+                    separately in the course catalog), include both colleges.
+                  </FormDescriptionText>
+                </FormTextContainer>
+                <FormTextAnswerContainer>
+                  <TextField
+                    required
+                    id="outlined-required"
+                    label="Required"
+                    onChange={(e) => {
+                      updateFormData('college', e.target.value);
+                    }}
+                    error={isSubmitted && nominationErrors.college}
+                    helperText={
+                      isSubmitted &&
+                      nominationErrors.college &&
+                      NominationErrorMessages.college
+                    }
+                  />
+                </FormTextAnswerContainer>
+              </FormQuestionContainer>
+            </FormControl>
+          </SampleForm>
+          <SampleForm>
+            <FormControl required error={isSubmitted && nominationErrors.major}>
+              <FormQuestionContainer>
+                <FormTextContainer>
+                  <FormQuestionText>What is your major?</FormQuestionText>
+                </FormTextContainer>
+                <FormTextAnswerContainer>
+                  <TextField
+                    required
+                    id="outlined-required"
+                    label="Required"
+                    onChange={(e) => {
+                      updateFormData('major', e.target.value);
+                    }}
+                    error={isSubmitted && nominationErrors.major}
+                    helperText={
+                      isSubmitted &&
+                      nominationErrors.major &&
+                      NominationErrorMessages.major
+                    }
+                  />
+                </FormTextAnswerContainer>
+              </FormQuestionContainer>
+            </FormControl>
+          </SampleForm>
+          <SampleForm>
+            <FormControl error={isSubmitted && nominationErrors.graduationYear}>
+              <FormQuestionContainer>
+                <FormTextContainer>
+                  <FormQuestionText>
+                    What is your expected graduation year?
+                  </FormQuestionText>
+                </FormTextContainer>
+                <RadioButtons>
+                  <RadioGroup
+                    name="year-buttons-group"
+                    aria-required
+                    onChange={(e) => {
+                      updateFormData(
+                        'graduationYear',
+                        Number.parseInt(e.target.value)
+                      );
+                    }}
+                  >
+                    {GRADUATION_YEARS.map((year) => (
+                      <FormControlLabel
+                        key={year}
+                        value={year}
+                        control={<Radio />}
+                        label={year.toString()}
+                      />
+                    ))}
+                  </RadioGroup>
+                </RadioButtons>
+                {isSubmitted && nominationErrors.graduationYear && (
+                  <FormHelperText>
+                    {NominationErrorMessages.graduationYear}
+                  </FormHelperText>
+                )}
+              </FormQuestionContainer>
+            </FormControl>
+          </SampleForm>
+          <SampleForm>
+            <FormQuestionContainer>
+              <FormTextContainer>
+                <FormQuestionText>
+                  Would you like to receive information about how to become a
+                  senator?
+                </FormQuestionText>
+                <FormDescriptionText>
+                  Becoming a senator is an excellent, rewarding opportunity to
+                  serve and improve the Northeastern community.
+                </FormDescriptionText>
+              </FormTextContainer>
+              <RadioButtons>
+                <RadioGroup
+                  aria-required
+                  value={formData.receiveSenatorInfo ? 'Yes' : 'No'}
+                  name="receive-buttons-group"
+                  onChange={(e) =>
+                    updateFormData(
+                      'receiveSenatorInfo',
+                      e.target.value === 'Yes'
+                    )
+                  }
+                >
+                  <FormControlLabel
+                    value="Yes"
+                    control={<Radio />}
+                    label="Yes"
+                  />
+                  <FormControlLabel value="No" control={<Radio />} label="No" />
+                </RadioGroup>
+              </RadioButtons>
+            </FormQuestionContainer>
+          </SampleForm>
+          <Button variant="contained" onClick={handleSampleFormSubmit}>
+            Submit
+          </Button>{' '}
+        </>
+      )}
     </>
   );
 };

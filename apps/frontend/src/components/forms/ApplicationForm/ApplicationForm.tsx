@@ -2,7 +2,10 @@ import { useState } from 'react';
 import { NameSubForm } from './SubForms/NameSubForm';
 import { ApplicationFormIntro } from './ApplicationFormIntro';
 import { PersonalInfoSubForm } from './SubForms/PersonalInfoSubForm';
-import { ApplicationErrors, ErrorMessages } from './ApplicationErrors';
+import {
+  ApplicationErrors,
+  ApplicationErrorMessages,
+} from './ApplicationErrors';
 import { PronounSubForm } from './SubForms/PronounsSubForm';
 import { AcademicsSubForm } from './SubForms/AcademicsSubForm';
 import { SpecialInterestSubForm } from './SubForms/SpecialInterestSubForm';
@@ -159,7 +162,7 @@ const ApplicationForm: React.FC<Props> = ({
     setFormData: setFormData,
     updateErrors: updateErrors,
     errors: applicationErrors,
-    errorMessages: ErrorMessages,
+    errorMessages: ApplicationErrorMessages,
     handleNext: handleNextForm,
     handlePrev: handlePrevForm,
   };
