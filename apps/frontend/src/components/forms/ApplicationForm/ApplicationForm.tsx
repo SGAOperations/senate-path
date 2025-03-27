@@ -11,7 +11,7 @@ import { AcademicsSubForm } from './SubForms/AcademicsSubForm';
 import { SpecialInterestSubForm } from './SubForms/SpecialInterestSubForm';
 import { NominationSubForm } from './SubForms/NominationSubForm';
 import { Box, Button } from '@mui/material';
-
+import { getFullPath } from './../../../utils';
 interface Props {
   setIsPopupOpen: (open: boolean) => void;
   setErrorMessage: (message: string) => void;
@@ -117,7 +117,7 @@ const ApplicationForm: React.FC<Props> = ({
       selectedAttestation: formData.attestation,
     };
     console.log(JSON.stringify(data));
-    fetch('https://nomination-system-2.onrender.com/api/applications', {
+    fetch(getFullPath('/api/applications'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
