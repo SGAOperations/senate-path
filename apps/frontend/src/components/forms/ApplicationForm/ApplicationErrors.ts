@@ -1,4 +1,4 @@
-export const ErrorMessages: Record<string, string> = {
+export const ApplicationErrorMessages: Record<string, string> = {
   fullName: 'Full name is required',
   preferredFullName: 'Preferred name is required',
   phoneticPronunciation: 'Phonetic pronunciation is required',

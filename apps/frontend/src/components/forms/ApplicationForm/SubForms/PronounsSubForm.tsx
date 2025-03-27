@@ -6,7 +6,7 @@ import {
   FormInputCheckbox,
   FormControls,
   FormQuestionText,
-} from '../styles';
+} from '../../FormStyles';
 import {
   FormControl,
   Button,

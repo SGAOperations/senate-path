@@ -1,4 +1,4 @@
-import { SampleForm, Introduction } from './styles';
+import { SampleForm, Introduction } from '../FormStyles';
 import { Button } from '@mui/material';
 
 interface Props {
