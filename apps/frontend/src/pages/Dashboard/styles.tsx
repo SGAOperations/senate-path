@@ -1,13 +1,15 @@
 import Button from '@mui/material/Button';
 import styled from 'styled-components';
 import DashboardImage from '../../assets/dashboard-background.png';
+import DashboardGradient from '../../assets/dashboard-gradient.png';
+
 
 export const HomeContainer = styled.div(() => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'flex-start',
-  backgroundImage: `url(${DashboardImage})`,
+  backgroundImage: `url(${DashboardGradient})`,
   backgroundSize: 'cover',
   backgroundPosition: 'center',
   backgroundRepeat: 'no-repeat',
@@ -78,11 +80,15 @@ export const InputContainer = styled.div(() => ({
   flexDirection: 'column',
   alignItems: 'flex-start',
   gap: '10px',
-  width: '80%',
+  width: '50%',
   padding: '15px 20px',
   borderRadius: '8px',
   top: '0',
   zIndex: '1000',
+
+  '@media (max-width: 768px)': {
+    width: '80%',
+  },
 }));
 
 export const InputNUID = styled.div(() => ({
