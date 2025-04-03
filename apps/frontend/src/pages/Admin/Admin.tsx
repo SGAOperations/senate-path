@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { AdminContainer, ExportCSVButton, HeaderRow, SemesterSelect } from './styles';
+import {
+  AdminContainer,
+  ExportCSVButton,
+  HeaderRow,
+  SemesterSelect,
+} from './styles';
 import {
   APPLICATION_TABLE_HEADERS,
   NOMINATION_TABLE_HEADERS,
@@ -88,7 +93,13 @@ const Admin: React.FC = () => {
   return (
     <AdminContainer>
       <label htmlFor="semester">Choose a semester: </label>
-      <SemesterSelect name="semester" id="semester">
+      <br></br>
+      <br></br>
+      <SemesterSelect
+        name="semester"
+        id="semester"
+        style={{ backgroundColor: "white", width: "200px", marginLeft: "20px" }}
+        >
         <MenuItem value="Spring2025">Spring 2025</MenuItem>
       </SemesterSelect>
 
