@@ -73,8 +73,10 @@ const Dashboard: React.FC = () => {
           setIsErrorOpen(true);
         });
     } catch (err: any) {
-      setError(err.message || 'An unknown error occurred');
+      if(err.message){
+        setError(err.message || 'An unknown error occurred');
       setIsErrorOpen(true);
+      }
     }
   };
 
@@ -97,7 +99,7 @@ const Dashboard: React.FC = () => {
       {showResult && (
         <Nominations>
           <h1>Nomination Status</h1>
-          <h3>{message}</h3>
+          {!error && <h3>{message}</h3>}
           <p>Total Nominations: {numNominations}</p>
           {neededNominations > 0 ? (
             <p>
