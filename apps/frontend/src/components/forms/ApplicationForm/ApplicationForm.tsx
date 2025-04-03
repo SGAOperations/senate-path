@@ -36,6 +36,7 @@ export interface ApplicationFormData {
   constituencyName: string;
   returningSenatorType: string;
   attestation: string;
+  otherConstituencyName?: string;
 }
 
 const ApplicationForm: React.FC<Props> = ({
@@ -61,6 +62,7 @@ const ApplicationForm: React.FC<Props> = ({
     constituencyName: '',
     returningSenatorType: 'no',
     attestation: '',
+    otherConstituencyName: '',
   });
 
   // The state of errors for each formData field.
@@ -81,6 +83,7 @@ const ApplicationForm: React.FC<Props> = ({
       constituencyName: true,
       returningSenatorType: false,
       attestation: true,
+      otherConstituencyName: false,
     }
   );
 
@@ -90,13 +93,33 @@ const ApplicationForm: React.FC<Props> = ({
    * @param value The value to change it to.
    */
   const updateErrors = (field: keyof ApplicationErrors, value: boolean) => {
-    setApplicationErrors((prev) => ({ ...prev, [field]: value }));
+    setApplicationErrors((prev) => {
+      let updatedErrors = { ...prev, [field]: value };
+
+      // Ensure otherConstituencyName is required if constituencyName is "Other"
+      if (
+        formData.constituencyName === 'Other' &&
+        !formData.otherConstituencyName
+      ) {
+        updatedErrors.otherConstituencyName = true;
+      } else {
+        updatedErrors.otherConstituencyName = false;
+      }
+
+      return updatedErrors;
+    });
   };
 
   /**
    * @returns Are there any errors in the form?
    */
   const hasAnyErrors = () => {
+    if (
+      formData.constituencyName === 'Other' &&
+      !formData.otherConstituencyName
+    ) {
+      return true;
+    }
     return Object.values(applicationErrors).some((value) => value === true);
   };
 
@@ -109,13 +132,23 @@ const ApplicationForm: React.FC<Props> = ({
       // Handle form error
       return;
     }
+
+    const finalConstituencyName =
+      formData.constituencyName === 'Other' && formData.otherConstituencyName
+        ? formData.otherConstituencyName
+        : formData.constituencyName;
+
     const data = {
       ...formData,
+      constituencyName: finalConstituencyName,
       pronouns: formData.pronouns.join(', '),
       selectedConstituencyType: formData.constituencyType,
       selectedReturningType: formData.returningSenatorType,
       selectedAttestation: formData.attestation,
     };
+
+    delete data.otherConstituencyName;
+
     console.log(JSON.stringify(data));
     fetch(getFullPath('/api/applications'), {
       method: 'POST',

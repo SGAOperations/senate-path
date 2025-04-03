@@ -16,7 +16,8 @@ export const CONSTITUENCIES = [
     "Northeastern University Real Estate Club (NURE)",
     "NU Immerse",
     "Phi Sigma Rho",
-    "Sandbox"
+    "Sandbox",
+    "Other"
   ];
 
   export const PRONOUNS = [

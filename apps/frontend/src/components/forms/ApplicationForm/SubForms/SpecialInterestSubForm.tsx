@@ -2,6 +2,7 @@ import React from 'react';
 import {
   SampleForm,
   FormSelect,
+  FormInput,
   FormQuestionContainer,
   FormTextContainer,
   FormTextAnswerContainer,
@@ -52,6 +53,11 @@ export const SpecialInterestSubForm: React.FC<SubFormProps> = ({
     setFormData((prev) => ({ ...prev, constituencyName: value }));
     updateErrors('constituencyName', !value);
   };
+  const handleOtherConstituencyNameChange = (value: string) => {
+    setFormData((prev) => ({ ...prev, otherConstituencyName: value }));
+    updateErrors('otherConstituencyName', !value);
+  };
+
   return (
     <>
       <SampleForm>
@@ -129,6 +135,34 @@ export const SpecialInterestSubForm: React.FC<SubFormProps> = ({
             )}
           </FormQuestionContainer>
         </FormControl>
+
+        {/* Show text field if "Other" is selected */}
+        {formData.constituencyName === 'Other' && (
+          <FormControl
+            required
+            error={isNext && errors.otherConstituencyName}
+            sx={{ marginTop: 2 }}
+          >
+            <FormQuestionText>
+              Please specify your constituency
+            </FormQuestionText>
+            <br></br>
+            <FormTextAnswerContainer>
+              <FormInput
+                type="text"
+                value={formData.otherConstituencyName || ''}
+                onChange={(e) =>
+                  handleOtherConstituencyNameChange(e.target.value)
+                }
+              />
+            </FormTextAnswerContainer>
+            {isNext && errors.otherConstituencyName && (
+              <FormHelperText>
+                {errorMessages.otherConstituencyName}
+              </FormHelperText>
+            )}
+          </FormControl>
+        )}
       </SampleForm>
       <FormControls>
         <Button
