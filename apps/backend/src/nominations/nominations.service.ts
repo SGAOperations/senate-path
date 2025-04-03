@@ -1,4 +1,10 @@
-import { Injectable, BadRequestException, NotFoundException, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+  InternalServerErrorException,
+  Logger
+} from '@nestjs/common';
 import { CreateNominationRequestDto } from './dto/create-nomination-request.dto';
 import { UpdateNominationRequestDto } from './dto/update-nomination-request.dto';
 
@@ -6,7 +12,6 @@ import supabase from '../supabase/client';
 import { Tables } from '../supabase/database.types';
 import { Status } from './nominations.types';
 import { validateOrReject, ValidationError } from 'class-validator';
-import { EmailsService } from '../emails/emails.service';
 
 interface NomineeData {
   constituencyName: string;
@@ -14,9 +19,8 @@ interface NomineeData {
 
 @Injectable()
 export class NominationsService {
-  constructor(private readonly emailsService: EmailsService) {}
   async getNominations(): Promise<Tables<'nominations'>[]> {
-    const { data, error } = await supabase.from('nominations').select('*').eq('semester', 'Spring 2025');
+    const { data, error } = await supabase.from('nominations').select('*');
 
     if (error) {
       throw new InternalServerErrorException(`Failed to fetch nominations: ${error.message}`);
@@ -28,46 +32,28 @@ export class NominationsService {
   async getNominationsByName(name: string): Promise<number> {
     console.log('name:' + name)
     const { count, error } = await supabase
-      .from('nominations')
-      .select('*', { count: 'exact' })
-      .eq('nominee', name)
-      .eq('semester', 'Spring 2025')
-      .eq('status', Status.APPROVED);
+    .from('nominations')
+    .select('*', { count: 'exact' })
+    .eq('nominee', name)
+    .eq('status', Status.APPROVED);
     console.log('count', count)
     console.log('error', error)
     if (error) {
       throw new InternalServerErrorException(`Failed to fetch nominations for ${name}: ${error.message}`);
     }
 
-    if (count === 30) {
-      await this.notifyAdmin(name, count);
-    }
-
     return count;
   }
 
-  private async notifyAdmin(nominee: string, count: number): Promise<void> {
-    const emailRequest = {
-      recipients: ['wu-chen.j@northeastern.edu'],
-      subject: `Nominee ${nominee} Reached ${count} Nominations`,
-      message: `The nominee "${nominee}" has now reached ${count} nominations. Please review their application.`,
-    };
 
-    try {
-      await this.emailsService.createEmail(emailRequest);
-      console.log(`Notification email sent to ${emailRequest.recipients}`);
-    } catch (error) {
-      console.error('Failed to send notification email:', error);
-    }
-  }
   private async getNameByNuid(nuid: string): Promise<string> {
     const { data, error } = await supabase
-      .from('applications')
-      .select('fullName')
-      .eq('nuid', nuid)
-      .single();
+    .from('applications')
+    .select('fullName')
+    .eq('nuid', nuid)
+    .single();
 
-      console.log('error', error)
+    console.log('error', error)
     if (error || !data) {
       throw new NotFoundException(`No application found for NUID ${nuid}`);
     }
@@ -86,9 +72,9 @@ export class NominationsService {
 
   async getNominationsByEmail(email: string): Promise<Tables<'nominations'>[]> {
     const { data, error } = await supabase
-      .from('nominations')
-      .select('*')
-      .eq('email', email);
+    .from('nominations')
+    .select('*')
+    .eq('email', email);
 
     if (error) {
       throw new InternalServerErrorException(`Failed to fetch nominations: ${error.message}`);
@@ -102,10 +88,10 @@ export class NominationsService {
 
     return data;
   }
-  
+
   async createNomination({
-    ...nominationsColumns
-  }: CreateNominationRequestDto): Promise<void> {
+                           ...nominationsColumns
+                         }: CreateNominationRequestDto): Promise<void> {
     try {
       console.log('here');
       await validateOrReject(nominationsColumns);
@@ -113,20 +99,21 @@ export class NominationsService {
       console.log(errors);
       throw new BadRequestException(this.formatValidationErrors(errors));
     }
-  
+
     if (nominationsColumns.fullName === nominationsColumns.nominee) {
       throw new BadRequestException('You cannot nominate yourself for Senator.');
     }
-  
+
+    // **Constituency Validation**: New helper function call
     await this.validateConstituency(nominationsColumns.nominee, nominationsColumns.constituency);
-  
+
     console.log('hereee');
     let status = Status.APPROVED;
     const { data: nominationData } = await supabase
-      .from('nominations')
-      .select('*')
-      .eq('email', nominationsColumns.email);
-  
+    .from('nominations')
+    .select('*')
+    .eq('email', nominationsColumns.email);
+
     // Has this nominator already nominated this nominee?
     const valid = nominationData.every(
       (nomination) => nomination.nominee !== nominationsColumns.nominee
@@ -138,26 +125,25 @@ export class NominationsService {
         `This nominator has already nominated the nominee: ${nominationsColumns.nominee}.`
       );
     }
-  
+
     const { error } = await supabase.from('nominations').insert({
       ...nominationsColumns,
-      semester: 'Spring 2025',
       status,
     });
-  
+
     if (error) {
       throw new BadRequestException(`Failed to create nomination: ${error.message}`);
     }
   }
 
-  
+
   private async validateConstituency(nominee: string, constituency: string): Promise<void> {
     const { data: nomineeData, error: nomineeError } = await supabase
-      .from('applications') // this is the name of the table right??
-      .select('constituencyName')
-      .eq('fullName', nominee)
-      .single<{ constituencyName: string }>();
-  
+    .from('applications') // this is the name of the table right??
+    .select('constituencyName')
+    .eq('fullName', nominee)
+    .single<{ constituencyName: string }>();
+
     if (nomineeError || !nomineeData) {
       console.log('error', nomineeError)
       throw new NotFoundException(`Nominee ${nominee} not found.`);
@@ -175,20 +161,20 @@ export class NominationsService {
 
   private formatValidationErrors(errors: ValidationError[]): string {
     return errors
-      .map((err) => `${err.property}: ${Object.values(err.constraints).join(', ')}`)
-      .join('; ');
+    .map((err) => `${err.property}: ${Object.values(err.constraints).join(', ')}`)
+    .join('; ');
   }
 
   async updateNomination({
-    id,
-    ...nominationColumns
-  }: {
+                           id,
+                           ...nominationColumns
+                         }: {
     id: number;
   } & UpdateNominationRequestDto): Promise<void> {
     const { data: nominationData } = await supabase
-      .from('nominations')
-      .select('*')
-      .eq('id', id);
+    .from('nominations')
+    .select('*')
+    .eq('id', id);
 
     if (nominationData.length === 0) {
       throw new NotFoundException(
@@ -197,11 +183,11 @@ export class NominationsService {
     }
 
     const { error } = await supabase
-      .from('nominations')
-      .update({
-        ...nominationColumns,
-      })
-      .eq('id', id);
+    .from('nominations')
+    .update({
+      ...nominationColumns,
+    })
+    .eq('id', id);
 
     if (error) {
       throw new InternalServerErrorException(`Failed to update nomination: ${error.message}`);
@@ -209,54 +195,36 @@ export class NominationsService {
   }
   async getUniqueNominees() {
     const { data: applicants, error } = await supabase
-      .from('applications')
-      .select('id, fullName')
-      .eq('semester', 'Spring 2025')
-      .order('id', { ascending: false });
-  
+    .from('applications')
+    .select('id, fullName')
+    .order('id', { ascending: false });
+
     if (error) {
       throw new InternalServerErrorException('Error fetching nominees: ' + error.message);
     }
-  
+
     const uniqueNominees = new Map<string, { id: number; fullName: string }>();
-  
+
     for (const applicant of applicants) {
       if (!uniqueNominees.has(applicant.fullName)) {
         uniqueNominees.set(applicant.fullName, applicant);
       }
     }
-  
+
     return Array.from(uniqueNominees.values()).map((applicant) => applicant.fullName);
   }
 
-  async getNomineesWithVotes(votes: number) {
-    // Step 1: Fetch nominee counts and constituency
-    const { data, error } = await supabase
-        .from('nominations')
-        .select('nominee, constituency')
-    
+  /**
+   * delete all nominations based on the name of the nominee
+   * @param nominee name
+   */
+  async deleteAllNominationsFor(nominee: string): Promise<void> {
+
+    Logger.log("deleted nominations associated with updated applicant")
+    const { error } = await supabase.from('nominations').delete().eq('nominee', nominee);
     if (error) {
-        throw new InternalServerErrorException(`Failed to fetch nominations: ${error.message}`);
+      throw new InternalServerErrorException(`Failed to delete nominations: ${error.message}`);
     }
-    if (!data || data.length === 0) {
-        console.log("No data found");
-        return [];
-    }
-    // Step 2: Count occurrences of each nominee
-    const nomineeCounts: Record<string, { count: number; constituency: string }> = {};
-    data.forEach(({ nominee, constituency }) => {
-        if (!nomineeCounts[nominee]) {
-            nomineeCounts[nominee] = { count: 0, constituency };
-        }
-        nomineeCounts[nominee].count += 1;
-    });
-    // Step 3: Filter nominees with votes greater than the threshold and sort results
-    const finalResult = Object.entries(nomineeCounts)
-        .filter(([_, { count }]) => count >= votes)
-        .map(([nominee, { count, constituency }]) => ({ nominee, constituency, count }))
-        .sort((a, b) => b.count - a.count); // Sort by highest to lowest count
-    console.log(finalResult);
-    return finalResult;
-}
-  
+  }
+
 }
