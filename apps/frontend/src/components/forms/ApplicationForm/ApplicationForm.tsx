@@ -2,13 +2,16 @@ import { useState } from 'react';
 import { NameSubForm } from './SubForms/NameSubForm';
 import { ApplicationFormIntro } from './ApplicationFormIntro';
 import { PersonalInfoSubForm } from './SubForms/PersonalInfoSubForm';
-import { ApplicationErrors, ErrorMessages } from './ApplicationErrors';
+import {
+  ApplicationErrors,
+  ApplicationErrorMessages,
+} from './ApplicationErrors';
 import { PronounSubForm } from './SubForms/PronounsSubForm';
 import { AcademicsSubForm } from './SubForms/AcademicsSubForm';
 import { SpecialInterestSubForm } from './SubForms/SpecialInterestSubForm';
 import { NominationSubForm } from './SubForms/NominationSubForm';
 import { Box, Button } from '@mui/material';
-
+import { getFullPath } from './../../../utils';
 interface Props {
   setIsPopupOpen: (open: boolean) => void;
   setErrorMessage: (message: string) => void;
@@ -114,7 +117,7 @@ const ApplicationForm: React.FC<Props> = ({
       selectedAttestation: formData.attestation,
     };
     console.log(JSON.stringify(data));
-    fetch('https://nomination-system-2.onrender.com/api/applications', {
+    fetch(getFullPath('/api/applications'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -159,7 +162,7 @@ const ApplicationForm: React.FC<Props> = ({
     setFormData: setFormData,
     updateErrors: updateErrors,
     errors: applicationErrors,
-    errorMessages: ErrorMessages,
+    errorMessages: ApplicationErrorMessages,
     handleNext: handleNextForm,
     handlePrev: handlePrevForm,
   };

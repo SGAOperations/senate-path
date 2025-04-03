@@ -9,7 +9,7 @@ import {
   FormControls,
   FormQuestionText,
   FormDescriptionText,
-} from '../styles';
+} from '../../FormStyles';
 import { useState } from 'react';
 import {
   FormControl,
@@ -20,7 +20,10 @@ import {
   Radio,
 } from '@mui/material';
 import { SubFormProps } from './SubFormProps';
-import { YEAR_OPTIONS, SENATOR_OPTIONS } from '../../../../../src/constants/constants';
+import {
+  YEAR_OPTIONS,
+  SENATOR_OPTIONS,
+} from '../../../../../src/constants/constants';
 
 export const AcademicsSubForm: React.FC<SubFormProps> = ({
   formData,
@@ -178,7 +181,7 @@ export const AcademicsSubForm: React.FC<SubFormProps> = ({
                 Example constituencies include Greek life organizations and
                 clubs. More information about the difference between academic
                 and special interest senators is available in the&nbsp;
-                <a href="https://docs.google.com/document/d/1xDyzPBpnlzlHmPL9pd2mGsKhzQCl_Cs9EPlFb0G-Y_o/edit">
+                <a href="https://www.northeasternsga.com/become-a-senator">
                   frequently asked questions document
                 </a>
                 .

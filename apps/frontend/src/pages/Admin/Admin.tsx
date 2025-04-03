@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { AdminContainer, ExportCSVButton, HeaderRow } from './styles';
+import {
+  AdminContainer,
+  ExportCSVButton,
+  HeaderRow,
+  SemesterSelect,
+} from './styles';
 import {
   APPLICATION_TABLE_HEADERS,
   NOMINATION_TABLE_HEADERS,
@@ -11,7 +16,7 @@ import {
 import NomineeTable from '../../components/tables/AdminTable/NomineeTable';
 import AdminTable from '../../components/tables/AdminTable';
 import LoginForm from '../../components/forms/LoginForm';
-
+import { MenuItem } from '@mui/material';
 import { getFullPath } from './../../utils';
 
 const Admin: React.FC = () => {
@@ -88,9 +93,15 @@ const Admin: React.FC = () => {
   return (
     <AdminContainer>
       <label htmlFor="semester">Choose a semester: </label>
-      <select name="semester" id="semester">
-        <option value="Spring2025">Spring 2025</option>
-      </select>
+      <br></br>
+      <br></br>
+      <SemesterSelect
+        name="semester"
+        id="semester"
+        style={{ backgroundColor: "white", width: "200px", marginLeft: "20px" }}
+        >
+        <MenuItem value="Spring2025">Spring 2025</MenuItem>
+      </SemesterSelect>
 
       <br />
       <br />

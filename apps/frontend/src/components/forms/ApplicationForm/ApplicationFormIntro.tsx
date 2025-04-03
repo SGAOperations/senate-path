@@ -1,4 +1,4 @@
-import { SampleForm, Introduction } from './styles';
+import { SampleForm, Introduction } from '../FormStyles';
 import { Button } from '@mui/material';
 
 interface Props {
@@ -29,7 +29,7 @@ export const ApplicationFormIntro: React.FC<Props> = ({ handleNext }) => {
           eligible to apply to become a senator. There are no elections. Read
           more about the process to become a senator in the{' '}
           <a
-            href="https://docs.google.com/document/d/1xDyzPBpnlzlHmPL9pd2mGsKhzQCl_Cs9EPlFb0G-Y_o/edit"
+            href="https://www.northeasternsga.com/become-a-senator"
             target="_blank"
             rel="noopener noreferrer"
           >

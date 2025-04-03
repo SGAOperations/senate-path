@@ -9,7 +9,7 @@ import {
   FormControls,
   FormQuestionText,
   FormDescriptionText,
-} from '../styles';
+} from '../../FormStyles';
 import {
   FormControl,
   FormControlLabel,
@@ -21,7 +21,10 @@ import {
 } from '@mui/material';
 import { SubFormProps } from './SubFormProps';
 import { useState } from 'react';
-import { CONSTITUENCY_TYPES, CONSTITUENCIES } from '../../../../../src/constants/constants';
+import {
+  CONSTITUENCY_TYPES,
+  CONSTITUENCIES,
+} from '../../../../../src/constants/constants';
 
 export const SpecialInterestSubForm: React.FC<SubFormProps> = ({
   formData,

@@ -8,7 +8,7 @@ import {
   FormTextAnswerContainer,
   FormControls,
   FormDescriptionText,
-} from '../styles';
+} from '../../FormStyles';
 import { useState } from 'react';
 import { FormControl, Button } from '@mui/material';
 import { SubFormProps } from './SubFormProps';
