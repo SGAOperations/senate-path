@@ -6,6 +6,7 @@ import {
   InputContainer,
   SubmitButton,
 } from './styles';
+import TextField from '@mui/material/TextField';
 
 const Dashboard: React.FC = () => {
   const [nuid, setNuid] = useState<string>('');
@@ -72,13 +73,15 @@ const Dashboard: React.FC = () => {
       <InputContainer>
         <h1>SGA Nomination Dashboard</h1>
         <label htmlFor="nuid">Enter your NUID:</label>
-        <input
+        <TextField
           id="nuid"
           type="text"
+          label="Required"
           value={nuid}
           onChange={(e) => setNuid(e.target.value)}
           placeholder="e.g., 001234567"
           required
+          fullWidth
         />
         <SubmitButton onClick={handleSubmit}>Submit</SubmitButton>
       </InputContainer>
