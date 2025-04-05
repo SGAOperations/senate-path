@@ -6,6 +6,7 @@ export const NominationErrorMessages: Record<string, string> = {
   college: 'College is required',
   major: 'Major is required',
   graduationYear: 'Graduation Year is required',
+  otherConstituency: 'Please enter the other constituency name'
 };
 
 export interface NominationErrors {
@@ -16,4 +17,5 @@ export interface NominationErrors {
   college: boolean;
   major: boolean;
   graduationYear: boolean;
+  otherConstituency: boolean;
 }

@@ -42,6 +42,7 @@ export interface NominationFormData {
   major: string;
   graduationYear: number;
   receiveSenatorInfo: boolean;
+  otherConstituency?: string;
 }
 
 const NominationForm: React.FC<Props> = ({
@@ -58,6 +59,7 @@ const NominationForm: React.FC<Props> = ({
     major: '',
     graduationYear: 0,
     receiveSenatorInfo: false,
+    otherConstituency: '',
   });
 
   /**
@@ -90,6 +92,7 @@ const NominationForm: React.FC<Props> = ({
     college: true,
     major: true,
     graduationYear: true,
+    otherConstituency: false,
   });
 
   /**
@@ -98,13 +101,27 @@ const NominationForm: React.FC<Props> = ({
    * @param value The value to change it to.
    */
   const updateErrors = (field: keyof NominationErrors, value: boolean) => {
-    setNominationErrors((prev) => ({ ...prev, [field]: value }));
+    setNominationErrors((prev) => {
+      let updatedErrors = { ...prev, [field]: value };
+
+      // Ensure otherConstituencyName is required if constituencyName is "Other"
+      if (formData.constituency === 'Other' && !formData.otherConstituency) {
+        updatedErrors.otherConstituency = true;
+      } else {
+        updatedErrors.otherConstituency = false;
+      }
+
+      return updatedErrors;
+    });
   };
 
   /**
    * @returns Are there any errors in the form?
    */
   const hasAnyErrors = () => {
+    if (formData.constituency === 'Other' && !formData.otherConstituency) {
+      return true;
+    }
     return Object.values(nominationErrors).some((value) => value === true);
   };
 
@@ -137,14 +154,28 @@ const NominationForm: React.FC<Props> = ({
     setErrorOpen(false);
     setIsSubmitted(true);
 
+    const finalConstituencyName =
+      formData.constituency === 'Other' && formData.otherConstituency
+        ? formData.otherConstituency
+        : formData.constituency;
+
+    const data = {
+      ...formData,
+      constituencyName: finalConstituencyName,
+    };
+
     if (hasAnyErrors()) {
       return;
     }
 
+    console.log('Form data:', data);
+
+    delete data.otherConstituency;
+
     fetch(getFullPath('/api/nominations'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData),
+      body: JSON.stringify(data),
     })
       .then((data) => {
         if (data.ok) {
@@ -367,6 +398,40 @@ const NominationForm: React.FC<Props> = ({
               </FormQuestionContainer>
             </FormControl>
           </SampleForm>
+          {/* Show text field if "Other" is selected */}
+          {formData.constituency === 'Other' && (
+            <SampleForm>
+              <FormControl
+                required
+                error={isSubmitted && !!nominationErrors.otherConstituency}
+              >
+                <FormQuestionContainer>
+                  <FormQuestionText>
+                    Please specify the constituency
+                  </FormQuestionText>{' '}
+                  <br></br>
+                  <FormTextAnswerContainer>
+                    <TextField
+                      required
+                      id="outlined-required"
+                      defaultValue=""
+                      onChange={(e) => {
+                        updateFormData(
+                          'otherConstituency',
+                          e.target.value as string
+                        );
+                      }}
+                    />
+                  </FormTextAnswerContainer>
+                  {isSubmitted && nominationErrors.otherConstituency && (
+                    <FormHelperText>
+                      {NominationErrorMessages.otherConstituency}
+                    </FormHelperText>
+                  )}
+                </FormQuestionContainer>
+              </FormControl>
+            </SampleForm>
+          )}
           <SampleForm>
             <FormControl
               required

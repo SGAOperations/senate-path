@@ -150,6 +150,7 @@ const ApplicationForm: React.FC<Props> = ({
     delete data.otherConstituencyName;
 
     console.log(JSON.stringify(data));
+    console.log('path', getFullPath('/api/applications'));
     fetch(getFullPath('/api/applications'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
