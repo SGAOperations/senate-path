@@ -16,6 +16,7 @@ export const ApplicationErrorMessages: Record<string, string> = {
   constituencyName: 'Constituency name is required',
   returningSenatorType: 'Returning senator type is required',
   attestation: 'Please accept the acknowledgement',
+  otherConstituencyName: 'Please enter the other constituency'
 };
 export interface ApplicationErrors {
   fullName: boolean;
@@ -33,4 +34,5 @@ export interface ApplicationErrors {
   constituencyName: boolean;
   returningSenatorType: boolean;
   attestation: boolean;
+  otherConstituencyName?: boolean;
 }
