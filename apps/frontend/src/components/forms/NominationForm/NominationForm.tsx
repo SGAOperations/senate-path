@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -49,6 +50,7 @@ const NominationForm: React.FC<Props> = ({
   setErrorMessage,
   setErrorOpen,
 }) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<NominationFormData>({
     fullName: '',
     email: '',
@@ -148,7 +150,7 @@ const NominationForm: React.FC<Props> = ({
     })
       .then((data) => {
         if (data.ok) {
-          setIsPopupOpen(true);
+          navigate('/', { state: { formSubmissionSuccess: true, formName: 'Nomination' } }); 
         } else {
           data
             .json()
