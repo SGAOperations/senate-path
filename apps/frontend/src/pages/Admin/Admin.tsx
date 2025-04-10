@@ -78,11 +78,16 @@ const Admin: React.FC = () => {
     filename: string,
     headers: string[]
   ) => {
+    const formatCsvValue = (value: string) =>
+      // just make it so that if the value itself contains a comma it does not format weirdly
+      value.includes(',') ? `"${value.replace(/"/g, '""')}"` : value;
+
     const someData =
-      headers + data.map((row) => Object.values(row).join(',')).join('\n');
+      headers.join(',') + '\n' +
+      data.map(row => Object.values(row).map(formatCsvValue).join(',')).join('\n');
+
     const csvContent = 'data:text/csv;charset=utf-8,' + someData;
     const encodedUri = encodeURI(csvContent);
-
     const link = document.createElement('a');
     link.setAttribute('href', encodedUri);
     link.setAttribute('download', filename);
