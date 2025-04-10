@@ -1,10 +1,22 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React,  { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { FaArrowDown } from 'react-icons/fa'; // Import the arrow icon
 import frontPageImage from '../../assets/front-page.jpg';
+import SubmitPopUp from '../../components/SubmitPopUp';
 
 const Home: React.FC = () => {
   const navigate = useNavigate(); // Hook to handle navigation
+  const location = useLocation();
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false); 
+  const [popupName, setPopupName] = useState('');
+
+  useEffect(() => {
+    if (location.state?.formSubmissionSuccess) {
+      setShowSuccessPopup(true); 
+      setPopupName(location.state?.formName || ''); 
+      window.history.replaceState({}, document.title) 
+    }
+  }, [location.state]); 
 
   const handleScrollToSGA = () => {
     const sgaSection = document.getElementById('sga-section');
@@ -15,6 +27,12 @@ const Home: React.FC = () => {
 
   return (
     <div>
+      <SubmitPopUp
+         open={showSuccessPopup}
+         setOpen={setShowSuccessPopup} 
+         name={popupName} 
+       />
+
       {/* Hero Section */}
       <div
         style={{

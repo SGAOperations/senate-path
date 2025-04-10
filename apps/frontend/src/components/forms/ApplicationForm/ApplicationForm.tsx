@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { NameSubForm } from './SubForms/NameSubForm';
 import { ApplicationFormIntro } from './ApplicationFormIntro';
 import { PersonalInfoSubForm } from './SubForms/PersonalInfoSubForm';
@@ -43,6 +44,7 @@ const ApplicationForm: React.FC<Props> = ({
   setErrorMessage,
   setErrorOpen,
 }) => {
+  const navigate = useNavigate();
   // The state of data in each form.
   const [formData, setFormData] = useState<ApplicationFormData>({
     fullName: '',
@@ -124,7 +126,7 @@ const ApplicationForm: React.FC<Props> = ({
     })
       .then((data) => {
         if (data.ok) {
-          setIsPopupOpen(true);
+          navigate('/', { state: { formSubmissionSuccess: true, formName: 'Application' } });   
         } else {
           data
             .json()

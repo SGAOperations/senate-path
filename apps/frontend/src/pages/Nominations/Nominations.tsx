@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 
 import { HomeContainer } from '../Nominations/styles';
-import SubmitPopUp from '../../components/SubmitPopUp';
 import NominationForm from '../../components/forms/NominationForm';
 import ErrorPopUp from '../../components/ErrorPopUp';
 
@@ -15,12 +14,6 @@ const Nominations: React.FC = () => {
       <NominationForm setIsPopupOpen={setIsPopupOpen} 
       setErrorMessage={setErrorMessage} 
       setErrorOpen={setErrorOpen}/>
-
-      <SubmitPopUp
-        open={isPopupOpen}
-        setOpen={setIsPopupOpen}
-        name="Nomination"
-      />
 
     <ErrorPopUp 
     open = {isErrorOpen}
