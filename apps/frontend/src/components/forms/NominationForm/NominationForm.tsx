@@ -161,7 +161,7 @@ const NominationForm: React.FC<Props> = ({
 
     const data = {
       ...formData,
-      constituencyName: finalConstituencyName,
+      constituency: finalConstituencyName,
     };
 
     if (hasAnyErrors()) {
