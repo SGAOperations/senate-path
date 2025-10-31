@@ -1,0 +1,939 @@
+{
+  "version": "6.0",
+  "nxVersion": "18.0.4",
+  "deps": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@mui/material": "^5.15.14",
+    "@mui/styled-engine-sc": "^6.0.0-alpha.17",
+    "@nestjs-modules/mailer": "^2.0.2",
+    "@nestjs/common": "^10.0.2",
+    "@nestjs/config": "^4.0.0",
+    "@nestjs/core": "^10.0.2",
+    "@nestjs/platform-express": "^10.0.2",
+    "@supabase/supabase-js": "^2.39.8",
+    "axios": "^1.6.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
+    "mdb-react-ui-kit": "^9.0.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-icons": "^5.3.0",
+    "react-is": "18.2.0",
+    "react-router-dom": "^6.28.0",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^7.8.0",
+    "styled-components": "^6.1.8",
+    "tslib": "^2.3.0",
+    "typeorm": "^0.3.20",
+    "yarn": "^1.22.22",
+    "@nestjs/schematics": "^10.0.1",
+    "@nestjs/testing": "^10.0.2",
+    "@nx/eslint": "18.0.4",
+    "@nx/eslint-plugin": "18.0.4",
+    "@nx/jest": "18.0.4",
+    "@nx/js": "18.0.4",
+    "@nx/nest": "^18.0.4",
+    "@nx/node": "18.0.4",
+    "@nx/react": "18.0.4",
+    "@nx/vite": "18.0.4",
+    "@nx/web": "18.0.4",
+    "@nx/webpack": "18.0.4",
+    "@nx/workspace": "18.0.4",
+    "@swc-node/register": "~1.8.0",
+    "@swc/cli": "~0.1.62",
+    "@swc/core": "~1.3.85",
+    "@swc/helpers": "~0.5.2",
+    "@testing-library/react": "^14.2.2",
+    "@types/jest": "^29.4.0",
+    "@types/node": "18.16.9",
+    "@types/react": "18.2.33",
+    "@types/react-dom": "18.2.14",
+    "@types/react-is": "18.2.2",
+    "@types/styled-components": "5.1.26",
+    "@typescript-eslint/eslint-plugin": "^6.13.2",
+    "@typescript-eslint/parser": "^6.13.2",
+    "@vitejs/plugin-react": "^4.2.0",
+    "@vitest/coverage-v8": "^1.0.4",
+    "@vitest/ui": "^1.0.4",
+    "babel-plugin-styled-components": "1.10.7",
+    "eslint": "~8.48.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-import": "2.27.5",
+    "eslint-plugin-jsx-a11y": "6.7.1",
+    "eslint-plugin-react": "7.32.2",
+    "eslint-plugin-react-hooks": "4.6.0",
+    "jest": "^29.4.1",
+    "jest-environment-node": "^29.4.1",
+    "jsdom": "~22.1.0",
+    "nx": "18.0.4",
+    "prettier": "^2.6.2",
+    "ts-jest": "^29.1.0",
+    "ts-node": "10.9.1",
+    "typescript": "~5.3.2",
+    "vite": "~5.0.0",
+    "vitest": "^1.0.4",
+    "webpack-cli": "^5.1.4"
+  },
+  "pathMappings": {},
+  "nxJsonPlugins": [
+    {
+      "name": "@nx/vite/plugin",
+      "options": {
+        "buildTargetName": "build",
+        "previewTargetName": "preview",
+        "testTargetName": "test",
+        "serveTargetName": "serve",
+        "serveStaticTargetName": "serve-static"
+      }
+    },
+    {
+      "name": "@nx/eslint/plugin",
+      "options": {
+        "targetName": "lint"
+      }
+    },
+    {
+      "name": "@nx/webpack/plugin",
+      "options": {
+        "buildTargetName": "build",
+        "serveTargetName": "serve",
+        "previewTargetName": "preview"
+      }
+    },
+    {
+      "name": "@nx/jest/plugin",
+      "options": {
+        "targetName": "test"
+      }
+    }
+  ],
+  "fileMap": {
+    "projectFileMap": {
+      "backend": [
+        {
+          "file": "apps/backend/.env.example",
+          "hash": "3730055718605794618"
+        },
+        {
+          "file": "apps/backend/.eslintrc.json",
+          "hash": "13800677001662881425"
+        },
+        {
+          "file": "apps/backend/Dockerfile",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/backend/jest.config.ts",
+          "hash": "13565990685219350708"
+        },
+        {
+          "file": "apps/backend/project.json",
+          "hash": "9233962208797548025"
+        },
+        {
+          "file": "apps/backend/src/app/app.controller.spec.ts",
+          "hash": "9499997688052526633",
+          "deps": [
+            "npm:@nestjs/testing"
+          ]
+        },
+        {
+          "file": "apps/backend/src/app/app.controller.ts",
+          "hash": "9005150069945785676",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/backend/src/app/app.module.ts",
+          "hash": "10163010396395301505",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@nestjs/config"
+          ]
+        },
+        {
+          "file": "apps/backend/src/app/app.service.spec.ts",
+          "hash": "8587461140686713758",
+          "deps": [
+            "npm:@nestjs/testing"
+          ]
+        },
+        {
+          "file": "apps/backend/src/app/app.service.ts",
+          "hash": "9967902337593410053",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/backend/src/applications/applications.controller.ts",
+          "hash": "12437808407006905553",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/backend/src/applications/applications.module.ts",
+          "hash": "16447773369798574379",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/backend/src/applications/applications.service.ts",
+          "hash": "964385611452793230",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:class-validator"
+          ]
+        },
+        {
+          "file": "apps/backend/src/applications/dto/create-application-request.dto.ts",
+          "hash": "13871998931486012131",
+          "deps": [
+            "npm:class-validator"
+          ]
+        },
+        {
+          "file": "apps/backend/src/applications/dto/get-nomination-forms-request.dto.ts",
+          "hash": "1464694363787716377",
+          "deps": [
+            "npm:class-validator",
+            "npm:class-transformer"
+          ]
+        },
+        {
+          "file": "apps/backend/src/applications/dto/update-application-request.dto.ts",
+          "hash": "13542458237837568566"
+        },
+        {
+          "file": "apps/backend/src/assets/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/backend/src/emails/dto/create-email-request.dto.ts",
+          "hash": "14449850253072563769",
+          "deps": [
+            "npm:class-validator"
+          ]
+        },
+        {
+          "file": "apps/backend/src/emails/emails.controller.ts",
+          "hash": "5278455687162114299",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/backend/src/emails/emails.module.ts",
+          "hash": "12673117985055592607",
+          "deps": [
+            "npm:@nestjs-modules/mailer",
+            "npm:@nestjs/common",
+            "npm:path"
+          ]
+        },
+        {
+          "file": "apps/backend/src/emails/emails.service.ts",
+          "hash": "12702012144358997143",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@nestjs-modules/mailer"
+          ]
+        },
+        {
+          "file": "apps/backend/src/emails/templates/email-template.hbs",
+          "hash": "16124318568139063919"
+        },
+        {
+          "file": "apps/backend/src/main.ts",
+          "hash": "2546540509400009969",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@nestjs/core"
+          ]
+        },
+        {
+          "file": "apps/backend/src/nominations/dto/create-nomination-request.dto.ts",
+          "hash": "11487306065141304513",
+          "deps": [
+            "npm:class-validator"
+          ]
+        },
+        {
+          "file": "apps/backend/src/nominations/dto/update-nomination-request.dto.ts",
+          "hash": "3054801523251895082",
+          "deps": [
+            "npm:class-validator"
+          ]
+        },
+        {
+          "file": "apps/backend/src/nominations/nominations.controller.ts",
+          "hash": "13944266123642066358",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/backend/src/nominations/nominations.module.ts",
+          "hash": "13680104934954295194",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/backend/src/nominations/nominations.service.ts",
+          "hash": "10743723350771870460",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:class-validator"
+          ]
+        },
+        {
+          "file": "apps/backend/src/nominations/nominations.types.ts",
+          "hash": "9896428746640632410"
+        },
+        {
+          "file": "apps/backend/src/supabase/client.ts",
+          "hash": "8005297809499895948",
+          "deps": [
+            "npm:@supabase/supabase-js"
+          ]
+        },
+        {
+          "file": "apps/backend/src/supabase/database.types.ts",
+          "hash": "4144708869738637346"
+        },
+        {
+          "file": "apps/backend/src/supabase/migrations/20250101000000_initial_schema.sql",
+          "hash": "15500733963387444850"
+        },
+        {
+          "file": "apps/backend/src/users/dto/create-user-request.dto.ts",
+          "hash": "16836658346656396260",
+          "deps": [
+            "npm:class-validator"
+          ]
+        },
+        {
+          "file": "apps/backend/src/users/users.controller.ts",
+          "hash": "2686738593576691040",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/backend/src/users/users.module.ts",
+          "hash": "7840614349798752879",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/backend/src/users/users.service.ts",
+          "hash": "17033670251317499455",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/backend/src/users/users.types.ts",
+          "hash": "17926161436258450391"
+        },
+        {
+          "file": "apps/backend/tsconfig.app.json",
+          "hash": "3171572500325445971"
+        },
+        {
+          "file": "apps/backend/tsconfig.json",
+          "hash": "3490524966360018312"
+        },
+        {
+          "file": "apps/backend/tsconfig.spec.json",
+          "hash": "11550347367511341917"
+        },
+        {
+          "file": "apps/backend/webpack.config.js",
+          "hash": "12840229110689865531",
+          "deps": [
+            "npm:@nx/webpack",
+            "npm:path"
+          ]
+        }
+      ],
+      "frontend": [
+        {
+          "file": "apps/frontend/.env.example",
+          "hash": "10343505625435383976"
+        },
+        {
+          "file": "apps/frontend/.eslintrc.json",
+          "hash": "11012487992710232822"
+        },
+        {
+          "file": "apps/frontend/Dockerfile",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/frontend/index.html",
+          "hash": "7846072800252272348"
+        },
+        {
+          "file": "apps/frontend/project.json",
+          "hash": "18422926973042117542"
+        },
+        {
+          "file": "apps/frontend/public/favicon.ico",
+          "hash": "9303420814833116677"
+        },
+        {
+          "file": "apps/frontend/public/logo.ico",
+          "hash": "9199744928180490563"
+        },
+        {
+          "file": "apps/frontend/src/app.tsx",
+          "hash": "4240081134229777484",
+          "deps": [
+            "npm:react-router-dom",
+            "npm:@mui/material"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/assets/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/frontend/src/assets/dashboard-background.png",
+          "hash": "886492414317544763"
+        },
+        {
+          "file": "apps/frontend/src/assets/dashboard-gradient.png",
+          "hash": "13269367096646889796"
+        },
+        {
+          "file": "apps/frontend/src/assets/front-page.jpg",
+          "hash": "14072507614827786677"
+        },
+        {
+          "file": "apps/frontend/src/assets/senate-logo.png",
+          "hash": "2516063478936773720"
+        },
+        {
+          "file": "apps/frontend/src/components/ErrorPopUp/ErrorPopUp.tsx",
+          "hash": "5969302403109375729",
+          "deps": [
+            "npm:@mui/material"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/components/ErrorPopUp/index.ts",
+          "hash": "16835621723762769963"
+        },
+        {
+          "file": "apps/frontend/src/components/ErrorPopUp/styles.tsx",
+          "hash": "16261125941422250978",
+          "deps": [
+            "npm:@mui/material",
+            "npm:styled-components"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/components/Footer/Footer.tsx",
+          "hash": "615292230202477125",
+          "deps": [
+            "npm:mdb-react-ui-kit"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/components/Footer/index.ts",
+          "hash": "14786303919764291112"
+        },
+        {
+          "file": "apps/frontend/src/components/Navbar/Navbar.tsx",
+          "hash": "9427696295064091676",
+          "deps": [
+            "npm:@mui/material"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/components/Navbar/constants.ts",
+          "hash": "2774286031412735788"
+        },
+        {
+          "file": "apps/frontend/src/components/Navbar/index.ts",
+          "hash": "11720350549982472034"
+        },
+        {
+          "file": "apps/frontend/src/components/Navbar/styles.tsx",
+          "hash": "17931156170994833062",
+          "deps": [
+            "npm:@mui/material",
+            "npm:react-router-dom",
+            "npm:styled-components"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/components/SubmitPopUp/SubmitPopUp.tsx",
+          "hash": "6674190424428545680",
+          "deps": [
+            "npm:@mui/material"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/components/SubmitPopUp/index.ts",
+          "hash": "11129460264240055221"
+        },
+        {
+          "file": "apps/frontend/src/components/SubmitPopUp/styles.tsx",
+          "hash": "16261125941422250978",
+          "deps": [
+            "npm:@mui/material",
+            "npm:styled-components"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/components/forms/ApplicationForm/ApplicationErrors.ts",
+          "hash": "9432816879321154323"
+        },
+        {
+          "file": "apps/frontend/src/components/forms/ApplicationForm/ApplicationForm.tsx",
+          "hash": "8895617351073950006",
+          "deps": [
+            "npm:react",
+            "npm:react-router-dom",
+            "npm:@mui/material"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/components/forms/ApplicationForm/ApplicationFormIntro.tsx",
+          "hash": "16436388308753739875",
+          "deps": [
+            "npm:@mui/material"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/components/forms/ApplicationForm/SubForms/AcademicsSubForm.tsx",
+          "hash": "18120156746619978632",
+          "deps": [
+            "npm:react",
+            "npm:@mui/material"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/components/forms/ApplicationForm/SubForms/NameSubForm.tsx",
+          "hash": "17128805660774958855",
+          "deps": [
+            "npm:react",
+            "npm:@mui/material"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/components/forms/ApplicationForm/SubForms/NominationSubForm.tsx",
+          "hash": "15776372968702203012",
+          "deps": [
+            "npm:react",
+            "npm:@mui/material"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/components/forms/ApplicationForm/SubForms/PersonalInfoSubForm.tsx",
+          "hash": "12279495382323237264",
+          "deps": [
+            "npm:react",
+            "npm:@mui/material"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/components/forms/ApplicationForm/SubForms/PronounsSubForm.tsx",
+          "hash": "5262160755500762963",
+          "deps": [
+            "npm:react",
+            "npm:@mui/material"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/components/forms/ApplicationForm/SubForms/SpecialInterestSubForm.tsx",
+          "hash": "11437491775348570293",
+          "deps": [
+            "npm:react",
+            "npm:@mui/material"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/components/forms/ApplicationForm/SubForms/SubFormProps.ts",
+          "hash": "6220046566619246556",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/components/forms/ApplicationForm/index.ts",
+          "hash": "8816623449695569314"
+        },
+        {
+          "file": "apps/frontend/src/components/forms/FormStyles.tsx",
+          "hash": "7497891658196114022",
+          "deps": [
+            "npm:@mui/material"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/components/forms/LoginForm/LoginForm.tsx",
+          "hash": "14325482868519707652",
+          "deps": [
+            "npm:@mui/material",
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/components/forms/LoginForm/index.ts",
+          "hash": "2114498224908584580"
+        },
+        {
+          "file": "apps/frontend/src/components/forms/LoginForm/styles.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/frontend/src/components/forms/NominationForm/NominationErrors.ts",
+          "hash": "10067371213761043025"
+        },
+        {
+          "file": "apps/frontend/src/components/forms/NominationForm/NominationForm.tsx",
+          "hash": "7048487617119789907",
+          "deps": [
+            "npm:react",
+            "npm:react-router-dom",
+            "npm:@mui/material"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/components/forms/NominationForm/index.ts",
+          "hash": "3840465383509215587"
+        },
+        {
+          "file": "apps/frontend/src/components/tables/AdminTable/AdminTable.tsx",
+          "hash": "1107705738375029740",
+          "deps": [
+            "npm:react",
+            "npm:@mui/material"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/components/tables/AdminTable/NomineeTable.tsx",
+          "hash": "14253190993885721470",
+          "deps": [
+            "npm:react",
+            "npm:@mui/material"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/components/tables/AdminTable/constants.ts",
+          "hash": "13311986666698668284"
+        },
+        {
+          "file": "apps/frontend/src/components/tables/AdminTable/index.ts",
+          "hash": "8698597605547664560"
+        },
+        {
+          "file": "apps/frontend/src/components/tables/AdminTable/styles.tsx",
+          "hash": "5682111368024117327",
+          "deps": [
+            "npm:@mui/material",
+            "npm:styled-components"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/components/tables/AdminTable/types.ts",
+          "hash": "15797796815667250873"
+        },
+        {
+          "file": "apps/frontend/src/constants/constants.ts",
+          "hash": "6884307449058661353"
+        },
+        {
+          "file": "apps/frontend/src/main.tsx",
+          "hash": "17779882753671977098",
+          "deps": [
+            "npm:react",
+            "npm:react-dom",
+            "npm:react-router-dom"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/pages/Admin/Admin.tsx",
+          "hash": "8371482329249815570",
+          "deps": [
+            "npm:react",
+            "npm:@mui/material"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/pages/Admin/index.ts",
+          "hash": "16548675356401963207"
+        },
+        {
+          "file": "apps/frontend/src/pages/Admin/styles.tsx",
+          "hash": "11577729378399249312",
+          "deps": [
+            "npm:@mui/material",
+            "npm:styled-components"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/pages/Applications/Applications.tsx",
+          "hash": "3108382206322596227",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/pages/Applications/constants.tx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/frontend/src/pages/Applications/index.ts",
+          "hash": "5509930389198341391"
+        },
+        {
+          "file": "apps/frontend/src/pages/Applications/styles.tsx",
+          "hash": "11766330245720320158",
+          "deps": [
+            "npm:styled-components"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/pages/Applications/types.ts",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/frontend/src/pages/Dashboard/Dashboard.tsx",
+          "hash": "11397138455261121301",
+          "deps": [
+            "npm:react",
+            "npm:@mui/material"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/pages/Dashboard/index.ts",
+          "hash": "12748528013595533474"
+        },
+        {
+          "file": "apps/frontend/src/pages/Dashboard/styles.tsx",
+          "hash": "13236267208293173306",
+          "deps": [
+            "npm:@mui/material",
+            "npm:styled-components"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/pages/Home/Home.spec.tsx",
+          "hash": "3557188504194772326",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/pages/Home/Home.tsx",
+          "hash": "6387155915288774840",
+          "deps": [
+            "npm:react",
+            "npm:react-router-dom",
+            "npm:react-icons"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/pages/Home/Styles.tsx",
+          "hash": "661482417953371632",
+          "deps": [
+            "npm:@mui/material"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/pages/Home/index.ts",
+          "hash": "16117244330736578688"
+        },
+        {
+          "file": "apps/frontend/src/pages/Login/Login.tsx",
+          "hash": "15275403459736941249",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/pages/Login/index.ts",
+          "hash": "3700973993253328362"
+        },
+        {
+          "file": "apps/frontend/src/pages/Login/styles.tsx",
+          "hash": "16001116909071314715",
+          "deps": [
+            "npm:@mui/material",
+            "npm:styled-components"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/pages/Nominations/Nominations.tsx",
+          "hash": "9077686868901687460",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/pages/Nominations/constants.ts",
+          "hash": "491453416328521819"
+        },
+        {
+          "file": "apps/frontend/src/pages/Nominations/index.ts",
+          "hash": "5343002546846851649"
+        },
+        {
+          "file": "apps/frontend/src/pages/Nominations/styles.tsx",
+          "hash": "11766330245720320158",
+          "deps": [
+            "npm:styled-components"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/pages/Nominations/types.ts",
+          "hash": "9095479166638573627"
+        },
+        {
+          "file": "apps/frontend/src/pages/NotFound/NotFound.tsx",
+          "hash": "10637827079491401069"
+        },
+        {
+          "file": "apps/frontend/src/pages/NotFound/index.ts",
+          "hash": "11945575064663386975"
+        },
+        {
+          "file": "apps/frontend/src/theme/index.ts",
+          "hash": "12246664062301602822"
+        },
+        {
+          "file": "apps/frontend/src/theme/mui.theme.ts",
+          "hash": "18388080634069459314",
+          "deps": [
+            "npm:@mui/material"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/utils.ts",
+          "hash": "16342908013193514265"
+        },
+        {
+          "file": "apps/frontend/tsconfig.app.json",
+          "hash": "7232119452847825095"
+        },
+        {
+          "file": "apps/frontend/tsconfig.json",
+          "hash": "11166545116916107487"
+        },
+        {
+          "file": "apps/frontend/tsconfig.spec.json",
+          "hash": "9472099605191632308"
+        },
+        {
+          "file": "apps/frontend/vite.config.ts",
+          "hash": "3786566035490919127",
+          "deps": [
+            "npm:vite",
+            "npm:@vitejs/plugin-react",
+            "npm:@nx/vite"
+          ]
+        }
+      ]
+    },
+    "nonProjectFiles": [
+      {
+        "file": ".editorconfig",
+        "hash": "5443105041930014821"
+      },
+      {
+        "file": ".eslintignore",
+        "hash": "7663861978715868291"
+      },
+      {
+        "file": ".eslintrc.json",
+        "hash": "17866138117546000433"
+      },
+      {
+        "file": ".github/workflows/ci.yml",
+        "hash": "7909940826736752755"
+      },
+      {
+        "file": ".gitignore",
+        "hash": "2755292205460183465"
+      },
+      {
+        "file": ".prettierignore",
+        "hash": "16881798119822611191"
+      },
+      {
+        "file": ".prettierrc",
+        "hash": "16267754514737964994"
+      },
+      {
+        "file": ".vscode/extensions.json",
+        "hash": "4934098906304722861"
+      },
+      {
+        "file": "README.md",
+        "hash": "16659011925149389155"
+      },
+      {
+        "file": "api/index.ts",
+        "hash": "9487299055781128930"
+      },
+      {
+        "file": "docker-compose.yml",
+        "hash": "15256933677204625888"
+      },
+      {
+        "file": "jest.config.ts",
+        "hash": "12333515226966617182"
+      },
+      {
+        "file": "jest.preset.js",
+        "hash": "9430166341120122740"
+      },
+      {
+        "file": "nx.json",
+        "hash": "2125197967787252113"
+      },
+      {
+        "file": "package-lock.json",
+        "hash": "2780371034153741781"
+      },
+      {
+        "file": "package.json",
+        "hash": "15629846306504318886"
+      },
+      {
+        "file": "supabase/.gitignore",
+        "hash": "11655384966607301079"
+      },
+      {
+        "file": "supabase/config.toml",
+        "hash": "3175116340987229256"
+      },
+      {
+        "file": "supabase/seed.sql",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "tsconfig.base.json",
+        "hash": "596896521444264820"
+      },
+      {
+        "file": "vercel.json",
+        "hash": "2360157378580143232"
+      },
+      {
+        "file": "yarn.lock",
+        "hash": "7374605214052681768"
+      }
+    ]
+  }
+}

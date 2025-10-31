@@ -1,0 +1,23 @@
+{
+  "11810890546044997790": {
+    "test": {
+      "command": "jest",
+      "options": {
+        "cwd": "apps/backend"
+      },
+      "cache": true,
+      "inputs": [
+        "default",
+        "^production",
+        {
+          "externalDependencies": [
+            "jest"
+          ]
+        }
+      ],
+      "outputs": [
+        "{workspaceRoot}/coverage/apps/backend"
+      ]
+    }
+  }
+}
