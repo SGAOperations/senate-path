@@ -2,8 +2,8 @@ import { Injectable, BadRequestException, InternalServerErrorException, NotFound
 import { UpdateApplicationRequestDto } from './dto/update-application-request.dto';
 import { GetNominationFormDTO } from './dto/get-nomination-forms-request.dto';
 
-import supabase from '../supabase/client';
-import { Tables } from '../supabase/database.types';
+import { PrismaService } from '../prisma/prisma.service';
+import { Application } from '@prisma/client';
 import { CreateApplicationRequestDto } from './dto/create-application-request.dto';
 import { validateOrReject, ValidationError } from 'class-validator';
 
@@ -11,40 +11,28 @@ import { NominationsService} from '../nominations/nominations.service';
 
 @Injectable()
 export class ApplicationsService {
-  constructor(private readonly nominationsService: NominationsService) {
-  }
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly nominationsService: NominationsService
+  ) {}
 
-  async getApplications(): Promise<Tables<'applications'>[]> {
-    const { data, error } =
-      await supabase.from('applications').select('*');
-
-    if (error) {
-      throw new InternalServerErrorException(`Failed to fetch applications: ${error.message}`);
-    }
-
-    return data;
+  async getApplications(): Promise<Application[]> {
+    return this.prisma.application.findMany();
   }
 
   async getNominationForms(): Promise<GetNominationFormDTO> {
-    const { data: nominees, error: nomineesError } = await supabase
-    .from('applications')
-    .select('fullName, email');
-    const { data: constituencies, error: constituencyError } = await supabase
-    .from('applications')
-    .select('constituency');
-
-    if (nomineesError || constituencyError) {
-      throw new InternalServerErrorException([
-        nomineesError ? `Nominee data fetch failed: ${nomineesError.message}` : '',
-        constituencyError ? `Constituency data fetch failed: ${constituencyError.message}` : '',
-      ].filter(Boolean).join(' | '));
-    }
+    const nominees = await this.prisma.application.findMany({
+      select: { fullName: true, email: true },
+    });
+    
+    const constituencies = await this.prisma.application.findMany({
+      select: { constituency: true },
+      distinct: ['constituency'],
+    });
 
     return {
       nominees: nominees,
-      constituencies: [
-        ...new Set(constituencies.map((item) => item.constituency)),
-      ],
+      constituencies: constituencies.map((item) => item.constituency),
     };
   }
 
@@ -69,9 +57,11 @@ export class ApplicationsService {
 
   private async handleApplication(applicationColumns: CreateApplicationRequestDto): Promise<void> {
     const nuid = applicationColumns.nuid;
-    const existingApplications = await this.findDuplicateApplications(nuid);
+    const existingApplication = await this.prisma.application.findUnique({
+      where: { nuid },
+    });
 
-    if (existingApplications.length > 0) {
+    if (existingApplication) {
       // if application already exists
       await this.updateApplicationNUID(applicationColumns);
     } else {
@@ -82,43 +72,21 @@ export class ApplicationsService {
 
   // insert application in sql
   private async insertApplication(applicationColumns: CreateApplicationRequestDto): Promise<void> {
-    const { error } = await supabase.from('applications').insert(applicationColumns);
-
-    if (error) {
-      throw new BadRequestException(`Failed to create application: ${error.message}`);
-    }
+    await this.prisma.application.create({
+      data: applicationColumns,
+    });
   }
 
   // update existing application
   private async updateApplicationNUID(applicationColumns: CreateApplicationRequestDto): Promise<void> {
-    const { error } = await supabase
-    .from('applications')
-    .update(applicationColumns)
-    .eq('nuid', applicationColumns.nuid);
+    await this.prisma.application.update({
+      where: { nuid: applicationColumns.nuid },
+      data: applicationColumns,
+    });
 
     // delete all nominations associated with the current application IF updated
-
     await this.nominationsService.deleteAllNominationsFor(applicationColumns.fullName);
-
-    if (error) {
-      throw new BadRequestException(`Failed to update application: ${error.message}`);
-    }
   }
-
-  // check for duplicate applications by nuid
-  private async findDuplicateApplications(nuid: string): Promise<{ nuid: string }[]> {
-    const { data, error } = await supabase
-    .from('applications')
-    .select('nuid')
-    .eq('nuid', nuid);
-
-    if (error) {
-      throw new BadRequestException(`Failed to check for duplicate applications: ${error.message}`);
-    }
-
-    return data ?? [];
-  }
-
 
   private formatValidationErrors(errors: ValidationError[]): string {
     return errors
@@ -132,25 +100,19 @@ export class ApplicationsService {
                           }: {
     id: number;
   } & UpdateApplicationRequestDto): Promise<void> {
-    // unused?
-    const { data: applicationData } = await supabase
-    .from('applications')
-    .select('*')
-    .eq('id', id);
+    const application = await this.prisma.application.findUnique({
+      where: { id },
+    });
 
-    if (applicationData.length === 0) {
+    if (!application) {
       throw new NotFoundException(
         `Application with given id, ${id}, does not exist.`
       );
     }
 
-    const { error } = await supabase
-    .from('applications')
-    .update(applicationColumns)
-    .eq('id', id);
-
-    if (error) {
-      throw new InternalServerErrorException(`Failed to update application: ${error.message}`);
-    }
+    await this.prisma.application.update({
+      where: { id },
+      data: applicationColumns,
+    });
   }
 }

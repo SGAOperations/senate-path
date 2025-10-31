@@ -8,8 +8,8 @@ import {
 import { CreateNominationRequestDto } from './dto/create-nomination-request.dto';
 import { UpdateNominationRequestDto } from './dto/update-nomination-request.dto';
 
-import supabase from '../supabase/client';
-import { Tables } from '../supabase/database.types';
+import { PrismaService } from '../prisma/prisma.service';
+import { Nomination } from '@prisma/client';
 import { Status } from './nominations.types';
 import { validateOrReject, ValidationError } from 'class-validator';
 
@@ -19,49 +19,35 @@ interface NomineeData {
 
 @Injectable()
 export class NominationsService {
-  async getNominations(): Promise<Tables<'nominations'>[]> {
-    const { data, error } = await supabase.from('nominations').select('*');
+  constructor(private readonly prisma: PrismaService) {}
 
-    if (error) {
-      throw new InternalServerErrorException(
-        `Failed to fetch nominations: ${error.message}`
-      );
-    }
-
-    return data;
+  async getNominations(): Promise<Nomination[]> {
+    return this.prisma.nomination.findMany();
   }
 
   async getNominationsByName(name: string): Promise<number> {
     console.log('name:' + name);
-    const { count, error } = await supabase
-      .from('nominations')
-      .select('*', { count: 'exact' })
-      .eq('nominee', name)
-      .eq('status', Status.APPROVED);
+    const count = await this.prisma.nomination.count({
+      where: {
+        nominee: name,
+        status: Status.APPROVED,
+      },
+    });
     console.log('count', count);
-    console.log('error', error);
-    if (error) {
-      throw new InternalServerErrorException(
-        `Failed to fetch nominations for ${name}: ${error.message}`
-      );
-    }
-
     return count;
   }
 
   private async getNameByNuid(nuid: string): Promise<string> {
-    const { data, error } = await supabase
-      .from('applications')
-      .select('fullName')
-      .eq('nuid', nuid)
-      .single();
+    const application = await this.prisma.application.findUnique({
+      where: { nuid },
+      select: { fullName: true },
+    });
 
-    console.log('error', error);
-    if (error || !data) {
+    if (!application) {
       throw new NotFoundException(`No application found for NUID ${nuid}`);
     }
 
-    return data.fullName;
+    return application.fullName;
   }
 
   async getNominationsByNuid(nuid: string): Promise<number> {
@@ -72,25 +58,18 @@ export class NominationsService {
     return count;
   }
 
-  async getNominationsByEmail(email: string): Promise<Tables<'nominations'>[]> {
-    const { data, error } = await supabase
-      .from('nominations')
-      .select('*')
-      .eq('email', email);
+  async getNominationsByEmail(email: string): Promise<Nomination[]> {
+    const nominations = await this.prisma.nomination.findMany({
+      where: { email },
+    });
 
-    if (error) {
-      throw new InternalServerErrorException(
-        `Failed to fetch nominations: ${error.message}`
-      );
-    }
-
-    if (data.length === 0) {
+    if (nominations.length === 0) {
       throw new BadRequestException(
         `Nominations with given email, ${email}, do not exist.`
       );
     }
 
-    return data;
+    return nominations;
   }
 
   async createNomination({
@@ -118,10 +97,9 @@ export class NominationsService {
 
     console.log('hereee');
     let status = Status.APPROVED;
-    const { data: nominationData } = await supabase
-      .from('nominations')
-      .select('*')
-      .eq('email', nominationsColumns.email);
+    const nominationData = await this.prisma.nomination.findMany({
+      where: { email: nominationsColumns.email },
+    });
 
     // Has this nominator already nominated this nominee?
     const valid = nominationData.every(
@@ -135,37 +113,31 @@ export class NominationsService {
       );
     }
 
-    const { error } = await supabase.from('nominations').insert({
-      ...nominationsColumns,
-      status,
+    await this.prisma.nomination.create({
+      data: {
+        ...nominationsColumns,
+        status,
+      },
     });
-
-    if (error) {
-      throw new BadRequestException(
-        `Failed to create nomination: ${error.message}`
-      );
-    }
   }
 
   private async validateConstituency(
     nominee: string,
     constituency: string
   ): Promise<void> {
-    const { data: nomineeData, error: nomineeError } = await supabase
-      .from('applications') // this is the name of the table right??
-      .select('constituencyName')
-      .eq('fullName', nominee)
-      .single<{ constituencyName: string }>();
+    const nomineeData = await this.prisma.application.findFirst({
+      where: { fullName: nominee },
+      select: { constituency: true },
+    });
 
-    if (nomineeError || !nomineeData) {
-      console.log('error', nomineeError);
+    if (!nomineeData) {
       throw new NotFoundException(`Nominee ${nominee} not found.`);
     }
     console.log(nomineeData);
-    if (nomineeData.constituencyName !== constituency) {
-      console.log(nomineeData.constituencyName);
+    if (nomineeData.constituency !== constituency) {
+      console.log(nomineeData.constituency);
       console.log(constituency);
-      console.log(nomineeData.constituencyName !== constituency);
+      console.log(nomineeData.constituency !== constituency);
       throw new BadRequestException(
         `The nominator must belong to the same constituency as the nominee.`
       );
@@ -186,41 +158,27 @@ export class NominationsService {
   }: {
     id: number;
   } & UpdateNominationRequestDto): Promise<void> {
-    const { data: nominationData } = await supabase
-      .from('nominations')
-      .select('*')
-      .eq('id', id);
+    const nomination = await this.prisma.nomination.findUnique({
+      where: { id },
+    });
 
-    if (nominationData.length === 0) {
+    if (!nomination) {
       throw new NotFoundException(
         `Nominations with given id, ${id}, does not exist.`
       );
     }
 
-    const { error } = await supabase
-      .from('nominations')
-      .update({
-        ...nominationColumns,
-      })
-      .eq('id', id);
-
-    if (error) {
-      throw new InternalServerErrorException(
-        `Failed to update nomination: ${error.message}`
-      );
-    }
+    await this.prisma.nomination.update({
+      where: { id },
+      data: nominationColumns,
+    });
   }
-  async getUniqueNominees() {
-    const { data: applicants, error } = await supabase
-      .from('applications')
-      .select('id, fullName')
-      .order('id', { ascending: false });
 
-    if (error) {
-      throw new InternalServerErrorException(
-        'Error fetching nominees: ' + error.message
-      );
-    }
+  async getUniqueNominees() {
+    const applicants = await this.prisma.application.findMany({
+      select: { id: true, fullName: true },
+      orderBy: { id: 'desc' },
+    });
 
     const uniqueNominees = new Map<string, { id: number; fullName: string }>();
 
@@ -241,31 +199,22 @@ export class NominationsService {
    */
   async deleteAllNominationsFor(nominee: string): Promise<void> {
     Logger.log('deleted nominations associated with updated applicant');
-    const { error } = await supabase
-      .from('nominations')
-      .delete()
-      .eq('nominee', nominee);
-    if (error) {
-      throw new InternalServerErrorException(
-        `Failed to delete nominations: ${error.message}`
-      );
-    }
+    await this.prisma.nomination.deleteMany({
+      where: { nominee },
+    });
   }
 
   async getNomineesWithVotes(votes: number) {
     // Step 1: Fetch nominee counts and constituency
-    const { data, error } = await supabase
-      .from('nominations')
-      .select('nominee, constituency');
-    if (error) {
-      throw new InternalServerErrorException(
-        `Failed to fetch nominations: ${error.message}`
-      );
-    }
+    const data = await this.prisma.nomination.findMany({
+      select: { nominee: true, constituency: true },
+    });
+
     if (!data || data.length === 0) {
       console.log('No data found');
       return [];
     }
+
     // Step 2: Count occurrences of each nominee
     const nomineeCounts: Record<
       string,
@@ -277,6 +226,7 @@ export class NominationsService {
       }
       nomineeCounts[nominee].count += 1;
     });
+
     // Step 3: Filter nominees with votes greater than the threshold and sort results
     const finalResult = Object.entries(nomineeCounts)
       .filter(([_, { count }]) => count >= votes)
