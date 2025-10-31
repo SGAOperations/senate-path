@@ -45,6 +45,9 @@ testem.log
 .DS_Store
 Thumbs.db
 
+# Nx (if any remnants)
+.nx/cache
+
 # Env Files
 .env
 .env.local

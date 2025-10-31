@@ -4,106 +4,142 @@ The purpose of this application is to streamline the application and nomination 
 
 ## Technologies
 
-Monorepo: [nx](https://nx.dev)
+**Frontend & Backend:**
+- [Next.js 16](https://nextjs.org/) - React framework with App Router
+- [React 19](https://react.dev/) - UI library
+- [TypeScript](https://www.typescriptlang.org/) - Type safety
 
-Common:
+**Database:**
+- [Prisma](https://www.prisma.io/) - Modern ORM for PostgreSQL
+- [PostgreSQL](https://www.postgresql.org/) - Relational database
 
-- [TypeScript](https://www.typescriptlang.org/)
-- Test framework: [Jest](https://jestjs.io/)
+**UI Components:**
+- [Material UI](https://mui.com/) - Component library
+- [styled-components](https://styled-components.com/) - CSS-in-JS
 
-Frontend:
+## Architecture
 
-- Library: [React](https://react.dev/)
-- Component library: [Material UI](https://mui.com/)
-- CSS library: [styled-components](https://styled-components.com/)
+This is a modern Next.js 16 application with:
+- **No API routes** - All data access happens server-side
+- **Server Functions** - Direct database queries from React Server Components
+- **Server Actions** - Form submissions with `'use server'` directive
+- **Prisma ORM** - Type-safe database access
 
-Backend:
+```
+/
+├── app/                    # Next.js App Router
+│   ├── layout.tsx         # Root layout
+│   ├── page.tsx           # Home page
+│   └── (pages)/           # Application pages (to be migrated)
+├── lib/                    # Server-side code
+│   ├── db.ts              # Prisma client singleton
+│   ├── data/              # Data access layer
+│   │   ├── applications.ts
+│   │   ├── nominations.ts
+│   │   └── users.ts
+│   └── actions/           # Server actions for mutations
+│       ├── applications.ts
+│       └── nominations.ts
+├── components/            # React components (to be migrated)
+├── prisma/
+│   └── schema.prisma     # Database schema
+└── package.json
+```
 
-- Framework: [NestJS](https://nestjs.com/)
-- Database: TBD
+## Database Schema
 
-## Deployment
+The application manages three main entities:
 
-( Deployed separatedly )
-
-- Deployed frontend on static site of Render
-- Deployed backend on web app site of Render
+- **Applications** - Senator applications from students
+- **Nominations** - Nominations for senator candidates
+- **Users** - System users with roles (Admin, Applicant, Standard)
 
 ## Setting up the development environment
 
-Prerequisites: make sure everything is installed
+### Prerequisites
 
-1. [node/npm](https://nodejs.org/en)
-   - To check if it's installed: `node -v` and `npm -v`
-   - To install: for [mac/linux](https://github.com/nvm-sh/nvm) and [windows](https://github.com/coreybutler/nvm-windows) (setup instructions are in the link under the `Installing and Updating` and `Installation & Upgrades` sections, respectively)
-2. [yarn](https://yarnpkg.com/)
-   - To check if it's installed: `yarn -v`
-   - To install: `npm install --global yarn`
-3. [nx](https://nx.dev/): `npm add --global nx@latest`
+1. [Node.js](https://nodejs.org/en) (v18 or higher)
+   - To check if it's installed: `node -v`
+   - To install: [mac/linux](https://github.com/nvm-sh/nvm) or [windows](https://github.com/coreybutler/nvm-windows)
 
-First, clone the repo and `cd` into the directory
+2. [PostgreSQL](https://www.postgresql.org/download/) database
+   - Local installation or cloud service (Supabase, Neon, etc.)
 
+### Installation
+
+1. Clone the repository:
 ```bash
-git clone https://github.com/SGAOperationalAffairs/nomination-system.git
+git clone https://github.com/b-at-neu/nomination-system.git
 cd nomination-system
 ```
 
-Then, install the dependencies
-
+2. Install dependencies:
 ```bash
-yarn
+npm install
+```
+
+3. Set up your environment variables:
+```bash
+cp .env .env.local
+```
+
+Edit `.env.local` and add your database connection string:
+```
+DATABASE_URL="postgresql://user:password@host:port/database"
+```
+
+4. Generate Prisma client and run migrations:
+```bash
+npm run prisma:generate
+npm run prisma:migrate
 ```
 
 ## Running the app
 
-To run just the frontend,
-
+For development:
 ```bash
-nx serve frontend
+npm run dev
 ```
 
-To run just the backend,
+The application will be available at http://localhost:3000/
 
+For production build:
 ```bash
-nx serve backend
+npm run build
+npm start
 ```
 
-To run both the frontend and backend with one command,
+## Available Scripts
 
-```bash
-nx run-many -t serve -p frontend backend
-```
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm start` - Start production server
+- `npm run lint` - Run ESLint
+- `npm run prisma:generate` - Generate Prisma client
+- `npm run prisma:migrate` - Run database migrations
 
-## Serving the app using docker
+## Key Features
 
-```bash
-docker-compose up --build
-```
+- **Application Submission** - Students can submit their senator applications
+- **Nomination System** - Constituents can nominate candidates
+- **Admin Dashboard** - View and manage all applications and nominations
+- **Constituency Validation** - Ensures nominators and nominees are in the same constituency
+- **Duplicate Prevention** - Prevents duplicate nominations and applications
 
-The frontend will be at http://localhost:4200/ and the backend will be at http://localhost:3000/.
+## Deployment
 
-## To Do List:
+This Next.js application can be deployed to:
+- [Vercel](https://vercel.com/) (recommended)
+- [Netlify](https://www.netlify.com/)
+- Any Node.js hosting platform
+- Docker container
 
-- [x] Add better responses from form backends than just 'Bad Request'
-- [x] Add Pop Up for error message for invalid form responses based on invalid frontend data
-- [x] Encode user permission functionality
-- [x] Encode dashboard backend functionality
-- [x] Make constituencyName on application same as on nomination, dont make user type out
-- [ ] Make sure that constituencyName is actually being put in the db
-- [ ] Not have nomineeName be updated literally every second
-- [x] Create SGA theme colors and logos
-- [x] Add relative imports
-- [ ] Clean up code
-- [ ] Make use of libraries (for ex. use in application form)
-- [ ] Reduce file length, split into multiple files
-- [ ] Improve reusability of code
-- [ ] Standardize styling with general style guide and usage (colors as well), potentially use styling library like tailwind?
-- [ ] Fix spacing in applications and nominations forms
-- [ ] Make the website look good on mobile
-- [ ] Use caching for gathering nominees on nomination form
-- [ ] Hide API keys and backend import paths
-- [ ] Try to not have all code public..?
-- [ ] Remove print statements
-- [ ] Either notify user that sites slow during inactivity or not have site slow down during inactivity
-- [x] Update admin page to show application correctly instead of nomination twice💀
-- [ ] Add time stamps to applications and nominations?
+Make sure to set your `DATABASE_URL` environment variable in your deployment platform.
+
+## Development Notes
+
+- All data fetching uses React Server Components
+- Form submissions use Next.js Server Actions
+- No client-side API calls needed
+- Prisma provides full type safety from database to UI
+- Database migrations are managed through Prisma Migrate
