@@ -1,31 +1,18 @@
 'use client';
 
 import { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
 import {
-  Box,
-  Grid,
-  Card,
-  CardContent,
-  Typography,
   Table,
   TableBody,
   TableCell,
-  TableContainer,
   TableHead,
+  TableHeader,
   TableRow,
-  Paper,
-  Chip,
-  TextField,
-  InputAdornment,
-  Alert,
-  Divider,
-  List,
-  ListItem,
-  ListItemText,
-} from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
-import PersonIcon from '@mui/icons-material/Person';
-import HowToVoteIcon from '@mui/icons-material/HowToVote';
+} from '@/components/ui/table';
+import { Search, User, Vote, TrendingUp } from 'lucide-react';
 import { Application, Nomination } from '@prisma/client';
 
 type ApplicationWithCount = Application & {
@@ -39,6 +26,13 @@ type ApplicationWithNominations = Application & {
 
 interface AdminDashboardProps {
   applications: ApplicationWithCount[];
+}
+
+function getNominationBadgeColor(count: number): "success" | "warning" | "info" | "default" {
+  if (count >= 30) return "success";  // Green for 30+
+  if (count >= 25) return "warning";  // Yellow for 25-30
+  if (count >= 2) return "info";      // Orange for 2-24
+  return "default";                   // Gray for 0-1
 }
 
 export default function AdminDashboard({ applications }: AdminDashboardProps) {
@@ -60,7 +54,6 @@ export default function AdminDashboard({ applications }: AdminDashboardProps) {
     setLoading(true);
     
     try {
-      // Fetch full details with nominations
       const response = await fetch(`/api/applications/${app.id}`);
       const data = await response.json();
       setApplicantDetails(data);
@@ -78,258 +71,224 @@ export default function AdminDashboard({ applications }: AdminDashboardProps) {
     : 0;
 
   return (
-    <Box>
+    <div>
       {/* Overview Stats */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} md={4}>
-          <Card sx={{ bgcolor: 'primary.main', color: 'white' }}>
-            <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                <PersonIcon sx={{ mr: 1 }} />
-                <Typography variant="h6">Total Applications</Typography>
-              </Box>
-              <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
-                {totalApplications}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center mb-2">
+              <User className="h-5 w-5 mr-2 text-primary" />
+              <h3 className="text-lg font-semibold">Total Applications</h3>
+            </div>
+            <p className="text-4xl font-bold">{totalApplications}</p>
+          </CardContent>
+        </Card>
         
-        <Grid item xs={12} md={4}>
-          <Card sx={{ bgcolor: 'secondary.main', color: 'white' }}>
-            <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                <HowToVoteIcon sx={{ mr: 1 }} />
-                <Typography variant="h6">Total Nominations</Typography>
-              </Box>
-              <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
-                {totalNominations}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center mb-2">
+              <Vote className="h-5 w-5 mr-2 text-primary" />
+              <h3 className="text-lg font-semibold">Total Nominations</h3>
+            </div>
+            <p className="text-4xl font-bold">{totalNominations}</p>
+          </CardContent>
+        </Card>
         
-        <Grid item xs={12} md={4}>
-          <Card sx={{ bgcolor: 'success.main', color: 'white' }}>
-            <CardContent>
-              <Typography variant="h6" sx={{ mb: 1 }}>
-                Avg Nominations
-              </Typography>
-              <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
-                {avgNominationsPerApplicant}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center mb-2">
+              <TrendingUp className="h-5 w-5 mr-2 text-primary" />
+              <h3 className="text-lg font-semibold">Avg Nominations</h3>
+            </div>
+            <p className="text-4xl font-bold">{avgNominationsPerApplicant}</p>
+          </CardContent>
+        </Card>
+      </div>
 
       {/* Search */}
-      <TextField
-        fullWidth
-        placeholder="Search by name, email, NUID, or constituency..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        sx={{ mb: 3 }}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <SearchIcon />
-            </InputAdornment>
-          ),
-        }}
-      />
+      <div className="relative mb-6">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Input
+          placeholder="Search by name, email, NUID, or constituency..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="pl-10"
+        />
+      </div>
 
-      <Grid container spacing={3}>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Applicants List */}
-        <Grid item xs={12} md={selectedApplicant ? 5 : 12}>
-          <Paper sx={{ p: 2 }}>
-            <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>
-              Applicants ({filteredApplications.length})
-            </Typography>
-            <TableContainer sx={{ maxHeight: 600 }}>
-              <Table stickyHeader>
-                <TableHead>
-                  <TableRow>
-                    <TableCell><strong>Name</strong></TableCell>
-                    <TableCell><strong>Constituency</strong></TableCell>
-                    <TableCell align="center"><strong>Nominations</strong></TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {filteredApplications.map((app) => (
-                    <TableRow
-                      key={app.id}
-                      hover
-                      onClick={() => handleSelectApplicant(app)}
-                      sx={{
-                        cursor: 'pointer',
-                        bgcolor: selectedApplicant?.id === app.id ? 'action.selected' : 'inherit',
-                      }}
-                    >
-                      <TableCell>
-                        <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
-                          {app.fullName}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          {app.email}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Chip label={app.constituency} size="small" />
-                      </TableCell>
-                      <TableCell align="center">
-                        <Chip
-                          label={app.nominationCount}
-                          color={app.nominationCount >= 5 ? 'success' : app.nominationCount >= 2 ? 'warning' : 'default'}
-                          size="small"
-                        />
-                      </TableCell>
+        <div className={selectedApplicant ? "lg:col-span-5" : "lg:col-span-12"}>
+          <Card>
+            <CardHeader>
+              <CardTitle>Applicants ({filteredApplications.length})</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="max-h-[600px] overflow-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Constituency</TableHead>
+                      <TableHead className="text-center">Nominations</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Paper>
-        </Grid>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredApplications.map((app) => (
+                      <TableRow
+                        key={app.id}
+                        onClick={() => handleSelectApplicant(app)}
+                        className={`cursor-pointer ${selectedApplicant?.id === app.id ? 'bg-muted' : ''}`}
+                      >
+                        <TableCell>
+                          <div>
+                            <div className="font-medium">{app.fullName}</div>
+                            <div className="text-sm text-muted-foreground">{app.email}</div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="outline">{app.constituency}</Badge>
+                        </TableCell>
+                        <TableCell className="text-center">
+                          <Badge variant={getNominationBadgeColor(app.nominationCount)}>
+                            {app.nominationCount}
+                          </Badge>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
         {/* Applicant Details */}
         {selectedApplicant && (
-          <Grid item xs={12} md={7}>
-            <Paper sx={{ p: 3 }}>
-              <Typography variant="h5" sx={{ mb: 1, fontWeight: 'bold' }}>
-                {selectedApplicant.fullName}
-              </Typography>
-              <Chip
-                label={`${selectedApplicant.nominationCount} Nominations`}
-                color={selectedApplicant.nominationCount >= 5 ? 'success' : selectedApplicant.nominationCount >= 2 ? 'warning' : 'default'}
-                sx={{ mb: 3 }}
-              />
+          <div className="lg:col-span-7">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-2xl">{selectedApplicant.fullName}</CardTitle>
+                  <Badge variant={getNominationBadgeColor(selectedApplicant.nominationCount)} className="text-sm">
+                    {selectedApplicant.nominationCount} Nominations
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent>
+                {loading ? (
+                  <p className="text-muted-foreground">Loading details...</p>
+                ) : (
+                  <div className="space-y-6">
+                    {/* Personal Information */}
+                    <div>
+                      <h3 className="text-lg font-bold mb-3">Personal Information</h3>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <p className="text-sm text-muted-foreground">NUID</p>
+                          <p className="font-medium">{selectedApplicant.nuid}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-muted-foreground">Email</p>
+                          <p className="font-medium">{selectedApplicant.email}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-muted-foreground">Preferred Name</p>
+                          <p className="font-medium">{selectedApplicant.preferredFullName}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-muted-foreground">Nickname</p>
+                          <p className="font-medium">{selectedApplicant.nickname}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-muted-foreground">Pronouns</p>
+                          <p className="font-medium">{selectedApplicant.pronouns}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-muted-foreground">Phone</p>
+                          <p className="font-medium">{selectedApplicant.phoneNumber}</p>
+                        </div>
+                      </div>
+                    </div>
 
-              <Divider sx={{ my: 2 }} />
+                    <div className="border-t pt-4" />
 
-              {/* Personal Information */}
-              <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>
-                Personal Information
-              </Typography>
-              <Grid container spacing={2} sx={{ mb: 3 }}>
-                <Grid item xs={6}>
-                  <Typography variant="body2" color="text.secondary">NUID</Typography>
-                  <Typography variant="body1">{selectedApplicant.nuid}</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="body2" color="text.secondary">Email</Typography>
-                  <Typography variant="body1">{selectedApplicant.email}</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="body2" color="text.secondary">Preferred Name</Typography>
-                  <Typography variant="body1">{selectedApplicant.preferredFullName}</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="body2" color="text.secondary">Nickname</Typography>
-                  <Typography variant="body1">{selectedApplicant.nickname}</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="body2" color="text.secondary">Pronouns</Typography>
-                  <Typography variant="body1">{selectedApplicant.pronouns}</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="body2" color="text.secondary">Phone</Typography>
-                  <Typography variant="body1">{selectedApplicant.phoneNumber}</Typography>
-                </Grid>
-              </Grid>
+                    {/* Academic Information */}
+                    <div>
+                      <h3 className="text-lg font-bold mb-3">Academic Information</h3>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <p className="text-sm text-muted-foreground">College</p>
+                          <p className="font-medium">{selectedApplicant.college}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-muted-foreground">Major</p>
+                          <p className="font-medium">{selectedApplicant.major}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-muted-foreground">Minors</p>
+                          <p className="font-medium">{selectedApplicant.minors || 'None'}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-muted-foreground">Year</p>
+                          <p className="font-medium">{selectedApplicant.year}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-muted-foreground">Semester</p>
+                          <p className="font-medium">{selectedApplicant.semester}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-muted-foreground">Constituency</p>
+                          <p className="font-medium">{selectedApplicant.constituency}</p>
+                        </div>
+                      </div>
+                    </div>
 
-              <Divider sx={{ my: 2 }} />
-
-              {/* Academic Information */}
-              <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>
-                Academic Information
-              </Typography>
-              <Grid container spacing={2} sx={{ mb: 3 }}>
-                <Grid item xs={6}>
-                  <Typography variant="body2" color="text.secondary">College</Typography>
-                  <Typography variant="body1">{selectedApplicant.college}</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="body2" color="text.secondary">Major</Typography>
-                  <Typography variant="body1">{selectedApplicant.major}</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="body2" color="text.secondary">Minors</Typography>
-                  <Typography variant="body1">{selectedApplicant.minors || 'None'}</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="body2" color="text.secondary">Year</Typography>
-                  <Typography variant="body1">{selectedApplicant.year}</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="body2" color="text.secondary">Semester</Typography>
-                  <Typography variant="body1">{selectedApplicant.semester}</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="body2" color="text.secondary">Constituency</Typography>
-                  <Chip label={selectedApplicant.constituency} size="small" />
-                </Grid>
-              </Grid>
-
-              <Divider sx={{ my: 2 }} />
-
-              {/* Nominations */}
-              <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>
-                Nominations Received ({selectedApplicant.nominationCount})
-              </Typography>
-
-              {loading ? (
-                <Typography>Loading nominations...</Typography>
-              ) : applicantDetails && applicantDetails.nominations.length > 0 ? (
-                <List>
-                  {applicantDetails.nominations.map((nomination, index) => (
-                    <ListItem
-                      key={nomination.id}
-                      sx={{
-                        border: '1px solid',
-                        borderColor: 'divider',
-                        borderRadius: 1,
-                        mb: 1,
-                        bgcolor: 'background.paper',
-                      }}
-                    >
-                      <ListItemText
-                        primary={
-                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Typography variant="body1" sx={{ fontWeight: 'medium' }}>
-                              {nomination.fullName || 'Anonymous'}
-                            </Typography>
-                            <Chip
-                              label={nomination.status}
-                              size="small"
-                              color={nomination.status === 'APPROVED' ? 'success' : 'default'}
-                            />
-                          </Box>
-                        }
-                        secondary={
-                          <Box sx={{ mt: 1 }}>
-                            <Typography variant="body2" color="text.secondary">
-                              Email: {nomination.email || 'N/A'}
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                              College: {nomination.college || 'N/A'} | Major: {nomination.major || 'N/A'}
-                            </Typography>
-                            <Typography variant="caption" color="text.secondary">
-                              Submitted: {new Date(nomination.createdAt).toLocaleDateString()}
-                            </Typography>
-                          </Box>
-                        }
-                      />
-                    </ListItem>
-                  ))}
-                </List>
-              ) : (
-                <Alert severity="info">No nominations received yet.</Alert>
-              )}
-            </Paper>
-          </Grid>
+                    {/* Nominations */}
+                    {applicantDetails && applicantDetails.nominations.length > 0 && (
+                      <>
+                        <div className="border-t pt-4" />
+                        <div>
+                          <h3 className="text-lg font-bold mb-3">
+                            Nominations ({applicantDetails.nominations.length})
+                          </h3>
+                          <div className="space-y-3">
+                            {applicantDetails.nominations.map((nomination) => (
+                              <Card key={nomination.id}>
+                                <CardContent className="pt-4">
+                                  <div className="flex justify-between items-start mb-2">
+                                    <div>
+                                      <p className="font-medium">{nomination.fullName}</p>
+                                      <p className="text-sm text-muted-foreground">{nomination.email}</p>
+                                    </div>
+                                    <Badge variant="outline">{nomination.status}</Badge>
+                                  </div>
+                                  <div className="grid grid-cols-2 gap-2 text-sm mt-2">
+                                    <div>
+                                      <span className="text-muted-foreground">College:</span> {nomination.college}
+                                    </div>
+                                    <div>
+                                      <span className="text-muted-foreground">Major:</span> {nomination.major}
+                                    </div>
+                                    <div>
+                                      <span className="text-muted-foreground">Submitted:</span>{' '}
+                                      {new Date(nomination.createdAt).toLocaleDateString()}
+                                    </div>
+                                  </div>
+                                </CardContent>
+                              </Card>
+                            ))}
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
         )}
-      </Grid>
-    </Box>
+      </div>
+    </div>
   );
 }
