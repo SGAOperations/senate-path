@@ -9,8 +9,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 enum Role {
@@ -29,38 +30,38 @@ model User {
 }
 
 model Application {
-  id                     Int      @id @default(autoincrement())
-  nuid                   String   @unique
-  fullName               String
-  preferredFullName      String
-  nickname               String
-  phoneticPronunciation  String
-  pronouns               String
-  email                  String
-  phoneNumber            String
-  college                String
-  major                  String
-  minors                 String
-  year                   Int
-  semester               String   @default("")
-  constituency           String
-  createdAt              DateTime @default(now()) @map("created_at")
+  id                    Int      @id @default(autoincrement())
+  nuid                  String   @unique
+  fullName              String
+  preferredFullName     String
+  nickname              String
+  phoneticPronunciation String
+  pronouns              String
+  email                 String
+  phoneNumber           String
+  college               String
+  major                 String
+  minors                String
+  year                  Int
+  semester              String   @default("")
+  constituency          String
+  createdAt             DateTime @default(now()) @map("created_at")
 
   @@map("applications")
 }
 
 model Nomination {
-  id                   Int      @id @default(autoincrement())
-  nominee              String?
-  fullName             String?
-  email                String?
-  college              String?
-  major                String?
-  graduationYear       Int?
-  constituency         String?
-  receiveSenatorInfo   Boolean? @default(false)
-  status               String
-  createdAt            DateTime @default(now()) @map("created_at")
+  id                 Int      @id @default(autoincrement())
+  nominee            String?
+  fullName           String?
+  email              String?
+  college            String?
+  major              String?
+  graduationYear     Int?
+  constituency       String?
+  receiveSenatorInfo Boolean? @default(false)
+  status             String
+  createdAt          DateTime @default(now()) @map("created_at")
 
   @@map("nominations")
 }
