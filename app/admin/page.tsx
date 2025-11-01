@@ -1,22 +1,20 @@
-'use client';
-
 import { Container, Typography, Paper, Box } from '@mui/material';
+import { getApplicationsWithNominationCounts, getApplicationWithNominations } from '@/lib/data/applications';
+import AdminDashboard from '@/components/AdminDashboard';
 
-export default function AdminPage() {
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
+export default async function AdminPage() {
+  const applications = await getApplicationsWithNominationCounts();
+
   return (
-    <Container maxWidth="lg" sx={{ py: 8 }}>
+    <Container maxWidth="xl" sx={{ py: 4 }}>
       <Paper elevation={3} sx={{ p: 4 }}>
-        <Typography variant="h3" component="h1" gutterBottom sx={{ fontWeight: 'bold' }}>
+        <Typography variant="h3" component="h1" gutterBottom sx={{ fontWeight: 'bold', mb: 4 }}>
           Admin Dashboard
         </Typography>
-        <Box sx={{ mt: 4 }}>
-          <Typography variant="body1" paragraph>
-            Admin interface will be migrated here from the old frontend.
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            This page is under construction and will include tables for managing applications and nominations.
-          </Typography>
-        </Box>
+        <AdminDashboard applications={applications} />
       </Paper>
     </Container>
   );

@@ -13,6 +13,53 @@ export async function getApplicationByNuid(nuid: string) {
   });
 }
 
+export async function getApplicationWithNominations(id: number) {
+  const application = await db.application.findUnique({
+    where: { id },
+  });
+
+  if (!application) {
+    return null;
+  }
+
+  const nominations = await db.nomination.findMany({
+    where: { nominee: application.fullName },
+    orderBy: { createdAt: 'desc' },
+  });
+
+  const nominationCount = nominations.filter(n => n.status === 'APPROVED').length;
+
+  return {
+    ...application,
+    nominations,
+    nominationCount,
+  };
+}
+
+export async function getApplicationsWithNominationCounts() {
+  const applications = await db.application.findMany({
+    orderBy: { createdAt: 'desc' },
+  });
+
+  const applicationsWithCounts = await Promise.all(
+    applications.map(async (app) => {
+      const nominationCount = await db.nomination.count({
+        where: {
+          nominee: app.fullName,
+          status: 'APPROVED',
+        },
+      });
+
+      return {
+        ...app,
+        nominationCount,
+      };
+    })
+  );
+
+  return applicationsWithCounts;
+}
+
 export async function getNominationFormData() {
   const nominees = await db.application.findMany({
     select: { fullName: true, email: true },
