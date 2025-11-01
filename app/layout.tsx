@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import MuiThemeProvider from '@/lib/MuiThemeProvider';
 import './globals.css';
 
@@ -16,11 +15,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body suppressHydrationWarning>
-        <AppRouterCacheProvider options={{ enableCssLayer: true }}>
-          <MuiThemeProvider>
-            {children}
-          </MuiThemeProvider>
-        </AppRouterCacheProvider>
+        <MuiThemeProvider>
+          {children}
+        </MuiThemeProvider>
       </body>
     </html>
   );
