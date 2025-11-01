@@ -1,12 +1,25 @@
 'use client';
 
-import { Container, Typography, Paper, Box, TextField, Button, Grid, MenuItem, Alert, FormControlLabel, Checkbox } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useState } from 'react';
 import { submitNomination } from '@/lib/actions/nominations';
 import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { CheckCircle2, XCircle } from 'lucide-react';
 
 const nominationSchema = z.object({
   fullName: z.string().min(1, 'Your full name is required'),
@@ -26,12 +39,16 @@ export default function NominationsPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [college, setCollege] = useState('');
+  const [constituency, setConstituency] = useState('');
+  const [receiveSenatorInfo, setReceiveSenatorInfo] = useState(false);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
   } = useForm<NominationFormData>({
     resolver: zodResolver(nominationSchema),
     defaultValues: {
@@ -73,168 +90,190 @@ export default function NominationsPage() {
   };
 
   return (
-    <Container maxWidth="md" sx={{ py: 4 }}>
-      <Paper elevation={3} sx={{ p: 4 }}>
-        <Typography variant="h3" component="h1" gutterBottom sx={{ fontWeight: 'bold', mb: 3 }}>
-          Nominate a Senator
-        </Typography>
+    <div className="container max-w-4xl mx-auto py-8 px-4">
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-3xl font-bold">Nominate a Senator</CardTitle>
+          <p className="text-muted-foreground mt-2">
+            Know someone who would make a great senator? Nominate them here! Please ensure they have submitted their application before nominating them.
+          </p>
+        </CardHeader>
+        <CardContent>
+          {submitSuccess && (
+            <Alert variant="success" className="mb-4">
+              <CheckCircle2 className="h-4 w-4" />
+              <AlertDescription>
+                Nomination submitted successfully! Redirecting to home page...
+              </AlertDescription>
+            </Alert>
+          )}
 
-        <Typography variant="body1" paragraph sx={{ mb: 4 }}>
-          Know someone who would make a great senator? Nominate them here! Please ensure they have submitted their application before nominating them.
-        </Typography>
+          {submitError && (
+            <Alert variant="destructive" className="mb-4">
+              <XCircle className="h-4 w-4" />
+              <AlertDescription>{submitError}</AlertDescription>
+            </Alert>
+          )}
 
-        {submitSuccess && (
-          <Alert severity="success" sx={{ mb: 3 }}>
-            Nomination submitted successfully! Redirecting to home page...
-          </Alert>
-        )}
-
-        {submitError && (
-          <Alert severity="error" sx={{ mb: 3 }}>
-            {submitError}
-          </Alert>
-        )}
-
-        <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
-          <Grid container spacing={3}>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Nominator Information */}
-            <Grid item xs={12}>
-              <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
-                Your Information (Nominator)
-              </Typography>
-            </Grid>
+            <div className="space-y-4">
+              <h3 className="text-xl font-bold">Your Information (Nominator)</h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="fullName">Your Full Name</Label>
+                  <Input
+                    id="fullName"
+                    {...register('fullName')}
+                  />
+                  {errors.fullName && (
+                    <p className="text-sm text-destructive">{errors.fullName.message}</p>
+                  )}
+                </div>
 
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                label="Your Full Name"
-                {...register('fullName')}
-                error={!!errors.fullName}
-                helperText={errors.fullName?.message}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                label="Your Email"
-                type="email"
-                {...register('email')}
-                error={!!errors.email}
-                helperText={errors.email?.message}
-                placeholder="your.email@northeastern.edu"
-              />
-            </Grid>
+                <div className="space-y-2">
+                  <Label htmlFor="email">Your Email</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="your.email@northeastern.edu"
+                    {...register('email')}
+                  />
+                  {errors.email && (
+                    <p className="text-sm text-destructive">{errors.email.message}</p>
+                  )}
+                </div>
+              </div>
+            </div>
 
             {/* Nominee Information */}
-            <Grid item xs={12} sx={{ mt: 2 }}>
-              <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
-                Nominee Information
-              </Typography>
-            </Grid>
+            <div className="space-y-4">
+              <h3 className="text-xl font-bold">Nominee Information</h3>
+              
+              <div className="space-y-2">
+                <Label htmlFor="nominee">Nominee Full Name</Label>
+                <Input
+                  id="nominee"
+                  placeholder="Enter the name of the person you're nominating"
+                  {...register('nominee')}
+                />
+                {errors.nominee && (
+                  <p className="text-sm text-destructive">{errors.nominee.message}</p>
+                )}
+              </div>
 
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Nominee Full Name"
-                {...register('nominee')}
-                error={!!errors.nominee}
-                helperText={errors.nominee?.message}
-                placeholder="Enter the name of the person you're nominating"
-              />
-            </Grid>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="college">Nominee's College</Label>
+                  <Select
+                    value={college}
+                    onValueChange={(value) => {
+                      setCollege(value);
+                      setValue('college', value, { shouldValidate: true });
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select college" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="College of Arts, Media and Design">College of Arts, Media and Design</SelectItem>
+                      <SelectItem value="D'Amore-McKim School of Business">D'Amore-McKim School of Business</SelectItem>
+                      <SelectItem value="Khoury College of Computer Sciences">Khoury College of Computer Sciences</SelectItem>
+                      <SelectItem value="College of Engineering">College of Engineering</SelectItem>
+                      <SelectItem value="Bouvé College of Health Sciences">Bouvé College of Health Sciences</SelectItem>
+                      <SelectItem value="College of Science">College of Science</SelectItem>
+                      <SelectItem value="College of Social Sciences and Humanities">College of Social Sciences and Humanities</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  {errors.college && (
+                    <p className="text-sm text-destructive">{errors.college.message}</p>
+                  )}
+                </div>
 
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                select
-                label="Nominee's College"
-                {...register('college')}
-                error={!!errors.college}
-                helperText={errors.college?.message}
-                defaultValue=""
-              >
-                <MenuItem value="College of Arts, Media and Design">College of Arts, Media and Design</MenuItem>
-                <MenuItem value="D'Amore-McKim School of Business">D'Amore-McKim School of Business</MenuItem>
-                <MenuItem value="Khoury College of Computer Sciences">Khoury College of Computer Sciences</MenuItem>
-                <MenuItem value="College of Engineering">College of Engineering</MenuItem>
-                <MenuItem value="Bouvé College of Health Sciences">Bouvé College of Health Sciences</MenuItem>
-                <MenuItem value="College of Science">College of Science</MenuItem>
-                <MenuItem value="College of Social Sciences and Humanities">College of Social Sciences and Humanities</MenuItem>
-              </TextField>
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                label="Nominee's Major"
-                {...register('major')}
-                error={!!errors.major}
-                helperText={errors.major?.message}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                label="Nominee's Graduation Year"
-                type="number"
-                {...register('graduationYear', { valueAsNumber: true })}
-                error={!!errors.graduationYear}
-                helperText={errors.graduationYear?.message}
-                placeholder="2025"
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                select
-                label="Constituency"
-                {...register('constituency')}
-                error={!!errors.constituency}
-                helperText={errors.constituency?.message}
-                defaultValue=""
-              >
-                <MenuItem value="CAMD">College of Arts, Media and Design</MenuItem>
-                <MenuItem value="DMSB">D'Amore-McKim School of Business</MenuItem>
-                <MenuItem value="Khoury">Khoury College of Computer Sciences</MenuItem>
-                <MenuItem value="COE">College of Engineering</MenuItem>
-                <MenuItem value="Bouve">Bouvé College of Health Sciences</MenuItem>
-                <MenuItem value="COS">College of Science</MenuItem>
-                <MenuItem value="CSSH">College of Social Sciences and Humanities</MenuItem>
-                <MenuItem value="Explore">Explore (Undeclared)</MenuItem>
-              </TextField>
-            </Grid>
-
-            <Grid item xs={12}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    {...register('receiveSenatorInfo')}
-                    defaultChecked={false}
+                <div className="space-y-2">
+                  <Label htmlFor="major">Nominee's Major</Label>
+                  <Input
+                    id="major"
+                    {...register('major')}
                   />
-                }
-                label="I would like to receive information about becoming a senator"
-              />
-            </Grid>
+                  {errors.major && (
+                    <p className="text-sm text-destructive">{errors.major.message}</p>
+                  )}
+                </div>
+              </div>
 
-            <Grid item xs={12} sx={{ mt: 3 }}>
-              <Button
-                type="submit"
-                variant="contained"
-                size="large"
-                fullWidth
-                disabled={isSubmitting}
-                sx={{ py: 1.5, fontWeight: 'bold' }}
-              >
-                {isSubmitting ? 'Submitting...' : 'Submit Nomination'}
-              </Button>
-            </Grid>
-          </Grid>
-        </Box>
-      </Paper>
-    </Container>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="graduationYear">Nominee's Graduation Year</Label>
+                  <Input
+                    id="graduationYear"
+                    type="number"
+                    placeholder="2025"
+                    {...register('graduationYear', { valueAsNumber: true })}
+                  />
+                  {errors.graduationYear && (
+                    <p className="text-sm text-destructive">{errors.graduationYear.message}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="constituency">Constituency</Label>
+                  <Select
+                    value={constituency}
+                    onValueChange={(value) => {
+                      setConstituency(value);
+                      setValue('constituency', value, { shouldValidate: true });
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select constituency" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="CAMD">College of Arts, Media and Design</SelectItem>
+                      <SelectItem value="DMSB">D'Amore-McKim School of Business</SelectItem>
+                      <SelectItem value="Khoury">Khoury College of Computer Sciences</SelectItem>
+                      <SelectItem value="COE">College of Engineering</SelectItem>
+                      <SelectItem value="Bouve">Bouvé College of Health Sciences</SelectItem>
+                      <SelectItem value="COS">College of Science</SelectItem>
+                      <SelectItem value="CSSH">College of Social Sciences and Humanities</SelectItem>
+                      <SelectItem value="Explore">Explore (Undeclared)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  {errors.constituency && (
+                    <p className="text-sm text-destructive">{errors.constituency.message}</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="receiveSenatorInfo"
+                  checked={receiveSenatorInfo}
+                  onCheckedChange={(checked) => {
+                    setReceiveSenatorInfo(checked as boolean);
+                    setValue('receiveSenatorInfo', checked as boolean);
+                  }}
+                />
+                <Label
+                  htmlFor="receiveSenatorInfo"
+                  className="text-sm font-normal cursor-pointer"
+                >
+                  I would like to receive information about becoming a senator
+                </Label>
+              </div>
+            </div>
+
+            <Button
+              type="submit"
+              className="w-full h-12 font-bold"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Submitting...' : 'Submit Nomination'}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
   );
 }
-

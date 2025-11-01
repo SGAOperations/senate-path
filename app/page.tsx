@@ -1,91 +1,8 @@
 'use client';
 
-import { Box, Button, Container, Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
 import Link from 'next/link';
-import { FaArrowDown } from 'react-icons/fa';
-
-const Hero = styled(Box)(({ theme }) => ({
-  position: 'relative',
-  height: '90vh',
-  width: '100vw',
-  overflow: 'hidden',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  [theme.breakpoints.down('sm')]: {
-    height: '70vh',
-  },
-}));
-
-const BackgroundImageContainer = styled(Box)(() => ({
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  width: '100%',
-  height: '100%',
-  zIndex: -2,
-  backgroundImage: 'url(/images/front-page.jpg)',
-  backgroundSize: 'cover',
-  backgroundPosition: 'center',
-}));
-
-const Overlay = styled(Box)(() => ({
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  width: '100%',
-  height: '100%',
-  backgroundColor: 'rgba(0, 0, 0, 0.44)',
-  zIndex: -1,
-}));
-
-const ContentOverlay = styled(Box)(() => ({
-  position: 'relative',
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
-  gap: 3,
-  textAlign: 'center',
-  color: 'white',
-  zIndex: 1,
-  padding: 3,
-}));
-
-const Arrow = styled(Box)(() => ({
-  position: 'absolute',
-  bottom: '20px',
-  left: '50%',
-  transform: 'translateX(-50%)',
-  cursor: 'pointer',
-  zIndex: 1,
-  transition: 'all 0.3s',
-  '&:hover': {
-    transform: 'translateX(-50%) translateY(5px)',
-  },
-}));
-
-const InfoSection = styled(Box)(({ theme }) => ({
-  backgroundColor: '#f9f9f9',
-  minHeight: '90vh',
-  padding: theme.spacing(8, 4),
-  [theme.breakpoints.down('sm')]: {
-    padding: theme.spacing(4, 2),
-  },
-}));
-
-const Line = styled(Box)(({ theme }) => ({
-  height: '4px',
-  flex: 1,
-  backgroundColor: 'black',
-  borderRadius: '50px',
-  marginTop: theme.spacing(4),
-  marginRight: theme.spacing(2),
-  [theme.breakpoints.down('sm')]: {
-    display: 'none',
-  },
-}));
+import { ChevronDown } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export default function Home() {
   const handleScrollToSGA = () => {
@@ -96,81 +13,66 @@ export default function Home() {
   };
 
   return (
-    <Box>
+    <div>
       {/* Hero Section */}
-      <Hero>
-        <BackgroundImageContainer />
-        <Overlay />
+      <div className="relative h-[90vh] sm:h-[70vh] w-full overflow-hidden flex items-center justify-center">
+        {/* Background Image */}
+        <div
+          className="absolute inset-0 -z-20 bg-cover bg-center"
+          style={{ backgroundImage: 'url(/images/front-page.jpg)' }}
+        />
         
-        <ContentOverlay>
-          <Typography
-            variant="h1"
-            sx={{
-              fontStyle: 'italic',
-              fontWeight: 'bold',
-              textShadow: '7px 7px 10px rgba(0, 0, 0, 0.8)',
-              fontSize: { xs: '1.75rem', md: '3.5rem' },
-            }}
-          >
+        {/* Overlay */}
+        <div className="absolute inset-0 -z-10 bg-black/44" />
+        
+        {/* Content */}
+        <div className="relative z-10 flex flex-col items-center justify-center gap-3 text-center text-white p-3">
+          <h1 className="text-[1.75rem] md:text-[3.5rem] font-bold italic drop-shadow-[7px_7px_10px_rgba(0,0,0,0.8)]">
             SENATE NOMINATIONS & APPLICATIONS
-          </Typography>
-          <Typography
-            variant="h2"
-            sx={{
-              fontWeight: 'bold',
-              textShadow: '5px 5px 7px rgba(0, 0, 0, 0.7)',
-              fontSize: { xs: '1rem', md: '1.5rem' },
-            }}
-          >
+          </h1>
+          <h2 className="text-base md:text-2xl font-bold drop-shadow-[5px_5px_7px_rgba(0,0,0,0.7)]">
             NORTHEASTERN'S STUDENT GOVERNMENT ASSOCIATION
-          </Typography>
+          </h2>
 
-          <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
+          <div className="flex gap-2 mt-2">
             <Button
-              component={Link}
-              href="/applications"
-              variant="contained"
-              size="large"
-              sx={{ fontWeight: 'bold', minWidth: '150px', minHeight: '56px' }}
+              asChild
+              size="lg"
+              className="font-bold min-w-[150px] min-h-[56px] bg-primary hover:bg-primary/90"
             >
-              Apply
+              <Link href="/applications">Apply</Link>
             </Button>
             <Button
-              component={Link}
-              href="/nominations"
-              variant="contained"
-              size="large"
-              sx={{ fontWeight: 'bold', minWidth: '150px', minHeight: '56px' }}
+              asChild
+              size="lg"
+              className="font-bold min-w-[150px] min-h-[56px] bg-primary hover:bg-primary/90"
             >
-              Nominate
+              <Link href="/nominations">Nominate</Link>
             </Button>
-          </Box>
-        </ContentOverlay>
+          </div>
+        </div>
 
-        <Arrow onClick={handleScrollToSGA}>
-          <FaArrowDown size={30} color="white" />
-        </Arrow>
-      </Hero>
+        {/* Arrow */}
+        <div
+          className="absolute bottom-5 left-1/2 -translate-x-1/2 cursor-pointer z-10 transition-transform hover:translate-y-1"
+          onClick={handleScrollToSGA}
+        >
+          <ChevronDown size={30} className="text-white" />
+        </div>
+      </div>
 
       {/* Info Section */}
-      <InfoSection id="sga-section">
-        <Container maxWidth="lg">
+      <div id="sga-section" className="bg-gray-50 min-h-[90vh] px-4 sm:px-8 py-8 sm:py-16">
+        <div className="max-w-7xl mx-auto">
           {/* What's SGA Section */}
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-            <Typography
-              variant="h3"
-              sx={{
-                fontStyle: 'italic',
-                fontWeight: 'bold',
-                textShadow: 'none',
-              }}
-            >
+          <div className="flex items-center mb-3">
+            <h3 className="text-3xl font-bold italic">
               WHAT IS SGA?
-            </Typography>
-            <Line sx={{ ml: 2 }} />
-          </Box>
+            </h3>
+            <div className="hidden sm:block flex-1 h-1 bg-black rounded-full ml-2 mt-4" />
+          </div>
           
-          <Typography variant="body1" sx={{ lineHeight: 1.8, mb: 3 }}>
+          <p className="text-base leading-relaxed mb-3">
             The Northeastern University Student Government Association (or SGA for
             short) is the representative body serving over 15,000 undergraduate
             students and to change our Boston campus for the better. We take on
@@ -178,41 +80,30 @@ export default function Home() {
             members of the University administration to improve student life,
             classroom programs, and the overall Northeastern Boston campus
             undergraduate experience.
-          </Typography>
+          </p>
           
           <Button
-            href="https://www.northeasternsga.com/senate"
-            variant="contained"
-            target="_blank"
-            rel="noopener noreferrer"
-            sx={{ fontWeight: 'bold', mb: 6 }}
+            asChild
+            className="font-bold mb-6 bg-primary hover:bg-primary/90"
           >
-            About the Senate
+            <a
+              href="https://www.northeasternsga.com/senate"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              About the Senate
+            </a>
           </Button>
 
           {/* Why Senator Section */}
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: { xs: 'flex-start', md: 'flex-end' },
-              mb: 3,
-            }}
-          >
-            <Line sx={{ mr: 2 }} />
-            <Typography
-              variant="h3"
-              sx={{
-                fontStyle: 'italic',
-                fontWeight: 'bold',
-                textShadow: 'none',
-              }}
-            >
+          <div className="flex items-center justify-start md:justify-end mb-3">
+            <div className="hidden sm:block flex-1 h-1 bg-black rounded-full mr-2 mt-4" />
+            <h3 className="text-3xl font-bold italic">
               WHY BE A SENATOR?
-            </Typography>
-          </Box>
+            </h3>
+          </div>
           
-          <Typography variant="body1" sx={{ lineHeight: 1.8, mb: 3 }}>
+          <p className="text-base leading-relaxed mb-3">
             Becoming a senator offers the chance to represent the student body,
             advocate for their concerns, and shape the future of campus life.
             Senators propose legislation, approve budgets, and influence
@@ -220,19 +111,22 @@ export default function Home() {
             issues and implement meaningful, lasting changes. If you're passionate
             about leadership, representation, and driving impactful change, this
             role is for you.
-          </Typography>
+          </p>
           
           <Button
-            href="https://www.northeasternsga.com/become-a-senator"
-            variant="contained"
-            target="_blank"
-            rel="noopener noreferrer"
-            sx={{ fontWeight: 'bold' }}
+            asChild
+            className="font-bold bg-primary hover:bg-primary/90"
           >
-            Requirements & Responsibilities
+            <a
+              href="https://www.northeasternsga.com/become-a-senator"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Requirements & Responsibilities
+            </a>
           </Button>
-        </Container>
-      </InfoSection>
-    </Box>
+        </div>
+      </div>
+    </div>
   );
 }
