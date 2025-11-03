@@ -3,8 +3,9 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { submitNomination } from '@/lib/actions/nominations';
+import { getNominationFormData } from '@/lib/data/applications';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -42,6 +43,9 @@ export default function NominationsPage() {
   const [college, setCollege] = useState('');
   const [constituency, setConstituency] = useState('');
   const [receiveSenatorInfo, setReceiveSenatorInfo] = useState(false);
+  const [nominee, setNominee] = useState('');
+  const [nominees, setNominees] = useState<Array<{ fullName: string; email: string }>>([]);
+  const [nomineesLoadError, setNomineesLoadError] = useState<string | null>(null);
 
   const {
     register,
@@ -55,6 +59,20 @@ export default function NominationsPage() {
       receiveSenatorInfo: false,
     },
   });
+
+  useEffect(() => {
+    async function fetchNominees() {
+      try {
+        const data = await getNominationFormData();
+        setNominees(data.nominees);
+        setNomineesLoadError(null);
+      } catch (error) {
+        console.error('Failed to fetch nominees:', error);
+        setNomineesLoadError('Failed to load nominee list. Please refresh the page.');
+      }
+    }
+    fetchNominees();
+  }, []);
 
   const onSubmit = async (data: NominationFormData) => {
     setIsSubmitting(true);
@@ -116,11 +134,20 @@ export default function NominationsPage() {
             </Alert>
           )}
 
+          {nomineesLoadError && (
+            <Alert variant="destructive" className="mb-4">
+              <XCircle className="h-4 w-4" />
+              <AlertDescription>{nomineesLoadError}</AlertDescription>
+            </Alert>
+          )}
+
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Nominator Information */}
             <div className="space-y-4 p-6 rounded-lg bg-slate-50 border border-slate-200">
               <h3 className="text-xl font-bold text-slate-800">Your Information (Nominator)</h3>
-              
+              <p className="text-sm text-muted-foreground">
+                Please ensure you have the same constituency as the person you're nominating.
+              </p>              
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="fullName">Your Full Name</Label>
@@ -146,27 +173,10 @@ export default function NominationsPage() {
                   )}
                 </div>
               </div>
-            </div>
-
-            {/* Nominee Information */}
-            <div className="space-y-4 p-6 rounded-lg bg-slate-50 border border-slate-200">
-              <h3 className="text-xl font-bold text-slate-800">Nominee Information</h3>
-              
-              <div className="space-y-2">
-                <Label htmlFor="nominee">Nominee Full Name</Label>
-                <Input
-                  id="nominee"
-                  placeholder="Enter the name of the person you're nominating"
-                  {...register('nominee')}
-                />
-                {errors.nominee && (
-                  <p className="text-sm text-destructive">{errors.nominee.message}</p>
-                )}
-              </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="college">Nominee's College</Label>
+                  <Label htmlFor="college">Your College</Label>
                   <Select
                     value={college}
                     onValueChange={(value) => {
@@ -193,7 +203,7 @@ export default function NominationsPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="major">Nominee's Major</Label>
+                  <Label htmlFor="major">Your Major</Label>
                   <Input
                     id="major"
                     {...register('major')}
@@ -204,47 +214,75 @@ export default function NominationsPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="graduationYear">Nominee's Graduation Year</Label>
-                  <Input
-                    id="graduationYear"
-                    type="number"
-                    placeholder="2025"
-                    {...register('graduationYear', { valueAsNumber: true })}
-                  />
-                  {errors.graduationYear && (
-                    <p className="text-sm text-destructive">{errors.graduationYear.message}</p>
-                  )}
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="constituency">Your Constituency</Label>
+                <Select
+                  value={constituency}
+                  onValueChange={(value) => {
+                    setConstituency(value);
+                    setValue('constituency', value, { shouldValidate: true });
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select constituency" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="CAMD">College of Arts, Media and Design</SelectItem>
+                    <SelectItem value="DMSB">D'Amore-McKim School of Business</SelectItem>
+                    <SelectItem value="Khoury">Khoury College of Computer Sciences</SelectItem>
+                    <SelectItem value="COE">College of Engineering</SelectItem>
+                    <SelectItem value="Bouve">Bouvé College of Health Sciences</SelectItem>
+                    <SelectItem value="COS">College of Science</SelectItem>
+                    <SelectItem value="CSSH">College of Social Sciences and Humanities</SelectItem>
+                    <SelectItem value="Explore">Explore (Undeclared)</SelectItem>
+                  </SelectContent>
+                </Select>
+                {errors.constituency && (
+                  <p className="text-sm text-destructive">{errors.constituency.message}</p>
+                )}
+              </div>
+            </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="constituency">Constituency</Label>
-                  <Select
-                    value={constituency}
-                    onValueChange={(value) => {
-                      setConstituency(value);
-                      setValue('constituency', value, { shouldValidate: true });
-                    }}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select constituency" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="CAMD">College of Arts, Media and Design</SelectItem>
-                      <SelectItem value="DMSB">D'Amore-McKim School of Business</SelectItem>
-                      <SelectItem value="Khoury">Khoury College of Computer Sciences</SelectItem>
-                      <SelectItem value="COE">College of Engineering</SelectItem>
-                      <SelectItem value="Bouve">Bouvé College of Health Sciences</SelectItem>
-                      <SelectItem value="COS">College of Science</SelectItem>
-                      <SelectItem value="CSSH">College of Social Sciences and Humanities</SelectItem>
-                      <SelectItem value="Explore">Explore (Undeclared)</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {errors.constituency && (
-                    <p className="text-sm text-destructive">{errors.constituency.message}</p>
-                  )}
-                </div>
+            {/* Nominee Information */}
+            <div className="space-y-4">
+              <h3 className="text-xl font-bold">Nominee Information</h3>
+              
+              <div className="space-y-2">
+                <Label htmlFor="nominee">Nominee Full Name</Label>
+                <Select
+                  value={nominee}
+                  onValueChange={(value) => {
+                    setNominee(value);
+                    setValue('nominee', value, { shouldValidate: true });
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select the person you're nominating" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {nominees.map((n) => (
+                      <SelectItem key={n.email} value={n.fullName}>
+                        {n.fullName}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {errors.nominee && (
+                  <p className="text-sm text-destructive">{errors.nominee.message}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="graduationYear">Nominee's Graduation Year</Label>
+                <Input
+                  id="graduationYear"
+                  type="number"
+                  placeholder="2025"
+                  {...register('graduationYear', { valueAsNumber: true })}
+                />
+                {errors.graduationYear && (
+                  <p className="text-sm text-destructive">{errors.graduationYear.message}</p>
+                )}
               </div>
 
               <div className="flex items-center space-x-2">
