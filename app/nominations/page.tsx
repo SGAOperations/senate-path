@@ -90,15 +90,16 @@ export default function NominationsPage() {
   };
 
   return (
-    <div className="container max-w-4xl mx-auto py-8 px-4">
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-3xl font-bold">Nominate a Senator</CardTitle>
-          <p className="text-muted-foreground mt-2">
-            Know someone who would make a great senator? Nominate them here! Please ensure they have submitted their application before nominating them.
-          </p>
-        </CardHeader>
-        <CardContent>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50">
+      <div className="container max-w-4xl mx-auto py-8 px-4">
+        <Card className="shadow-lg">
+          <CardHeader className="bg-gradient-to-r from-primary/10 to-primary/5 border-b">
+            <CardTitle className="text-3xl font-bold">Nominate a Senator</CardTitle>
+            <p className="text-muted-foreground mt-2">
+              Know someone who would make a great senator? Nominate them here! Please ensure they have submitted their application before nominating them.
+            </p>
+          </CardHeader>
+          <CardContent>
           {submitSuccess && (
             <Alert variant="success" className="mb-4">
               <CheckCircle2 className="h-4 w-4" />
@@ -117,8 +118,8 @@ export default function NominationsPage() {
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Nominator Information */}
-            <div className="space-y-4">
-              <h3 className="text-xl font-bold">Your Information (Nominator)</h3>
+            <div className="space-y-4 p-6 rounded-lg bg-slate-50 border border-slate-200">
+              <h3 className="text-xl font-bold text-slate-800">Your Information (Nominator)</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
@@ -148,8 +149,8 @@ export default function NominationsPage() {
             </div>
 
             {/* Nominee Information */}
-            <div className="space-y-4">
-              <h3 className="text-xl font-bold">Nominee Information</h3>
+            <div className="space-y-4 p-6 rounded-lg bg-slate-50 border border-slate-200">
+              <h3 className="text-xl font-bold text-slate-800">Nominee Information</h3>
               
               <div className="space-y-2">
                 <Label htmlFor="nominee">Nominee Full Name</Label>
@@ -266,7 +267,7 @@ export default function NominationsPage() {
 
             <Button
               type="submit"
-              className="w-full h-12 font-bold"
+              className="w-full h-12 font-bold text-lg shadow-md hover:shadow-lg transition-shadow"
               disabled={isSubmitting}
             >
               {isSubmitting ? 'Submitting...' : 'Submit Nomination'}
@@ -274,6 +275,7 @@ export default function NominationsPage() {
           </form>
         </CardContent>
       </Card>
+    </div>
     </div>
   );
 }
