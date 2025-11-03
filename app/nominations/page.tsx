@@ -45,6 +45,7 @@ export default function NominationsPage() {
   const [receiveSenatorInfo, setReceiveSenatorInfo] = useState(false);
   const [nominee, setNominee] = useState('');
   const [nominees, setNominees] = useState<Array<{ fullName: string; email: string }>>([]);
+  const [nomineesLoadError, setNomineesLoadError] = useState<string | null>(null);
 
   const {
     register,
@@ -64,8 +65,10 @@ export default function NominationsPage() {
       try {
         const data = await getNominationFormData();
         setNominees(data.nominees);
+        setNomineesLoadError(null);
       } catch (error) {
         console.error('Failed to fetch nominees:', error);
+        setNomineesLoadError('Failed to load nominee list. Please refresh the page.');
       }
     }
     fetchNominees();
@@ -127,6 +130,13 @@ export default function NominationsPage() {
             <Alert variant="destructive" className="mb-4">
               <XCircle className="h-4 w-4" />
               <AlertDescription>{submitError}</AlertDescription>
+            </Alert>
+          )}
+
+          {nomineesLoadError && (
+            <Alert variant="destructive" className="mb-4">
+              <XCircle className="h-4 w-4" />
+              <AlertDescription>{nomineesLoadError}</AlertDescription>
             </Alert>
           )}
 
@@ -251,7 +261,7 @@ export default function NominationsPage() {
                   </SelectTrigger>
                   <SelectContent>
                     {nominees.map((n) => (
-                      <SelectItem key={n.fullName} value={n.fullName}>
+                      <SelectItem key={n.email} value={n.fullName}>
                         {n.fullName}
                       </SelectItem>
                     ))}
