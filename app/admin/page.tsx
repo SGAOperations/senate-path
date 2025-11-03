@@ -1,4 +1,4 @@
-import { getApplicationsWithNominationCounts } from '@/lib/data/applications';
+import { getApplicationsWithNominationCounts, getApplicationWithNominations } from '@/lib/data/applications';
 import AdminDashboard from '@/components/AdminDashboard';
 
 export const dynamic = 'force-dynamic';
@@ -11,7 +11,10 @@ export default async function AdminPage() {
       <div className="mb-6">
         <h1 className="text-4xl font-bold">Admin Dashboard</h1>
       </div>
-      <AdminDashboard applications={applications} />
+      <AdminDashboard 
+        applications={applications} 
+        getApplicationDetails={getApplicationWithNominations}
+      />
     </div>
   );
 }

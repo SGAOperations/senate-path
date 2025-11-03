@@ -26,6 +26,7 @@ type ApplicationWithNominations = Application & {
 
 interface AdminDashboardProps {
   applications: ApplicationWithCount[];
+  getApplicationDetails: (id: number) => Promise<ApplicationWithNominations | null>;
 }
 
 function getNominationBadgeColor(count: number): "success" | "warning" | "info" | "default" {
@@ -35,7 +36,7 @@ function getNominationBadgeColor(count: number): "success" | "warning" | "info" 
   return "default";                   // Gray for 0-1
 }
 
-export default function AdminDashboard({ applications }: AdminDashboardProps) {
+export default function AdminDashboard({ applications, getApplicationDetails }: AdminDashboardProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedApplicant, setSelectedApplicant] = useState<ApplicationWithCount | null>(null);
   const [applicantDetails, setApplicantDetails] = useState<ApplicationWithNominations | null>(null);
@@ -54,8 +55,7 @@ export default function AdminDashboard({ applications }: AdminDashboardProps) {
     setLoading(true);
     
     try {
-      const response = await fetch(`/api/applications/${app.id}`);
-      const data = await response.json();
+      const data = await getApplicationDetails(app.id);
       setApplicantDetails(data);
     } catch (error) {
       console.error('Error fetching applicant details:', error);
