@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
 
 /**
  * Hook to warn users about unsaved changes when they try to leave the page.
@@ -15,7 +14,6 @@ export function useUnsavedChangesWarning(
   isSubmitting: boolean,
   submitSuccess: boolean
 ) {
-  const router = useRouter();
   const hasUnsavedChanges = useRef(false);
 
   useEffect(() => {
