@@ -359,7 +359,7 @@ export default function ApplicationsPage() {
               <div className="space-y-2">
                 <Label htmlFor="constituency">
                   Constituency 
-                  <span className="block text-sm text-muted-foreground font-normal mt-1">
+                  <span id="constituency-helper" className="block text-sm text-muted-foreground font-normal mt-1">
                     Students in double or combined majors may select either college
                   </span>
                 </Label>
@@ -371,7 +371,7 @@ export default function ApplicationsPage() {
                   }}
                   disabled={colleges.length === 0}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger aria-describedby="constituency-helper">
                     <SelectValue placeholder={colleges.length === 0 ? "Please select college(s) first" : "Select constituency"} />
                   </SelectTrigger>
                   <SelectContent>

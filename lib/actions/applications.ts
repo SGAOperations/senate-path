@@ -14,10 +14,11 @@ export async function submitApplication(formData: FormData) {
       'Senior': 4,
     };
     
-    const year = yearMap[yearValue];
-    if (!year) {
+    if (!(yearValue in yearMap)) {
       throw new Error('Invalid year value');
     }
+    
+    const year = yearMap[yearValue];
     
     const data = {
       nuid: formData.get('nuid') as string,
