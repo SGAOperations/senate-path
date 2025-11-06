@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <div>
       {/* Hero Section */}
-      <div className="relative h-screen w-full overflow-hidden flex items-center justify-center">
+      <div className="relative min-h-screen w-full overflow-hidden flex items-center justify-center">
         {/* Background Image */}
         <div
           className="absolute inset-0 -z-20 bg-cover bg-center"
