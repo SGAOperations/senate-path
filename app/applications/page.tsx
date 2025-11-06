@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Select,
   SelectContent,
@@ -23,18 +24,22 @@ import { CheckCircle2, XCircle } from 'lucide-react';
 const applicationSchema = z.object({
   nuid: z.string().min(9, 'NUID must be 9 digits').max(9, 'NUID must be 9 digits'),
   fullName: z.string().min(1, 'Full name is required'),
-  preferredFullName: z.string().min(1, 'Preferred full name is required'),
-  nickname: z.string().min(1, 'Nickname is required'),
-  phoneticPronunciation: z.string().min(1, 'Phonetic pronunciation is required'),
-  pronouns: z.string().min(1, 'Pronouns are required'),
-  email: z.string().email('Valid email is required'),
+  preferredFullName: z.string().optional(),
+  nickname: z.string().optional(),
+  phoneticPronunciation: z.string().optional(),
+  pronouns: z.string().optional(),
+  email: z.string().email('Valid email is required').refine((email) => email.endsWith('@northeastern.edu'), {
+    message: 'Email must be a Northeastern email (@northeastern.edu)',
+  }),
   phoneNumber: z.string().min(10, 'Valid phone number is required'),
-  college: z.string().min(1, 'College is required'),
+  college: z.array(z.string()).min(1, 'At least one college must be selected'),
   major: z.string().min(1, 'Major is required'),
-  minors: z.string(),
-  year: z.number().min(1, 'Year is required').max(6, 'Year must be between 1-6'),
-  semester: z.string().min(1, 'Semester is required'),
+  minors: z.string().optional(),
+  year: z.string().min(1, 'Year is required'),
   constituency: z.string().min(1, 'Constituency is required'),
+}).refine((data) => data.college.includes(data.constituency), {
+  message: 'Constituency must be one of the selected colleges',
+  path: ['constituency'],
 });
 
 type ApplicationFormData = z.infer<typeof applicationSchema>;
@@ -44,9 +49,8 @@ export default function ApplicationsPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [college, setCollege] = useState('');
+  const [colleges, setColleges] = useState<string[]>([]);
   const [year, setYear] = useState('');
-  const [semester, setSemester] = useState('');
   const [constituency, setConstituency] = useState('');
 
   const {
@@ -67,10 +71,11 @@ export default function ApplicationsPage() {
     try {
       const formData = new FormData();
       Object.entries(data).forEach(([key, value]) => {
-        if (key === 'year') {
-          formData.append(key, Number(value).toString());
+        if (key === 'college') {
+          // Store colleges as comma-separated string
+          formData.append(key, (value as string[]).join(', '));
         } else {
-          formData.append(key, value.toString());
+          formData.append(key, value?.toString() || '');
         }
       });
 
@@ -79,6 +84,9 @@ export default function ApplicationsPage() {
       if (result.success) {
         setSubmitSuccess(true);
         reset();
+        setColleges([]);
+        setYear('');
+        setConstituency('');
         setTimeout(() => {
           router.push('/');
         }, 2000);
@@ -155,6 +163,7 @@ export default function ApplicationsPage() {
                 <Label htmlFor="fullName">Full Name (as it appears on official documents)</Label>
                 <Input
                   id="fullName"
+                  placeholder="Enter your full name"
                   {...register('fullName')}
                 />
                 {errors.fullName && (
@@ -164,9 +173,10 @@ export default function ApplicationsPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="preferredFullName">Preferred Full Name</Label>
+                  <Label htmlFor="preferredFullName">Preferred Full Name <span className="text-muted-foreground">(optional)</span></Label>
                   <Input
                     id="preferredFullName"
+                    placeholder="Enter your preferred name"
                     {...register('preferredFullName')}
                   />
                   {errors.preferredFullName && (
@@ -175,9 +185,10 @@ export default function ApplicationsPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="nickname">Nickname</Label>
+                  <Label htmlFor="nickname">Nickname <span className="text-muted-foreground">(optional)</span></Label>
                   <Input
                     id="nickname"
+                    placeholder="Enter your nickname"
                     {...register('nickname')}
                   />
                   {errors.nickname && (
@@ -188,7 +199,7 @@ export default function ApplicationsPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="phoneticPronunciation">Phonetic Pronunciation</Label>
+                  <Label htmlFor="phoneticPronunciation">Phonetic Pronunciation <span className="text-muted-foreground">(optional)</span></Label>
                   <Input
                     id="phoneticPronunciation"
                     placeholder="How to pronounce your name"
@@ -200,7 +211,7 @@ export default function ApplicationsPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="pronouns">Pronouns</Label>
+                  <Label htmlFor="pronouns">Pronouns <span className="text-muted-foreground">(optional)</span></Label>
                   <Input
                     id="pronouns"
                     placeholder="e.g., he/him, she/her, they/them"
@@ -231,49 +242,65 @@ export default function ApplicationsPage() {
             <div className="space-y-4 p-6 rounded-lg bg-slate-50 border border-slate-200">
               <h3 className="text-xl font-bold text-slate-800">Academic Information</h3>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="college">College</Label>
-                  <Select
-                    value={college}
-                    onValueChange={(value) => {
-                      setCollege(value);
-                      setValue('college', value, { shouldValidate: true });
-                    }}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select college" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="College of Arts, Media and Design">College of Arts, Media and Design</SelectItem>
-                      <SelectItem value="D'Amore-McKim School of Business">D'Amore-McKim School of Business</SelectItem>
-                      <SelectItem value="Khoury College of Computer Sciences">Khoury College of Computer Sciences</SelectItem>
-                      <SelectItem value="College of Engineering">College of Engineering</SelectItem>
-                      <SelectItem value="Bouvé College of Health Sciences">Bouvé College of Health Sciences</SelectItem>
-                      <SelectItem value="College of Science">College of Science</SelectItem>
-                      <SelectItem value="College of Social Sciences and Humanities">College of Social Sciences and Humanities</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {errors.college && (
-                    <p className="text-sm text-destructive">{errors.college.message}</p>
-                  )}
+              <div className="space-y-2">
+                <Label>College <span className="text-sm text-muted-foreground">(Select all that apply)</span></Label>
+                <div className="space-y-2 p-4 rounded-md border border-input bg-white">
+                  {[
+                    'College of Arts, Media and Design',
+                    "D'Amore-McKim School of Business",
+                    'Khoury College of Computer Sciences',
+                    'College of Engineering',
+                    'Bouvé College of Health Sciences',
+                    'College of Science',
+                    'College of Social Sciences and Humanities',
+                    'Explore Program',
+                  ].map((collegeName) => (
+                    <div key={collegeName} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={`college-${collegeName}`}
+                        checked={colleges.includes(collegeName)}
+                        onCheckedChange={(checked) => {
+                          const newColleges = checked
+                            ? [...colleges, collegeName]
+                            : colleges.filter((c) => c !== collegeName);
+                          setColleges(newColleges);
+                          setValue('college', newColleges, { shouldValidate: true });
+                          // Reset constituency if it's no longer in the selected colleges
+                          if (!newColleges.includes(constituency)) {
+                            setConstituency('');
+                            setValue('constituency', '', { shouldValidate: true });
+                          }
+                        }}
+                      />
+                      <Label
+                        htmlFor={`college-${collegeName}`}
+                        className="text-sm font-normal cursor-pointer"
+                      >
+                        {collegeName}
+                      </Label>
+                    </div>
+                  ))}
                 </div>
+                {errors.college && (
+                  <p className="text-sm text-destructive">{errors.college.message}</p>
+                )}
+              </div>
 
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="major">Major</Label>
                   <Input
                     id="major"
+                    placeholder="Enter your major"
                     {...register('major')}
                   />
                   {errors.major && (
                     <p className="text-sm text-destructive">{errors.major.message}</p>
                   )}
                 </div>
-              </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="minors">Minors (if any)</Label>
+                  <Label htmlFor="minors">Minors <span className="text-muted-foreground">(optional)</span></Label>
                   <Input
                     id="minors"
                     placeholder="Leave blank if none"
@@ -283,58 +310,30 @@ export default function ApplicationsPage() {
                     <p className="text-sm text-destructive">{errors.minors.message}</p>
                   )}
                 </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="year">Year</Label>
-                  <Select
-                    value={year}
-                    onValueChange={(value) => {
-                      setYear(value);
-                      setValue('year', parseInt(value), { shouldValidate: true });
-                    }}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select year" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="1">1 (Freshman)</SelectItem>
-                      <SelectItem value="2">2 (Sophomore)</SelectItem>
-                      <SelectItem value="3">3 (Middler)</SelectItem>
-                      <SelectItem value="4">4 (Junior)</SelectItem>
-                      <SelectItem value="5">5 (Senior)</SelectItem>
-                      <SelectItem value="6">6+ (Graduate)</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {errors.year && (
-                    <p className="text-sm text-destructive">{errors.year.message}</p>
-                  )}
-                </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="semester">Semester Applying For</Label>
-                  <Select
-                    value={semester}
-                    onValueChange={(value) => {
-                      setSemester(value);
-                      setValue('semester', value, { shouldValidate: true });
-                    }}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select semester" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Fall 2025">Fall 2025</SelectItem>
-                      <SelectItem value="Spring 2026">Spring 2026</SelectItem>
-                      <SelectItem value="Fall 2026">Fall 2026</SelectItem>
-                      <SelectItem value="Spring 2027">Spring 2027</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {errors.semester && (
-                    <p className="text-sm text-destructive">{errors.semester.message}</p>
-                  )}
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="year">Year</Label>
+                <Select
+                  value={year}
+                  onValueChange={(value) => {
+                    setYear(value);
+                    setValue('year', value, { shouldValidate: true });
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select year" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Freshman">Freshman</SelectItem>
+                    <SelectItem value="Sophomore">Sophomore</SelectItem>
+                    <SelectItem value="Junior">Junior</SelectItem>
+                    <SelectItem value="Senior">Senior</SelectItem>
+                  </SelectContent>
+                </Select>
+                {errors.year && (
+                  <p className="text-sm text-destructive">{errors.year.message}</p>
+                )}
               </div>
             </div>
 
@@ -343,26 +342,29 @@ export default function ApplicationsPage() {
               <h3 className="text-xl font-bold text-slate-800">Constituency</h3>
               
               <div className="space-y-2">
-                <Label htmlFor="constituency">Constituency</Label>
+                <Label htmlFor="constituency">
+                  Constituency 
+                  <span className="block text-sm text-muted-foreground font-normal mt-1">
+                    Students in double or combined majors may select either college
+                  </span>
+                </Label>
                 <Select
                   value={constituency}
                   onValueChange={(value) => {
                     setConstituency(value);
                     setValue('constituency', value, { shouldValidate: true });
                   }}
+                  disabled={colleges.length === 0}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select constituency" />
+                    <SelectValue placeholder={colleges.length === 0 ? "Please select college(s) first" : "Select constituency"} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="CAMD">College of Arts, Media and Design</SelectItem>
-                    <SelectItem value="DMSB">D'Amore-McKim School of Business</SelectItem>
-                    <SelectItem value="Khoury">Khoury College of Computer Sciences</SelectItem>
-                    <SelectItem value="COE">College of Engineering</SelectItem>
-                    <SelectItem value="Bouve">Bouvé College of Health Sciences</SelectItem>
-                    <SelectItem value="COS">College of Science</SelectItem>
-                    <SelectItem value="CSSH">College of Social Sciences and Humanities</SelectItem>
-                    <SelectItem value="Explore">Explore (Undeclared)</SelectItem>
+                    {colleges.map((collegeName) => (
+                      <SelectItem key={collegeName} value={collegeName}>
+                        {collegeName}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 {errors.constituency && (
