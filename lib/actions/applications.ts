@@ -10,9 +10,14 @@ export async function submitApplication(formData: FormData) {
     const yearMap: { [key: string]: number } = {
       'Freshman': 1,
       'Sophomore': 2,
-      'Junior': 4,
-      'Senior': 5,
+      'Junior': 3,
+      'Senior': 4,
     };
+    
+    const year = yearMap[yearValue];
+    if (!year) {
+      throw new Error('Invalid year value');
+    }
     
     const data = {
       nuid: formData.get('nuid') as string,
@@ -26,7 +31,7 @@ export async function submitApplication(formData: FormData) {
       college: formData.get('college') as string,
       major: formData.get('major') as string,
       minors: (formData.get('minors') as string) || '',
-      year: yearMap[yearValue] || 0,
+      year,
       semester: '',
       constituency: formData.get('constituency') as string,
     };
