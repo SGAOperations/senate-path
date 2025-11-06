@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 
 /**
  * Hook to warn users about unsaved changes when they try to leave the page.
@@ -14,18 +14,13 @@ export function useUnsavedChangesWarning(
   isSubmitting: boolean,
   submitSuccess: boolean
 ) {
-  const hasUnsavedChanges = useRef(false);
-
-  useEffect(() => {
-    // Update the ref when form state changes
-    // Don't warn if form is submitting or was successfully submitted
-    hasUnsavedChanges.current = isDirty && !isSubmitting && !submitSuccess;
-  }, [isDirty, isSubmitting, submitSuccess]);
-
   useEffect(() => {
     // Handle browser navigation (back button, refresh, close tab)
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (hasUnsavedChanges.current) {
+      // Only warn if form is dirty and not submitting and hasn't been successfully submitted
+      const hasUnsavedChanges = isDirty && !isSubmitting && !submitSuccess;
+      
+      if (hasUnsavedChanges) {
         e.preventDefault();
         // Modern browsers require returnValue to be set
         e.returnValue = '';
@@ -38,7 +33,7 @@ export function useUnsavedChangesWarning(
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
-  }, []);
+  }, [isDirty, isSubmitting, submitSuccess]);
 
   // Note: Next.js App Router doesn't provide a way to intercept client-side navigation
   // The beforeunload event handles browser navigation (refresh, close, back button)
