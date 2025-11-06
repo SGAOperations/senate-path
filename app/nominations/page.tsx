@@ -23,12 +23,12 @@ import { CheckCircle2, XCircle } from 'lucide-react';
 
 const nominationSchema = z.object({
   fullName: z.string().min(1, 'Your full name is required'),
-  email: z.string().email('Valid email is required').refine(
+  email: z.string().min(1, 'Email is required').email('Valid email is required').refine(
     (email) => email.endsWith('@northeastern.edu'),
     'Email must be a @northeastern.edu address'
   ),
-  nominee: z.string().min(1, 'Nominee name is required'),
-  college: z.string().min(1, 'College is required'),
+  nominee: z.string().min(1, 'Please select a nominee'),
+  college: z.string().min(1, 'Please select your home college'),
   major: z.string().min(1, 'Major is required'),
 });
 
@@ -164,9 +164,6 @@ export default function NominationsPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="college">Home College</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Your home college should be the same college that your advisor is housed under
-                  </p>
                   <Select
                     value={college}
                     onValueChange={(value) => {
@@ -187,6 +184,9 @@ export default function NominationsPage() {
                       <SelectItem value="College of Social Sciences and Humanities">College of Social Sciences and Humanities</SelectItem>
                     </SelectContent>
                   </Select>
+                  <p className="text-sm text-muted-foreground">
+                    Your home college should be the same college that your advisor is housed under
+                  </p>
                   {errors.college && (
                     <p className="text-sm text-destructive">{errors.college.message}</p>
                   )}
@@ -210,7 +210,6 @@ export default function NominationsPage() {
               <h3 className="text-xl font-bold">Nominee Information</h3>
               
               <div className="space-y-2">
-                <Label htmlFor="nominee">Nominee Full Name</Label>
                 <Select
                   value={nominee}
                   onValueChange={(value) => {
