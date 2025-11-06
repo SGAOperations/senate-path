@@ -20,7 +20,8 @@ import {
 } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { CheckCircle2, XCircle } from 'lucide-react';
+import { XCircle, Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 const nominationSchema = z.object({
   fullName: z.string().min(1, 'Your full name is required'),
@@ -39,7 +40,6 @@ export default function NominationsPage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [submitSuccess, setSubmitSuccess] = useState(false);
   const [college, setCollege] = useState('');
   const [constituency, setConstituency] = useState('');
   const [receiveSenatorInfo, setReceiveSenatorInfo] = useState(false);
@@ -77,7 +77,6 @@ export default function NominationsPage() {
   const onSubmit = async (data: NominationFormData) => {
     setIsSubmitting(true);
     setSubmitError(null);
-    setSubmitSuccess(false);
 
     try {
       const formData = new FormData();
@@ -92,11 +91,8 @@ export default function NominationsPage() {
       const result = await submitNomination(formData);
 
       if (result.success) {
-        setSubmitSuccess(true);
-        reset();
-        setTimeout(() => {
-          router.push('/');
-        }, 2000);
+        toast.success('Nomination submitted successfully!');
+        router.push('/');
       } else {
         setSubmitError(result.error || 'Failed to submit nomination');
       }
@@ -118,15 +114,6 @@ export default function NominationsPage() {
             </p>
           </CardHeader>
           <CardContent>
-          {submitSuccess && (
-            <Alert variant="success" className="mb-4">
-              <CheckCircle2 className="h-4 w-4" />
-              <AlertDescription>
-                Nomination submitted successfully! Redirecting to home page...
-              </AlertDescription>
-            </Alert>
-          )}
-
           {submitError && (
             <Alert variant="destructive" className="mb-4">
               <XCircle className="h-4 w-4" />
@@ -154,6 +141,7 @@ export default function NominationsPage() {
                   <Input
                     id="fullName"
                     {...register('fullName')}
+                    disabled={isSubmitting}
                   />
                   {errors.fullName && (
                     <p className="text-sm text-destructive">{errors.fullName.message}</p>
@@ -167,6 +155,7 @@ export default function NominationsPage() {
                     type="email"
                     placeholder="your.email@northeastern.edu"
                     {...register('email')}
+                    disabled={isSubmitting}
                   />
                   {errors.email && (
                     <p className="text-sm text-destructive">{errors.email.message}</p>
@@ -183,6 +172,7 @@ export default function NominationsPage() {
                       setCollege(value);
                       setValue('college', value, { shouldValidate: true });
                     }}
+                    disabled={isSubmitting}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select college" />
@@ -207,6 +197,7 @@ export default function NominationsPage() {
                   <Input
                     id="major"
                     {...register('major')}
+                    disabled={isSubmitting}
                   />
                   {errors.major && (
                     <p className="text-sm text-destructive">{errors.major.message}</p>
@@ -222,6 +213,7 @@ export default function NominationsPage() {
                     setConstituency(value);
                     setValue('constituency', value, { shouldValidate: true });
                   }}
+                  disabled={isSubmitting}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select constituency" />
@@ -255,6 +247,7 @@ export default function NominationsPage() {
                     setNominee(value);
                     setValue('nominee', value, { shouldValidate: true });
                   }}
+                  disabled={isSubmitting}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select the person you're nominating" />
@@ -279,6 +272,7 @@ export default function NominationsPage() {
                   type="number"
                   placeholder="2025"
                   {...register('graduationYear', { valueAsNumber: true })}
+                  disabled={isSubmitting}
                 />
                 {errors.graduationYear && (
                   <p className="text-sm text-destructive">{errors.graduationYear.message}</p>
@@ -293,6 +287,7 @@ export default function NominationsPage() {
                     setReceiveSenatorInfo(checked as boolean);
                     setValue('receiveSenatorInfo', checked as boolean);
                   }}
+                  disabled={isSubmitting}
                 />
                 <Label
                   htmlFor="receiveSenatorInfo"
@@ -308,7 +303,14 @@ export default function NominationsPage() {
               className="w-full h-12 font-bold text-lg shadow-md hover:shadow-lg transition-shadow"
               disabled={isSubmitting}
             >
-              {isSubmitting ? 'Submitting...' : 'Submit Nomination'}
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                  Submitting...
+                </>
+              ) : (
+                'Submit Nomination'
+              )}
             </Button>
           </form>
         </CardContent>
