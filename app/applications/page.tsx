@@ -61,7 +61,8 @@ export default function ApplicationsPage() {
   });
 
   // Warn user about unsaved changes before leaving the page
-  useUnsavedChangesWarning(isDirty, isSubmitting, submitSuccess);
+  const hasUnsavedChanges = isDirty && !isSubmitting && !submitSuccess;
+  useUnsavedChangesWarning(hasUnsavedChanges);
 
   const onSubmit = async (data: ApplicationFormData) => {
     setIsSubmitting(true);
