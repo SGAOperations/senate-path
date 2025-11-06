@@ -18,19 +18,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { CheckCircle2, XCircle } from 'lucide-react';
 
 const nominationSchema = z.object({
   fullName: z.string().min(1, 'Your full name is required'),
-  email: z.string().email('Valid email is required'),
+  email: z.string().email('Valid email is required').refine(
+    (email) => email.endsWith('@northeastern.edu'),
+    'Email must be a @northeastern.edu address'
+  ),
   nominee: z.string().min(1, 'Nominee name is required'),
   college: z.string().min(1, 'College is required'),
   major: z.string().min(1, 'Major is required'),
-  graduationYear: z.number().min(2024, 'Valid graduation year required').max(2030, 'Graduation year must be by 2030'),
-  constituency: z.string().min(1, 'Constituency is required'),
-  receiveSenatorInfo: z.boolean(),
 });
 
 type NominationFormData = z.infer<typeof nominationSchema>;
@@ -41,8 +40,6 @@ export default function NominationsPage() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [college, setCollege] = useState('');
-  const [constituency, setConstituency] = useState('');
-  const [receiveSenatorInfo, setReceiveSenatorInfo] = useState(false);
   const [nominee, setNominee] = useState('');
   const [nominees, setNominees] = useState<Array<{ fullName: string; email: string }>>([]);
   const [nomineesLoadError, setNomineesLoadError] = useState<string | null>(null);
@@ -55,9 +52,6 @@ export default function NominationsPage() {
     setValue,
   } = useForm<NominationFormData>({
     resolver: zodResolver(nominationSchema),
-    defaultValues: {
-      receiveSenatorInfo: false,
-    },
   });
 
   useEffect(() => {
@@ -82,11 +76,7 @@ export default function NominationsPage() {
     try {
       const formData = new FormData();
       Object.entries(data).forEach(([key, value]) => {
-        if (key === 'graduationYear') {
-          formData.append(key, Number(value).toString());
-        } else {
-          formData.append(key, value.toString());
-        }
+        formData.append(key, value.toString());
       });
 
       const result = await submitNomination(formData);
@@ -114,7 +104,7 @@ export default function NominationsPage() {
           <CardHeader className="bg-gradient-to-r from-primary/10 to-primary/5 border-b">
             <CardTitle className="text-3xl font-bold">Nominate a Senator</CardTitle>
             <p className="text-muted-foreground mt-2">
-              Know someone who would make a great senator? Nominate them here! Please ensure they have submitted their application before nominating them.
+              Nominate students to become senators. Senators must have submitted an application in order to be nominated.
             </p>
           </CardHeader>
           <CardContent>
@@ -144,10 +134,7 @@ export default function NominationsPage() {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Nominator Information */}
             <div className="space-y-4 p-6 rounded-lg bg-slate-50 border border-slate-200">
-              <h3 className="text-xl font-bold text-slate-800">Your Information (Nominator)</h3>
-              <p className="text-sm text-muted-foreground">
-                Please ensure you have the same constituency as the person you're nominating.
-              </p>              
+              <h3 className="text-xl font-bold text-slate-800">Your Information (Nominator)</h3>              
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="fullName">Your Full Name</Label>
@@ -176,7 +163,10 @@ export default function NominationsPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="college">Your College</Label>
+                  <Label htmlFor="college">Home College</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Your home college should be the same college that your advisor is housed under
+                  </p>
                   <Select
                     value={college}
                     onValueChange={(value) => {
@@ -213,34 +203,6 @@ export default function NominationsPage() {
                   )}
                 </div>
               </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="constituency">Your Constituency</Label>
-                <Select
-                  value={constituency}
-                  onValueChange={(value) => {
-                    setConstituency(value);
-                    setValue('constituency', value, { shouldValidate: true });
-                  }}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select constituency" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="CAMD">College of Arts, Media and Design</SelectItem>
-                    <SelectItem value="DMSB">D'Amore-McKim School of Business</SelectItem>
-                    <SelectItem value="Khoury">Khoury College of Computer Sciences</SelectItem>
-                    <SelectItem value="COE">College of Engineering</SelectItem>
-                    <SelectItem value="Bouve">Bouvé College of Health Sciences</SelectItem>
-                    <SelectItem value="COS">College of Science</SelectItem>
-                    <SelectItem value="CSSH">College of Social Sciences and Humanities</SelectItem>
-                    <SelectItem value="Explore">Explore (Undeclared)</SelectItem>
-                  </SelectContent>
-                </Select>
-                {errors.constituency && (
-                  <p className="text-sm text-destructive">{errors.constituency.message}</p>
-                )}
-              </div>
             </div>
 
             {/* Nominee Information */}
@@ -270,36 +232,6 @@ export default function NominationsPage() {
                 {errors.nominee && (
                   <p className="text-sm text-destructive">{errors.nominee.message}</p>
                 )}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="graduationYear">Nominee's Graduation Year</Label>
-                <Input
-                  id="graduationYear"
-                  type="number"
-                  placeholder="2025"
-                  {...register('graduationYear', { valueAsNumber: true })}
-                />
-                {errors.graduationYear && (
-                  <p className="text-sm text-destructive">{errors.graduationYear.message}</p>
-                )}
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="receiveSenatorInfo"
-                  checked={receiveSenatorInfo}
-                  onCheckedChange={(checked) => {
-                    setReceiveSenatorInfo(checked as boolean);
-                    setValue('receiveSenatorInfo', checked as boolean);
-                  }}
-                />
-                <Label
-                  htmlFor="receiveSenatorInfo"
-                  className="text-sm font-normal cursor-pointer"
-                >
-                  I would like to receive information about becoming a senator
-                </Label>
               </div>
             </div>
 

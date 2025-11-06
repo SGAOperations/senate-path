@@ -9,11 +9,11 @@ export async function submitNomination(formData: FormData) {
       fullName: formData.get('fullName') as string,
       email: formData.get('email') as string,
       nominee: formData.get('nominee') as string,
-      constituency: formData.get('constituency') as string,
       college: formData.get('college') as string,
       major: formData.get('major') as string,
-      graduationYear: parseInt(formData.get('graduationYear') as string),
-      receiveSenatorInfo: formData.get('receiveSenatorInfo') === 'true',
+      graduationYear: null,
+      constituency: null,
+      receiveSenatorInfo: null,
     };
 
     await createNomination(data);

@@ -94,6 +94,19 @@ export async function getNomineesWithMinVotes(minVotes: number) {
 }
 
 export async function createNomination(data: Omit<Nomination, 'id' | 'createdAt' | 'status'>) {
+  // Map college to constituency
+  const collegeToConstituency: Record<string, string> = {
+    'College of Arts, Media and Design': 'CAMD',
+    "D'Amore-McKim School of Business": 'DMSB',
+    'Khoury College of Computer Sciences': 'Khoury',
+    'College of Engineering': 'COE',
+    'Bouvé College of Health Sciences': 'Bouve',
+    'College of Science': 'COS',
+    'College of Social Sciences and Humanities': 'CSSH',
+  };
+
+  const nominatorConstituency = data.college ? collegeToConstituency[data.college] : undefined;
+
   // Validate: Can't nominate yourself
   if (data.fullName === data.nominee) {
     throw new Error('You cannot nominate yourself for Senator');
@@ -109,7 +122,7 @@ export async function createNomination(data: Omit<Nomination, 'id' | 'createdAt'
     throw new Error(`Nominee ${data.nominee} not found`);
   }
 
-  if (nomineeApp.constituency !== data.constituency) {
+  if (nominatorConstituency && nomineeApp.constituency !== nominatorConstituency) {
     throw new Error('The nominator must belong to the same constituency as the nominee');
   }
 
@@ -129,6 +142,7 @@ export async function createNomination(data: Omit<Nomination, 'id' | 'createdAt'
   return db.nomination.create({
     data: {
       ...data,
+      constituency: nominatorConstituency || null,
       status: Status.APPROVED,
     },
   });
