@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Table,
   TableBody,
@@ -12,8 +13,9 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Search, User, Vote, TrendingUp } from 'lucide-react';
+import { Search, User, Vote, TrendingUp, Download } from 'lucide-react';
 import { Application, Nomination } from '@prisma/client';
+import { exportApplicantsToCSV } from '@/lib/actions/export';
 
 type ApplicationWithCount = Application & {
   nominationCount: number;
@@ -41,6 +43,7 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
   const [selectedApplicant, setSelectedApplicant] = useState<ApplicationWithCount | null>(null);
   const [applicantDetails, setApplicantDetails] = useState<ApplicationWithNominations | null>(null);
   const [loading, setLoading] = useState(false);
+  const [exporting, setExporting] = useState(false);
 
   const filteredApplications = applications.filter(
     (app) =>
@@ -61,6 +64,35 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
       console.error('Error fetching applicant details:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleExportCSV = async () => {
+    setExporting(true);
+    try {
+      const result = await exportApplicantsToCSV();
+      
+      if (result.success && result.data) {
+        // Create a blob and download it
+        const blob = new Blob([result.data], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        
+        link.setAttribute('href', url);
+        link.setAttribute('download', result.filename || 'applicants.csv');
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } else {
+        console.error('Export failed:', result.error);
+        alert('Failed to export applicants. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error exporting CSV:', error);
+      alert('An error occurred while exporting. Please try again.');
+    } finally {
+      setExporting(false);
     }
   };
 
@@ -105,15 +137,26 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
         </Card>
       </div>
 
-      {/* Search */}
-      <div className="relative mb-6">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          placeholder="Search by name, email, NUID, or constituency..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="pl-10"
-        />
+      {/* Search and Export */}
+      <div className="flex gap-4 mb-6">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search by name, email, NUID, or constituency..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10"
+          />
+        </div>
+        <Button 
+          onClick={handleExportCSV}
+          disabled={exporting || applications.length === 0}
+          variant="outline"
+          className="flex items-center gap-2"
+        >
+          <Download className="h-4 w-4" />
+          {exporting ? 'Exporting...' : 'Export to CSV'}
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
