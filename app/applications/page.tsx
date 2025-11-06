@@ -28,7 +28,7 @@ const applicationSchema = z.object({
   nickname: z.string().optional(),
   phoneticPronunciation: z.string().optional(),
   pronouns: z.string().optional(),
-  email: z.string().email('Valid email is required').refine((email) => email.endsWith('@northeastern.edu'), {
+  email: z.string().email('Please enter a valid email address').refine((email) => email.endsWith('@northeastern.edu'), {
     message: 'Email must be a Northeastern email (@northeastern.edu)',
   }),
   phoneNumber: z.string().min(10, 'Valid phone number is required'),
@@ -37,7 +37,11 @@ const applicationSchema = z.object({
   minors: z.string().optional(),
   year: z.string().min(1, 'Please select your year'),
   constituency: z.string().min(1, 'Please select your constituency'),
-}).refine((data) => data.college.includes(data.constituency), {
+}).refine((data) => {
+  // Filter out 'Explore Program' from colleges as it's not a valid constituency
+  const validConstituencies = data.college.filter(c => c !== 'Explore Program');
+  return validConstituencies.includes(data.constituency);
+}, {
   message: 'Constituency must be one of the selected colleges',
   path: ['constituency'],
 });
@@ -280,8 +284,9 @@ export default function ApplicationsPage() {
                             : colleges.filter((c) => c !== collegeName);
                           setColleges(newColleges);
                           setValue('college', newColleges, { shouldValidate: true });
-                          // Reset constituency if it's no longer in the selected colleges
-                          if (!newColleges.includes(constituency)) {
+                          // Reset constituency if it's no longer in the selected colleges (excluding Explore Program)
+                          const validConstituencies = newColleges.filter(c => c !== 'Explore Program');
+                          if (!validConstituencies.includes(constituency)) {
                             setConstituency('');
                             setValue('constituency', '', { shouldValidate: true });
                           }
@@ -359,7 +364,7 @@ export default function ApplicationsPage() {
               <div className="space-y-2">
                 <Label htmlFor="constituency">
                   Constituency 
-                  <span id="constituency-helper" className="block text-sm text-muted-foreground font-normal mt-1">
+                  <span id="constituency-helper" role="status" className="block text-sm text-muted-foreground font-normal mt-1">
                     Students in double or combined majors may select either college
                   </span>
                 </Label>
@@ -369,13 +374,13 @@ export default function ApplicationsPage() {
                     setConstituency(value);
                     setValue('constituency', value, { shouldValidate: true });
                   }}
-                  disabled={colleges.length === 0}
+                  disabled={colleges.filter(c => c !== 'Explore Program').length === 0}
                 >
                   <SelectTrigger aria-describedby="constituency-helper">
-                    <SelectValue placeholder={colleges.length === 0 ? "Please select college(s) first" : "Select constituency"} />
+                    <SelectValue placeholder={colleges.filter(c => c !== 'Explore Program').length === 0 ? "Please select college(s) first" : "Select constituency"} />
                   </SelectTrigger>
                   <SelectContent>
-                    {colleges.map((collegeName) => (
+                    {colleges.filter(c => c !== 'Explore Program').map((collegeName) => (
                       <SelectItem key={collegeName} value={collegeName}>
                         {collegeName}
                       </SelectItem>
