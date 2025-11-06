@@ -92,6 +92,7 @@ export default function NominationsPage() {
 
       if (result.success) {
         toast.success('Nomination submitted successfully!');
+        reset();
         router.push('/');
       } else {
         setSubmitError(result.error || 'Failed to submit nomination');

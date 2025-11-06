@@ -77,6 +77,7 @@ export default function ApplicationsPage() {
 
       if (result.success) {
         toast.success('Application submitted successfully!');
+        reset();
         router.push('/');
       } else {
         setSubmitError(result.error || 'Failed to submit application');
