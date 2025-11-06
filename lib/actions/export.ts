@@ -27,29 +27,30 @@ export async function exportApplicantsToCSV() {
 
     // Convert applications to CSV rows
     const rows = applications.map(app => [
-      app.nuid,
-      app.fullName,
-      app.preferredFullName,
-      app.nickname,
-      app.phoneticPronunciation,
-      app.pronouns,
-      app.email,
-      app.phoneNumber,
-      app.college,
-      app.major,
-      app.minors,
-      app.year.toString(),
-      app.semester,
-      app.constituency,
-      app.createdAt.toISOString()
+      app.nuid || '',
+      app.fullName || '',
+      app.preferredFullName || '',
+      app.nickname || '',
+      app.phoneticPronunciation || '',
+      app.pronouns || '',
+      app.email || '',
+      app.phoneNumber || '',
+      app.college || '',
+      app.major || '',
+      app.minors || '',
+      app.year?.toString() || '',
+      app.semester || '',
+      app.constituency || '',
+      app.createdAt?.toISOString() || ''
     ]);
 
     // Escape CSV fields (handle commas and quotes)
-    const escapeCSVField = (field: string): string => {
-      if (field.includes(',') || field.includes('"') || field.includes('\n')) {
-        return `"${field.replace(/"/g, '""')}"`;
+    const escapeCSVField = (field: string | null | undefined): string => {
+      const str = field?.toString() || '';
+      if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+        return `"${str.replace(/"/g, '""')}"`;
       }
-      return field;
+      return str;
     };
 
     // Build CSV content
