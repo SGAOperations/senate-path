@@ -84,13 +84,14 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+        
+        // Clean up the URL object to prevent memory leaks
+        URL.revokeObjectURL(url);
       } else {
         console.error('Export failed:', result.error);
-        alert('Failed to export applicants. Please try again.');
       }
     } catch (error) {
       console.error('Error exporting CSV:', error);
-      alert('An error occurred while exporting. Please try again.');
     } finally {
       setExporting(false);
     }

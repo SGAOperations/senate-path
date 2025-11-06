@@ -1,10 +1,12 @@
 'use server';
 
-import { getApplications } from '@/lib/data/applications';
+import { db } from '@/lib/db';
 
 export async function exportApplicantsToCSV() {
   try {
-    const applications = await getApplications();
+    const applications = await db.application.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
 
     // Define CSV headers based on Application model fields
     const headers = [
