@@ -8,10 +8,11 @@ export async function submitApplication(formData: FormData) {
     const yearValue = formData.get('year') as string;
     // Map year names to numbers for database storage
     const yearMap: { [key: string]: number } = {
-      'Freshman': 1,
-      'Sophomore': 2,
-      'Junior': 3,
-      'Senior': 4,
+      '1st year': 1,
+      '2nd year': 2,
+      '3rd year': 3,
+      '4th year': 4,
+      '5th+ year': 5,
     };
     
     if (!(yearValue in yearMap)) {

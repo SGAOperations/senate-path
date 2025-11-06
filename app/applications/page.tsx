@@ -3,7 +3,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { submitApplication } from '@/lib/actions/applications';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -38,9 +38,8 @@ const applicationSchema = z.object({
   year: z.string().min(1, 'Please select your year'),
   constituency: z.string().min(1, 'Please select your constituency'),
 }).refine((data) => {
-  // Filter out 'Explore Program' from colleges as it's not a valid constituency
-  const validConstituencies = data.college.filter(c => c !== 'Explore Program');
-  return validConstituencies.includes(data.constituency);
+  // Constituency must be one of the selected colleges
+  return data.college.includes(data.constituency);
 }, {
   message: 'Constituency must be one of the selected colleges',
   path: ['constituency'],
@@ -53,9 +52,6 @@ export default function ApplicationsPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [colleges, setColleges] = useState<string[]>([]);
-  const [year, setYear] = useState('');
-  const [constituency, setConstituency] = useState('');
 
   const {
     register,
@@ -63,6 +59,7 @@ export default function ApplicationsPage() {
     formState: { errors },
     reset,
     setValue,
+    watch,
   } = useForm<ApplicationFormData>({
     resolver: zodResolver(applicationSchema),
     defaultValues: {
@@ -81,6 +78,16 @@ export default function ApplicationsPage() {
       constituency: '',
     },
   });
+
+  const colleges = watch('college');
+  const constituency = watch('constituency');
+
+  // Auto-select constituency if only one college is selected
+  useEffect(() => {
+    if (colleges.length === 1 && colleges[0] !== constituency) {
+      setValue('constituency', colleges[0], { shouldValidate: true });
+    }
+  }, [colleges, constituency, setValue]);
 
   const onSubmit = async (data: ApplicationFormData) => {
     setIsSubmitting(true);
@@ -103,9 +110,6 @@ export default function ApplicationsPage() {
       if (result.success) {
         setSubmitSuccess(true);
         reset();
-        setColleges([]);
-        setYear('');
-        setConstituency('');
         setTimeout(() => {
           router.push('/');
         }, 2000);
@@ -156,7 +160,6 @@ export default function ApplicationsPage() {
                   <Label htmlFor="nuid">NUID</Label>
                   <Input
                     id="nuid"
-                    placeholder="000000000"
                     {...register('nuid')}
                   />
                   {errors.nuid && (
@@ -169,7 +172,6 @@ export default function ApplicationsPage() {
                   <Input
                     id="email"
                     type="email"
-                    placeholder="student@northeastern.edu"
                     {...register('email')}
                   />
                   {errors.email && (
@@ -179,10 +181,20 @@ export default function ApplicationsPage() {
               </div>
 
               <div className="space-y-2">
+                <Label htmlFor="phoneNumber">Phone Number</Label>
+                <Input
+                  id="phoneNumber"
+                  {...register('phoneNumber')}
+                />
+                {errors.phoneNumber && (
+                  <p className="text-sm text-destructive">{errors.phoneNumber.message}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
                 <Label htmlFor="fullName">Full Name (as it appears on official documents)</Label>
                 <Input
                   id="fullName"
-                  placeholder="Enter your full name"
                   {...register('fullName')}
                 />
                 {errors.fullName && (
@@ -195,7 +207,6 @@ export default function ApplicationsPage() {
                   <Label htmlFor="preferredFullName">Preferred Full Name <span className="text-muted-foreground">(optional)</span></Label>
                   <Input
                     id="preferredFullName"
-                    placeholder="Enter your preferred name"
                     {...register('preferredFullName')}
                   />
                   {errors.preferredFullName && (
@@ -207,7 +218,6 @@ export default function ApplicationsPage() {
                   <Label htmlFor="nickname">Nickname <span className="text-muted-foreground">(optional)</span></Label>
                   <Input
                     id="nickname"
-                    placeholder="Enter your nickname"
                     {...register('nickname')}
                   />
                   {errors.nickname && (
@@ -221,7 +231,6 @@ export default function ApplicationsPage() {
                   <Label htmlFor="phoneticPronunciation">Phonetic Pronunciation <span className="text-muted-foreground">(optional)</span></Label>
                   <Input
                     id="phoneticPronunciation"
-                    placeholder="How to pronounce your name"
                     {...register('phoneticPronunciation')}
                   />
                   {errors.phoneticPronunciation && (
@@ -233,25 +242,10 @@ export default function ApplicationsPage() {
                   <Label htmlFor="pronouns">Pronouns <span className="text-muted-foreground">(optional)</span></Label>
                   <Input
                     id="pronouns"
-                    placeholder="e.g., he/him, she/her, they/them"
                     {...register('pronouns')}
                   />
                   {errors.pronouns && (
                     <p className="text-sm text-destructive">{errors.pronouns.message}</p>
-                  )}
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="phoneNumber">Phone Number</Label>
-                  <Input
-                    id="phoneNumber"
-                    placeholder="(XXX) XXX-XXXX"
-                    {...register('phoneNumber')}
-                  />
-                  {errors.phoneNumber && (
-                    <p className="text-sm text-destructive">{errors.phoneNumber.message}</p>
                   )}
                 </div>
               </div>
@@ -263,7 +257,7 @@ export default function ApplicationsPage() {
               
               <div className="space-y-2">
                 <Label>College <span className="text-sm text-muted-foreground">(Select all that apply)</span></Label>
-                <div className="space-y-2 p-4 rounded-md border border-input bg-white">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 p-4 rounded-md border border-input bg-white">
                   {[
                     'College of Arts, Media and Design',
                     "D'Amore-McKim School of Business",
@@ -282,12 +276,9 @@ export default function ApplicationsPage() {
                           const newColleges = checked
                             ? [...colleges, collegeName]
                             : colleges.filter((c) => c !== collegeName);
-                          setColleges(newColleges);
                           setValue('college', newColleges, { shouldValidate: true });
-                          // Reset constituency if it's no longer in the selected colleges (excluding Explore Program)
-                          const validConstituencies = newColleges.filter(c => c !== 'Explore Program');
-                          if (!validConstituencies.includes(constituency)) {
-                            setConstituency('');
+                          // Reset constituency if it's no longer in the selected colleges
+                          if (!newColleges.includes(constituency)) {
                             setValue('constituency', '', { shouldValidate: true });
                           }
                         }}
@@ -311,7 +302,6 @@ export default function ApplicationsPage() {
                   <Label htmlFor="major">Major</Label>
                   <Input
                     id="major"
-                    placeholder="Enter your major"
                     {...register('major')}
                   />
                   {errors.major && (
@@ -323,7 +313,6 @@ export default function ApplicationsPage() {
                   <Label htmlFor="minors">Minors <span className="text-muted-foreground">(optional)</span></Label>
                   <Input
                     id="minors"
-                    placeholder="Leave blank if none"
                     {...register('minors')}
                   />
                   {errors.minors && (
@@ -335,9 +324,8 @@ export default function ApplicationsPage() {
               <div className="space-y-2">
                 <Label htmlFor="year">Year</Label>
                 <Select
-                  value={year}
+                  value={watch('year')}
                   onValueChange={(value) => {
-                    setYear(value);
                     setValue('year', value, { shouldValidate: true });
                   }}
                 >
@@ -345,10 +333,11 @@ export default function ApplicationsPage() {
                     <SelectValue placeholder="Select year" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Freshman">Freshman</SelectItem>
-                    <SelectItem value="Sophomore">Sophomore</SelectItem>
-                    <SelectItem value="Junior">Junior</SelectItem>
-                    <SelectItem value="Senior">Senior</SelectItem>
+                    <SelectItem value="1st year">1st year</SelectItem>
+                    <SelectItem value="2nd year">2nd year</SelectItem>
+                    <SelectItem value="3rd year">3rd year</SelectItem>
+                    <SelectItem value="4th year">4th year</SelectItem>
+                    <SelectItem value="5th+ year">5th+ year</SelectItem>
                   </SelectContent>
                 </Select>
                 {errors.year && (
@@ -364,23 +353,22 @@ export default function ApplicationsPage() {
               <div className="space-y-2">
                 <Label htmlFor="constituency">
                   Constituency 
-                  <span id="constituency-helper" role="status" className="block text-sm text-muted-foreground font-normal mt-1">
+                  <span className="block text-sm text-muted-foreground font-normal mt-1">
                     Students in double or combined majors may select either college
                   </span>
                 </Label>
                 <Select
                   value={constituency}
                   onValueChange={(value) => {
-                    setConstituency(value);
                     setValue('constituency', value, { shouldValidate: true });
                   }}
-                  disabled={colleges.filter(c => c !== 'Explore Program').length === 0}
+                  disabled={colleges.length === 0}
                 >
-                  <SelectTrigger aria-describedby="constituency-helper">
-                    <SelectValue placeholder={colleges.filter(c => c !== 'Explore Program').length === 0 ? "Please select college(s) first" : "Select constituency"} />
+                  <SelectTrigger>
+                    <SelectValue placeholder={colleges.length === 0 ? "Please select college(s) first" : "Select constituency"} />
                   </SelectTrigger>
                   <SelectContent>
-                    {colleges.filter(c => c !== 'Explore Program').map((collegeName) => (
+                    {colleges.map((collegeName) => (
                       <SelectItem key={collegeName} value={collegeName}>
                         {collegeName}
                       </SelectItem>
