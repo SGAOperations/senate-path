@@ -32,11 +32,11 @@ const applicationSchema = z.object({
     message: 'Email must be a Northeastern email (@northeastern.edu)',
   }),
   phoneNumber: z.string().min(10, 'Valid phone number is required'),
-  college: z.array(z.string()).min(1, 'At least one college must be selected'),
+  college: z.array(z.string()).min(1, 'Please select at least one college'),
   major: z.string().min(1, 'Major is required'),
   minors: z.string().optional(),
-  year: z.string().min(1, 'Year is required'),
-  constituency: z.string().min(1, 'Constituency is required'),
+  year: z.string().min(1, 'Please select your year'),
+  constituency: z.string().min(1, 'Please select your constituency'),
 }).refine((data) => data.college.includes(data.constituency), {
   message: 'Constituency must be one of the selected colleges',
   path: ['constituency'],
@@ -61,6 +61,21 @@ export default function ApplicationsPage() {
     setValue,
   } = useForm<ApplicationFormData>({
     resolver: zodResolver(applicationSchema),
+    defaultValues: {
+      nuid: '',
+      fullName: '',
+      preferredFullName: '',
+      nickname: '',
+      phoneticPronunciation: '',
+      pronouns: '',
+      email: '',
+      phoneNumber: '',
+      college: [],
+      major: '',
+      minors: '',
+      year: '',
+      constituency: '',
+    },
   });
 
   const onSubmit = async (data: ApplicationFormData) => {
