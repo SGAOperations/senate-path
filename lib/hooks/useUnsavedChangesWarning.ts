@@ -35,8 +35,7 @@ export function useUnsavedChangesWarning(
     };
   }, [isDirty, isSubmitting, submitSuccess]);
 
-  // Note: Next.js App Router doesn't provide a way to intercept client-side navigation
-  // The beforeunload event handles browser navigation (refresh, close, back button)
-  // For in-app navigation via Next.js router, users would need to implement
-  // custom Link components or use the experimental navigation guards when available
+  // Note: This hook only handles browser navigation events (refresh, close, back button).
+  // It does NOT intercept client-side navigation via Next.js <Link> components or router.push().
+  // This is a limitation of Next.js App Router which doesn't currently provide navigation guards.
 }
