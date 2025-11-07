@@ -3,7 +3,7 @@ CREATE TYPE "Role" AS ENUM ('ADMIN', 'APPLICANT', 'STANDARD');
 
 -- CreateTable
 CREATE TABLE "users" (
-    "id" SERIAL NOT NULL,
+    "id" TEXT NOT NULL,
     "firstName" TEXT NOT NULL,
     "lastName" TEXT NOT NULL,
     "role" "Role" NOT NULL DEFAULT 'STANDARD',
@@ -13,7 +13,7 @@ CREATE TABLE "users" (
 
 -- CreateTable
 CREATE TABLE "applications" (
-    "id" SERIAL NOT NULL,
+    "id" TEXT NOT NULL,
     "nuid" TEXT NOT NULL,
     "fullName" TEXT NOT NULL,
     "preferredFullName" TEXT NOT NULL,
@@ -35,7 +35,7 @@ CREATE TABLE "applications" (
 
 -- CreateTable
 CREATE TABLE "nominations" (
-    "id" SERIAL NOT NULL,
+    "id" TEXT NOT NULL,
     "nominee" TEXT,
     "fullName" TEXT,
     "email" TEXT,
