@@ -19,8 +19,9 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { CheckCircle2, XCircle } from 'lucide-react';
+import { XCircle, Loader2 } from 'lucide-react';
 import { useUnsavedChangesWarning } from '@/lib/hooks/useUnsavedChangesWarning';
+import { toast } from 'sonner';
 
 const nominationSchema = z.object({
   fullName: z.string().min(1, 'Your full name is required'),
@@ -39,7 +40,6 @@ export default function NominationsPage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [submitSuccess, setSubmitSuccess] = useState(false);
   const [nominees, setNominees] = useState<Array<{ fullName: string; email: string }>>([]);
   const [nomineesLoadError, setNomineesLoadError] = useState<string | null>(null);
 
@@ -61,7 +61,7 @@ export default function NominationsPage() {
   });
 
   // Warn user about unsaved changes before leaving the page
-  const hasUnsavedChanges = isDirty && !isSubmitting && !submitSuccess;
+  const hasUnsavedChanges = isDirty && !isSubmitting;
   useUnsavedChangesWarning(hasUnsavedChanges);
 
   useEffect(() => {
@@ -81,17 +81,14 @@ export default function NominationsPage() {
   const onSubmit = async (data: NominationFormData) => {
     setIsSubmitting(true);
     setSubmitError(null);
-    setSubmitSuccess(false);
 
     try {
       const result = await createNomination(data);
 
       if (result.success) {
-        setSubmitSuccess(true);
+        toast.success('Nomination submitted successfully!');
         reset();
-        setTimeout(() => {
-          router.push('/');
-        }, 2000);
+        router.push('/');
       } else {
         setSubmitError(result.error || 'Failed to submit nomination');
       }
@@ -113,15 +110,6 @@ export default function NominationsPage() {
             </p>
           </CardHeader>
           <CardContent>
-          {submitSuccess && (
-            <Alert variant="success" className="mb-4">
-              <CheckCircle2 className="h-4 w-4" />
-              <AlertDescription>
-                Nomination submitted successfully! Redirecting to home page...
-              </AlertDescription>
-            </Alert>
-          )}
-
           {submitError && (
             <Alert variant="destructive" className="mb-4">
               <XCircle className="h-4 w-4" />
@@ -148,6 +136,7 @@ export default function NominationsPage() {
                       <Input
                         id="fullName"
                         {...register('fullName')}
+                    disabled={isSubmitting}
                       />
                       {errors.fullName && (
                         <p className="text-sm text-destructive">{errors.fullName.message}</p>
@@ -161,7 +150,8 @@ export default function NominationsPage() {
                         type="email"
                         placeholder="your.email@northeastern.edu"
                         {...register('email')}
-                      />
+                        disabled={isSubmitting}
+                  />
                       {errors.email && (
                         <p className="text-sm text-destructive">{errors.email.message}</p>
                       )}
@@ -178,7 +168,8 @@ export default function NominationsPage() {
                           <Select
                             value={field.value}
                             onValueChange={field.onChange}
-                          >
+                            disabled={isSubmitting}
+                  >
                             <SelectTrigger>
                               <SelectValue placeholder="Select college" />
                             </SelectTrigger>
@@ -255,7 +246,14 @@ export default function NominationsPage() {
               className="w-full h-12 font-bold text-lg shadow-md hover:shadow-lg transition-shadow"
               disabled={isSubmitting}
             >
-              {isSubmitting ? 'Submitting...' : 'Submit Nomination'}
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                  Submitting...
+                </>
+              ) : (
+                'Submit Nomination'
+              )}
             </Button>
           </form>
         </CardContent>
