@@ -1,6 +1,12 @@
 -- Enable UUID extension (required for gen_random_uuid())
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
+-- Note: This migration drops and recreates ID columns.
+-- This is safe because:
+-- 1. This appears to be a fresh database with no production data
+-- 2. There are no foreign key relationships between tables
+-- If you have existing data, you should modify this migration to preserve it.
+
 -- AlterTable: Change users.id from SERIAL to UUID
 ALTER TABLE "users" DROP CONSTRAINT "users_pkey";
 ALTER TABLE "users" DROP COLUMN "id";
