@@ -80,13 +80,21 @@ npm install
 
 3. Set up your environment variables:
 ```bash
-cp .env .env.local
+cp .env.example .env.local
 ```
 
-Edit `.env.local` and add your database connection string:
+Edit `.env.local` and add your database connection strings and Supabase credentials:
 ```
 DATABASE_URL="postgresql://user:password@host:port/database"
+DIRECT_URL="postgresql://user:password@host:port/database"
+NEXT_PUBLIC_SUPABASE_URL="your-supabase-project-url"
+NEXT_PUBLIC_SUPABASE_ANON_KEY="your-supabase-anon-key"
 ```
+
+To get your Supabase credentials:
+- Create a project at [Supabase](https://supabase.com)
+- Go to Project Settings > API
+- Copy the Project URL and anon/public key
 
 4. Generate Prisma client and run migrations:
 ```bash
@@ -122,9 +130,25 @@ npm start
 
 - **Application Submission** - Students can submit their senator applications
 - **Nomination System** - Constituents can nominate candidates
-- **Admin Dashboard** - View and manage all applications and nominations
+- **Admin Dashboard** - View and manage all applications and nominations (protected by authentication)
+- **Authentication** - Secure OTP email-based login via Supabase Auth
+  - No passwords required - users receive a magic link via email
+  - Admin page is protected and only accessible to logged-in users
+  - Admin link only visible in navbar for authenticated users
 - **Constituency Validation** - Ensures nominators and nominees are in the same constituency
 - **Duplicate Prevention** - Prevents duplicate nominations and applications
+
+## Authentication
+
+The application uses Supabase Auth with email OTP (One-Time Password) for authentication:
+
+1. Users click "Sign In" in the navbar
+2. They enter their email address
+3. They receive a magic link via email
+4. Clicking the link logs them in automatically
+5. Once authenticated, users can access the Admin Dashboard
+
+The admin page (`/admin`) is protected by middleware and requires authentication to access.
 
 ## Deployment
 
@@ -134,7 +158,11 @@ This Next.js application can be deployed to:
 - Any Node.js hosting platform
 - Docker container
 
-Make sure to set your `DATABASE_URL` environment variable in your deployment platform.
+Make sure to set the following environment variables in your deployment platform:
+- `DATABASE_URL` - PostgreSQL database connection string
+- `DIRECT_URL` - Direct PostgreSQL connection string (for Prisma migrations)
+- `NEXT_PUBLIC_SUPABASE_URL` - Supabase project URL
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Supabase anonymous/public key
 
 ## Development Notes
 
