@@ -82,10 +82,13 @@ export default function ApplicationsPage() {
   const colleges = watch('college');
   const constituency = watch('constituency');
 
-  // Auto-select constituency if only one college is selected
+  // Auto-select constituency if only one college is selected, clear if multiple
   useEffect(() => {
     if (colleges.length === 1 && colleges[0] !== constituency) {
       setValue('constituency', colleges[0], { shouldValidate: true });
+    } else if (colleges.length > 1 && constituency) {
+      // Clear constituency when multiple colleges are selected
+      setValue('constituency', '', { shouldValidate: false });
     }
   }, [colleges, constituency, setValue]);
 
@@ -168,31 +171,29 @@ export default function ApplicationsPage() {
                     <p className="text-sm text-destructive">{errors.email.message}</p>
                   )}
                 </div>
-              </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="phoneNumber">Phone Number</Label>
-                <Input
-                  id="phoneNumber"
-                  {...register('phoneNumber')}
-                />
-                {errors.phoneNumber && (
-                  <p className="text-sm text-destructive">{errors.phoneNumber.message}</p>
-                )}
-              </div>
+                <div className="space-y-2 md:col-span-2">
+                  <Label htmlFor="phoneNumber">Phone Number</Label>
+                  <Input
+                    id="phoneNumber"
+                    {...register('phoneNumber')}
+                  />
+                  {errors.phoneNumber && (
+                    <p className="text-sm text-destructive">{errors.phoneNumber.message}</p>
+                  )}
+                </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="fullName">Full Name (as it appears on official documents)</Label>
-                <Input
-                  id="fullName"
-                  {...register('fullName')}
-                />
-                {errors.fullName && (
-                  <p className="text-sm text-destructive">{errors.fullName.message}</p>
-                )}
-              </div>
+                <div className="space-y-2 md:col-span-2">
+                  <Label htmlFor="fullName">Full Name (as it appears on official documents)</Label>
+                  <Input
+                    id="fullName"
+                    {...register('fullName')}
+                  />
+                  {errors.fullName && (
+                    <p className="text-sm text-destructive">{errors.fullName.message}</p>
+                  )}
+                </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="preferredFullName">Preferred Full Name <span className="text-muted-foreground">(optional)</span></Label>
                   <Input
@@ -214,9 +215,7 @@ export default function ApplicationsPage() {
                     <p className="text-sm text-destructive">{errors.nickname.message}</p>
                   )}
                 </div>
-              </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="phoneticPronunciation">Phonetic Pronunciation <span className="text-muted-foreground">(optional)</span></Label>
                   <Input
