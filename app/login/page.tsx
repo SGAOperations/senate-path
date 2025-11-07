@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,7 +11,6 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { CheckCircle2, XCircle, Mail } from 'lucide-react';
 
 function LoginForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -21,9 +20,6 @@ function LoginForm() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    setError(null);
-    setSuccess(false);
 
     const { error } = await supabase.auth.signInWithOtp({
       email,
@@ -32,17 +28,16 @@ function LoginForm() {
       },
     });
 
-    setIsLoading(false);
-
     if (error) {
+      setIsLoading(false);
       setError(error.message);
+      setSuccess(false);
     } else {
+      setIsLoading(false);
+      setError(null);
       setSuccess(true);
     }
   };
-
-  // Handle the case where user is already logged in
-  const message = searchParams.get('message');
 
   return (
     <Card className="w-full max-w-md shadow-lg">
@@ -53,13 +48,6 @@ function LoginForm() {
         </p>
       </CardHeader>
       <CardContent className="pt-6">
-        {message && (
-          <Alert variant="destructive" className="mb-4">
-            <XCircle className="h-4 w-4" />
-            <AlertDescription>{message}</AlertDescription>
-          </Alert>
-        )}
-
         {success ? (
           <Alert variant="success" className="mb-4">
             <CheckCircle2 className="h-4 w-4" />
