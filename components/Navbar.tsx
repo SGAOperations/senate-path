@@ -3,20 +3,44 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { createClient } from '@/lib/supabase/client';
+import { User } from '@supabase/supabase-js';
 
 export function Navbar() {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const supabase = createClient();
 
-  const navLinks = [
+  useEffect(() => {
+    // Get initial user
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUser(user);
+    });
+
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [supabase.auth]);
+
+  const baseNavLinks = [
     { href: '/', label: 'Home' },
     { href: '/applications', label: 'Apply' },
     { href: '/nominations', label: 'Nominate' },
     { href: '/dashboard', label: 'Dashboard' },
-    { href: '/admin', label: 'Admin' },
-    { href: '/login', label: 'Login' },
+  ];
+
+  const navLinks = [
+    ...baseNavLinks,
+    ...(user ? [{ href: '/admin', label: 'Admin' }] : []),
+    ...(!user ? [{ href: '/login', label: 'Login' }] : []),
   ];
 
   const isActive = (href: string) => {
