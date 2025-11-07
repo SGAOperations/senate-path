@@ -61,7 +61,7 @@ export default function NominationsPage() {
   });
 
   // Warn user about unsaved changes before leaving the page
-  const hasUnsavedChanges = isDirty && !isSubmitting && !submitSuccess;
+  const hasUnsavedChanges = isDirty && !isSubmitting;
   useUnsavedChangesWarning(hasUnsavedChanges);
 
   useEffect(() => {
