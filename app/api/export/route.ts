@@ -46,10 +46,10 @@ export async function GET(request: NextRequest) {
       app.createdAt?.toISOString() || ''
     ]);
 
-    // Escape CSV fields (handle commas and quotes)
+    // Escape CSV fields (handle commas, quotes, newlines, and carriage returns)
     const escapeCSVField = (field: string | null | undefined): string => {
       const str = field?.toString() || '';
-      if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+      if (str.includes(',') || str.includes('"') || str.includes('\n') || str.includes('\r')) {
         return `"${str.replace(/"/g, '""')}"`;
       }
       return str;
