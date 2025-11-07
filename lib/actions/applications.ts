@@ -3,9 +3,24 @@
 import { revalidatePath } from 'next/cache';
 import { createOrUpdateApplication } from '@/lib/data/applications';
 
-export async function submitApplication(formData: FormData) {
+type ApplicationData = {
+  nuid: string;
+  fullName: string;
+  preferredFullName?: string;
+  nickname?: string;
+  phoneticPronunciation?: string;
+  pronouns?: string;
+  email: string;
+  phoneNumber: string;
+  college: string[];
+  major: string;
+  minors?: string;
+  year: string;
+  constituency: string;
+};
+
+export async function submitApplication(formData: ApplicationData) {
   try {
-    const yearValue = formData.get('year') as string;
     // Map year names to numbers for database storage
     const yearMap: { [key: string]: number } = {
       '1st year': 1,
@@ -15,27 +30,27 @@ export async function submitApplication(formData: FormData) {
       '5th+ year': 5,
     };
     
-    if (!(yearValue in yearMap)) {
+    if (!(formData.year in yearMap)) {
       throw new Error('Invalid year value');
     }
     
-    const year = yearMap[yearValue];
+    const year = yearMap[formData.year];
     
     const data = {
-      nuid: formData.get('nuid') as string,
-      fullName: formData.get('fullName') as string,
-      preferredFullName: (formData.get('preferredFullName') as string) || '',
-      nickname: (formData.get('nickname') as string) || '',
-      phoneticPronunciation: (formData.get('phoneticPronunciation') as string) || '',
-      pronouns: (formData.get('pronouns') as string) || '',
-      email: formData.get('email') as string,
-      phoneNumber: formData.get('phoneNumber') as string,
-      college: formData.get('college') as string,
-      major: formData.get('major') as string,
-      minors: (formData.get('minors') as string) || '',
+      nuid: formData.nuid,
+      fullName: formData.fullName,
+      preferredFullName: formData.preferredFullName || '',
+      nickname: formData.nickname || '',
+      phoneticPronunciation: formData.phoneticPronunciation || '',
+      pronouns: formData.pronouns || '',
+      email: formData.email,
+      phoneNumber: formData.phoneNumber,
+      college: formData.college.join(', '),
+      major: formData.major,
+      minors: formData.minors || '',
       year,
       semester: '',
-      constituency: formData.get('constituency') as string,
+      constituency: formData.constituency,
     };
 
     await createOrUpdateApplication(data);

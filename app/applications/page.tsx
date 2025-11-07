@@ -95,17 +95,7 @@ export default function ApplicationsPage() {
     setSubmitSuccess(false);
 
     try {
-      const formData = new FormData();
-      Object.entries(data).forEach(([key, value]) => {
-        if (key === 'college') {
-          // Store colleges as comma-separated string
-          formData.append(key, (value as string[]).join(', '));
-        } else {
-          formData.append(key, value?.toString() || '');
-        }
-      });
-
-      const result = await submitApplication(formData);
+      const result = await submitApplication(data);
 
       if (result.success) {
         setSubmitSuccess(true);
