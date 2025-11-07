@@ -168,7 +168,7 @@ export default function ApplicationsPage() {
                   )}
                 </div>
 
-                <div className="space-y-2 md:col-span-2">
+                <div className="space-y-2">
                   <Label htmlFor="phoneNumber">Phone Number</Label>
                   <Input
                     id="phoneNumber"
@@ -179,7 +179,7 @@ export default function ApplicationsPage() {
                   )}
                 </div>
 
-                <div className="space-y-2 md:col-span-2">
+                <div className="space-y-2">
                   <Label htmlFor="fullName">Full Name (as it appears on official documents)</Label>
                   <Input
                     id="fullName"
