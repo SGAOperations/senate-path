@@ -19,7 +19,9 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { CheckCircle2, XCircle } from 'lucide-react';
+import { XCircle, Loader2 } from 'lucide-react';
+import { useUnsavedChangesWarning } from '@/lib/hooks/useUnsavedChangesWarning';
+import { toast } from 'sonner';
 
 const applicationSchema = z.object({
   nuid: z.string().min(9, 'NUID must be 9 digits').max(9, 'NUID must be 9 digits'),
@@ -56,7 +58,7 @@ export default function ApplicationsPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
     reset,
     setValue,
     watch,
@@ -92,20 +94,21 @@ export default function ApplicationsPage() {
     }
   }, [colleges, constituency, setValue]);
 
+  // Warn user about unsaved changes before leaving the page
+  const hasUnsavedChanges = isDirty && !isSubmitting;
+  useUnsavedChangesWarning(hasUnsavedChanges);
+
   const onSubmit = async (data: ApplicationFormData) => {
     setIsSubmitting(true);
     setSubmitError(null);
-    setSubmitSuccess(false);
 
     try {
       const result = await submitApplication(data);
 
       if (result.success) {
-        setSubmitSuccess(true);
+        toast.success('Application submitted successfully!');
         reset();
-        setTimeout(() => {
-          router.push('/');
-        }, 2000);
+        router.push('/');
       } else {
         setSubmitError(result.error || 'Failed to submit application');
       }
@@ -127,15 +130,6 @@ export default function ApplicationsPage() {
             </p>
           </CardHeader>
           <CardContent>
-          {submitSuccess && (
-            <Alert variant="success" className="mb-4">
-              <CheckCircle2 className="h-4 w-4" />
-              <AlertDescription>
-                Application submitted successfully! Redirecting to home page...
-              </AlertDescription>
-            </Alert>
-          )}
-
           {submitError && (
             <Alert variant="destructive" className="mb-4">
               <XCircle className="h-4 w-4" />
@@ -154,6 +148,7 @@ export default function ApplicationsPage() {
                   <Input
                     id="nuid"
                     {...register('nuid')}
+                    disabled={isSubmitting}
                   />
                   {errors.nuid && (
                     <p className="text-sm text-destructive">{errors.nuid.message}</p>
@@ -166,6 +161,7 @@ export default function ApplicationsPage() {
                     id="email"
                     type="email"
                     {...register('email')}
+                    disabled={isSubmitting}
                   />
                   {errors.email && (
                     <p className="text-sm text-destructive">{errors.email.message}</p>
@@ -199,6 +195,7 @@ export default function ApplicationsPage() {
                   <Input
                     id="preferredFullName"
                     {...register('preferredFullName')}
+                    disabled={isSubmitting}
                   />
                   {errors.preferredFullName && (
                     <p className="text-sm text-destructive">{errors.preferredFullName.message}</p>
@@ -210,6 +207,7 @@ export default function ApplicationsPage() {
                   <Input
                     id="nickname"
                     {...register('nickname')}
+                    disabled={isSubmitting}
                   />
                   {errors.nickname && (
                     <p className="text-sm text-destructive">{errors.nickname.message}</p>
@@ -221,6 +219,7 @@ export default function ApplicationsPage() {
                   <Input
                     id="phoneticPronunciation"
                     {...register('phoneticPronunciation')}
+                    disabled={isSubmitting}
                   />
                   {errors.phoneticPronunciation && (
                     <p className="text-sm text-destructive">{errors.phoneticPronunciation.message}</p>
@@ -232,9 +231,24 @@ export default function ApplicationsPage() {
                   <Input
                     id="pronouns"
                     {...register('pronouns')}
+                    disabled={isSubmitting}
                   />
                   {errors.pronouns && (
                     <p className="text-sm text-destructive">{errors.pronouns.message}</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="phoneNumber">Phone Number</Label>
+                  <Input
+                    id="phoneNumber"
+                    placeholder="(XXX) XXX-XXXX"
+                    {...register('phoneNumber')}
+                  />
+                  {errors.phoneNumber && (
+                    <p className="text-sm text-destructive">{errors.phoneNumber.message}</p>
                   )}
                 </div>
               </div>
@@ -292,6 +306,7 @@ export default function ApplicationsPage() {
                   <Input
                     id="major"
                     {...register('major')}
+                    disabled={isSubmitting}
                   />
                   {errors.major && (
                     <p className="text-sm text-destructive">{errors.major.message}</p>
@@ -303,6 +318,7 @@ export default function ApplicationsPage() {
                   <Input
                     id="minors"
                     {...register('minors')}
+                    disabled={isSubmitting}
                   />
                   {errors.minors && (
                     <p className="text-sm text-destructive">{errors.minors.message}</p>
@@ -375,7 +391,14 @@ export default function ApplicationsPage() {
               className="w-full h-12 font-bold text-lg shadow-md hover:shadow-lg transition-shadow"
               disabled={isSubmitting}
             >
-              {isSubmitting ? 'Submitting...' : 'Submit Application'}
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                  Submitting...
+                </>
+              ) : (
+                'Submit Application'
+              )}
             </Button>
           </form>
         </CardContent>
