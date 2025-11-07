@@ -120,10 +120,10 @@ export default function ApplicationsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-slate-50">
       <div className="container max-w-4xl mx-auto py-8 px-4">
         <Card className="shadow-lg">
-          <CardHeader className="bg-gradient-to-r from-primary/10 to-primary/5 border-b">
+          <CardHeader className="bg-linear-to-r from-primary/10 to-primary/5 border-b">
             <CardTitle className="text-3xl font-bold">Senator Application</CardTitle>
             <p className="text-muted-foreground mt-2">
               Thank you for your interest in becoming a Senator! Please fill out all fields below.
