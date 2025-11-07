@@ -3,13 +3,14 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { submitApplication } from '@/lib/actions/applications';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Select,
   SelectContent,
@@ -25,18 +26,25 @@ import { toast } from 'sonner';
 const applicationSchema = z.object({
   nuid: z.string().min(9, 'NUID must be 9 digits').max(9, 'NUID must be 9 digits'),
   fullName: z.string().min(1, 'Full name is required'),
-  preferredFullName: z.string().min(1, 'Preferred full name is required'),
-  nickname: z.string().min(1, 'Nickname is required'),
-  phoneticPronunciation: z.string().min(1, 'Phonetic pronunciation is required'),
-  pronouns: z.string().min(1, 'Pronouns are required'),
-  email: z.string().email('Valid email is required'),
+  preferredFullName: z.string().optional(),
+  nickname: z.string().optional(),
+  phoneticPronunciation: z.string().optional(),
+  pronouns: z.string().optional(),
+  email: z.string().email('Please enter a valid email address').refine((email) => email.endsWith('@northeastern.edu'), {
+    message: 'Email must be a Northeastern email (@northeastern.edu)',
+  }),
   phoneNumber: z.string().min(10, 'Valid phone number is required'),
-  college: z.string().min(1, 'College is required'),
+  college: z.array(z.string()).min(1, 'Please select at least one college'),
   major: z.string().min(1, 'Major is required'),
-  minors: z.string(),
-  year: z.number().min(1, 'Year is required').max(6, 'Year must be between 1-6'),
-  semester: z.string().min(1, 'Semester is required'),
-  constituency: z.string().min(1, 'Constituency is required'),
+  minors: z.string().optional(),
+  year: z.string().min(1, 'Please select your year'),
+  constituency: z.string().min(1, 'Please select your constituency'),
+}).refine((data) => {
+  // Constituency must be one of the selected colleges
+  return data.college.includes(data.constituency);
+}, {
+  message: 'Constituency must be one of the selected colleges',
+  path: ['constituency'],
 });
 
 type ApplicationFormData = z.infer<typeof applicationSchema>;
@@ -45,10 +53,7 @@ export default function ApplicationsPage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [college, setCollege] = useState('');
-  const [year, setYear] = useState('');
-  const [semester, setSemester] = useState('');
-  const [constituency, setConstituency] = useState('');
+  const [submitSuccess, setSubmitSuccess] = useState(false);
 
   const {
     register,
@@ -56,9 +61,38 @@ export default function ApplicationsPage() {
     formState: { errors, isDirty },
     reset,
     setValue,
+    watch,
   } = useForm<ApplicationFormData>({
     resolver: zodResolver(applicationSchema),
+    defaultValues: {
+      nuid: '',
+      fullName: '',
+      preferredFullName: '',
+      nickname: '',
+      phoneticPronunciation: '',
+      pronouns: '',
+      email: '',
+      phoneNumber: '',
+      college: [],
+      major: '',
+      minors: '',
+      year: '',
+      constituency: '',
+    },
   });
+
+  const colleges = watch('college');
+  const constituency = watch('constituency');
+
+  // Auto-select constituency if only one college is selected, clear if multiple
+  useEffect(() => {
+    if (colleges.length === 1 && colleges[0] !== constituency) {
+      setValue('constituency', colleges[0], { shouldValidate: true });
+    } else if (colleges.length > 1 && constituency) {
+      // Clear constituency when multiple colleges are selected
+      setValue('constituency', '', { shouldValidate: false });
+    }
+  }, [colleges, constituency, setValue]);
 
   // Warn user about unsaved changes before leaving the page
   const hasUnsavedChanges = isDirty && !isSubmitting;
@@ -69,16 +103,7 @@ export default function ApplicationsPage() {
     setSubmitError(null);
 
     try {
-      const formData = new FormData();
-      Object.entries(data).forEach(([key, value]) => {
-        if (key === 'year') {
-          formData.append(key, Number(value).toString());
-        } else {
-          formData.append(key, value.toString());
-        }
-      });
-
-      const result = await submitApplication(formData);
+      const result = await submitApplication(data);
 
       if (result.success) {
         toast.success('Application submitted successfully!');
@@ -95,10 +120,10 @@ export default function ApplicationsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-slate-50">
       <div className="container max-w-4xl mx-auto py-8 px-4">
         <Card className="shadow-lg">
-          <CardHeader className="bg-gradient-to-r from-primary/10 to-primary/5 border-b">
+          <CardHeader className="bg-linear-to-r from-primary/10 to-primary/5 border-b">
             <CardTitle className="text-3xl font-bold">Senator Application</CardTitle>
             <p className="text-muted-foreground mt-2">
               Thank you for your interest in becoming a Senator! Please fill out all fields below.
@@ -122,7 +147,6 @@ export default function ApplicationsPage() {
                   <Label htmlFor="nuid">NUID</Label>
                   <Input
                     id="nuid"
-                    placeholder="000000000"
                     {...register('nuid')}
                     disabled={isSubmitting}
                   />
@@ -136,7 +160,6 @@ export default function ApplicationsPage() {
                   <Input
                     id="email"
                     type="email"
-                    placeholder="student@northeastern.edu"
                     {...register('email')}
                     disabled={isSubmitting}
                   />
@@ -144,23 +167,31 @@ export default function ApplicationsPage() {
                     <p className="text-sm text-destructive">{errors.email.message}</p>
                   )}
                 </div>
-              </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="fullName">Full Name (as it appears on official documents)</Label>
-                <Input
-                  id="fullName"
-                  {...register('fullName')}
-                  disabled={isSubmitting}
-                />
-                {errors.fullName && (
-                  <p className="text-sm text-destructive">{errors.fullName.message}</p>
-                )}
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="preferredFullName">Preferred Full Name</Label>
+                  <Label htmlFor="phoneNumber">Phone Number</Label>
+                  <Input
+                    id="phoneNumber"
+                    {...register('phoneNumber')}
+                  />
+                  {errors.phoneNumber && (
+                    <p className="text-sm text-destructive">{errors.phoneNumber.message}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="fullName">Full Name (as it appears on official documents)</Label>
+                  <Input
+                    id="fullName"
+                    {...register('fullName')}
+                  />
+                  {errors.fullName && (
+                    <p className="text-sm text-destructive">{errors.fullName.message}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="preferredFullName">Preferred Full Name <span className="text-muted-foreground">(optional)</span></Label>
                   <Input
                     id="preferredFullName"
                     {...register('preferredFullName')}
@@ -172,7 +203,7 @@ export default function ApplicationsPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="nickname">Nickname</Label>
+                  <Label htmlFor="nickname">Nickname <span className="text-muted-foreground">(optional)</span></Label>
                   <Input
                     id="nickname"
                     {...register('nickname')}
@@ -182,14 +213,11 @@ export default function ApplicationsPage() {
                     <p className="text-sm text-destructive">{errors.nickname.message}</p>
                   )}
                 </div>
-              </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="phoneticPronunciation">Phonetic Pronunciation</Label>
+                  <Label htmlFor="phoneticPronunciation">Phonetic Pronunciation <span className="text-muted-foreground">(optional)</span></Label>
                   <Input
                     id="phoneticPronunciation"
-                    placeholder="How to pronounce your name"
                     {...register('phoneticPronunciation')}
                     disabled={isSubmitting}
                   />
@@ -199,10 +227,9 @@ export default function ApplicationsPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="pronouns">Pronouns</Label>
+                  <Label htmlFor="pronouns">Pronouns <span className="text-muted-foreground">(optional)</span></Label>
                   <Input
                     id="pronouns"
-                    placeholder="e.g., he/him, she/her, they/them"
                     {...register('pronouns')}
                     disabled={isSubmitting}
                   />
@@ -219,7 +246,6 @@ export default function ApplicationsPage() {
                     id="phoneNumber"
                     placeholder="(XXX) XXX-XXXX"
                     {...register('phoneNumber')}
-                    disabled={isSubmitting}
                   />
                   {errors.phoneNumber && (
                     <p className="text-sm text-destructive">{errors.phoneNumber.message}</p>
@@ -232,35 +258,49 @@ export default function ApplicationsPage() {
             <div className="space-y-4 p-6 rounded-lg bg-slate-50 border border-slate-200">
               <h3 className="text-xl font-bold text-slate-800">Academic Information</h3>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="college">College</Label>
-                  <Select
-                    value={college}
-                    onValueChange={(value) => {
-                      setCollege(value);
-                      setValue('college', value, { shouldValidate: true });
-                    }}
-                    disabled={isSubmitting}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select college" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="College of Arts, Media and Design">College of Arts, Media and Design</SelectItem>
-                      <SelectItem value="D'Amore-McKim School of Business">D'Amore-McKim School of Business</SelectItem>
-                      <SelectItem value="Khoury College of Computer Sciences">Khoury College of Computer Sciences</SelectItem>
-                      <SelectItem value="College of Engineering">College of Engineering</SelectItem>
-                      <SelectItem value="Bouvé College of Health Sciences">Bouvé College of Health Sciences</SelectItem>
-                      <SelectItem value="College of Science">College of Science</SelectItem>
-                      <SelectItem value="College of Social Sciences and Humanities">College of Social Sciences and Humanities</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {errors.college && (
-                    <p className="text-sm text-destructive">{errors.college.message}</p>
-                  )}
+              <div className="space-y-2">
+                <Label>College <span className="text-sm text-muted-foreground">(Select all that apply)</span></Label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 p-4 rounded-md border border-input bg-white">
+                  {[
+                    'College of Arts, Media and Design',
+                    "D'Amore-McKim School of Business",
+                    'Khoury College of Computer Sciences',
+                    'College of Engineering',
+                    'Bouvé College of Health Sciences',
+                    'College of Science',
+                    'College of Social Sciences and Humanities',
+                    'Explore Program',
+                  ].map((collegeName) => (
+                    <div key={collegeName} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={`college-${collegeName}`}
+                        checked={colleges.includes(collegeName)}
+                        onCheckedChange={(checked) => {
+                          const newColleges = checked
+                            ? [...colleges, collegeName]
+                            : colleges.filter((c) => c !== collegeName);
+                          setValue('college', newColleges, { shouldValidate: true });
+                          // Reset constituency if it's no longer in the selected colleges
+                          if (!newColleges.includes(constituency)) {
+                            setValue('constituency', '', { shouldValidate: true });
+                          }
+                        }}
+                      />
+                      <Label
+                        htmlFor={`college-${collegeName}`}
+                        className="text-sm font-normal cursor-pointer"
+                      >
+                        {collegeName}
+                      </Label>
+                    </div>
+                  ))}
                 </div>
+                {errors.college && (
+                  <p className="text-sm text-destructive">{errors.college.message}</p>
+                )}
+              </div>
 
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="major">Major</Label>
                   <Input
@@ -272,14 +312,11 @@ export default function ApplicationsPage() {
                     <p className="text-sm text-destructive">{errors.major.message}</p>
                   )}
                 </div>
-              </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="minors">Minors (if any)</Label>
+                  <Label htmlFor="minors">Minors <span className="text-muted-foreground">(optional)</span></Label>
                   <Input
                     id="minors"
-                    placeholder="Leave blank if none"
                     {...register('minors')}
                     disabled={isSubmitting}
                   />
@@ -287,60 +324,30 @@ export default function ApplicationsPage() {
                     <p className="text-sm text-destructive">{errors.minors.message}</p>
                   )}
                 </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="year">Year</Label>
-                  <Select
-                    value={year}
-                    onValueChange={(value) => {
-                      setYear(value);
-                      setValue('year', parseInt(value), { shouldValidate: true });
-                    }}
-                    disabled={isSubmitting}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select year" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="1">1 (Freshman)</SelectItem>
-                      <SelectItem value="2">2 (Sophomore)</SelectItem>
-                      <SelectItem value="3">3 (Middler)</SelectItem>
-                      <SelectItem value="4">4 (Junior)</SelectItem>
-                      <SelectItem value="5">5 (Senior)</SelectItem>
-                      <SelectItem value="6">6+ (Graduate)</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {errors.year && (
-                    <p className="text-sm text-destructive">{errors.year.message}</p>
-                  )}
-                </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="semester">Semester Applying For</Label>
-                  <Select
-                    value={semester}
-                    onValueChange={(value) => {
-                      setSemester(value);
-                      setValue('semester', value, { shouldValidate: true });
-                    }}
-                    disabled={isSubmitting}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select semester" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Fall 2025">Fall 2025</SelectItem>
-                      <SelectItem value="Spring 2026">Spring 2026</SelectItem>
-                      <SelectItem value="Fall 2026">Fall 2026</SelectItem>
-                      <SelectItem value="Spring 2027">Spring 2027</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {errors.semester && (
-                    <p className="text-sm text-destructive">{errors.semester.message}</p>
-                  )}
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="year">Year</Label>
+                <Select
+                  value={watch('year')}
+                  onValueChange={(value) => {
+                    setValue('year', value, { shouldValidate: true });
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select year" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1st year">1st year</SelectItem>
+                    <SelectItem value="2nd year">2nd year</SelectItem>
+                    <SelectItem value="3rd year">3rd year</SelectItem>
+                    <SelectItem value="4th year">4th year</SelectItem>
+                    <SelectItem value="5th+ year">5th+ year</SelectItem>
+                  </SelectContent>
+                </Select>
+                {errors.year && (
+                  <p className="text-sm text-destructive">{errors.year.message}</p>
+                )}
               </div>
             </div>
 
@@ -349,27 +356,28 @@ export default function ApplicationsPage() {
               <h3 className="text-xl font-bold text-slate-800">Constituency</h3>
               
               <div className="space-y-2">
-                <Label htmlFor="constituency">Constituency</Label>
+                <Label htmlFor="constituency">
+                  Constituency 
+                  <span className="block text-sm text-muted-foreground font-normal mt-1">
+                    Students in double or combined majors may select either college
+                  </span>
+                </Label>
                 <Select
                   value={constituency}
                   onValueChange={(value) => {
-                    setConstituency(value);
                     setValue('constituency', value, { shouldValidate: true });
                   }}
-                  disabled={isSubmitting}
+                  disabled={colleges.length === 0}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select constituency" />
+                    <SelectValue placeholder={colleges.length === 0 ? "Please select college(s) first" : "Select constituency"} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="CAMD">College of Arts, Media and Design</SelectItem>
-                    <SelectItem value="DMSB">D'Amore-McKim School of Business</SelectItem>
-                    <SelectItem value="Khoury">Khoury College of Computer Sciences</SelectItem>
-                    <SelectItem value="COE">College of Engineering</SelectItem>
-                    <SelectItem value="Bouve">Bouvé College of Health Sciences</SelectItem>
-                    <SelectItem value="COS">College of Science</SelectItem>
-                    <SelectItem value="CSSH">College of Social Sciences and Humanities</SelectItem>
-                    <SelectItem value="Explore">Explore (Undeclared)</SelectItem>
+                    {colleges.map((collegeName) => (
+                      <SelectItem key={collegeName} value={collegeName}>
+                        {collegeName}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 {errors.constituency && (
