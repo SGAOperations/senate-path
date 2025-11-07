@@ -1,8 +1,7 @@
--- Enable UUID extension
+-- Enable UUID extension (required for gen_random_uuid())
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 -- AlterTable: Change users.id from SERIAL to UUID
--- Drop the old id column and recreate with UUID
 ALTER TABLE "users" DROP CONSTRAINT "users_pkey";
 ALTER TABLE "users" DROP COLUMN "id";
 ALTER TABLE "users" ADD COLUMN "id" UUID NOT NULL DEFAULT gen_random_uuid();
