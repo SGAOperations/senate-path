@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { XCircle, Loader2 } from 'lucide-react';
+import { useUnsavedChangesWarning } from '@/lib/hooks/useUnsavedChangesWarning';
 import { toast } from 'sonner';
 
 const applicationSchema = z.object({
@@ -52,12 +53,16 @@ export default function ApplicationsPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
     reset,
     setValue,
   } = useForm<ApplicationFormData>({
     resolver: zodResolver(applicationSchema),
   });
+
+  // Warn user about unsaved changes before leaving the page
+  const hasUnsavedChanges = isDirty && !isSubmitting && !submitSuccess;
+  useUnsavedChangesWarning(hasUnsavedChanges);
 
   const onSubmit = async (data: ApplicationFormData) => {
     setIsSubmitting(true);
