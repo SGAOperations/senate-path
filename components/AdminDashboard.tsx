@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   Table,
   TableBody,
@@ -13,9 +14,10 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Search, User, Vote, TrendingUp, Download } from 'lucide-react';
+import { Search, User, Vote, TrendingUp, Download, AlertCircle, X } from 'lucide-react';
 import { Application, Nomination } from '@prisma/client';
-import { exportApplicantsToCSV } from '@/lib/actions/export';
+import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 type ApplicationWithCount = Application & {
   nominationCount: number;
@@ -43,7 +45,7 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
   const [selectedApplicant, setSelectedApplicant] = useState<ApplicationWithCount | null>(null);
   const [applicantDetails, setApplicantDetails] = useState<ApplicationWithNominations | null>(null);
   const [loading, setLoading] = useState(false);
-  const [exporting, setExporting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const filteredApplications = applications.filter(
     (app) =>
@@ -62,38 +64,9 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
       setApplicantDetails(data);
     } catch (error) {
       console.error('Error fetching applicant details:', error);
+      setError('Failed to load applicant details. Please try again.');
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleExportCSV = async () => {
-    setExporting(true);
-    try {
-      const result = await exportApplicantsToCSV();
-      
-      if (result.success && result.data) {
-        // Create a blob and download it
-        const blob = new Blob([result.data], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        const url = URL.createObjectURL(blob);
-        
-        link.setAttribute('href', url);
-        link.setAttribute('download', result.filename || 'applicants.csv');
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        
-        // Clean up the URL object to prevent memory leaks
-        URL.revokeObjectURL(url);
-      } else {
-        console.error('Export failed:', result.error);
-      }
-    } catch (error) {
-      console.error('Error exporting CSV:', error);
-    } finally {
-      setExporting(false);
     }
   };
 
@@ -138,6 +111,23 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
         </Card>
       </div>
 
+      {/* Error Toast */}
+      {error && (
+        <Alert variant="destructive" className="mb-6">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription className="flex items-center justify-between">
+            <span>{error}</span>
+            <button
+              onClick={() => setError(null)}
+              className="ml-4 hover:opacity-70"
+              aria-label="Dismiss error"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </AlertDescription>
+        </Alert>
+      )}
+
       {/* Search and Export */}
       <div className="flex gap-4 mb-6">
         <div className="relative flex-1">
@@ -149,15 +139,18 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
             className="pl-10"
           />
         </div>
-        <Button 
-          onClick={handleExportCSV}
-          disabled={exporting || applications.length === 0}
-          variant="outline"
-          className="flex items-center gap-2"
+        <Link
+          href="/api/export"
+          className={cn(
+            buttonVariants({ variant: "outline" }),
+            "flex items-center gap-2 cursor-pointer",
+            applications.length === 0 && "pointer-events-none opacity-50"
+          )}
+          aria-disabled={applications.length === 0}
         >
           <Download className="h-4 w-4" />
-          {exporting ? 'Exporting...' : 'Export to CSV'}
-        </Button>
+          Export to CSV
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
