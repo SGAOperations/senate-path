@@ -50,6 +50,13 @@ export default function NominationsPage() {
     control,
   } = useForm<NominationFormData>({
     resolver: zodResolver(nominationSchema),
+    defaultValues: {
+      fullName: '',
+      email: '',
+      nominee: '',
+      college: '',
+      major: '',
+    },
   });
 
   useEffect(() => {
