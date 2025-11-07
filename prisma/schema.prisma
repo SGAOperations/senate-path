@@ -52,17 +52,14 @@ model Application {
 }
 
 model Nomination {
-  id                 Int      @id @default(autoincrement())
-  nominee            String?
-  fullName           String?
-  email              String?
-  college            String?
-  major              String?
-  graduationYear     Int?
-  constituency       String?
-  receiveSenatorInfo Boolean? @default(false)
-  status             String
-  createdAt          DateTime @default(now()) @map("created_at")
+  id        Int      @id @default(autoincrement())
+  nominee   String?
+  fullName  String?
+  email     String?
+  college   String?
+  major     String?
+  status    String
+  createdAt DateTime @default(now()) @map("created_at")
 
   @@map("nominations")
 }

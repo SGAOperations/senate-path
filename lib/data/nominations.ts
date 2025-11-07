@@ -66,72 +66,30 @@ export async function getUniqueNominees() {
 
 export async function getNomineesWithMinVotes(minVotes: number) {
   const nominations = await db.nomination.findMany({
-    select: { nominee: true, constituency: true },
+    select: { nominee: true },
   });
 
   if (nominations.length === 0) {
     return [];
   }
 
-  const voteCounts: Record<string, { count: number; constituency: string | null }> = {};
+  const voteCounts: Record<string, number> = {};
   
-  for (const { nominee, constituency } of nominations) {
+  for (const { nominee } of nominations) {
     if (!nominee) continue;
     if (!voteCounts[nominee]) {
-      voteCounts[nominee] = { count: 0, constituency };
+      voteCounts[nominee] = 0;
     }
-    voteCounts[nominee].count += 1;
+    voteCounts[nominee] += 1;
   }
 
   return Object.entries(voteCounts)
-    .filter(([_, { count }]) => count >= minVotes)
-    .map(([nominee, { count, constituency }]) => ({
+    .filter(([_, count]) => count >= minVotes)
+    .map(([nominee, count]) => ({
       nominee,
-      constituency,
       count,
     }))
     .sort((a, b) => b.count - a.count);
-}
-
-export async function createNomination(data: Omit<Nomination, 'id' | 'createdAt' | 'status'>) {
-  // Validate: Can't nominate yourself
-  if (data.fullName === data.nominee) {
-    throw new Error('You cannot nominate yourself for Senator');
-  }
-
-  // Validate: Nominee must exist and be in same constituency
-  const nomineeApp = await db.application.findFirst({
-    where: { fullName: data.nominee || undefined },
-    select: { constituency: true },
-  });
-
-  if (!nomineeApp) {
-    throw new Error(`Nominee ${data.nominee} not found`);
-  }
-
-  if (nomineeApp.constituency !== data.constituency) {
-    throw new Error('The nominator must belong to the same constituency as the nominee');
-  }
-
-  // Check if already nominated
-  const existing = await db.nomination.findFirst({
-    where: {
-      email: data.email || undefined,
-      nominee: data.nominee,
-    },
-  });
-
-  if (existing) {
-    throw new Error(`This nominator has already nominated ${data.nominee}`);
-  }
-
-  // Create nomination
-  return db.nomination.create({
-    data: {
-      ...data,
-      status: Status.APPROVED,
-    },
-  });
 }
 
 export async function updateNomination(id: number, data: Partial<Nomination>) {
