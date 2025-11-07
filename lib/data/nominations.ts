@@ -51,7 +51,7 @@ export async function getNominationsByEmail(email: string) {
 export async function getUniqueNominees() {
   const applicants = await db.application.findMany({
     select: { id: true, fullName: true },
-    orderBy: { id: 'desc' },
+    orderBy: { createdAt: 'desc' },
   });
 
   const uniqueNominees = new Map<string, string>();
@@ -134,7 +134,7 @@ export async function createNomination(data: Omit<Nomination, 'id' | 'createdAt'
   });
 }
 
-export async function updateNomination(id: number, data: Partial<Nomination>) {
+export async function updateNomination(id: string, data: Partial<Nomination>) {
   return db.nomination.update({
     where: { id },
     data,

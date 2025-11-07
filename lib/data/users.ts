@@ -7,7 +7,7 @@ export async function getUsers() {
   return db.user.findMany();
 }
 
-export async function getUserById(id: number) {
+export async function getUserById(id: string) {
   return db.user.findUnique({
     where: { id },
   });
@@ -19,14 +19,14 @@ export async function createUser(data: Omit<User, 'id'>) {
   });
 }
 
-export async function updateUser(id: number, data: Partial<User>) {
+export async function updateUser(id: string, data: Partial<User>) {
   return db.user.update({
     where: { id },
     data,
   });
 }
 
-export async function deleteUser(id: number) {
+export async function deleteUser(id: string) {
   return db.user.delete({
     where: { id },
   });
