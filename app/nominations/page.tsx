@@ -1,10 +1,10 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useState, useEffect } from 'react';
-import { submitNomination } from '@/lib/actions/nominations';
+import { createNomination } from '@/lib/actions/nominations';
 import { getNominationFormData } from '@/lib/data/applications';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -18,20 +18,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { CheckCircle2, XCircle } from 'lucide-react';
 import { useUnsavedChangesWarning } from '@/lib/hooks/useUnsavedChangesWarning';
 
 const nominationSchema = z.object({
   fullName: z.string().min(1, 'Your full name is required'),
-  email: z.string().email('Valid email is required'),
-  nominee: z.string().min(1, 'Nominee name is required'),
-  college: z.string().min(1, 'College is required'),
+  email: z.string().min(1, 'Email is required').email('Valid email is required').refine(
+    (email) => email.endsWith('@northeastern.edu'),
+    'Email must be a @northeastern.edu address'
+  ),
+  nominee: z.string().min(1, 'Please select a nominee'),
+  college: z.string().min(1, 'Please select your home college'),
   major: z.string().min(1, 'Major is required'),
-  graduationYear: z.number().min(2024, 'Valid graduation year required').max(2030, 'Graduation year must be by 2030'),
-  constituency: z.string().min(1, 'Constituency is required'),
-  receiveSenatorInfo: z.boolean(),
 });
 
 type NominationFormData = z.infer<typeof nominationSchema>;
@@ -41,10 +40,6 @@ export default function NominationsPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [college, setCollege] = useState('');
-  const [constituency, setConstituency] = useState('');
-  const [receiveSenatorInfo, setReceiveSenatorInfo] = useState(false);
-  const [nominee, setNominee] = useState('');
   const [nominees, setNominees] = useState<Array<{ fullName: string; email: string }>>([]);
   const [nomineesLoadError, setNomineesLoadError] = useState<string | null>(null);
 
@@ -53,11 +48,15 @@ export default function NominationsPage() {
     handleSubmit,
     formState: { errors, isDirty },
     reset,
-    setValue,
+    control,
   } = useForm<NominationFormData>({
     resolver: zodResolver(nominationSchema),
     defaultValues: {
-      receiveSenatorInfo: false,
+      fullName: '',
+      email: '',
+      nominee: '',
+      college: '',
+      major: '',
     },
   });
 
@@ -85,16 +84,7 @@ export default function NominationsPage() {
     setSubmitSuccess(false);
 
     try {
-      const formData = new FormData();
-      Object.entries(data).forEach(([key, value]) => {
-        if (key === 'graduationYear') {
-          formData.append(key, Number(value).toString());
-        } else {
-          formData.append(key, value.toString());
-        }
-      });
-
-      const result = await submitNomination(formData);
+      const result = await createNomination(data);
 
       if (result.success) {
         setSubmitSuccess(true);
@@ -119,7 +109,7 @@ export default function NominationsPage() {
           <CardHeader className="bg-gradient-to-r from-primary/10 to-primary/5 border-b">
             <CardTitle className="text-3xl font-bold">Nominate a Senator</CardTitle>
             <p className="text-muted-foreground mt-2">
-              Know someone who would make a great senator? Nominate them here! Please ensure they have submitted their application before nominating them.
+              Nominate students to become senators. Senators must have submitted an application in order to be nominated.
             </p>
           </CardHeader>
           <CardContent>
@@ -148,165 +138,117 @@ export default function NominationsPage() {
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Nominator Information */}
-            <div className="space-y-4 p-6 rounded-lg bg-slate-50 border border-slate-200">
-              <h3 className="text-xl font-bold text-slate-800">Your Information (Nominator)</h3>
-              <p className="text-sm text-muted-foreground">
-                Please ensure you have the same constituency as the person you're nominating.
-              </p>              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="fullName">Your Full Name</Label>
-                  <Input
-                    id="fullName"
-                    {...register('fullName')}
-                  />
-                  {errors.fullName && (
-                    <p className="text-sm text-destructive">{errors.fullName.message}</p>
-                  )}
-                </div>
+            <Card>
+              <CardContent className="pt-6">
+                <h3 className="text-xl font-bold text-slate-800 mb-4">Your Information (Nominator)</h3>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="fullName">Your Full Name</Label>
+                      <Input
+                        id="fullName"
+                        {...register('fullName')}
+                      />
+                      {errors.fullName && (
+                        <p className="text-sm text-destructive">{errors.fullName.message}</p>
+                      )}
+                    </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="email">Your Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="your.email@northeastern.edu"
-                    {...register('email')}
-                  />
-                  {errors.email && (
-                    <p className="text-sm text-destructive">{errors.email.message}</p>
-                  )}
-                </div>
-              </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Your Email</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="your.email@northeastern.edu"
+                        {...register('email')}
+                      />
+                      {errors.email && (
+                        <p className="text-sm text-destructive">{errors.email.message}</p>
+                      )}
+                    </div>
+                  </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="college">Your College</Label>
-                  <Select
-                    value={college}
-                    onValueChange={(value) => {
-                      setCollege(value);
-                      setValue('college', value, { shouldValidate: true });
-                    }}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select college" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="College of Arts, Media and Design">College of Arts, Media and Design</SelectItem>
-                      <SelectItem value="D'Amore-McKim School of Business">D'Amore-McKim School of Business</SelectItem>
-                      <SelectItem value="Khoury College of Computer Sciences">Khoury College of Computer Sciences</SelectItem>
-                      <SelectItem value="College of Engineering">College of Engineering</SelectItem>
-                      <SelectItem value="Bouvé College of Health Sciences">Bouvé College of Health Sciences</SelectItem>
-                      <SelectItem value="College of Science">College of Science</SelectItem>
-                      <SelectItem value="College of Social Sciences and Humanities">College of Social Sciences and Humanities</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {errors.college && (
-                    <p className="text-sm text-destructive">{errors.college.message}</p>
-                  )}
-                </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="college">Home College</Label>
+                      <Controller
+                        name="college"
+                        control={control}
+                        render={({ field }) => (
+                          <Select
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select college" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="College of Arts, Media and Design">College of Arts, Media and Design</SelectItem>
+                              <SelectItem value="D'Amore-McKim School of Business">D'Amore-McKim School of Business</SelectItem>
+                              <SelectItem value="Khoury College of Computer Sciences">Khoury College of Computer Sciences</SelectItem>
+                              <SelectItem value="College of Engineering">College of Engineering</SelectItem>
+                              <SelectItem value="Bouvé College of Health Sciences">Bouvé College of Health Sciences</SelectItem>
+                              <SelectItem value="College of Science">College of Science</SelectItem>
+                              <SelectItem value="College of Social Sciences and Humanities">College of Social Sciences and Humanities</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        )}
+                      />
+                      <p className="text-sm text-muted-foreground">
+                        Your home college should be the same college that your advisor is housed under
+                      </p>
+                      {errors.college && (
+                        <p className="text-sm text-destructive">{errors.college.message}</p>
+                      )}
+                    </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="major">Your Major</Label>
-                  <Input
-                    id="major"
-                    {...register('major')}
-                  />
-                  {errors.major && (
-                    <p className="text-sm text-destructive">{errors.major.message}</p>
-                  )}
+                    <div className="space-y-2">
+                      <Label htmlFor="major">Your Major</Label>
+                      <Input
+                        id="major"
+                        {...register('major')}
+                      />
+                      {errors.major && (
+                        <p className="text-sm text-destructive">{errors.major.message}</p>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="constituency">Your Constituency</Label>
-                <Select
-                  value={constituency}
-                  onValueChange={(value) => {
-                    setConstituency(value);
-                    setValue('constituency', value, { shouldValidate: true });
-                  }}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select constituency" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="CAMD">College of Arts, Media and Design</SelectItem>
-                    <SelectItem value="DMSB">D'Amore-McKim School of Business</SelectItem>
-                    <SelectItem value="Khoury">Khoury College of Computer Sciences</SelectItem>
-                    <SelectItem value="COE">College of Engineering</SelectItem>
-                    <SelectItem value="Bouve">Bouvé College of Health Sciences</SelectItem>
-                    <SelectItem value="COS">College of Science</SelectItem>
-                    <SelectItem value="CSSH">College of Social Sciences and Humanities</SelectItem>
-                    <SelectItem value="Explore">Explore (Undeclared)</SelectItem>
-                  </SelectContent>
-                </Select>
-                {errors.constituency && (
-                  <p className="text-sm text-destructive">{errors.constituency.message}</p>
-                )}
-              </div>
-            </div>
+              </CardContent>
+            </Card>
 
             {/* Nominee Information */}
-            <div className="space-y-4">
-              <h3 className="text-xl font-bold">Nominee Information</h3>
-              
-              <div className="space-y-2">
-                <Label htmlFor="nominee">Nominee Full Name</Label>
-                <Select
-                  value={nominee}
-                  onValueChange={(value) => {
-                    setNominee(value);
-                    setValue('nominee', value, { shouldValidate: true });
-                  }}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select the person you're nominating" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {nominees.map((n) => (
-                      <SelectItem key={n.email} value={n.fullName}>
-                        {n.fullName}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {errors.nominee && (
-                  <p className="text-sm text-destructive">{errors.nominee.message}</p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="graduationYear">Nominee's Graduation Year</Label>
-                <Input
-                  id="graduationYear"
-                  type="number"
-                  placeholder="2025"
-                  {...register('graduationYear', { valueAsNumber: true })}
-                />
-                {errors.graduationYear && (
-                  <p className="text-sm text-destructive">{errors.graduationYear.message}</p>
-                )}
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="receiveSenatorInfo"
-                  checked={receiveSenatorInfo}
-                  onCheckedChange={(checked) => {
-                    setReceiveSenatorInfo(checked as boolean);
-                    setValue('receiveSenatorInfo', checked as boolean);
-                  }}
-                />
-                <Label
-                  htmlFor="receiveSenatorInfo"
-                  className="text-sm font-normal cursor-pointer"
-                >
-                  I would like to receive information about becoming a senator
-                </Label>
-              </div>
-            </div>
+            <Card>
+              <CardContent className="pt-6">
+                <h3 className="text-xl font-bold mb-4">Nominee Information</h3>
+                <div className="space-y-2">
+                  <Controller
+                    name="nominee"
+                    control={control}
+                    render={({ field }) => (
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select the person you're nominating" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {nominees.map((n) => (
+                            <SelectItem key={n.email} value={n.fullName}>
+                              {n.fullName}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                  {errors.nominee && (
+                    <p className="text-sm text-destructive">{errors.nominee.message}</p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
 
             <Button
               type="submit"
