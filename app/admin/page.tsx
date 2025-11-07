@@ -1,9 +1,16 @@
 import { getApplicationsWithNominationCounts, getApplicationWithNominations } from '@/lib/data/applications';
 import AdminDashboard from '@/components/AdminDashboard';
-
-export const dynamic = 'force-dynamic';
+import { createClient } from '@/lib/supabase/server';
+import { redirect } from 'next/navigation';
 
 export default async function AdminPage() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect('/login');
+  }
+
   const applications = await getApplicationsWithNominationCounts();
 
   return (

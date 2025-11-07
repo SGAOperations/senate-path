@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   Table,
   TableBody,
@@ -12,8 +14,10 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Search, User, Vote, TrendingUp } from 'lucide-react';
+import { Search, User, Vote, TrendingUp, Download, AlertCircle, X } from 'lucide-react';
 import { Application, Nomination } from '@prisma/client';
+import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 type ApplicationWithCount = Application & {
   nominationCount: number;
@@ -41,6 +45,7 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
   const [selectedApplicant, setSelectedApplicant] = useState<ApplicationWithCount | null>(null);
   const [applicantDetails, setApplicantDetails] = useState<ApplicationWithNominations | null>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const filteredApplications = applications.filter(
     (app) =>
@@ -59,6 +64,7 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
       setApplicantDetails(data);
     } catch (error) {
       console.error('Error fetching applicant details:', error);
+      setError('Failed to load applicant details. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -105,15 +111,46 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
         </Card>
       </div>
 
-      {/* Search */}
-      <div className="relative mb-6">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          placeholder="Search by name, email, NUID, or constituency..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="pl-10"
-        />
+      {/* Error Toast */}
+      {error && (
+        <Alert variant="destructive" className="mb-6">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription className="flex items-center justify-between">
+            <span>{error}</span>
+            <button
+              onClick={() => setError(null)}
+              className="ml-4 hover:opacity-70"
+              aria-label="Dismiss error"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {/* Search and Export */}
+      <div className="flex gap-4 mb-6">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search by name, email, NUID, or constituency..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10"
+          />
+        </div>
+        <Link
+          href="/api/export"
+          className={cn(
+            buttonVariants({ variant: "outline" }),
+            "flex items-center gap-2 cursor-pointer",
+            applications.length === 0 && "pointer-events-none opacity-50"
+          )}
+          aria-disabled={applications.length === 0}
+        >
+          <Download className="h-4 w-4" />
+          Export to CSV
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">

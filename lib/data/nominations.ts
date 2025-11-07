@@ -66,28 +66,27 @@ export async function getUniqueNominees() {
 
 export async function getNomineesWithMinVotes(minVotes: number) {
   const nominations = await db.nomination.findMany({
-    select: { nominee: true, constituency: true },
+    select: { nominee: true },
   });
 
   if (nominations.length === 0) {
     return [];
   }
 
-  const voteCounts: Record<string, { count: number; constituency: string | null }> = {};
-  
-  for (const { nominee, constituency } of nominations) {
+  const voteCounts: Record<string, number> = {};
+
+  for (const { nominee } of nominations) {
     if (!nominee) continue;
     if (!voteCounts[nominee]) {
-      voteCounts[nominee] = { count: 0, constituency };
+      voteCounts[nominee] = 0;
     }
-    voteCounts[nominee].count += 1;
+    voteCounts[nominee] += 1;
   }
 
   return Object.entries(voteCounts)
-    .filter(([_, { count }]) => count >= minVotes)
-    .map(([nominee, { count, constituency }]) => ({
+    .filter(([_, count]) => count >= minVotes)
+    .map(([nominee, count]) => ({
       nominee,
-      constituency,
       count,
     }))
     .sort((a, b) => b.count - a.count);
