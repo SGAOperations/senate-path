@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from 'sonner';
+import { Navbar } from '@/components/Navbar';
 
 export const metadata: Metadata = {
   title: 'SGA Nomination System',
@@ -15,6 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body suppressHydrationWarning>
+        <Navbar />
         {children}
         <Toaster position="bottom-right" />
       </body>

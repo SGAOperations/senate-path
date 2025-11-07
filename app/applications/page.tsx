@@ -20,6 +20,7 @@ import {
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { XCircle, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useUnsavedChangesWarning } from '@/lib/hooks/useUnsavedChangesWarning';
 
 const applicationSchema = z.object({
   nuid: z.string().min(9, 'NUID must be 9 digits').max(9, 'NUID must be 9 digits'),
@@ -52,12 +53,16 @@ export default function ApplicationsPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
     reset,
     setValue,
   } = useForm<ApplicationFormData>({
     resolver: zodResolver(applicationSchema),
   });
+
+  // Warn user about unsaved changes before leaving the page
+  const hasUnsavedChanges = isDirty && !isSubmitting;
+  useUnsavedChangesWarning(hasUnsavedChanges);
 
   const onSubmit = async (data: ApplicationFormData) => {
     setIsSubmitting(true);

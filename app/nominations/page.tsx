@@ -22,6 +22,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { XCircle, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useUnsavedChangesWarning } from '@/lib/hooks/useUnsavedChangesWarning';
 
 const nominationSchema = z.object({
   fullName: z.string().min(1, 'Your full name is required'),
@@ -50,7 +51,7 @@ export default function NominationsPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
     reset,
     setValue,
   } = useForm<NominationFormData>({
@@ -59,6 +60,10 @@ export default function NominationsPage() {
       receiveSenatorInfo: false,
     },
   });
+
+  // Warn user about unsaved changes before leaving the page
+  const hasUnsavedChanges = isDirty && !isSubmitting;
+  useUnsavedChangesWarning(hasUnsavedChanges);
 
   useEffect(() => {
     async function fetchNominees() {
