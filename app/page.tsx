@@ -41,6 +41,13 @@ export default function Home() {
             >
               <Link href="/nominations">Nominate</Link>
             </Button>
+            <Button
+              asChild
+              size="lg"
+              className="font-bold min-w-[150px] min-h-[56px] bg-primary hover:bg-primary/90"
+            >
+              <Link href="/endorsements">Endorse</Link>
+            </Button>
           </div>
         </div>
       </div>
