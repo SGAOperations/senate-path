@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { CheckCircle2, XCircle } from 'lucide-react';
+import { useUnsavedChangesWarning } from '@/lib/hooks/useUnsavedChangesWarning';
 
 const nominationSchema = z.object({
   fullName: z.string().min(1, 'Your full name is required'),
@@ -45,7 +46,7 @@ export default function NominationsPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
     reset,
     control,
   } = useForm<NominationFormData>({
@@ -58,6 +59,10 @@ export default function NominationsPage() {
       major: '',
     },
   });
+
+  // Warn user about unsaved changes before leaving the page
+  const hasUnsavedChanges = isDirty && !isSubmitting && !submitSuccess;
+  useUnsavedChangesWarning(hasUnsavedChanges);
 
   useEffect(() => {
     async function fetchNominees() {
