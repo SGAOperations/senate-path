@@ -19,7 +19,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { CheckCircle2, XCircle, ChevronLeft, ChevronRight } from 'lucide-react';
+import { XCircle, ChevronLeft, ChevronRight } from 'lucide-react';
+import { toast } from 'sonner';
 
 const endorsementSchema = z.object({
   endorserName: z.string().min(1, 'Your name is required'),
@@ -37,7 +38,6 @@ export default function EndorsementsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [submitSuccess, setSubmitSuccess] = useState(false);
   const [applicantName, setApplicantName] = useState('');
   const [applicants, setApplicants] = useState<Array<{ fullName: string; email: string }>>([]);
   const [applicantsLoadError, setApplicantsLoadError] = useState<string | null>(null);
@@ -72,7 +72,6 @@ export default function EndorsementsPage() {
   const onSubmit = async (data: EndorsementFormData) => {
     setIsSubmitting(true);
     setSubmitError(null);
-    setSubmitSuccess(false);
 
     try {
       const formData = new FormData();
@@ -83,12 +82,9 @@ export default function EndorsementsPage() {
       const result = await submitEndorsement(formData);
 
       if (result.success) {
-        setSubmitSuccess(true);
+        toast.success('Endorsement submitted successfully!');
         reset();
-        setCurrentPage(1);
-        setTimeout(() => {
-          router.push('/');
-        }, 2000);
+        router.push('/');
       } else {
         setSubmitError(result.error || 'Failed to submit endorsement');
       }
@@ -131,15 +127,6 @@ export default function EndorsementsPage() {
             </p>
           </CardHeader>
           <CardContent>
-            {submitSuccess && (
-              <Alert variant="success" className="mb-4">
-                <CheckCircle2 className="h-4 w-4" />
-                <AlertDescription>
-                  Endorsement submitted successfully! Redirecting to home page...
-                </AlertDescription>
-              </Alert>
-            )}
-
             {submitError && (
               <Alert variant="destructive" className="mb-4">
                 <XCircle className="h-4 w-4" />
