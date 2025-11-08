@@ -22,7 +22,6 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { XCircle, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useUnsavedChangesWarning } from '@/lib/hooks/useUnsavedChangesWarning';
 import { toast } from 'sonner';
-import { Textarea } from '@/components/ui/textarea';
 
 const applicationSchema = z.object({
   nuid: z.string().min(9, 'NUID must be 9 digits').max(9, 'NUID must be 9 digits'),
@@ -159,16 +158,12 @@ export default function ApplicationsPage() {
               Thank you for your interest in becoming a Senator! {currentPage === 1 ? 'Please fill out all fields below.' : 'Please answer the following questions.'}
             </p>
             <div className="flex items-center gap-2 mt-4">
-              <div className={`flex items-center justify-center w-8 h-8 rounded-full ${currentPage === 1 ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'} font-semibold`}>
-                1
-              </div>
-              <div className="flex-1 h-1 bg-muted">
-                <div className={`h-full ${currentPage === 2 ? 'bg-primary' : 'bg-muted'} transition-all`} />
-              </div>
-              <div className={`flex items-center justify-center w-8 h-8 rounded-full ${currentPage === 2 ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'} font-semibold`}>
-                2
-              </div>
+              <div className={`h-2 flex-1 rounded ${currentPage >= 1 ? 'bg-primary' : 'bg-gray-200'}`} />
+              <div className={`h-2 flex-1 rounded ${currentPage >= 2 ? 'bg-primary' : 'bg-gray-200'}`} />
             </div>
+            <p className="text-sm text-muted-foreground mt-2">
+              Step {currentPage} of 2
+            </p>
           </CardHeader>
           <CardContent>
           {submitError && (
@@ -421,8 +416,7 @@ export default function ApplicationsPage() {
               onClick={handleNextPage}
               className="w-full h-12 font-bold text-lg shadow-md hover:shadow-lg transition-shadow"
             >
-              Next: Long Answer Questions
-              <ChevronRight className="ml-2 h-5 w-5" />
+              Next <ChevronRight className="ml-2 h-5 w-5" />
             </Button>
             </>
             )}
@@ -432,107 +426,89 @@ export default function ApplicationsPage() {
             {/* Long Answer Questions */}
             <div className="space-y-6">
               <div className="space-y-4 p-6 rounded-lg bg-slate-50 border border-slate-200">
-                <h3 className="text-xl font-bold text-slate-800">Question 1</h3>
-                <Label htmlFor="whySenateLongAnswer" className="text-base">
-                  The Student Government Association (SGA) has several committees, boards, and working groups spanning different areas of the student experience. Talk about why you're choosing to become part of Senate – what makes this opportunity stand out and what specific aspects of Senate motivated you to apply.
-                </Label>
-                <Textarea
-                  id="whySenateLongAnswer"
-                  rows={8}
-                  placeholder="Enter your response here..."
-                  {...register('whySenateLongAnswer')}
-                  disabled={isSubmitting}
-                  className="resize-y"
-                />
-                {errors.whySenateLongAnswer && (
-                  <p className="text-sm text-destructive">{errors.whySenateLongAnswer.message}</p>
-                )}
-              </div>
+                <h3 className="text-xl font-bold text-slate-800">Application Questions</h3>
+                <p className="text-sm text-muted-foreground">
+                  Please answer the following questions about your interest in Senate
+                </p>
 
-              <div className="space-y-4 p-6 rounded-lg bg-slate-50 border border-slate-200">
-                <h3 className="text-xl font-bold text-slate-800">Question 2</h3>
-                <Label htmlFor="constituencyIssueLongAnswer" className="text-base">
-                  As a Senator, you'll be representing your community and academic constituency in addition to serving as an advocate for all students of Northeastern University. Describe an issue facing both your academic constituency and your community constituency. How will you equitably advocate on behalf of all of these parties while in the Senate Chambers?
-                </Label>
-                <Textarea
-                  id="constituencyIssueLongAnswer"
-                  rows={8}
-                  placeholder="Enter your response here..."
-                  {...register('constituencyIssueLongAnswer')}
-                  disabled={isSubmitting}
-                  className="resize-y"
-                />
-                {errors.constituencyIssueLongAnswer && (
-                  <p className="text-sm text-destructive">{errors.constituencyIssueLongAnswer.message}</p>
-                )}
-              </div>
+                <div className="space-y-2">
+                  <Label htmlFor="whySenateLongAnswer">
+                    The Student Government Association (SGA) has several committees, boards, and working groups spanning different areas of the student experience. Talk about why you're choosing to become part of Senate – what makes this opportunity stand out and what specific aspects of Senate motivated you to apply.
+                  </Label>
+                  <textarea
+                    id="whySenateLongAnswer"
+                    className="w-full min-h-[120px] px-3 py-2 text-sm border border-input bg-background rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                    placeholder="Please provide a detailed response (minimum 50 characters)"
+                    {...register('whySenateLongAnswer')}
+                  />
+                  {errors.whySenateLongAnswer && (
+                    <p className="text-sm text-destructive">{errors.whySenateLongAnswer.message}</p>
+                  )}
+                </div>
 
-              <div className="space-y-4 p-6 rounded-lg bg-slate-50 border border-slate-200">
-                <h3 className="text-xl font-bold text-slate-800">Question 3</h3>
-                <Label htmlFor="diversityEquityInclusionLongAnswer" className="text-base">
-                  Now more than ever principles of diversity, equity, and inclusion need to be purposefully implemented and considered in all aspects of the Association's activities. Your fellow Huskies may not be aware of the different perspectives within underrepresented communities on campus.
-                </Label>
-                <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1 mt-2 mb-3">
-                  <li>In your own words, define diversity, equity, and inclusion and describe what these terms mean to you.</li>
-                  <li>Additionally, explain how you will embody principles of diversity, equity, and inclusion during your time in Senate?</li>
-                  <li>How will you contribute to our efforts to ensure the voices and needs of Northeastern's diverse populations are heard?</li>
-                </ul>
-                <Textarea
-                  id="diversityEquityInclusionLongAnswer"
-                  rows={8}
-                  placeholder="Enter your response here..."
-                  {...register('diversityEquityInclusionLongAnswer')}
-                  disabled={isSubmitting}
-                  className="resize-y"
-                />
-                {errors.diversityEquityInclusionLongAnswer && (
-                  <p className="text-sm text-destructive">{errors.diversityEquityInclusionLongAnswer.message}</p>
-                )}
-              </div>
+                <div className="space-y-2">
+                  <Label htmlFor="constituencyIssueLongAnswer">
+                    As a Senator, you'll be representing your community and academic constituency in addition to serving as an advocate for all students of Northeastern University. Describe an issue facing both your academic constituency and your community constituency. How will you equitably advocate on behalf of all of these parties while in the Senate Chambers?
+                  </Label>
+                  <textarea
+                    id="constituencyIssueLongAnswer"
+                    className="w-full min-h-[120px] px-3 py-2 text-sm border border-input bg-background rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                    placeholder="Please provide a detailed response (minimum 50 characters)"
+                    {...register('constituencyIssueLongAnswer')}
+                  />
+                  {errors.constituencyIssueLongAnswer && (
+                    <p className="text-sm text-destructive">{errors.constituencyIssueLongAnswer.message}</p>
+                  )}
+                </div>
 
-              <div className="space-y-4 p-6 rounded-lg bg-slate-50 border border-slate-200">
-                <h3 className="text-xl font-bold text-slate-800">Question 4</h3>
-                <Label htmlFor="conflictSituationLongAnswer" className="text-base">
-                  Talk about a time you were faced with a conflict or difficult situation. How did you handle it – and how has it impacted the person you are today?
-                </Label>
-                <Textarea
-                  id="conflictSituationLongAnswer"
-                  rows={8}
-                  placeholder="Enter your response here..."
-                  {...register('conflictSituationLongAnswer')}
-                  disabled={isSubmitting}
-                  className="resize-y"
-                />
-                {errors.conflictSituationLongAnswer && (
-                  <p className="text-sm text-destructive">{errors.conflictSituationLongAnswer.message}</p>
-                )}
+                <div className="space-y-2">
+                  <Label htmlFor="diversityEquityInclusionLongAnswer">
+                    Now more than ever principles of diversity, equity, and inclusion need to be purposefully implemented and considered in all aspects of the Association's activities. Your fellow Huskies may not be aware of the different perspectives within underrepresented communities on campus. In your own words, define diversity, equity, and inclusion and describe what these terms mean to you. Additionally, explain how you will embody principles of diversity, equity, and inclusion during your time in Senate? How will you contribute to our efforts to ensure the voices and needs of Northeastern's diverse populations are heard?
+                  </Label>
+                  <textarea
+                    id="diversityEquityInclusionLongAnswer"
+                    className="w-full min-h-[120px] px-3 py-2 text-sm border border-input bg-background rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                    placeholder="Please provide a detailed response (minimum 50 characters)"
+                    {...register('diversityEquityInclusionLongAnswer')}
+                  />
+                  {errors.diversityEquityInclusionLongAnswer && (
+                    <p className="text-sm text-destructive">{errors.diversityEquityInclusionLongAnswer.message}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="conflictSituationLongAnswer">
+                    Talk about a time you were faced with a conflict or difficult situation. How did you handle it – and how has it impacted the person you are today?
+                  </Label>
+                  <textarea
+                    id="conflictSituationLongAnswer"
+                    className="w-full min-h-[120px] px-3 py-2 text-sm border border-input bg-background rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                    placeholder="Please provide a detailed response (minimum 50 characters)"
+                    {...register('conflictSituationLongAnswer')}
+                  />
+                  {errors.conflictSituationLongAnswer && (
+                    <p className="text-sm text-destructive">{errors.conflictSituationLongAnswer.message}</p>
+                  )}
+                </div>
               </div>
             </div>
 
             <div className="flex gap-4">
               <Button
                 type="button"
-                onClick={handlePreviousPage}
                 variant="outline"
-                className="flex-1 h-12 font-bold text-lg shadow-md hover:shadow-lg transition-shadow"
+                onClick={handlePreviousPage}
+                className="flex-1 h-12 font-bold text-lg"
               >
-                <ChevronLeft className="mr-2 h-5 w-5" />
-                Previous
+                <ChevronLeft className="mr-2 h-5 w-5" /> Previous
               </Button>
               <Button
                 type="submit"
                 className="flex-1 h-12 font-bold text-lg shadow-md hover:shadow-lg transition-shadow"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    Submitting...
-                </>
-              ) : (
-                'Submit Application'
-              )}
-            </Button>
+                {isSubmitting ? 'Submitting...' : 'Submit Application'}
+              </Button>
             </div>
             </>
             )}
