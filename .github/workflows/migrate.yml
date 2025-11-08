@@ -27,12 +27,25 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
+      - name: Check migration status (before)
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
+        run: |
+          echo "Checking migration status before applying..."
+          npx prisma migrate status || true
+
       - name: Apply migrations
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           DIRECT_URL: ${{ secrets.DIRECT_URL }}
         run: npx prisma migrate deploy
 
-      - name: Migration status
+      - name: Check migration status (after)
         if: success()
-        run: echo "✅ Migrations applied successfully to ${{ github.ref == 'refs/heads/main' && 'production' || 'development' }} environment"
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
+        run: |
+          echo "✅ Migrations applied successfully to ${{ github.ref == 'refs/heads/main' && 'production' || 'development' }} environment"
+          npx prisma migrate status
