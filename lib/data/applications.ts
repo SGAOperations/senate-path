@@ -13,6 +13,29 @@ export async function getApplicationByNuid(nuid: string) {
   });
 }
 
+export async function getApplicationByNuidWithNominations(nuid: string) {
+  const application = await db.application.findUnique({
+    where: { nuid },
+  });
+
+  if (!application) {
+    return null;
+  }
+
+  const nominations = await db.nomination.findMany({
+    where: { nominee: application.fullName },
+    orderBy: { createdAt: 'desc' },
+  });
+
+  const nominationCount = nominations.filter(n => n.status === 'APPROVED').length;
+
+  return {
+    ...application,
+    nominations,
+    nominationCount,
+  };
+}
+
 export async function getApplicationWithNominations(id: string) {
   const application = await db.application.findUnique({
     where: { id },

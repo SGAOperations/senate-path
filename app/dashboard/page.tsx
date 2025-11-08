@@ -1,10 +1,14 @@
+import { getApplicationByNuidWithNominations } from '@/lib/data/applications';
+import UserDashboard from '@/components/UserDashboard';
+
 export default function DashboardPage() {
   return (
-    <div className="container max-w-7xl mx-auto py-8 px-4">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">User Dashboard</h1>
-        <p className="text-muted-foreground">Coming soon - Will show nomination statistics and user data</p>
+    <div className="container max-w-[1600px] mx-auto py-6 px-4">
+      <div className="mb-6">
+        <h1 className="text-4xl font-bold">User Dashboard</h1>
+        <p className="text-muted-foreground mt-2">View your application status and nomination count</p>
       </div>
+      <UserDashboard getApplicationByNuid={getApplicationByNuidWithNominations} />
     </div>
   );
 }
