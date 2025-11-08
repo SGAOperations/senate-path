@@ -15,22 +15,23 @@ datasource db {
 }
 
 model Application {
-  id                    String   @id @default(uuid())
-  nuid                  String   @unique
-  fullName              String
-  preferredFullName     String
-  nickname              String
-  phoneticPronunciation String
-  pronouns              String
-  email                 String
-  phoneNumber           String
-  college               String
-  major                 String
-  minors                String
-  year                  Int
-  semester              String
-  constituency          String
-  createdAt             DateTime @default(now())
+  id                         String   @id @default(uuid())
+  nuid                       String   @unique
+  fullName                   String
+  preferredFullName          String
+  nickname                   String
+  phoneticPronunciation      String
+  pronunciationAudioUrl      String   @default("")
+  pronouns                   String
+  email                      String
+  phoneNumber                String
+  college                    String
+  major                     String
+  minors                     String
+  year                       Int
+  semester                   String
+  constituency               String
+  createdAt                  DateTime @default(now())
 
   @@map("applications")
 }

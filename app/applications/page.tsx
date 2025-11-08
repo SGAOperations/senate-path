@@ -19,9 +19,10 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { XCircle, Loader2 } from 'lucide-react';
+import { XCircle, Loader2, ExternalLink } from 'lucide-react';
 import { useUnsavedChangesWarning } from '@/lib/hooks/useUnsavedChangesWarning';
 import { toast } from 'sonner';
+import { VoiceRecorder } from '@/components/ui/voice-recorder';
 
 const applicationSchema = z.object({
   nuid: z.string().min(9, 'NUID must be 9 digits').max(9, 'NUID must be 9 digits'),
@@ -54,6 +55,8 @@ export default function ApplicationsPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [pronunciationAudio, setPronunciationAudio] = useState<Blob | null>(null);
+  const [pronunciationAudioUrl, setPronunciationAudioUrl] = useState<string>('');
 
   const {
     register,
@@ -103,11 +106,27 @@ export default function ApplicationsPage() {
     setSubmitError(null);
 
     try {
-      const result = await submitApplication(data);
+      // Convert audio blob to base64 if present
+      let audioDataUrl = '';
+      if (pronunciationAudio) {
+        const reader = new FileReader();
+        audioDataUrl = await new Promise<string>((resolve, reject) => {
+          reader.onloadend = () => resolve(reader.result as string);
+          reader.onerror = reject;
+          reader.readAsDataURL(pronunciationAudio);
+        });
+      }
+
+      const result = await submitApplication({
+        ...data,
+        pronunciationAudioUrl: audioDataUrl,
+      });
 
       if (result.success) {
         toast.success('Application submitted successfully!');
         reset();
+        setPronunciationAudio(null);
+        setPronunciationAudioUrl('');
         router.push('/');
       } else {
         setSubmitError(result.error || 'Failed to submit application');
@@ -214,16 +233,59 @@ export default function ApplicationsPage() {
                   )}
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="phoneticPronunciation">Phonetic Pronunciation <span className="text-muted-foreground">(optional)</span></Label>
+                <div className="space-y-2 md:col-span-2">
+                  <Label htmlFor="phoneticPronunciation">
+                    Name Pronunciation <span className="text-muted-foreground">(optional)</span>
+                  </Label>
+                  <p className="text-sm text-muted-foreground mb-2">
+                    Help us pronounce your last name correctly. You can either:
+                  </p>
+                  <ul className="text-sm text-muted-foreground mb-3 ml-4 list-disc">
+                    <li>Type the phonetic spelling (e.g., "Smith" = "SMITH")</li>
+                    <li>Record yourself saying your last name using the voice recorder below</li>
+                  </ul>
+                  
                   <Input
                     id="phoneticPronunciation"
+                    placeholder="e.g., SMITH or Smith (rhymes with myth)"
                     {...register('phoneticPronunciation')}
                     disabled={isSubmitting}
                   />
                   {errors.phoneticPronunciation && (
                     <p className="text-sm text-destructive">{errors.phoneticPronunciation.message}</p>
                   )}
+                  
+                  <div className="mt-3 p-4 rounded-md bg-white border border-input">
+                    <div className="flex items-start justify-between mb-2">
+                      <div>
+                        <h4 className="text-sm font-medium">Voice Recording</h4>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Record yourself pronouncing your <strong>last name</strong> (max 30 seconds)
+                        </p>
+                      </div>
+                      <a
+                        href="https://www.internationalphoneticalphabet.org/ipa-sounds/ipa-chart-with-sounds/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-primary hover:underline flex items-center gap-1"
+                      >
+                        Pronunciation Guide
+                        <ExternalLink className="h-3 w-3" />
+                      </a>
+                    </div>
+                    <VoiceRecorder
+                      onRecordingComplete={(blob, url) => {
+                        setPronunciationAudio(blob);
+                        setPronunciationAudioUrl(url);
+                      }}
+                      onRecordingDelete={() => {
+                        setPronunciationAudio(null);
+                        setPronunciationAudioUrl('');
+                      }}
+                      disabled={isSubmitting}
+                      maxDuration={30}
+                    />
+                  </div>
                 </div>
 
                 <div className="space-y-2">
