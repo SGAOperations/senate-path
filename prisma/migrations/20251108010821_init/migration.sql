@@ -6,6 +6,7 @@ CREATE TABLE "users" (
     "id" TEXT NOT NULL,
     "firstName" TEXT NOT NULL,
     "lastName" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
     "role" "Role" NOT NULL DEFAULT 'STANDARD',
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
@@ -41,14 +42,14 @@ CREATE TABLE "nominations" (
     "email" TEXT,
     "college" TEXT,
     "major" TEXT,
-    "graduationYear" INTEGER,
-    "constituency" TEXT,
-    "receiveSenatorInfo" BOOLEAN DEFAULT false,
     "status" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "nominations_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "applications_nuid_key" ON "applications"("nuid");
