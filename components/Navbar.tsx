@@ -51,7 +51,7 @@ export function Navbar() {
   };
 
   return (
-    <nav className="bg-white border-b border-border sticky top-0 z-50 shadow-sm h-16">
+    <nav className="bg-white border-b-2 border-primary sticky top-0 z-50 shadow-md h-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo/Brand */}
@@ -72,10 +72,10 @@ export function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`inline-flex items-center px-1 pt-1 text-sm font-medium transition-colors ${
+                className={`inline-flex items-center px-1 pt-1 text-sm font-bold transition-colors ${
                   isActive(link.href)
-                    ? 'text-primary border-b-2 border-primary'
-                    : 'text-foreground hover:text-primary hover:border-b-2 hover:border-muted'
+                    ? 'text-primary border-b-4 border-primary'
+                    : 'text-foreground hover:text-primary hover:border-b-4 hover:border-primary/50'
                 }`}
               >
                 {link.label}
@@ -103,17 +103,17 @@ export function Navbar() {
 
       {/* Mobile menu */}
       {isMenuOpen && (
-        <div className="md:hidden border-t border-border">
+        <div className="md:hidden border-t-2 border-primary">
           <div className="px-2 pt-2 pb-3 space-y-1">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setIsMenuOpen(false)}
-                className={`block px-3 py-2 rounded-md text-base font-medium ${
+                className={`block px-3 py-2 rounded-md text-base font-bold ${
                   isActive(link.href)
-                    ? 'bg-primary/10 text-primary'
-                    : 'text-foreground hover:bg-muted hover:text-primary'
+                    ? 'bg-primary text-white'
+                    : 'text-foreground hover:bg-primary/10 hover:text-primary'
                 }`}
               >
                 {link.label}

@@ -103,13 +103,13 @@ export default function NominationsPage() {
     <div className="min-h-screen bg-gradient-to-br from-muted via-background to-muted">
       <div className="container max-w-4xl mx-auto py-8 px-4">
         <Card className="shadow-lg">
-          <CardHeader className="bg-gradient-to-r from-primary/10 to-primary/5 border-b">
-            <CardTitle className="text-3xl font-bold">Nominate a Senator</CardTitle>
+          <CardHeader className="bg-gradient-to-r from-primary/20 to-primary/10 border-b-2 border-primary">
+            <CardTitle className="text-3xl font-bold text-primary">Nominate a Senator</CardTitle>
             <p className="text-muted-foreground mt-2">
               Nominate students to become senators. Senators must have submitted an application in order to be nominated.
             </p>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-8">
           {submitError && (
             <Alert variant="destructive" className="mb-4">
               <XCircle className="h-4 w-4" />
@@ -126,9 +126,9 @@ export default function NominationsPage() {
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Nominator Information */}
-            <Card>
+            <Card className="border-2 border-primary/30">
               <CardContent className="pt-6">
-                <h3 className="text-xl font-bold text-foreground mb-4">Your Information (Nominator)</h3>
+                <h3 className="text-xl font-bold text-primary border-b-2 border-primary pb-2 mb-4">Your Information (Nominator)</h3>
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
@@ -209,9 +209,9 @@ export default function NominationsPage() {
             </Card>
 
             {/* Nominee Information */}
-            <Card>
+            <Card className="border-2 border-primary/30">
               <CardContent className="pt-6">
-                <h3 className="text-xl font-bold mb-4">Nominee Information</h3>
+                <h3 className="text-xl font-bold text-primary border-b-2 border-primary pb-2 mb-4">Nominee Information</h3>
                 <div className="space-y-2">
                   <Controller
                     name="nominee"
