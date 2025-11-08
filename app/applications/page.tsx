@@ -120,7 +120,7 @@ export default function ApplicationsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-slate-50">
+    <div className="min-h-screen bg-gradient-to-br from-muted via-background to-muted">
       <div className="container max-w-4xl mx-auto py-8 px-4">
         <Card className="shadow-lg">
           <CardHeader className="bg-linear-to-r from-primary/10 to-primary/5 border-b">
@@ -139,8 +139,8 @@ export default function ApplicationsPage() {
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Personal Information */}
-            <div className="space-y-4 p-6 rounded-lg bg-slate-50 border border-slate-200">
-              <h3 className="text-xl font-bold text-slate-800">Personal Information</h3>
+            <div className="space-y-4 p-6 rounded-lg bg-muted border border-border">
+              <h3 className="text-xl font-bold text-foreground">Personal Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
@@ -255,8 +255,8 @@ export default function ApplicationsPage() {
             </div>
 
             {/* Academic Information */}
-            <div className="space-y-4 p-6 rounded-lg bg-slate-50 border border-slate-200">
-              <h3 className="text-xl font-bold text-slate-800">Academic Information</h3>
+            <div className="space-y-4 p-6 rounded-lg bg-muted border border-border">
+              <h3 className="text-xl font-bold text-foreground">Academic Information</h3>
               
               <div className="space-y-2">
                 <Label>College <span className="text-sm text-muted-foreground">(Select all that apply)</span></Label>
@@ -352,8 +352,8 @@ export default function ApplicationsPage() {
             </div>
 
             {/* Constituency */}
-            <div className="space-y-4 p-6 rounded-lg bg-slate-50 border border-slate-200">
-              <h3 className="text-xl font-bold text-slate-800">Constituency</h3>
+            <div className="space-y-4 p-6 rounded-lg bg-muted border border-border">
+              <h3 className="text-xl font-bold text-foreground">Constituency</h3>
               
               <div className="space-y-2">
                 <Label htmlFor="constituency">

@@ -100,7 +100,7 @@ export default function NominationsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50">
+    <div className="min-h-screen bg-gradient-to-br from-muted via-background to-muted">
       <div className="container max-w-4xl mx-auto py-8 px-4">
         <Card className="shadow-lg">
           <CardHeader className="bg-gradient-to-r from-primary/10 to-primary/5 border-b">
@@ -128,7 +128,7 @@ export default function NominationsPage() {
             {/* Nominator Information */}
             <Card>
               <CardContent className="pt-6">
-                <h3 className="text-xl font-bold text-slate-800 mb-4">Your Information (Nominator)</h3>
+                <h3 className="text-xl font-bold text-foreground mb-4">Your Information (Nominator)</h3>
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
