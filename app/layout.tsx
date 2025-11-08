@@ -14,10 +14,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body suppressHydrationWarning>
+    <html lang="en" className="h-full">
+      <body suppressHydrationWarning className="h-full overflow-hidden">
         <Navbar />
-        {children}
+        <main className="h-[calc(100%-4rem)] overflow-auto">
+          {children}
+        </main>
         <Toaster position="bottom-right" />
       </body>
     </html>
