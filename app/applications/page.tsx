@@ -29,8 +29,8 @@ const applicationSchema = z.object({
   fullName: z.string().min(1, 'Full name is required'),
   preferredFullName: z.string().optional(),
   nickname: z.string().optional(),
-  phoneticPronunciation: z.string().optional(),
-  pronouns: z.string().optional(),
+  phoneticPronunciation: z.string().min(1, 'Phonetic pronunciation is required'),
+  pronouns: z.string().min(1, 'Pronouns are required'),
   email: z.string().email('Please enter a valid email address').refine((email) => email.endsWith('@northeastern.edu'), {
     message: 'Email must be a Northeastern email (@northeastern.edu)',
   }),
@@ -215,6 +215,7 @@ export default function ApplicationsPage() {
                   <Label htmlFor="phoneNumber">Phone Number</Label>
                   <Input
                     id="phoneNumber"
+                    placeholder="(XXX) XXX-XXXX"
                     {...register('phoneNumber')}
                   />
                   {errors.phoneNumber && (
@@ -258,7 +259,7 @@ export default function ApplicationsPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="phoneticPronunciation">Phonetic Pronunciation <span className="text-muted-foreground">(optional)</span></Label>
+                  <Label htmlFor="phoneticPronunciation">Phonetic Pronunciation</Label>
                   <Input
                     id="phoneticPronunciation"
                     {...register('phoneticPronunciation')}
@@ -270,7 +271,7 @@ export default function ApplicationsPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="pronouns">Pronouns <span className="text-muted-foreground">(optional)</span></Label>
+                  <Label htmlFor="pronouns">Pronouns</Label>
                   <Input
                     id="pronouns"
                     {...register('pronouns')}
@@ -278,20 +279,6 @@ export default function ApplicationsPage() {
                   />
                   {errors.pronouns && (
                     <p className="text-sm text-destructive">{errors.pronouns.message}</p>
-                  )}
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="phoneNumber">Phone Number</Label>
-                  <Input
-                    id="phoneNumber"
-                    placeholder="(XXX) XXX-XXXX"
-                    {...register('phoneNumber')}
-                  />
-                  {errors.phoneNumber && (
-                    <p className="text-sm text-destructive">{errors.phoneNumber.message}</p>
                   )}
                 </div>
               </div>
