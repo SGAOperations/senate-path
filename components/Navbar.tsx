@@ -34,6 +34,7 @@ export function Navbar() {
     { href: '/', label: 'Home' },
     { href: '/applications', label: 'Apply' },
     { href: '/nominations', label: 'Nominate' },
+    { href: '/endorsements', label: 'Endorse' },
     { href: '/dashboard', label: 'Dashboard' },
   ];
 
