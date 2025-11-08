@@ -106,6 +106,13 @@ export default function ApplicationsPage() {
     setSubmitError(null);
 
     try {
+      // Validate that voice recording is provided
+      if (!pronunciationAudio) {
+        setSubmitError('Please provide a voice recording of your name pronunciation');
+        setIsSubmitting(false);
+        return;
+      }
+
       // Convert audio blob to base64 if present
       let audioDataUrl = '';
       if (pronunciationAudio) {
@@ -162,6 +169,54 @@ export default function ApplicationsPage() {
               <h3 className="text-xl font-bold text-slate-800">Personal Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2 md:col-span-2">
+                  <Label htmlFor="fullName">Full Name (as it appears on official documents)</Label>
+                  <Input
+                    id="fullName"
+                    {...register('fullName')}
+                    disabled={isSubmitting}
+                  />
+                  {errors.fullName && (
+                    <p className="text-sm text-destructive">{errors.fullName.message}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="preferredFullName">Preferred Full Name <span className="text-muted-foreground">(optional)</span></Label>
+                  <Input
+                    id="preferredFullName"
+                    {...register('preferredFullName')}
+                    disabled={isSubmitting}
+                  />
+                  {errors.preferredFullName && (
+                    <p className="text-sm text-destructive">{errors.preferredFullName.message}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="nickname">Nickname <span className="text-muted-foreground">(optional)</span></Label>
+                  <Input
+                    id="nickname"
+                    {...register('nickname')}
+                    disabled={isSubmitting}
+                  />
+                  {errors.nickname && (
+                    <p className="text-sm text-destructive">{errors.nickname.message}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="pronouns">Pronouns</Label>
+                  <Input
+                    id="pronouns"
+                    {...register('pronouns')}
+                    disabled={isSubmitting}
+                  />
+                  {errors.pronouns && (
+                    <p className="text-sm text-destructive">{errors.pronouns.message}</p>
+                  )}
+                </div>
+
                 <div className="space-y-2">
                   <Label htmlFor="nuid">NUID</Label>
                   <Input
@@ -193,44 +248,10 @@ export default function ApplicationsPage() {
                     id="phoneNumber"
                     placeholder="(XXX) XXX-XXXX"
                     {...register('phoneNumber')}
+                    disabled={isSubmitting}
                   />
                   {errors.phoneNumber && (
                     <p className="text-sm text-destructive">{errors.phoneNumber.message}</p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="fullName">Full Name (as it appears on official documents)</Label>
-                  <Input
-                    id="fullName"
-                    {...register('fullName')}
-                  />
-                  {errors.fullName && (
-                    <p className="text-sm text-destructive">{errors.fullName.message}</p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="preferredFullName">Preferred Full Name <span className="text-muted-foreground">(optional)</span></Label>
-                  <Input
-                    id="preferredFullName"
-                    {...register('preferredFullName')}
-                    disabled={isSubmitting}
-                  />
-                  {errors.preferredFullName && (
-                    <p className="text-sm text-destructive">{errors.preferredFullName.message}</p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="nickname">Nickname <span className="text-muted-foreground">(optional)</span></Label>
-                  <Input
-                    id="nickname"
-                    {...register('nickname')}
-                    disabled={isSubmitting}
-                  />
-                  {errors.nickname && (
-                    <p className="text-sm text-destructive">{errors.nickname.message}</p>
                   )}
                 </div>
 
@@ -239,40 +260,42 @@ export default function ApplicationsPage() {
                     Name Pronunciation
                   </Label>
                   <p className="text-sm text-muted-foreground mb-2">
-                    Help us pronounce your last name correctly. You can either:
+                    Help us pronounce your last name correctly. Please provide both:
                   </p>
                   <ul className="text-sm text-muted-foreground mb-3 ml-4 list-disc">
-                    <li>Type the phonetic spelling (e.g., "Smith" = "SMITH")</li>
-                    <li>Record yourself saying your last name using the voice recorder below</li>
+                    <li>Type the phonetic spelling below (e.g., "Smith" = "SMITH")</li>
+                    <li>Record yourself saying your last name using the voice recorder</li>
                   </ul>
                   
-                  <Input
-                    id="phoneticPronunciation"
-                    placeholder="e.g., SMITH or Smith (rhymes with myth)"
-                    {...register('phoneticPronunciation')}
-                    disabled={isSubmitting}
-                  />
+                  <div className="flex items-end gap-2">
+                    <div className="flex-1">
+                      <Input
+                        id="phoneticPronunciation"
+                        placeholder="e.g., SMITH or Smith (rhymes with myth)"
+                        {...register('phoneticPronunciation')}
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                    <a
+                      href="https://www.internationalphoneticalphabet.org/ipa-sounds/ipa-chart-with-sounds/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-primary hover:underline flex items-center gap-1 whitespace-nowrap pb-2"
+                    >
+                      Pronunciation Guide
+                      <ExternalLink className="h-3 w-3" />
+                    </a>
+                  </div>
                   {errors.phoneticPronunciation && (
                     <p className="text-sm text-destructive">{errors.phoneticPronunciation.message}</p>
                   )}
                   
                   <div className="mt-3 p-4 rounded-md bg-white border border-input">
-                    <div className="flex items-start justify-between mb-2">
-                      <div>
-                        <h4 className="text-sm font-medium">Voice Recording</h4>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          Record yourself pronouncing your <strong>last name</strong> (max 30 seconds)
-                        </p>
-                      </div>
-                      <a
-                        href="https://www.internationalphoneticalphabet.org/ipa-sounds/ipa-chart-with-sounds/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-xs text-primary hover:underline flex items-center gap-1"
-                      >
-                        Pronunciation Guide
-                        <ExternalLink className="h-3 w-3" />
-                      </a>
+                    <div className="mb-2">
+                      <h4 className="text-sm font-medium">Voice Recording (Required)</h4>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Record yourself pronouncing your <strong>last name</strong> (max 30 seconds)
+                      </p>
                     </div>
                     <VoiceRecorder
                       onRecordingComplete={(blob, url) => {
@@ -286,19 +309,10 @@ export default function ApplicationsPage() {
                       disabled={isSubmitting}
                       maxDuration={30}
                     />
+                    {submitError && !pronunciationAudio && (
+                      <p className="text-sm text-destructive mt-2">Voice recording is required</p>
+                    )}
                   </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="pronouns">Pronouns</Label>
-                  <Input
-                    id="pronouns"
-                    {...register('pronouns')}
-                    disabled={isSubmitting}
-                  />
-                  {errors.pronouns && (
-                    <p className="text-sm text-destructive">{errors.pronouns.message}</p>
-                  )}
                 </div>
               </div>
             </div>
