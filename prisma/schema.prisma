@@ -42,27 +42,27 @@ enum NominationStatus {
 }
 
 model Nomination {
-  id        String   @id @default(uuid())
+  id        String           @id @default(uuid())
   nominee   String
   fullName  String
   email     String
   college   String
   major     String
   status    NominationStatus @default(PENDING)
-  createdAt DateTime @default(now())
+  createdAt DateTime         @default(now())
 
   @@map("nominations")
 }
 
 model Endorsement {
-  id                         Int      @id @default(autoincrement())
-  endorserName               String
-  endorserEmail              String
-  applicantName              String
-  definingTraits             String
-  leadershipQualities        String
-  areasForDevelopment        String
-  createdAt                  DateTime @default(now()) @map("created_at")
+  id                  String   @id @default(uuid())
+  endorserName        String
+  endorserEmail       String
+  applicantName       String
+  definingTraits      String
+  leadershipQualities String
+  areasForDevelopment String
+  createdAt           DateTime @default(now())
 
   @@map("endorsements")
 }
