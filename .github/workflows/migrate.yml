@@ -20,32 +20,12 @@ jobs:
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
-        with:
-          node-version: 20
-          cache: 'yarn'
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
-
-      - name: Check migration status (before)
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          DIRECT_URL: ${{ secrets.DIRECT_URL }}
-        run: |
-          echo "Checking migration status before applying..."
-          npx prisma migrate status || true
+        run: npm ci
 
       - name: Apply migrations
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           DIRECT_URL: ${{ secrets.DIRECT_URL }}
         run: npx prisma migrate deploy
-
-      - name: Check migration status (after)
-        if: success()
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          DIRECT_URL: ${{ secrets.DIRECT_URL }}
-        run: |
-          echo "✅ Migrations applied successfully to ${{ github.ref == 'refs/heads/main' && 'production' || 'development' }} environment"
-          npx prisma migrate status
