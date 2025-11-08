@@ -1,6 +1,9 @@
 'use client';
 
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -21,32 +24,42 @@ interface UserManagementProps {
   initialUsers: User[];
 }
 
+const userSchema = z.object({
+  email: z.string().email('Please enter a valid email address'),
+});
+
+type UserFormData = z.infer<typeof userSchema>;
+
 export default function UserManagement({ initialUsers }: UserManagementProps) {
   const [users, setUsers] = useState<User[]>(initialUsers);
-  const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  const handleCreateUser = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm<UserFormData>({
+    resolver: zodResolver(userSchema),
+    defaultValues: {
+      email: '',
+    },
+  });
+
+  const onSubmit = async (data: UserFormData) => {
     setLoading(true);
     setError(null);
     setSuccess(null);
 
-    if (!email) {
-      setError('Email is required');
-      setLoading(false);
-      return;
-    }
-
-    const result = await createUser(email);
+    const result = await createUser(data.email);
 
     if (result.error) {
       setError(result.error);
     } else {
-      setSuccess(`User ${email} created successfully. A password reset email has been sent.`);
-      setEmail('');
+      setSuccess(`User ${data.email} created successfully. A password reset email has been sent.`);
+      reset();
       
       // Refresh the page to get updated user list
       window.location.reload();
@@ -133,24 +146,25 @@ export default function UserManagement({ initialUsers }: UserManagementProps) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleCreateUser} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email Address</Label>
               <Input
                 id="email"
                 type="email"
                 placeholder="user@northeastern.edu"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={loading}
-                required
+                {...register('email')}
+                disabled={isSubmitting || loading}
               />
+              {errors.email && (
+                <p className="text-sm text-destructive">{errors.email.message}</p>
+              )}
               <p className="text-sm text-muted-foreground">
                 A password reset email will be sent to this address
               </p>
             </div>
-            <Button type="submit" disabled={loading}>
-              {loading ? 'Creating...' : 'Create User'}
+            <Button type="submit" disabled={isSubmitting || loading}>
+              {isSubmitting || loading ? 'Creating...' : 'Create User'}
             </Button>
           </form>
         </CardContent>
