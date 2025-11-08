@@ -14,24 +14,8 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-enum Role {
-  ADMIN
-  APPLICANT
-  STANDARD
-}
-
-model User {
-  id        Int    @id @default(autoincrement())
-  firstName String
-  lastName  String
-  email     String @unique
-  role      Role   @default(STANDARD)
-
-  @@map("users")
-}
-
 model Application {
-  id                    Int      @id @default(autoincrement())
+  id                    String   @id @default(uuid())
   nuid                  String   @unique
   fullName              String
   preferredFullName     String
@@ -44,22 +28,28 @@ model Application {
   major                 String
   minors                String
   year                  Int
-  semester              String   @default("")
+  semester              String
   constituency          String
-  createdAt             DateTime @default(now()) @map("created_at")
+  createdAt             DateTime @default(now())
 
   @@map("applications")
 }
 
+enum NominationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 model Nomination {
-  id        Int      @id @default(autoincrement())
-  nominee   String?
-  fullName  String?
-  email     String?
-  college   String?
-  major     String?
-  status    String
-  createdAt DateTime @default(now()) @map("created_at")
+  id        String   @id @default(uuid())
+  nominee   String
+  fullName  String
+  email     String
+  college   String
+  major     String
+  status    NominationStatus @default(PENDING)
+  createdAt DateTime @default(now())
 
   @@map("nominations")
 }

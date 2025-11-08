@@ -13,7 +13,7 @@ export async function getApplicationByNuid(nuid: string) {
   });
 }
 
-export async function getApplicationWithNominations(id: number) {
+export async function getApplicationWithNominations(id: string) {
   const application = await db.application.findUnique({
     where: { id },
   });
@@ -102,7 +102,7 @@ export async function createOrUpdateApplication(data: Omit<Application, 'id' | '
   });
 }
 
-export async function updateApplication(id: number, data: Partial<Application>) {
+export async function updateApplication(id: string, data: Partial<Application>) {
   return db.application.update({
     where: { id },
     data,
