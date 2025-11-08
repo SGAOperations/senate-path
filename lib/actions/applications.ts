@@ -8,9 +8,9 @@ type ApplicationData = {
   fullName: string;
   preferredFullName?: string;
   nickname?: string;
-  phoneticPronunciation?: string;
-  pronunciationAudioUrl?: string;
-  pronouns?: string;
+  phoneticPronunciation: string;
+  pronunciationAudioUrl: string;
+  pronouns: string;
   email: string;
   phoneNumber: string;
   college: string[];
@@ -42,9 +42,9 @@ export async function submitApplication(formData: ApplicationData) {
       fullName: formData.fullName,
       preferredFullName: formData.preferredFullName || '',
       nickname: formData.nickname || '',
-      phoneticPronunciation: formData.phoneticPronunciation || '',
-      pronunciationAudioUrl: formData.pronunciationAudioUrl || '',
-      pronouns: formData.pronouns || '',
+      phoneticPronunciation: formData.phoneticPronunciation,
+      pronunciationAudioUrl: formData.pronunciationAudioUrl,
+      pronouns: formData.pronouns,
       email: formData.email,
       phoneNumber: formData.phoneNumber,
       college: formData.college.join(', '),
