@@ -98,9 +98,9 @@ export async function createNomination(data: Omit<Nomination, 'id' | 'createdAt'
     throw new Error('You cannot nominate yourself for Senator');
   }
 
-  // Validate: Nominee must exist and be in same constituency
+  // Validate: Nominee must exist
   const nomineeApp = await db.application.findFirst({
-    where: { fullName: data.nominee || undefined },
+    where: { fullName: data.nominee },
     select: { constituency: true },
   });
 
@@ -108,14 +108,10 @@ export async function createNomination(data: Omit<Nomination, 'id' | 'createdAt'
     throw new Error(`Nominee ${data.nominee} not found`);
   }
 
-  if (nomineeApp.constituency !== data.constituency) {
-    throw new Error('The nominator must belong to the same constituency as the nominee');
-  }
-
   // Check if already nominated
   const existing = await db.nomination.findFirst({
     where: {
-      email: data.email || undefined,
+      email: data.email,
       nominee: data.nominee,
     },
   });
