@@ -17,6 +17,10 @@ type ApplicationData = {
   minors?: string;
   year: string;
   constituency: string;
+  whySenateLongAnswer: string;
+  constituencyIssueLongAnswer: string;
+  diversityEquityInclusionLongAnswer: string;
+  conflictSituationLongAnswer: string;
 };
 
 export async function submitApplication(formData: ApplicationData) {
@@ -51,6 +55,10 @@ export async function submitApplication(formData: ApplicationData) {
       year,
       semester: '',
       constituency: formData.constituency,
+      whySenateLongAnswer: formData.whySenateLongAnswer,
+      constituencyIssueLongAnswer: formData.constituencyIssueLongAnswer,
+      diversityEquityInclusionLongAnswer: formData.diversityEquityInclusionLongAnswer,
+      conflictSituationLongAnswer: formData.conflictSituationLongAnswer,
     };
 
     await createOrUpdateApplication(data);

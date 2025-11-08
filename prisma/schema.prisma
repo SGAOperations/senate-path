@@ -30,6 +30,10 @@ model Application {
   year                  Int
   semester              String
   constituency          String
+  whySenateLongAnswer   String   @default("")
+  constituencyIssueLongAnswer String @default("")
+  diversityEquityInclusionLongAnswer String @default("")
+  conflictSituationLongAnswer String @default("")
   createdAt             DateTime @default(now())
 
   @@map("applications")
