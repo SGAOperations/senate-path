@@ -52,14 +52,9 @@ export async function createEndorsement(data: Omit<Endorsement, 'id' | 'createdA
 }
 
 export async function updateEndorsement(id: string, data: Partial<Endorsement>) {
-  return db.endorsement.update({
-    where: { id },
-    data,
-  });
+  return db.endorsement.update({ where: { id }, data });
 }
 
 export async function deleteEndorsement(id: string) {
-  return db.endorsement.delete({
-    where: { id },
-  });
+  return db.endorsement.delete({ where: { id } });
 }

@@ -3,17 +3,17 @@
 import { revalidatePath } from 'next/cache';
 import { createEndorsement } from '@/lib/data/endorsements';
 
-export async function submitEndorsement(formData: FormData) {
-  try {
-    const data = {
-      endorserName: formData.get('endorserName') as string,
-      endorserEmail: formData.get('endorserEmail') as string,
-      applicantName: formData.get('applicantName') as string,
-      definingTraits: formData.get('definingTraits') as string,
-      leadershipQualities: formData.get('leadershipQualities') as string,
-      areasForDevelopment: formData.get('areasForDevelopment') as string,
-    };
+type EndorsementData = {
+  endorserName: string;
+  endorserEmail: string;
+  applicantName: string;
+  definingTraits: string;
+  leadershipQualities: string;
+  areasForDevelopment: string;
+};
 
+export async function submitEndorsement(data: EndorsementData) {
+  try {
     await createEndorsement(data);
     revalidatePath('/endorsements');
     revalidatePath('/admin');

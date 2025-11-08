@@ -29,16 +29,15 @@ const endorsementSchema = z.object({
   definingTraits: z.string().min(50, 'Please provide at least 50 characters'),
   leadershipQualities: z.string().min(50, 'Please provide at least 50 characters'),
   areasForDevelopment: z.string().min(50, 'Please provide at least 50 characters'),
+  currentPage: z.number().optional(),
 });
 
 type EndorsementFormData = z.infer<typeof endorsementSchema>;
 
 export default function EndorsementsPage() {
   const router = useRouter();
-  const [currentPage, setCurrentPage] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [applicantName, setApplicantName] = useState('');
   const [applicants, setApplicants] = useState<Array<{ fullName: string; email: string }>>([]);
   const [applicantsLoadError, setApplicantsLoadError] = useState<string | null>(null);
 
@@ -49,11 +48,23 @@ export default function EndorsementsPage() {
     reset,
     setValue,
     trigger,
-    getValues,
+    watch,
   } = useForm<EndorsementFormData>({
     resolver: zodResolver(endorsementSchema),
     mode: 'onBlur',
+    defaultValues: {
+      endorserName: '',
+      endorserEmail: '',
+      applicantName: '',
+      definingTraits: '',
+      leadershipQualities: '',
+      areasForDevelopment: '',
+      currentPage: 1,
+    },
   });
+
+  const currentPage = watch('currentPage') ?? 1;
+  const applicantName = watch('applicantName');
 
   useEffect(() => {
     async function fetchApplicants() {
@@ -74,12 +85,14 @@ export default function EndorsementsPage() {
     setSubmitError(null);
 
     try {
-      const formData = new FormData();
-      Object.entries(data).forEach(([key, value]) => {
-        formData.append(key, value.toString());
+      const result = await submitEndorsement({
+        endorserName: data.endorserName,
+        endorserEmail: data.endorserEmail,
+        applicantName: data.applicantName,
+        definingTraits: data.definingTraits,
+        leadershipQualities: data.leadershipQualities,
+        areasForDevelopment: data.areasForDevelopment,
       });
-
-      const result = await submitEndorsement(formData);
 
       if (result.success) {
         toast.success('Endorsement submitted successfully!');
@@ -101,12 +114,12 @@ export default function EndorsementsPage() {
     const isValid = await trigger(fieldsToValidate);
     
     if (isValid) {
-      setCurrentPage(2);
+      setValue('currentPage', 2);
     }
   };
 
   const handlePreviousPage = () => {
-    setCurrentPage(1);
+    setValue('currentPage', 1);
   };
 
   return (
@@ -184,7 +197,6 @@ export default function EndorsementsPage() {
                       <Select
                         value={applicantName}
                         onValueChange={(value) => {
-                          setApplicantName(value);
                           setValue('applicantName', value, { shouldValidate: true });
                         }}
                       >
