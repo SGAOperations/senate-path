@@ -123,7 +123,7 @@ export default function ApplicationsPage() {
     <div className="min-h-screen bg-gradient-to-br from-muted via-background to-muted">
       <div className="container max-w-4xl mx-auto py-8 px-4">
         <Card className="shadow-lg">
-          <CardHeader className="bg-gradient-to-r from-primary/20 to-primary/10 border-b-2 border-primary">
+          <CardHeader className="bg-gradient-to-r from-primary/20 to-primary/10 border-b border-primary">
             <CardTitle className="text-3xl font-bold text-primary">Senator Application</CardTitle>
             <p className="text-muted-foreground mt-2">
               Thank you for your interest in becoming a Senator! Please fill out all fields below.
@@ -139,8 +139,8 @@ export default function ApplicationsPage() {
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Personal Information */}
-            <div className="space-y-4 p-6 rounded-lg bg-muted border-2 border-primary/30">
-              <h3 className="text-xl font-bold text-primary border-b-2 border-primary pb-2">Personal Information</h3>
+            <div className="space-y-4 p-6 rounded-lg bg-muted border border-primary/30">
+              <h3 className="text-xl font-bold text-primary border-b border-primary pb-2">Personal Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
@@ -255,8 +255,8 @@ export default function ApplicationsPage() {
             </div>
 
             {/* Academic Information */}
-            <div className="space-y-4 p-6 rounded-lg bg-muted border-2 border-primary/30">
-              <h3 className="text-xl font-bold text-primary border-b-2 border-primary pb-2">Academic Information</h3>
+            <div className="space-y-4 p-6 rounded-lg bg-muted border border-primary/30">
+              <h3 className="text-xl font-bold text-primary border-b border-primary pb-2">Academic Information</h3>
               
               <div className="space-y-2">
                 <Label>College <span className="text-sm text-muted-foreground">(Select all that apply)</span></Label>
@@ -352,8 +352,8 @@ export default function ApplicationsPage() {
             </div>
 
             {/* Constituency */}
-            <div className="space-y-4 p-6 rounded-lg bg-muted border-2 border-primary/30">
-              <h3 className="text-xl font-bold text-primary border-b-2 border-primary pb-2">Constituency</h3>
+            <div className="space-y-4 p-6 rounded-lg bg-muted border border-primary/30">
+              <h3 className="text-xl font-bold text-primary border-b border-primary pb-2">Constituency</h3>
               
               <div className="space-y-2">
                 <Label htmlFor="constituency">
