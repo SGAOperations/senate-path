@@ -1,16 +1,5 @@
 -- CreateEnum
-CREATE TYPE "Role" AS ENUM ('ADMIN', 'APPLICANT', 'STANDARD');
-
--- CreateTable
-CREATE TABLE "users" (
-    "id" TEXT NOT NULL,
-    "firstName" TEXT NOT NULL,
-    "lastName" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
-    "role" "Role" NOT NULL DEFAULT 'STANDARD',
-
-    CONSTRAINT "users_pkey" PRIMARY KEY ("id")
-);
+CREATE TYPE "NominationStatus" AS ENUM ('PENDING', 'APPROVED', 'REJECTED');
 
 -- CreateTable
 CREATE TABLE "applications" (
@@ -27,9 +16,9 @@ CREATE TABLE "applications" (
     "major" TEXT NOT NULL,
     "minors" TEXT NOT NULL,
     "year" INTEGER NOT NULL,
-    "semester" TEXT NOT NULL DEFAULT '',
+    "semester" TEXT NOT NULL,
     "constituency" TEXT NOT NULL,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "applications_pkey" PRIMARY KEY ("id")
 );
@@ -37,19 +26,16 @@ CREATE TABLE "applications" (
 -- CreateTable
 CREATE TABLE "nominations" (
     "id" TEXT NOT NULL,
-    "nominee" TEXT,
-    "fullName" TEXT,
-    "email" TEXT,
-    "college" TEXT,
-    "major" TEXT,
-    "status" TEXT NOT NULL,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "nominee" TEXT NOT NULL,
+    "fullName" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "college" TEXT NOT NULL,
+    "major" TEXT NOT NULL,
+    "status" "NominationStatus" NOT NULL DEFAULT 'PENDING',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "nominations_pkey" PRIMARY KEY ("id")
 );
-
--- CreateIndex
-CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "applications_nuid_key" ON "applications"("nuid");
