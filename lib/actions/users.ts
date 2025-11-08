@@ -34,7 +34,7 @@ export async function getUsers(): Promise<{ users: User[]; error: string | null 
       id: user.id,
       email: user.email || '',
       created_at: user.created_at,
-      last_sign_in_at: user.last_sign_in_at,
+      last_sign_in_at: user.last_sign_in_at || null,
     }));
 
     return { users, error: null };
