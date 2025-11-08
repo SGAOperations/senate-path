@@ -51,7 +51,7 @@ export async function getNominationsByEmail(email: string) {
 export async function getUniqueNominees() {
   const applicants = await db.application.findMany({
     select: { id: true, fullName: true },
-    orderBy: { id: 'desc' },
+    orderBy: { createdAt: 'desc' },
   });
 
   const uniqueNominees = new Map<string, string>();
@@ -74,7 +74,7 @@ export async function getNomineesWithMinVotes(minVotes: number) {
   }
 
   const voteCounts: Record<string, number> = {};
-  
+
   for (const { nominee } of nominations) {
     if (!nominee) continue;
     if (!voteCounts[nominee]) {
@@ -92,7 +92,44 @@ export async function getNomineesWithMinVotes(minVotes: number) {
     .sort((a, b) => b.count - a.count);
 }
 
-export async function updateNomination(id: number, data: Partial<Nomination>) {
+export async function createNomination(data: Omit<Nomination, 'id' | 'createdAt' | 'status'>) {
+  // Validate: Can't nominate yourself
+  if (data.fullName === data.nominee) {
+    throw new Error('You cannot nominate yourself for Senator');
+  }
+
+  // Validate: Nominee must exist
+  const nomineeApp = await db.application.findFirst({
+    where: { fullName: data.nominee },
+    select: { constituency: true },
+  });
+
+  if (!nomineeApp) {
+    throw new Error(`Nominee ${data.nominee} not found`);
+  }
+
+  // Check if already nominated
+  const existing = await db.nomination.findFirst({
+    where: {
+      email: data.email,
+      nominee: data.nominee,
+    },
+  });
+
+  if (existing) {
+    throw new Error(`This nominator has already nominated ${data.nominee}`);
+  }
+
+  // Create nomination
+  return db.nomination.create({
+    data: {
+      ...data,
+      status: Status.APPROVED,
+    },
+  });
+}
+
+export async function updateNomination(id: string, data: Partial<Nomination>) {
   return db.nomination.update({
     where: { id },
     data,

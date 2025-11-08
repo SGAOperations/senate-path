@@ -30,7 +30,7 @@ type ApplicationWithNominations = Application & {
 
 interface AdminDashboardProps {
   applications: ApplicationWithCount[];
-  getApplicationDetails: (id: number) => Promise<ApplicationWithNominations | null>;
+  getApplicationDetails: (id: string) => Promise<ApplicationWithNominations | null>;
 }
 
 function getNominationBadgeColor(count: number): "success" | "warning" | "info" | "default" {
