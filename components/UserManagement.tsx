@@ -24,7 +24,6 @@ interface UserManagementProps {
 export default function UserManagement({ initialUsers }: UserManagementProps) {
   const [users, setUsers] = useState<User[]>(initialUsers);
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -35,26 +34,19 @@ export default function UserManagement({ initialUsers }: UserManagementProps) {
     setError(null);
     setSuccess(null);
 
-    if (!email || !password) {
-      setError('Email and password are required');
+    if (!email) {
+      setError('Email is required');
       setLoading(false);
       return;
     }
 
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters');
-      setLoading(false);
-      return;
-    }
-
-    const result = await createUser(email, password);
+    const result = await createUser(email);
 
     if (result.error) {
       setError(result.error);
     } else {
-      setSuccess(`User ${email} created successfully`);
+      setSuccess(`User ${email} created successfully. A password reset email has been sent.`);
       setEmail('');
-      setPassword('');
       
       // Refresh the page to get updated user list
       window.location.reload();
@@ -142,32 +134,20 @@ export default function UserManagement({ initialUsers }: UserManagementProps) {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleCreateUser} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email Address</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="user@northeastern.edu"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  disabled={loading}
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Minimum 6 characters"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  disabled={loading}
-                  required
-                  minLength={6}
-                />
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email Address</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="user@northeastern.edu"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={loading}
+                required
+              />
+              <p className="text-sm text-muted-foreground">
+                A password reset email will be sent to this address
+              </p>
             </div>
             <Button type="submit" disabled={loading}>
               {loading ? 'Creating...' : 'Create User'}
