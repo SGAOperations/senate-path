@@ -1,15 +1,17 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { createClient } from '@/lib/supabase/client';
 import { User } from '@supabase/supabase-js';
+import { Button } from '@/components/ui/button';
 
 export function Navbar() {
   const pathname = usePathname();
+  const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const supabase = createClient();
@@ -51,6 +53,11 @@ export function Navbar() {
     return pathname === href || pathname.startsWith(href + '/');
   };
 
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    router.push('/');
+  };
+
   return (
     <nav className="bg-white border-b border-primary sticky top-0 z-50 shadow-sm h-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -68,7 +75,7 @@ export function Navbar() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex space-x-8">
+          <div className="hidden md:flex space-x-8 items-center">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -82,6 +89,15 @@ export function Navbar() {
                 {link.label}
               </Link>
             ))}
+            {user && (
+              <Button 
+                onClick={handleLogout}
+                variant="destructive"
+                size="sm"
+              >
+                Logout
+              </Button>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -120,6 +136,18 @@ export function Navbar() {
                 {link.label}
               </Link>
             ))}
+            {user && (
+              <Button 
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  handleLogout();
+                }}
+                variant="destructive"
+                className="w-full mt-2"
+              >
+                Logout
+              </Button>
+            )}
           </div>
         </div>
       )}
