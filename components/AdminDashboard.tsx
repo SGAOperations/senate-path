@@ -170,7 +170,7 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
                       <TableHead>Name</TableHead>
                       <TableHead>Constituency</TableHead>
                       <TableHead className="text-center">Nominations</TableHead>
-                      <TableHead className="text-center">Endorsements</TableHead>
+                      <TableHead className="text-center">Endorsed</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
