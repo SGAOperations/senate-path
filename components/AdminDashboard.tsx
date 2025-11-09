@@ -297,10 +297,6 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
                           <p className="font-medium">{selectedApplicant.year}</p>
                         </div>
                         <div>
-                          <p className="text-sm text-muted-foreground">Semester</p>
-                          <p className="font-medium">{selectedApplicant.semester}</p>
-                        </div>
-                        <div>
                           <p className="text-sm text-muted-foreground">Constituency</p>
                           <p className="font-medium">{selectedApplicant.constituency}</p>
                         </div>
