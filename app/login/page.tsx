@@ -52,7 +52,7 @@ function LoginForm() {
           <div className="space-y-2">
             <Label htmlFor="email">Email Address</Label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
               <Input
                 id="email"
                 type="email"
@@ -70,7 +70,7 @@ function LoginForm() {
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
               <Input
                 id="password"
                 type="password"
@@ -103,7 +103,7 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 flex items-center justify-center py-12 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-muted via-background to-muted flex items-center justify-center py-12 px-4">
       <Suspense fallback={
         <Card className="w-full max-w-md shadow-lg">
           <CardHeader className="bg-gradient-to-r from-primary/10 to-primary/5 border-b">
@@ -111,8 +111,8 @@ export default function LoginPage() {
           </CardHeader>
           <CardContent className="pt-6">
             <div className="animate-pulse space-y-4">
-              <div className="h-10 bg-gray-200 rounded" />
-              <div className="h-10 bg-gray-200 rounded" />
+              <div className="h-10 bg-muted rounded" />
+              <div className="h-10 bg-muted rounded" />
             </div>
           </CardContent>
         </Card>

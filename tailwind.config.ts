@@ -19,38 +19,38 @@ const config: Config = {
     },
     extend: {
       colors: {
-        border: "var(--color-border)",
-        input: "var(--color-input)",
-        ring: "var(--color-ring)",
-        background: "var(--color-background)",
-        foreground: "var(--color-foreground)",
+        border: "#e5e7eb",
+        input: "#e5e7eb",
+        ring: "#000000",
+        background: "#FFFFFF",
+        foreground: "#000000",
         primary: {
-          DEFAULT: "var(--color-primary)",
-          foreground: "var(--color-primary-foreground)",
+          DEFAULT: "#c8102f",
+          foreground: "#FFFFFF",
         },
         secondary: {
-          DEFAULT: "var(--color-secondary)",
-          foreground: "var(--color-secondary-foreground)",
+          DEFAULT: "#f3f4f6",
+          foreground: "#000000",
         },
         destructive: {
-          DEFAULT: "var(--color-destructive)",
-          foreground: "var(--color-destructive-foreground)",
+          DEFAULT: "#c8102f",
+          foreground: "#FFFFFF",
         },
         muted: {
-          DEFAULT: "var(--color-muted)",
-          foreground: "var(--color-muted-foreground)",
+          DEFAULT: "#f9fafb",
+          foreground: "#6b7280",
         },
         accent: {
-          DEFAULT: "var(--color-accent)",
-          foreground: "var(--color-accent-foreground)",
+          DEFAULT: "#a4804e",
+          foreground: "#FFFFFF",
         },
         popover: {
-          DEFAULT: "var(--color-popover)",
-          foreground: "var(--color-popover-foreground)",
+          DEFAULT: "#FFFFFF",
+          foreground: "#000000",
         },
         card: {
-          DEFAULT: "var(--color-card)",
-          foreground: "var(--color-card-foreground)",
+          DEFAULT: "#FFFFFF",
+          foreground: "#000000",
         },
       },
       borderRadius: {

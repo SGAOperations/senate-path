@@ -149,11 +149,11 @@ export default function ApplicationsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-slate-50">
+    <div className="min-h-screen bg-gradient-to-br from-muted via-background to-muted">
       <div className="container max-w-4xl mx-auto py-8 px-4">
         <Card className="shadow-lg">
-          <CardHeader className="bg-linear-to-r from-primary/10 to-primary/5 border-b">
-            <CardTitle className="text-3xl font-bold">Senator Application</CardTitle>
+          <CardHeader className="bg-gradient-to-r from-primary/20 to-primary/10 border-b border-primary">
+            <CardTitle className="text-3xl font-bold text-primary">Senator Application</CardTitle>
             <p className="text-muted-foreground mt-2">
               Thank you for your interest in becoming a Senator! {currentPage === 1 ? 'Please fill out all fields below.' : 'Please answer the following questions.'}
             </p>
@@ -165,7 +165,7 @@ export default function ApplicationsPage() {
               Step {currentPage} of 2
             </p>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-8">
           {submitError && (
             <Alert variant="destructive" className="mb-4">
               <XCircle className="h-4 w-4" />
@@ -177,8 +177,8 @@ export default function ApplicationsPage() {
             {currentPage === 1 && (
               <>
             {/* Personal Information */}
-            <div className="space-y-4 p-6 rounded-lg bg-slate-50 border border-slate-200">
-              <h3 className="text-xl font-bold text-slate-800">Personal Information</h3>
+            <div className="space-y-4 p-6 rounded-lg bg-muted border border-primary/30">
+              <h3 className="text-xl font-bold text-primary border-b border-primary pb-2">Personal Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
@@ -280,8 +280,8 @@ export default function ApplicationsPage() {
             </div>
 
             {/* Academic Information */}
-            <div className="space-y-4 p-6 rounded-lg bg-slate-50 border border-slate-200">
-              <h3 className="text-xl font-bold text-slate-800">Academic Information</h3>
+            <div className="space-y-4 p-6 rounded-lg bg-muted border border-primary/30">
+              <h3 className="text-xl font-bold text-primary border-b border-primary pb-2">Academic Information</h3>
               
               <div className="space-y-2">
                 <Label>College <span className="text-sm text-muted-foreground">(Select all that apply)</span></Label>
@@ -377,8 +377,8 @@ export default function ApplicationsPage() {
             </div>
 
             {/* Constituency */}
-            <div className="space-y-4 p-6 rounded-lg bg-slate-50 border border-slate-200">
-              <h3 className="text-xl font-bold text-slate-800">Constituency</h3>
+            <div className="space-y-4 p-6 rounded-lg bg-muted border border-primary/30">
+              <h3 className="text-xl font-bold text-primary border-b border-primary pb-2">Constituency</h3>
               
               <div className="space-y-2">
                 <Label htmlFor="constituency">
