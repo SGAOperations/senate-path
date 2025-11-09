@@ -31,6 +31,7 @@ const applicationSchema = z.object({
   preferredFullName: z.string().optional(),
   nickname: z.string().optional(),
   phoneticPronunciation: z.string().min(1, 'Phonetic pronunciation is required'),
+  pronunciationAudioUrl: z.string().optional(),
   pronouns: z.string().min(1, 'Pronouns are required'),
   email: z.string().email('Please enter a valid email address').refine((email) => email.endsWith('@northeastern.edu'), {
     message: 'Email must be a Northeastern email (@northeastern.edu)',
@@ -83,6 +84,7 @@ export default function ApplicationForm({ communityConstituencies }: Application
       preferredFullName: '',
       nickname: '',
       phoneticPronunciation: '',
+      pronunciationAudioUrl: '',
       pronouns: '',
       email: '',
       phoneNumber: '',
@@ -140,7 +142,10 @@ export default function ApplicationForm({ communityConstituencies }: Application
     setSubmitError(null);
 
     try {
-      const result = await submitApplication(data);
+      const result = await submitApplication({
+        ...data,
+        pronunciationAudioUrl: data.pronunciationAudioUrl || '',
+      });
 
       if (result.success) {
         toast.success('Application submitted successfully!');
