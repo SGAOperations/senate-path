@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 
 export default function Home() {
   return (
-    <div className="h-[calc(100vh-4rem)] overflow-hidden">
+    <div className="h-full overflow-hidden">
       {/* Hero Section */}
       <div className="relative h-full w-full flex items-center justify-center">
         {/* Background Image */}
