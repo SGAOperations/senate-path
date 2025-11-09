@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { createClient } from '@/lib/supabase/client';
 import { User } from '@supabase/supabase-js';
+import { APP_VERSION } from '@/lib/version';
 
 export function Navbar() {
   const pathname = usePathname();
