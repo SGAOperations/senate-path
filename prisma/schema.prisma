@@ -15,8 +15,8 @@ datasource db {
 }
 
 model Application {
-  id                                 String   @id @default(uuid())
-  nuid                               String   @unique
+  id                                 String                 @id @default(uuid())
+  nuid                               String                 @unique
   fullName                           String
   preferredFullName                  String
   nickname                           String
@@ -31,11 +31,13 @@ model Application {
   year                               Int
   semester                           String
   constituency                       String
+  communityConstituencyId            String?
+  communityConstituency              CommunityConstituency? @relation(fields: [communityConstituencyId], references: [id])
   whySenateLongAnswer                String
   constituencyIssueLongAnswer        String
   diversityEquityInclusionLongAnswer String
   conflictSituationLongAnswer        String
-  createdAt                          DateTime @default(now())
+  createdAt                          DateTime               @default(now())
 
   @@map("applications")
 }
@@ -70,4 +72,15 @@ model Endorsement {
   createdAt           DateTime @default(now())
 
   @@map("endorsements")
+}
+
+model CommunityConstituency {
+  id           String        @id @default(uuid())
+  name         String        @unique
+  isActive     Boolean       @default(true)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  applications Application[]
+
+  @@map("community_constituencies")
 }
