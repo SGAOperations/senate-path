@@ -79,9 +79,16 @@ export async function getApplicationsWithNominationCounts() {
         },
       });
 
+      const endorsementCount = await db.endorsement.count({
+        where: {
+          applicantName: app.fullName,
+        },
+      });
+
       return {
         ...app,
         nominationCount,
+        endorsementCount,
       };
     })
   );

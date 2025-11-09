@@ -21,6 +21,7 @@ import { cn } from '@/lib/utils';
 
 type ApplicationWithCount = Application & {
   nominationCount: number;
+  endorsementCount: number;
 };
 
 type ApplicationWithNominations = Application & {
@@ -169,6 +170,7 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
                       <TableHead>Name</TableHead>
                       <TableHead>Constituency</TableHead>
                       <TableHead className="text-center">Nominations</TableHead>
+                      <TableHead className="text-center">Endorsements</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -191,6 +193,13 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
                           <Badge variant={getNominationBadgeColor(app.nominationCount)}>
                             {app.nominationCount}
                           </Badge>
+                        </TableCell>
+                        <TableCell className="text-center">
+                          {app.endorsementCount > 0 ? (
+                            <Badge variant="success">✓</Badge>
+                          ) : (
+                            <span className="text-muted-foreground text-sm">—</span>
+                          )}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -327,7 +336,7 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
                         <div className="border-t pt-4" />
                         <div>
                           <h3 className="text-lg font-bold mb-3">
-                            Endorsements ({applicantDetails.endorsements.length})
+                            Endorsements
                           </h3>
                           <div className="space-y-3">
                             {applicantDetails.endorsements.map((endorsement) => (
