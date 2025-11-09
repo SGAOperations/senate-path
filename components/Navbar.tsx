@@ -41,6 +41,7 @@ export function Navbar() {
   const navLinks = [
     ...baseNavLinks,
     ...(user ? [{ href: '/admin', label: 'Admin' }] : []),
+    ...(user ? [{ href: '/users', label: 'Users' }] : []),
     ...(!user ? [{ href: '/login', label: 'Login' }] : []),
   ];
 
