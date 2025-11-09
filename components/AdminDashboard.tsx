@@ -15,16 +15,18 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Search, User, Vote, TrendingUp, Download, AlertCircle, X } from 'lucide-react';
-import { Application, Nomination } from '@prisma/client';
+import { Application, Nomination, Endorsement } from '@prisma/client';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
 type ApplicationWithCount = Application & {
   nominationCount: number;
+  endorsementCount: number;
 };
 
 type ApplicationWithNominations = Application & {
   nominations: Nomination[];
+  endorsements: Endorsement[];
   nominationCount: number;
 };
 
@@ -168,6 +170,7 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
                       <TableHead>Name</TableHead>
                       <TableHead>Constituency</TableHead>
                       <TableHead className="text-center">Nominations</TableHead>
+                      <TableHead className="text-center">Endorsed</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -190,6 +193,13 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
                           <Badge variant={getNominationBadgeColor(app.nominationCount)}>
                             {app.nominationCount}
                           </Badge>
+                        </TableCell>
+                        <TableCell className="text-center">
+                          {app.endorsementCount > 0 ? (
+                            <Badge variant="success">✓</Badge>
+                          ) : (
+                            <span className="text-muted-foreground text-sm">—</span>
+                          )}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -326,6 +336,47 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
                                     <div>
                                       <span className="text-muted-foreground">Submitted:</span>{' '}
                                       {new Date(nomination.createdAt).toLocaleDateString()}
+                                    </div>
+                                  </div>
+                                </CardContent>
+                              </Card>
+                            ))}
+                          </div>
+                        </div>
+                      </>
+                    )}
+
+                    {/* Endorsements */}
+                    {applicantDetails && applicantDetails.endorsements.length > 0 && (
+                      <>
+                        <div className="border-t pt-4" />
+                        <div>
+                          <h3 className="text-lg font-bold mb-3">
+                            Endorsements
+                          </h3>
+                          <div className="space-y-3">
+                            {applicantDetails.endorsements.map((endorsement) => (
+                              <Card key={endorsement.id}>
+                                <CardContent className="pt-4">
+                                  <div className="mb-3">
+                                    <p className="font-medium">{endorsement.endorserName}</p>
+                                    <p className="text-sm text-muted-foreground">{endorsement.endorserEmail}</p>
+                                    <p className="text-xs text-muted-foreground mt-1">
+                                      Submitted: {new Date(endorsement.createdAt).toLocaleDateString()}
+                                    </p>
+                                  </div>
+                                  <div className="space-y-3 text-sm">
+                                    <div>
+                                      <p className="font-semibold text-muted-foreground mb-1">Defining Traits:</p>
+                                      <p className="text-foreground">{endorsement.definingTraits}</p>
+                                    </div>
+                                    <div>
+                                      <p className="font-semibold text-muted-foreground mb-1">Leadership Qualities:</p>
+                                      <p className="text-foreground">{endorsement.leadershipQualities}</p>
+                                    </div>
+                                    <div>
+                                      <p className="font-semibold text-muted-foreground mb-1">Areas for Development:</p>
+                                      <p className="text-foreground">{endorsement.areasForDevelopment}</p>
                                     </div>
                                   </div>
                                 </CardContent>
