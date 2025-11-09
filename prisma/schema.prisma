@@ -21,6 +21,7 @@ model Application {
   preferredFullName                  String
   nickname                           String
   phoneticPronunciation              String
+  pronunciationAudioUrl              String
   pronouns                           String
   email                              String
   phoneNumber                        String

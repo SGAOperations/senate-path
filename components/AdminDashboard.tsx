@@ -245,6 +245,22 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
                           <p className="text-sm text-muted-foreground">Phone</p>
                           <p className="font-medium">{selectedApplicant.phoneNumber}</p>
                         </div>
+                        <div className="col-span-2">
+                          <p className="text-sm text-muted-foreground mb-1">Name Pronunciation</p>
+                          <p className="font-medium mb-2">{selectedApplicant.phoneticPronunciation}</p>
+                          {selectedApplicant.pronunciationAudioUrl && (
+                            <div className="flex items-center gap-2">
+                              <audio 
+                                controls 
+                                className="h-10"
+                                preload="none"
+                              >
+                                <source src={selectedApplicant.pronunciationAudioUrl} type="audio/webm" />
+                                Your browser does not support the audio element.
+                              </audio>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
 
