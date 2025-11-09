@@ -1,3 +1,7 @@
+-- AlterTable
+ALTER TABLE "applications" ADD COLUMN     "communityConstituencyId" TEXT,
+ALTER COLUMN "pronunciationAudioUrl" DROP DEFAULT;
+
 -- CreateTable
 CREATE TABLE "community_constituencies" (
     "id" TEXT NOT NULL,
@@ -8,9 +12,6 @@ CREATE TABLE "community_constituencies" (
 
     CONSTRAINT "community_constituencies_pkey" PRIMARY KEY ("id")
 );
-
--- AlterTable
-ALTER TABLE "applications" ADD COLUMN "communityConstituencyId" TEXT;
 
 -- CreateIndex
 CREATE UNIQUE INDEX "community_constituencies_name_key" ON "community_constituencies"("name");
