@@ -50,11 +50,17 @@ export async function getApplicationWithNominations(id: string) {
     orderBy: { createdAt: 'desc' },
   });
 
+  const endorsements = await db.endorsement.findMany({
+    where: { applicantName: application.fullName },
+    orderBy: { createdAt: 'desc' },
+  });
+
   const nominationCount = nominations.filter(n => n.status === 'APPROVED').length;
 
   return {
     ...application,
     nominations,
+    endorsements,
     nominationCount,
   };
 }
