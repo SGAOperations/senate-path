@@ -5,9 +5,9 @@ import { Button } from '@/components/ui/button';
 
 export default function Home() {
   return (
-    <div>
+    <div className="h-[calc(100vh-4rem)] overflow-hidden">
       {/* Hero Section */}
-      <div className="relative min-h-screen w-full overflow-hidden flex items-center justify-center">
+      <div className="relative h-full w-full flex items-center justify-center">
         {/* Background Image */}
         <div
           className="absolute inset-0 -z-20 bg-cover bg-center"
