@@ -26,6 +26,7 @@ interface UserManagementProps {
 
 const userSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
 });
 
 type UserFormData = z.infer<typeof userSchema>;
@@ -45,6 +46,7 @@ export default function UserManagement({ initialUsers }: UserManagementProps) {
     resolver: zodResolver(userSchema),
     defaultValues: {
       email: '',
+      password: '',
     },
   });
 
@@ -53,12 +55,12 @@ export default function UserManagement({ initialUsers }: UserManagementProps) {
     setError(null);
     setSuccess(null);
 
-    const result = await createUser(data.email);
+    const result = await createUser(data.email, data.password);
 
     if (result.error) {
       setError(result.error);
     } else {
-      setSuccess(`User ${data.email} created successfully. A password reset email has been sent.`);
+      setSuccess(`User ${data.email} created successfully`);
       reset();
       
       // Refresh the page to get updated user list
@@ -147,21 +149,33 @@ export default function UserManagement({ initialUsers }: UserManagementProps) {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email Address</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="user@northeastern.edu"
-                {...register('email')}
-                disabled={isSubmitting || loading}
-              />
-              {errors.email && (
-                <p className="text-sm text-destructive">{errors.email.message}</p>
-              )}
-              <p className="text-sm text-muted-foreground">
-                A password reset email will be sent to this address
-              </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="email">Email Address</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="user@northeastern.edu"
+                  {...register('email')}
+                  disabled={isSubmitting || loading}
+                />
+                {errors.email && (
+                  <p className="text-sm text-destructive">{errors.email.message}</p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="Minimum 6 characters"
+                  {...register('password')}
+                  disabled={isSubmitting || loading}
+                />
+                {errors.password && (
+                  <p className="text-sm text-destructive">{errors.password.message}</p>
+                )}
+              </div>
             </div>
             <Button type="submit" disabled={isSubmitting || loading}>
               {isSubmitting || loading ? 'Creating...' : 'Create User'}
