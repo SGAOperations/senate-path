@@ -100,3 +100,85 @@ export async function removeCommunityConstituency(id: string) {
     };
   }
 }
+
+/**
+ * Bulk upload community constituencies from CSV
+ */
+export async function uploadConstituenciesFromCSV(csvContent: string) {
+  try {
+    // Parse CSV content
+    const lines = csvContent.trim().split('\n');
+    
+    if (lines.length === 0) {
+      return {
+        success: false,
+        error: 'CSV file is empty',
+      };
+    }
+
+    // Skip header if it exists
+    const startIndex = lines[0].toLowerCase().includes('name') ? 1 : 0;
+    const constituencies = lines.slice(startIndex);
+
+    if (constituencies.length === 0) {
+      return {
+        success: false,
+        error: 'No constituencies found in CSV file',
+      };
+    }
+
+    let successCount = 0;
+    let errorCount = 0;
+    const errors: string[] = [];
+
+    for (let i = 0; i < constituencies.length; i++) {
+      const line = constituencies[i].trim();
+      
+      // Skip empty lines
+      if (!line) continue;
+
+      // Parse CSV line (handle quoted values)
+      const name = line.replace(/^["']|["']$/g, '').trim();
+
+      if (!name) {
+        errorCount++;
+        errors.push(`Line ${i + startIndex + 1}: Empty constituency name`);
+        continue;
+      }
+
+      try {
+        await createCommunityConstituency({
+          name,
+          isActive: true,
+        });
+        successCount++;
+      } catch (error) {
+        errorCount++;
+        const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+        errors.push(`Line ${i + startIndex + 1} ("${name}"): ${errorMsg}`);
+      }
+    }
+
+    revalidatePath('/admin/community-constituencies');
+    revalidatePath('/applications');
+
+    if (errorCount > 0) {
+      return {
+        success: false,
+        error: `Uploaded ${successCount} constituencies. ${errorCount} failed:\n${errors.join('\n')}`,
+        partialSuccess: successCount > 0,
+      };
+    }
+
+    return {
+      success: true,
+      message: `Successfully uploaded ${successCount} constituencies`,
+    };
+  } catch (error) {
+    console.error('Error uploading CSV:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to upload CSV',
+    };
+  }
+}
