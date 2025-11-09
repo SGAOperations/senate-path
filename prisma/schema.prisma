@@ -15,23 +15,27 @@ datasource db {
 }
 
 model Application {
-  id                         String   @id @default(uuid())
-  nuid                       String   @unique
-  fullName                   String
-  preferredFullName          String
-  nickname                   String
-  phoneticPronunciation      String
-  pronunciationAudioUrl      String   @default("")
-  pronouns                   String
-  email                      String
-  phoneNumber                String
-  college                    String
-  major                     String
-  minors                     String
-  year                       Int
-  semester                   String
-  constituency               String
-  createdAt                  DateTime @default(now())
+  id                                 String   @id @default(uuid())
+  nuid                               String   @unique
+  fullName                           String
+  preferredFullName                  String
+  nickname                           String
+  phoneticPronunciation              String
+  pronunciationAudioUrl              String
+  pronouns                           String
+  email                              String
+  phoneNumber                        String
+  college                            String
+  major                              String
+  minors                             String
+  year                               Int
+  semester                           String
+  constituency                       String
+  whySenateLongAnswer                String
+  constituencyIssueLongAnswer        String
+  diversityEquityInclusionLongAnswer String
+  conflictSituationLongAnswer        String
+  createdAt                          DateTime @default(now())
 
   @@map("applications")
 }
@@ -43,14 +47,27 @@ enum NominationStatus {
 }
 
 model Nomination {
-  id        String   @id @default(uuid())
+  id        String           @id @default(uuid())
   nominee   String
   fullName  String
   email     String
   college   String
   major     String
   status    NominationStatus @default(PENDING)
-  createdAt DateTime @default(now())
+  createdAt DateTime         @default(now())
 
   @@map("nominations")
+}
+
+model Endorsement {
+  id                  String   @id @default(uuid())
+  endorserName        String
+  endorserEmail       String
+  applicantName       String
+  definingTraits      String
+  leadershipQualities String
+  areasForDevelopment String
+  createdAt           DateTime @default(now())
+
+  @@map("endorsements")
 }
