@@ -139,7 +139,7 @@ export default function EndorsementsPage() {
               Step {currentPage} of 2
             </p>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-8">
             {submitError && (
               <Alert variant="destructive" className="mb-4">
                 <XCircle className="h-4 w-4" />
