@@ -24,6 +24,7 @@ import { XCircle, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useUnsavedChangesWarning } from '@/lib/hooks/useUnsavedChangesWarning';
 import { toast } from 'sonner';
 import { CommunityConstituency } from '@prisma/client';
+import { VoiceRecorder } from '@/components/ui/voice-recorder';
 
 const applicationSchema = z.object({
   nuid: z.string().min(9, 'NUID must be 9 digits').max(9, 'NUID must be 9 digits'),
@@ -67,6 +68,7 @@ export default function ApplicationForm({ communityConstituencies }: Application
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isUploadingAudio, setIsUploadingAudio] = useState(false);
 
   const {
     register,
@@ -117,6 +119,37 @@ export default function ApplicationForm({ communityConstituencies }: Application
   // Warn user about unsaved changes before leaving the page
   const hasUnsavedChanges = isDirty && !isSubmitting;
   useUnsavedChangesWarning(hasUnsavedChanges);
+
+  const handleAudioRecordingComplete = async (audioBlob: Blob, audioUrl: string) => {
+    setIsUploadingAudio(true);
+    try {
+      const formData = new FormData();
+      formData.append('audio', audioBlob, 'pronunciation.webm');
+
+      const response = await fetch('/api/upload-pronunciation', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to upload audio');
+      }
+
+      const { url } = await response.json();
+      setValue('pronunciationAudioUrl', url, { shouldDirty: true });
+      toast.success('Audio recording uploaded successfully!');
+    } catch (error) {
+      console.error('Error uploading audio:', error);
+      toast.error('Failed to upload audio recording. Please try again.');
+    } finally {
+      setIsUploadingAudio(false);
+    }
+  };
+
+  const handleAudioRecordingDelete = () => {
+    setValue('pronunciationAudioUrl', '', { shouldDirty: true });
+    toast.success('Audio recording deleted');
+  };
 
   const handleNextPage = async () => {
     // Validate all fields on page 1 before proceeding
@@ -275,6 +308,22 @@ export default function ApplicationForm({ communityConstituencies }: Application
                   />
                   {errors.phoneticPronunciation && (
                     <p className="text-sm text-destructive">{errors.phoneticPronunciation.message}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2 col-span-1 md:col-span-2">
+                  <Label>Audio Recording of Name Pronunciation <span className="text-muted-foreground">(optional)</span></Label>
+                  <VoiceRecorder
+                    onRecordingComplete={handleAudioRecordingComplete}
+                    onRecordingDelete={handleAudioRecordingDelete}
+                    disabled={isSubmitting || isUploadingAudio}
+                    maxDuration={30}
+                  />
+                  {isUploadingAudio && (
+                    <p className="text-sm text-muted-foreground flex items-center gap-2">
+                      <Loader2 className="h-3 w-3 animate-spin" />
+                      Uploading audio...
+                    </p>
                   )}
                 </div>
 
