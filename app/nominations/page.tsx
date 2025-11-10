@@ -181,6 +181,7 @@ export default function NominationsPage() {
                               <SelectItem value="Bouvé College of Health Sciences">Bouvé College of Health Sciences</SelectItem>
                               <SelectItem value="College of Science">College of Science</SelectItem>
                               <SelectItem value="College of Social Sciences and Humanities">College of Social Sciences and Humanities</SelectItem>
+                              <SelectItem value="Explore Program">Explore Program</SelectItem>
                             </SelectContent>
                           </Select>
                         )}
