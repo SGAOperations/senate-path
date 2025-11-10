@@ -4,15 +4,6 @@ import { createClient } from '@/lib/supabase/server';
 export async function POST(request: NextRequest) {
   try {
     const supabase = await createClient();
-    
-    // Check if user is authenticated
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
-    }
 
     const formData = await request.formData();
     const file = formData.get('audio') as File;
@@ -24,9 +15,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Generate a unique filename
+    // Generate a unique filename using timestamp and random string
     const timestamp = Date.now();
-    const fileName = `pronunciations/${user.id}/${timestamp}.webm`;
+    const randomString = Math.random().toString(36).substring(2, 15);
+    const fileName = `pronunciations/${timestamp}-${randomString}.webm`;
 
     // Upload to Supabase Storage
     const { data, error } = await supabase.storage

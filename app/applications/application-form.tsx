@@ -32,7 +32,7 @@ const applicationSchema = z.object({
   preferredFullName: z.string().optional(),
   nickname: z.string().optional(),
   phoneticPronunciation: z.string().min(1, 'Phonetic pronunciation is required'),
-  pronunciationAudioUrl: z.string().optional(),
+  pronunciationAudioUrl: z.string().min(1, 'Audio recording of last name pronunciation is required'),
   pronouns: z.string().min(1, 'Pronouns are required'),
   email: z.string().email('Please enter a valid email address').refine((email) => email.endsWith('@northeastern.edu'), {
     message: 'Email must be a Northeastern email (@northeastern.edu)',
@@ -154,7 +154,7 @@ export default function ApplicationForm({ communityConstituencies }: Application
   const handleNextPage = async () => {
     // Validate all fields on page 1 before proceeding
     const fieldsToValidate: (keyof ApplicationFormData)[] = [
-      'nuid', 'fullName', 'email', 'phoneNumber', 'college', 'major', 'year', 'constituency', 'communityConstituencyId'
+      'nuid', 'fullName', 'email', 'phoneNumber', 'pronouns', 'phoneticPronunciation', 'pronunciationAudioUrl', 'college', 'major', 'year', 'constituency', 'communityConstituencyId'
     ];
     
     const isValid = await trigger(fieldsToValidate);
@@ -239,36 +239,12 @@ export default function ApplicationForm({ communityConstituencies }: Application
                   )}
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    {...register('email')}
-                    disabled={isSubmitting}
-                  />
-                  {errors.email && (
-                    <p className="text-sm text-destructive">{errors.email.message}</p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="phoneNumber">Phone Number</Label>
-                  <Input
-                    id="phoneNumber"
-                    placeholder="(XXX) XXX-XXXX"
-                    {...register('phoneNumber')}
-                  />
-                  {errors.phoneNumber && (
-                    <p className="text-sm text-destructive">{errors.phoneNumber.message}</p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
+                <div className="space-y-2 col-span-1 md:col-span-2">
                   <Label htmlFor="fullName">Full Name (as it appears on official documents)</Label>
                   <Input
                     id="fullName"
                     {...register('fullName')}
+                    disabled={isSubmitting}
                   />
                   {errors.fullName && (
                     <p className="text-sm text-destructive">{errors.fullName.message}</p>
@@ -300,30 +276,28 @@ export default function ApplicationForm({ communityConstituencies }: Application
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="phoneticPronunciation">Phonetic Pronunciation</Label>
+                  <Label htmlFor="email">Email</Label>
                   <Input
-                    id="phoneticPronunciation"
-                    {...register('phoneticPronunciation')}
+                    id="email"
+                    type="email"
+                    {...register('email')}
                     disabled={isSubmitting}
                   />
-                  {errors.phoneticPronunciation && (
-                    <p className="text-sm text-destructive">{errors.phoneticPronunciation.message}</p>
+                  {errors.email && (
+                    <p className="text-sm text-destructive">{errors.email.message}</p>
                   )}
                 </div>
 
-                <div className="space-y-2 col-span-1 md:col-span-2">
-                  <Label>Audio Recording of Name Pronunciation <span className="text-muted-foreground">(optional)</span></Label>
-                  <VoiceRecorder
-                    onRecordingComplete={handleAudioRecordingComplete}
-                    onRecordingDelete={handleAudioRecordingDelete}
-                    disabled={isSubmitting || isUploadingAudio}
-                    maxDuration={30}
+                <div className="space-y-2">
+                  <Label htmlFor="phoneNumber">Phone Number</Label>
+                  <Input
+                    id="phoneNumber"
+                    placeholder="(XXX) XXX-XXXX"
+                    {...register('phoneNumber')}
+                    disabled={isSubmitting}
                   />
-                  {isUploadingAudio && (
-                    <p className="text-sm text-muted-foreground flex items-center gap-2">
-                      <Loader2 className="h-3 w-3 animate-spin" />
-                      Uploading audio...
-                    </p>
+                  {errors.phoneNumber && (
+                    <p className="text-sm text-destructive">{errors.phoneNumber.message}</p>
                   )}
                 </div>
 
@@ -336,6 +310,40 @@ export default function ApplicationForm({ communityConstituencies }: Application
                   />
                   {errors.pronouns && (
                     <p className="text-sm text-destructive">{errors.pronouns.message}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="phoneticPronunciation">Phonetic Pronunciation</Label>
+                  <Input
+                    id="phoneticPronunciation"
+                    {...register('phoneticPronunciation')}
+                    disabled={isSubmitting}
+                  />
+                  {errors.phoneticPronunciation && (
+                    <p className="text-sm text-destructive">{errors.phoneticPronunciation.message}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2 col-span-1 md:col-span-2">
+                  <Label>Audio Recording of Last Name Pronunciation</Label>
+                  <p className="text-sm text-muted-foreground mb-2">
+                    Please record your last name pronunciation. This will help us pronounce your name correctly during official ceremonies.
+                  </p>
+                  <VoiceRecorder
+                    onRecordingComplete={handleAudioRecordingComplete}
+                    onRecordingDelete={handleAudioRecordingDelete}
+                    disabled={isSubmitting || isUploadingAudio}
+                    maxDuration={30}
+                  />
+                  {isUploadingAudio && (
+                    <p className="text-sm text-muted-foreground flex items-center gap-2">
+                      <Loader2 className="h-3 w-3 animate-spin" />
+                      Uploading audio...
+                    </p>
+                  )}
+                  {errors.pronunciationAudioUrl && (
+                    <p className="text-sm text-destructive">{errors.pronunciationAudioUrl.message}</p>
                   )}
                 </div>
               </div>
