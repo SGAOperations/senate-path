@@ -63,16 +63,17 @@ export async function createNomination(data: NominationData) {
       throw new Error(`This nominator has already nominated ${data.nominee}`);
     }
 
-    // Create nomination
+    // Create nomination with PENDING status
     await db.nomination.create({
       data: {
         ...data,
-        status: Status.APPROVED,
+        status: 'PENDING',
       },
     });
 
     revalidatePath('/nominations');
     revalidatePath('/admin');
+    revalidatePath('/admin/nominations');
     revalidatePath('/dashboard');
 
     return { success: true };
@@ -81,6 +82,90 @@ export async function createNomination(data: NominationData) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Failed to create nomination'
+    };
+  }
+}
+
+export async function approveNomination(id: string) {
+  try {
+    await db.nomination.update({
+      where: { id },
+      data: { status: 'APPROVED' },
+    });
+
+    revalidatePath('/admin');
+    revalidatePath('/admin/nominations');
+    revalidatePath('/dashboard');
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error approving nomination:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to approve nomination'
+    };
+  }
+}
+
+export async function rejectNomination(id: string) {
+  try {
+    await db.nomination.update({
+      where: { id },
+      data: { status: 'REJECTED' },
+    });
+
+    revalidatePath('/admin');
+    revalidatePath('/admin/nominations');
+    revalidatePath('/dashboard');
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error rejecting nomination:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to reject nomination'
+    };
+  }
+}
+
+export async function bulkApproveNominations(ids: string[]) {
+  try {
+    await db.nomination.updateMany({
+      where: { id: { in: ids } },
+      data: { status: 'APPROVED' },
+    });
+
+    revalidatePath('/admin');
+    revalidatePath('/admin/nominations');
+    revalidatePath('/dashboard');
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error bulk approving nominations:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to approve nominations'
+    };
+  }
+}
+
+export async function bulkRejectNominations(ids: string[]) {
+  try {
+    await db.nomination.updateMany({
+      where: { id: { in: ids } },
+      data: { status: 'REJECTED' },
+    });
+
+    revalidatePath('/admin');
+    revalidatePath('/admin/nominations');
+    revalidatePath('/dashboard');
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error bulk rejecting nominations:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to reject nominations'
     };
   }
 }

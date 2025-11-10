@@ -18,14 +18,22 @@ export default async function AdminPage() {
 
   return (
     <div className="container max-w-[1600px] mx-auto py-6 px-4">
-      <div className="mb-6 flex justify-between items-center">
+      <div className="mb-6 flex justify-between items-center flex-wrap gap-4">
         <h1 className="text-4xl font-bold">Admin Dashboard</h1>
-        <Link href="/admin/community-constituencies">
-          <Button variant="outline">
-            <Settings className="h-4 w-4 mr-2" />
-            Manage Community Constituencies
-          </Button>
-        </Link>
+        <div className="flex gap-2">
+          <Link href="/admin/nominations">
+            <Button variant="outline">
+              <Settings className="h-4 w-4 mr-2" />
+              Manage Nominations
+            </Button>
+          </Link>
+          <Link href="/admin/community-constituencies">
+            <Button variant="outline">
+              <Settings className="h-4 w-4 mr-2" />
+              Manage Community Constituencies
+            </Button>
+          </Link>
+        </div>
       </div>
       <AdminDashboard 
         applications={applications} 
