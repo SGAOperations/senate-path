@@ -158,7 +158,7 @@ export default function EndorsementsPage() {
               {/* Page 1: Endorser Information */}
               {currentPage === 1 && (
                 <div className="space-y-6">
-                  <div className="space-y-4 p-6 rounded-lg bg-slate-50 border border-slate-200">
+                  <div className="space-y-4 p-3 sm:p-6 rounded-lg bg-slate-50 border border-slate-200">
                     <h3 className="text-xl font-bold text-slate-800">Your Information</h3>
                     <p className="text-sm text-muted-foreground">
                       Please provide your contact information
@@ -189,7 +189,7 @@ export default function EndorsementsPage() {
                     </div>
                   </div>
 
-                  <div className="space-y-4 p-6 rounded-lg bg-slate-50 border border-slate-200">
+                  <div className="space-y-4 p-3 sm:p-6 rounded-lg bg-slate-50 border border-slate-200">
                     <h3 className="text-xl font-bold text-slate-800">Applicant Information</h3>
                     
                     <div className="space-y-2">
@@ -230,7 +230,7 @@ export default function EndorsementsPage() {
               {/* Page 2: Endorsement Questions */}
               {currentPage === 2 && (
                 <div className="space-y-6">
-                  <div className="space-y-4 p-6 rounded-lg bg-slate-50 border border-slate-200">
+                  <div className="space-y-4 p-3 sm:p-6 rounded-lg bg-slate-50 border border-slate-200">
                     <h3 className="text-xl font-bold text-slate-800">Endorsement Questions</h3>
                     <p className="text-sm text-muted-foreground">
                       Please answer the following questions about the applicant

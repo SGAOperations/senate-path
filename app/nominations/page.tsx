@@ -127,7 +127,7 @@ export default function NominationsPage() {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Nominator Information */}
             <Card className="border border-primary/30">
-              <CardContent className="pt-6">
+              <CardContent className="pt-4 sm:pt-6 px-3 sm:px-6 pb-3 sm:pb-6">
                 <h3 className="text-xl font-bold text-slate-800 border-b border-slate-200 pb-2 mb-4">Your Information (Nominator)</h3>
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -210,7 +210,7 @@ export default function NominationsPage() {
 
             {/* Nominee Information */}
             <Card className="border border-primary/30">
-              <CardContent className="pt-6">
+              <CardContent className="pt-4 sm:pt-6 px-3 sm:px-6 pb-3 sm:pb-6">
                 <h3 className="text-xl font-bold text-slate-800 border-b border-slate-200 pb-2 mb-4">Nominee Information</h3>
                 <div className="space-y-2">
                   <Controller

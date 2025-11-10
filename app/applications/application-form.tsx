@@ -190,7 +190,7 @@ export default function ApplicationForm({ communityConstituencies }: Application
             {currentPage === 1 && (
               <>
             {/* Personal Information */}
-            <div className="space-y-4 p-6 rounded-lg bg-slate-50 border border-slate-200">
+            <div className="space-y-4 p-3 sm:p-6 rounded-lg bg-slate-50 border border-slate-200">
               <h3 className="text-xl font-bold text-slate-800">Personal Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -293,12 +293,12 @@ export default function ApplicationForm({ communityConstituencies }: Application
             </div>
 
             {/* Academic Information */}
-            <div className="space-y-4 p-6 rounded-lg bg-slate-50 border border-slate-200">
+            <div className="space-y-4 p-3 sm:p-6 rounded-lg bg-slate-50 border border-slate-200">
               <h3 className="text-xl font-bold text-slate-800">Academic Information</h3>
               
               <div className="space-y-2">
                 <Label>College <span className="text-sm text-muted-foreground">(Select all that apply)</span></Label>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-4 rounded-md border border-input bg-white">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-2 sm:p-4 rounded-md border border-input bg-white">
                   {[
                     'College of Arts, Media and Design',
                     "D'Amore-McKim School of Business",
@@ -390,7 +390,7 @@ export default function ApplicationForm({ communityConstituencies }: Application
             </div>
 
             {/* Constituency */}
-            <div className="space-y-4 p-6 rounded-lg bg-slate-50 border border-slate-200">
+            <div className="space-y-4 p-3 sm:p-6 rounded-lg bg-slate-50 border border-slate-200">
               <h3 className="text-xl font-bold text-slate-800">Constituency</h3>
               
               <div className="space-y-2">
@@ -465,7 +465,7 @@ export default function ApplicationForm({ communityConstituencies }: Application
               <>
             {/* Long Answer Questions */}
             <div className="space-y-6">
-              <div className="space-y-4 p-6 rounded-lg bg-slate-50 border border-slate-200">
+              <div className="space-y-4 p-3 sm:p-6 rounded-lg bg-slate-50 border border-slate-200">
                 <h3 className="text-xl font-bold text-slate-800">Application Questions</h3>
                 <p className="text-sm text-muted-foreground">
                   Please answer the following questions about your interest in Senate
