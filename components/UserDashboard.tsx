@@ -210,10 +210,6 @@ export default function UserDashboard({ getApplicationByNuid }: UserDashboardPro
                       <p className="font-medium">{applicantDetails.year}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground">Semester</p>
-                      <p className="font-medium">{applicantDetails.semester}</p>
-                    </div>
-                    <div>
                       <p className="text-sm text-muted-foreground">Constituency</p>
                       <p className="font-medium">{applicantDetails.constituency}</p>
                     </div>
