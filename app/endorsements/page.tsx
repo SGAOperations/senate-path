@@ -124,11 +124,11 @@ export default function EndorsementsPage() {
 
   return (
     <div className="bg-gradient-to-br from-slate-50 via-white to-slate-50">
-      <div className="container max-w-4xl mx-auto py-8 px-4">
+      <div className="container max-w-4xl mx-auto py-3 sm:py-6 lg:py-8 px-3 sm:px-4">
         <Card className="shadow-lg">
           <CardHeader className="bg-gradient-to-r from-primary/10 to-primary/5 border-b">
-            <CardTitle className="text-3xl font-bold">Endorse an Applicant</CardTitle>
-            <p className="text-muted-foreground mt-2">
+            <CardTitle className="text-2xl sm:text-3xl font-bold">Endorse an Applicant</CardTitle>
+            <p className="text-sm sm:text-base text-muted-foreground mt-2">
               Support a candidate by providing an endorsement. Your endorsement will help us understand the applicant's strengths and potential.
             </p>
             <div className="flex items-center gap-2 mt-4">
@@ -158,7 +158,7 @@ export default function EndorsementsPage() {
               {/* Page 1: Endorser Information */}
               {currentPage === 1 && (
                 <div className="space-y-6">
-                  <div className="space-y-4 p-6 rounded-lg bg-slate-50 border border-slate-200">
+                  <div className="space-y-4 p-3 sm:p-6 rounded-lg bg-slate-50 border border-slate-200">
                     <h3 className="text-xl font-bold text-slate-800">Your Information</h3>
                     <p className="text-sm text-muted-foreground">
                       Please provide your contact information
@@ -189,7 +189,7 @@ export default function EndorsementsPage() {
                     </div>
                   </div>
 
-                  <div className="space-y-4 p-6 rounded-lg bg-slate-50 border border-slate-200">
+                  <div className="space-y-4 p-3 sm:p-6 rounded-lg bg-slate-50 border border-slate-200">
                     <h3 className="text-xl font-bold text-slate-800">Applicant Information</h3>
                     
                     <div className="space-y-2">
@@ -230,7 +230,7 @@ export default function EndorsementsPage() {
               {/* Page 2: Endorsement Questions */}
               {currentPage === 2 && (
                 <div className="space-y-6">
-                  <div className="space-y-4 p-6 rounded-lg bg-slate-50 border border-slate-200">
+                  <div className="space-y-4 p-3 sm:p-6 rounded-lg bg-slate-50 border border-slate-200">
                     <h3 className="text-xl font-bold text-slate-800">Endorsement Questions</h3>
                     <p className="text-sm text-muted-foreground">
                       Please answer the following questions about the applicant

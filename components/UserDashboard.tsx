@@ -64,12 +64,12 @@ export default function UserDashboard({ getApplicationByNuid }: UserDashboardPro
   return (
     <div>
       {/* Search Form */}
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>Enter Your NUID</CardTitle>
+      <Card className="mb-4 sm:mb-6">
+        <CardHeader className="pb-4 sm:pb-6">
+          <CardTitle className="text-xl sm:text-2xl">Enter Your NUID</CardTitle>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSearch} className="flex gap-4">
+        <CardContent className="pt-0">
+          <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3 sm:gap-4">
             <div className="flex-1">
               <Input
                 placeholder="Enter your 9-digit NUID..."
@@ -78,9 +78,10 @@ export default function UserDashboard({ getApplicationByNuid }: UserDashboardPro
                 maxLength={9}
                 pattern="[0-9]*"
                 disabled={loading}
+                className="h-12 text-base"
               />
             </div>
-            <Button type="submit" disabled={loading}>
+            <Button type="submit" disabled={loading} className="h-12 text-base w-full sm:w-auto">
               <Search className="h-4 w-4 mr-2" />
               {loading ? 'Searching...' : 'View My Dashboard'}
             </Button>
@@ -108,36 +109,36 @@ export default function UserDashboard({ getApplicationByNuid }: UserDashboardPro
       {/* Overview Stats */}
       {applicantDetails && (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
             <Card>
-              <CardContent className="pt-6">
+              <CardContent className="pt-4 sm:pt-6">
                 <div className="flex items-center mb-2">
                   <User className="h-5 w-5 mr-2 text-primary" />
-                  <h3 className="text-lg font-semibold">Your Application</h3>
+                  <h3 className="text-base sm:text-lg font-semibold">Your Application</h3>
                 </div>
-                <p className="text-2xl font-bold">{applicantDetails.fullName}</p>
-                <p className="text-sm text-muted-foreground">{applicantDetails.constituency}</p>
+                <p className="text-xl sm:text-2xl font-bold truncate">{applicantDetails.fullName}</p>
+                <p className="text-sm text-muted-foreground truncate">{applicantDetails.constituency}</p>
               </CardContent>
             </Card>
             
             <Card>
-              <CardContent className="pt-6">
+              <CardContent className="pt-4 sm:pt-6">
                 <div className="flex items-center mb-2">
                   <Vote className="h-5 w-5 mr-2 text-primary" />
-                  <h3 className="text-lg font-semibold">Total Nominations</h3>
+                  <h3 className="text-base sm:text-lg font-semibold">Total Nominations</h3>
                 </div>
-                <p className="text-4xl font-bold">{applicantDetails.nominationCount}</p>
+                <p className="text-3xl sm:text-4xl font-bold">{applicantDetails.nominationCount}</p>
                 <p className="text-sm text-muted-foreground">approved nominations</p>
               </CardContent>
             </Card>
             
             <Card>
-              <CardContent className="pt-6">
+              <CardContent className="pt-4 sm:pt-6">
                 <div className="flex items-center mb-2">
                   <TrendingDown className="h-5 w-5 mr-2 text-primary" />
-                  <h3 className="text-lg font-semibold">Missing Nominations</h3>
+                  <h3 className="text-base sm:text-lg font-semibold">Missing Nominations</h3>
                 </div>
-                <p className="text-4xl font-bold">{missingNominations}</p>
+                <p className="text-3xl sm:text-4xl font-bold">{missingNominations}</p>
                 <p className="text-sm text-muted-foreground">needed to reach 30</p>
               </CardContent>
             </Card>
@@ -158,14 +159,14 @@ export default function UserDashboard({ getApplicationByNuid }: UserDashboardPro
                 {/* Personal Information */}
                 <div>
                   <h3 className="text-lg font-bold mb-3">Personal Information</h3>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <p className="text-sm text-muted-foreground">NUID</p>
-                      <p className="font-medium">{applicantDetails.nuid}</p>
+                      <p className="font-medium break-all">{applicantDetails.nuid}</p>
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Email</p>
-                      <p className="font-medium">{applicantDetails.email}</p>
+                      <p className="font-medium break-all">{applicantDetails.email}</p>
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Preferred Name</p>
@@ -181,7 +182,7 @@ export default function UserDashboard({ getApplicationByNuid }: UserDashboardPro
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Phone</p>
-                      <p className="font-medium">{applicantDetails.phoneNumber}</p>
+                      <p className="font-medium break-all">{applicantDetails.phoneNumber}</p>
                     </div>
                   </div>
                 </div>
@@ -191,7 +192,7 @@ export default function UserDashboard({ getApplicationByNuid }: UserDashboardPro
                 {/* Academic Information */}
                 <div>
                   <h3 className="text-lg font-bold mb-3">Academic Information</h3>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <p className="text-sm text-muted-foreground">College</p>
                       <p className="font-medium">{applicantDetails.college}</p>
@@ -235,21 +236,21 @@ export default function UserDashboard({ getApplicationByNuid }: UserDashboardPro
                   {applicantDetails.nominations.map((nomination) => (
                     <Card key={nomination.id}>
                       <CardContent className="pt-4">
-                        <div className="flex justify-between items-start mb-2">
-                          <div>
-                            <p className="font-medium">{nomination.fullName}</p>
-                            <p className="text-sm text-muted-foreground">{nomination.email}</p>
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-2">
+                          <div className="min-w-0 flex-1">
+                            <p className="font-medium truncate">{nomination.fullName}</p>
+                            <p className="text-sm text-muted-foreground truncate">{nomination.email}</p>
                           </div>
-                          <Badge variant="outline">{nomination.status}</Badge>
+                          <Badge variant="outline" className="self-start">{nomination.status}</Badge>
                         </div>
-                        <div className="grid grid-cols-2 gap-2 text-sm mt-2">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm mt-2">
                           <div>
                             <span className="text-muted-foreground">College:</span> {nomination.college}
                           </div>
                           <div>
                             <span className="text-muted-foreground">Major:</span> {nomination.major}
                           </div>
-                          <div>
+                          <div className="sm:col-span-2">
                             <span className="text-muted-foreground">Submitted:</span>{' '}
                             {new Date(nomination.createdAt).toLocaleDateString()}
                           </div>

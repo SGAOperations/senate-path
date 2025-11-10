@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { Navbar } from '@/components/Navbar';
 import { Toaster } from 'sonner';
@@ -6,6 +6,12 @@ import { Toaster } from 'sonner';
 export const metadata: Metadata = {
   title: 'SGA Nomination System',
   description: 'Student Government Association Senator Application and Nomination System',
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
 };
 
 export default function RootLayout({

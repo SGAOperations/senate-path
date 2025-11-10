@@ -81,34 +81,34 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
   return (
     <div>
       {/* Overview Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="pt-4 sm:pt-6">
             <div className="flex items-center mb-2">
               <User className="h-5 w-5 mr-2 text-primary" />
-              <h3 className="text-lg font-semibold">Total Applications</h3>
+              <h3 className="text-base sm:text-lg font-semibold">Total Applications</h3>
             </div>
-            <p className="text-4xl font-bold">{totalApplications}</p>
+            <p className="text-3xl sm:text-4xl font-bold">{totalApplications}</p>
           </CardContent>
         </Card>
         
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="pt-4 sm:pt-6">
             <div className="flex items-center mb-2">
               <Vote className="h-5 w-5 mr-2 text-primary" />
-              <h3 className="text-lg font-semibold">Total Nominations</h3>
+              <h3 className="text-base sm:text-lg font-semibold">Total Nominations</h3>
             </div>
-            <p className="text-4xl font-bold">{totalNominations}</p>
+            <p className="text-3xl sm:text-4xl font-bold">{totalNominations}</p>
           </CardContent>
         </Card>
         
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="pt-4 sm:pt-6">
             <div className="flex items-center mb-2">
               <TrendingUp className="h-5 w-5 mr-2 text-primary" />
-              <h3 className="text-lg font-semibold">Avg Nominations</h3>
+              <h3 className="text-base sm:text-lg font-semibold">Avg Nominations</h3>
             </div>
-            <p className="text-4xl font-bold">{avgNominationsPerApplicant}</p>
+            <p className="text-3xl sm:text-4xl font-bold">{avgNominationsPerApplicant}</p>
           </CardContent>
         </Card>
       </div>
@@ -131,21 +131,21 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
       )}
 
       {/* Search and Export */}
-      <div className="flex gap-4 mb-6">
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-4 sm:mb-6">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search by name, email, NUID, or constituency..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10"
+            className="pl-10 h-12 text-base"
           />
         </div>
         <Link
           href="/api/export"
           className={cn(
             buttonVariants({ variant: "outline" }),
-            "flex items-center gap-2 cursor-pointer",
+            "flex items-center justify-center gap-2 cursor-pointer h-12 text-base w-full sm:w-auto",
             applications.length === 0 && "pointer-events-none opacity-50"
           )}
           aria-disabled={applications.length === 0}
@@ -160,51 +160,53 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
         <div className={selectedApplicant ? "lg:col-span-5" : "lg:col-span-12"}>
           <Card>
             <CardHeader>
-              <CardTitle>Applicants ({filteredApplications.length})</CardTitle>
+              <CardTitle className="text-xl sm:text-2xl">Applicants ({filteredApplications.length})</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="max-h-[600px] overflow-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Constituency</TableHead>
-                      <TableHead className="text-center">Nominations</TableHead>
-                      <TableHead className="text-center">Endorsed</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredApplications.map((app) => (
-                      <TableRow
-                        key={app.id}
-                        onClick={() => handleSelectApplicant(app)}
-                        className={`cursor-pointer ${selectedApplicant?.id === app.id ? 'bg-muted' : ''}`}
-                      >
-                        <TableCell>
-                          <div>
-                            <div className="font-medium">{app.fullName}</div>
-                            <div className="text-sm text-muted-foreground">{app.email}</div>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="outline">{app.constituency}</Badge>
-                        </TableCell>
-                        <TableCell className="text-center">
-                          <Badge variant={getNominationBadgeColor(app.nominationCount)}>
-                            {app.nominationCount}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="text-center">
-                          {app.endorsementCount > 0 ? (
-                            <Badge variant="success">✓</Badge>
-                          ) : (
-                            <span className="text-muted-foreground text-sm">—</span>
-                          )}
-                        </TableCell>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="min-w-[180px]">Name</TableHead>
+                        <TableHead className="min-w-[150px]">Constituency</TableHead>
+                        <TableHead className="text-center min-w-[100px]">Nominations</TableHead>
+                        <TableHead className="text-center min-w-[100px]">Endorsed</TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredApplications.map((app) => (
+                        <TableRow
+                          key={app.id}
+                          onClick={() => handleSelectApplicant(app)}
+                          className={`cursor-pointer ${selectedApplicant?.id === app.id ? 'bg-muted' : ''}`}
+                        >
+                          <TableCell>
+                            <div>
+                              <div className="font-medium">{app.fullName}</div>
+                              <div className="text-sm text-muted-foreground truncate max-w-[200px]">{app.email}</div>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant="outline" className="whitespace-nowrap">{app.constituency}</Badge>
+                          </TableCell>
+                          <TableCell className="text-center">
+                            <Badge variant={getNominationBadgeColor(app.nominationCount)}>
+                              {app.nominationCount}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-center">
+                            {app.endorsementCount > 0 ? (
+                              <Badge variant="success">✓</Badge>
+                            ) : (
+                              <span className="text-muted-foreground text-sm">—</span>
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -215,9 +217,9 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
           <div className="lg:col-span-7">
             <Card>
               <CardHeader>
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-2xl">{selectedApplicant.fullName}</CardTitle>
-                  <Badge variant={getNominationBadgeColor(selectedApplicant.nominationCount)} className="text-sm">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                  <CardTitle className="text-xl sm:text-2xl truncate">{selectedApplicant.fullName}</CardTitle>
+                  <Badge variant={getNominationBadgeColor(selectedApplicant.nominationCount)} className="text-sm self-start sm:self-auto">
                     {selectedApplicant.nominationCount} Nominations
                   </Badge>
                 </div>
@@ -230,14 +232,14 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
                     {/* Personal Information */}
                     <div>
                       <h3 className="text-lg font-bold mb-3">Personal Information</h3>
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                           <p className="text-sm text-muted-foreground">NUID</p>
-                          <p className="font-medium">{selectedApplicant.nuid}</p>
+                          <p className="font-medium break-all">{selectedApplicant.nuid}</p>
                         </div>
                         <div>
                           <p className="text-sm text-muted-foreground">Email</p>
-                          <p className="font-medium">{selectedApplicant.email}</p>
+                          <p className="font-medium break-all">{selectedApplicant.email}</p>
                         </div>
                         <div>
                           <p className="text-sm text-muted-foreground">Preferred Name</p>
@@ -253,16 +255,16 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
                         </div>
                         <div>
                           <p className="text-sm text-muted-foreground">Phone</p>
-                          <p className="font-medium">{selectedApplicant.phoneNumber}</p>
+                          <p className="font-medium break-all">{selectedApplicant.phoneNumber}</p>
                         </div>
-                        <div className="col-span-2">
+                        <div className="col-span-1 sm:col-span-2">
                           <p className="text-sm text-muted-foreground mb-1">Name Pronunciation</p>
                           <p className="font-medium mb-2">{selectedApplicant.phoneticPronunciation}</p>
                           {selectedApplicant.pronunciationAudioUrl && (
                             <div className="flex items-center gap-2">
                               <audio 
                                 controls 
-                                className="h-10"
+                                className="h-10 w-full max-w-md"
                                 preload="none"
                               >
                                 <source src={selectedApplicant.pronunciationAudioUrl} type="audio/webm" />
@@ -279,7 +281,7 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
                     {/* Academic Information */}
                     <div>
                       <h3 className="text-lg font-bold mb-3">Academic Information</h3>
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                           <p className="text-sm text-muted-foreground">College</p>
                           <p className="font-medium">{selectedApplicant.college}</p>
@@ -296,7 +298,7 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
                           <p className="text-sm text-muted-foreground">Year</p>
                           <p className="font-medium">{selectedApplicant.year}</p>
                         </div>
-                        <div>
+                        <div className="col-span-1 sm:col-span-2">
                           <p className="text-sm text-muted-foreground">Constituency</p>
                           <p className="font-medium">{selectedApplicant.constituency}</p>
                         </div>
@@ -315,21 +317,21 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
                             {applicantDetails.nominations.map((nomination) => (
                               <Card key={nomination.id}>
                                 <CardContent className="pt-4">
-                                  <div className="flex justify-between items-start mb-2">
-                                    <div>
-                                      <p className="font-medium">{nomination.fullName}</p>
-                                      <p className="text-sm text-muted-foreground">{nomination.email}</p>
+                                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-2">
+                                    <div className="min-w-0 flex-1">
+                                      <p className="font-medium truncate">{nomination.fullName}</p>
+                                      <p className="text-sm text-muted-foreground truncate">{nomination.email}</p>
                                     </div>
-                                    <Badge variant="outline">{nomination.status}</Badge>
+                                    <Badge variant="outline" className="self-start">{nomination.status}</Badge>
                                   </div>
-                                  <div className="grid grid-cols-2 gap-2 text-sm mt-2">
+                                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm mt-2">
                                     <div>
                                       <span className="text-muted-foreground">College:</span> {nomination.college}
                                     </div>
                                     <div>
                                       <span className="text-muted-foreground">Major:</span> {nomination.major}
                                     </div>
-                                    <div>
+                                    <div className="sm:col-span-2">
                                       <span className="text-muted-foreground">Submitted:</span>{' '}
                                       {new Date(nomination.createdAt).toLocaleDateString()}
                                     </div>
