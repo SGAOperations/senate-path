@@ -10,7 +10,22 @@ const Status = {
 } as const;
 
 export async function getNominations() {
-  return db.nomination.findMany();
+  return db.nomination.findMany({
+    orderBy: { createdAt: 'desc' },
+  });
+}
+
+export async function getAllNominations() {
+  return db.nomination.findMany({
+    orderBy: { createdAt: 'desc' },
+  });
+}
+
+export async function getNominationsByStatus(status: 'PENDING' | 'APPROVED' | 'REJECTED') {
+  return db.nomination.findMany({
+    where: { status },
+    orderBy: { createdAt: 'desc' },
+  });
 }
 
 export async function getNominationsByNuid(nuid: string) {
