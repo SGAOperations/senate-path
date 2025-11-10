@@ -101,15 +101,15 @@ export default function NominationsPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-muted via-background to-muted">
-      <div className="container max-w-4xl mx-auto py-8 px-4">
+      <div className="container max-w-4xl mx-auto py-4 sm:py-6 lg:py-8 px-4">
         <Card className="shadow-lg">
           <CardHeader className="bg-gradient-to-r from-primary/20 to-primary/10 border-b border-primary">
-            <CardTitle className="text-3xl font-bold text-primary">Nominate a Senator</CardTitle>
-            <p className="text-muted-foreground mt-2">
+            <CardTitle className="text-2xl sm:text-3xl font-bold text-primary">Nominate a Senator</CardTitle>
+            <p className="text-sm sm:text-base text-muted-foreground mt-2">
               Nominate students to become senators. Senators must have submitted an application in order to be nominated.
             </p>
           </CardHeader>
-          <CardContent className="pt-8">
+          <CardContent className="pt-6 sm:pt-8">
           {submitError && (
             <Alert variant="destructive" className="mb-4">
               <XCircle className="h-4 w-4" />

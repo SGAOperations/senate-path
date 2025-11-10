@@ -6,6 +6,11 @@ import { Toaster } from 'sonner';
 export const metadata: Metadata = {
   title: 'SGA Nomination System',
   description: 'Student Government Association Senator Application and Nomination System',
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
+  },
 };
 
 export default function RootLayout({

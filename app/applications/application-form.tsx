@@ -163,11 +163,11 @@ export default function ApplicationForm({ communityConstituencies }: Application
 
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-slate-50">
-      <div className="container max-w-4xl mx-auto py-8 px-4">
+      <div className="container max-w-4xl mx-auto py-4 sm:py-6 lg:py-8 px-4">
         <Card className="shadow-lg">
           <CardHeader className="bg-linear-to-r from-primary/10 to-primary/5 border-b">
-            <CardTitle className="text-3xl font-bold">Senator Application</CardTitle>
-            <p className="text-muted-foreground mt-2">
+            <CardTitle className="text-2xl sm:text-3xl font-bold">Senator Application</CardTitle>
+            <p className="text-sm sm:text-base text-muted-foreground mt-2">
               Thank you for your interest in becoming a Senator! {currentPage === 1 ? 'Please fill out all fields below.' : 'Please answer the following questions.'}
             </p>
             <div className="flex items-center gap-2 mt-4">
@@ -298,7 +298,7 @@ export default function ApplicationForm({ communityConstituencies }: Application
               
               <div className="space-y-2">
                 <Label>College <span className="text-sm text-muted-foreground">(Select all that apply)</span></Label>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 p-4 rounded-md border border-input bg-white">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-4 rounded-md border border-input bg-white">
                   {[
                     'College of Arts, Media and Design',
                     "D'Amore-McKim School of Business",
@@ -309,7 +309,7 @@ export default function ApplicationForm({ communityConstituencies }: Application
                     'College of Social Sciences and Humanities',
                     'Explore Program',
                   ].map((collegeName) => (
-                    <div key={collegeName} className="flex items-center space-x-2">
+                    <div key={collegeName} className="flex items-center space-x-3 py-1">
                       <Checkbox
                         id={`college-${collegeName}`}
                         checked={colleges.includes(collegeName)}
@@ -326,7 +326,7 @@ export default function ApplicationForm({ communityConstituencies }: Application
                       />
                       <Label
                         htmlFor={`college-${collegeName}`}
-                        className="text-sm font-normal cursor-pointer"
+                        className="text-sm font-normal cursor-pointer leading-snug"
                       >
                         {collegeName}
                       </Label>
