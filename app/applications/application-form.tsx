@@ -313,8 +313,22 @@ export default function ApplicationForm({ communityConstituencies }: Application
                   )}
                 </div>
 
+                <div className="space-y-2 col-span-1 md:col-span-2">
+                  <p className="text-sm font-medium text-slate-700 mb-2">
+                    Please provide the phonetic pronunciation and audio recording of your <strong>last name</strong>.{' '}
+                    <a 
+                      href="https://www.wikihow.com/Write-Phonetically" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-primary underline hover:text-primary/80"
+                    >
+                      See pronunciation guide
+                    </a>
+                  </p>
+                </div>
+
                 <div className="space-y-2">
-                  <Label htmlFor="phoneticPronunciation"><strong>Last Name</strong> Phonetic Pronunciation</Label>
+                  <Label htmlFor="phoneticPronunciation">Phonetic Pronunciation</Label>
                   <Input
                     id="phoneticPronunciation"
                     {...register('phoneticPronunciation')}
@@ -326,7 +340,7 @@ export default function ApplicationForm({ communityConstituencies }: Application
                 </div>
 
                 <div className="space-y-2">
-                  <Label><strong>Last Name</strong> Audio Recording</Label>
+                  <Label>Audio Recording</Label>
                   <VoiceRecorder
                     onRecordingComplete={handleAudioRecordingComplete}
                     onRecordingDelete={handleAudioRecordingDelete}
