@@ -47,8 +47,16 @@ function getStatusBadge(status: string) {
 export default function NominationsManager({ nominations: initialNominations }: NominationsManagerProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [nomineeFilter, setNomineeFilter] = useState<string>('all');
+  const [sortBy, setSortBy] = useState<'date' | 'nominee' | 'status'>('date');
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [isProcessing, setIsProcessing] = useState(false);
+
+  // Get unique nominees for filter
+  const uniqueNominees = useMemo(() => {
+    const nominees = new Set(initialNominations.map(n => n.nominee));
+    return Array.from(nominees).sort();
+  }, [initialNominations]);
 
   // Compute stats
   const stats = useMemo(() => {
@@ -58,14 +66,14 @@ export default function NominationsManager({ nominations: initialNominations }: 
     const rejected = initialNominations.filter(n => n.status === 'REJECTED').length;
     
     // Count unique nominees
-    const uniqueNominees = new Set(initialNominations.map(n => n.nominee)).size;
+    const uniqueNomineesCount = new Set(initialNominations.map(n => n.nominee)).size;
 
-    return { total, pending, approved, rejected, uniqueNominees };
+    return { total, pending, approved, rejected, uniqueNominees: uniqueNomineesCount };
   }, [initialNominations]);
 
-  // Filter nominations
+  // Filter and sort nominations
   const filteredNominations = useMemo(() => {
-    return initialNominations.filter((nom) => {
+    let filtered = initialNominations.filter((nom) => {
       const matchesSearch = 
         nom.nominee.toLowerCase().includes(searchTerm.toLowerCase()) ||
         nom.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -74,10 +82,26 @@ export default function NominationsManager({ nominations: initialNominations }: 
         nom.major.toLowerCase().includes(searchTerm.toLowerCase());
 
       const matchesStatus = statusFilter === 'all' || nom.status === statusFilter;
+      const matchesNominee = nomineeFilter === 'all' || nom.nominee === nomineeFilter;
 
-      return matchesSearch && matchesStatus;
+      return matchesSearch && matchesStatus && matchesNominee;
     });
-  }, [initialNominations, searchTerm, statusFilter]);
+
+    // Sort filtered results
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case 'nominee':
+          return a.nominee.localeCompare(b.nominee);
+        case 'status':
+          return a.status.localeCompare(b.status);
+        case 'date':
+        default:
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      }
+    });
+
+    return filtered;
+  }, [initialNominations, searchTerm, statusFilter, nomineeFilter, sortBy]);
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
@@ -225,8 +249,22 @@ export default function NominationsManager({ nominations: initialNominations }: 
           />
         </div>
         
+        <Select value={nomineeFilter} onValueChange={setNomineeFilter}>
+          <SelectTrigger className="w-[200px]">
+            <SelectValue placeholder="Filter by nominee" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Nominees</SelectItem>
+            {uniqueNominees.map((nominee) => (
+              <SelectItem key={nominee} value={nominee}>
+                {nominee}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-[150px]">
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
           <SelectContent>
@@ -234,6 +272,17 @@ export default function NominationsManager({ nominations: initialNominations }: 
             <SelectItem value="PENDING">Pending</SelectItem>
             <SelectItem value="APPROVED">Approved</SelectItem>
             <SelectItem value="REJECTED">Rejected</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <Select value={sortBy} onValueChange={(value) => setSortBy(value as 'date' | 'nominee' | 'status')}>
+          <SelectTrigger className="w-[150px]">
+            <SelectValue placeholder="Sort by" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="date">Date (Newest)</SelectItem>
+            <SelectItem value="nominee">Nominee A-Z</SelectItem>
+            <SelectItem value="status">Status</SelectItem>
           </SelectContent>
         </Select>
 
