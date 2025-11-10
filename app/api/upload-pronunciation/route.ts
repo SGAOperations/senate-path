@@ -30,8 +30,20 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       console.error('Upload error:', error);
+      
+      // Provide more specific error message for RLS policy issues
+      if (error.message?.includes('row-level security') || error.statusCode === '403') {
+        return NextResponse.json(
+          { 
+            error: 'Storage bucket not configured. Please create a bucket named "applications" in Supabase Storage with public access enabled.',
+            details: error.message 
+          },
+          { status: 500 }
+        );
+      }
+      
       return NextResponse.json(
-        { error: 'Failed to upload file' },
+        { error: 'Failed to upload file', details: error.message },
         { status: 500 }
       );
     }

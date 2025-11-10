@@ -31,7 +31,7 @@ const applicationSchema = z.object({
   fullName: z.string().min(1, 'Full name is required'),
   preferredFullName: z.string().optional(),
   nickname: z.string().optional(),
-  phoneticPronunciation: z.string().min(1, 'Phonetic pronunciation is required'),
+  phoneticPronunciation: z.string().min(1, 'Phonetic pronunciation of last name is required'),
   pronunciationAudioUrl: z.string().min(1, 'Audio recording of last name pronunciation is required'),
   pronouns: z.string().min(1, 'Pronouns are required'),
   email: z.string().email('Please enter a valid email address').refine((email) => email.endsWith('@northeastern.edu'), {
@@ -227,18 +227,6 @@ export default function ApplicationForm({ communityConstituencies }: Application
               <h3 className="text-xl font-bold text-slate-800">Personal Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="nuid">NUID</Label>
-                  <Input
-                    id="nuid"
-                    {...register('nuid')}
-                    disabled={isSubmitting}
-                  />
-                  {errors.nuid && (
-                    <p className="text-sm text-destructive">{errors.nuid.message}</p>
-                  )}
-                </div>
-
                 <div className="space-y-2 col-span-1 md:col-span-2">
                   <Label htmlFor="fullName">Full Name (as it appears on official documents)</Label>
                   <Input
@@ -276,6 +264,30 @@ export default function ApplicationForm({ communityConstituencies }: Application
                 </div>
 
                 <div className="space-y-2">
+                  <Label htmlFor="nuid">NUID</Label>
+                  <Input
+                    id="nuid"
+                    {...register('nuid')}
+                    disabled={isSubmitting}
+                  />
+                  {errors.nuid && (
+                    <p className="text-sm text-destructive">{errors.nuid.message}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="pronouns">Pronouns</Label>
+                  <Input
+                    id="pronouns"
+                    {...register('pronouns')}
+                    disabled={isSubmitting}
+                  />
+                  {errors.pronouns && (
+                    <p className="text-sm text-destructive">{errors.pronouns.message}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
                   <Input
                     id="email"
@@ -302,19 +314,7 @@ export default function ApplicationForm({ communityConstituencies }: Application
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="pronouns">Pronouns</Label>
-                  <Input
-                    id="pronouns"
-                    {...register('pronouns')}
-                    disabled={isSubmitting}
-                  />
-                  {errors.pronouns && (
-                    <p className="text-sm text-destructive">{errors.pronouns.message}</p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="phoneticPronunciation">Phonetic Pronunciation</Label>
+                  <Label htmlFor="phoneticPronunciation"><strong>Last Name</strong> Phonetic Pronunciation</Label>
                   <Input
                     id="phoneticPronunciation"
                     {...register('phoneticPronunciation')}
@@ -325,11 +325,8 @@ export default function ApplicationForm({ communityConstituencies }: Application
                   )}
                 </div>
 
-                <div className="space-y-2 col-span-1 md:col-span-2">
-                  <Label>Audio Recording of Last Name Pronunciation</Label>
-                  <p className="text-sm text-muted-foreground mb-2">
-                    Please record your last name pronunciation. This will help us pronounce your name correctly during official ceremonies.
-                  </p>
+                <div className="space-y-2">
+                  <Label><strong>Last Name</strong> Audio Recording</Label>
                   <VoiceRecorder
                     onRecordingComplete={handleAudioRecordingComplete}
                     onRecordingDelete={handleAudioRecordingDelete}
