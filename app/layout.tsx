@@ -22,10 +22,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="h-full" suppressHydrationWarning>
-      <body suppressHydrationWarning className="h-full overflow-hidden">
+      <body suppressHydrationWarning className="h-full overflow-hidden bg-background text-foreground">
         <ThemeProvider defaultTheme="system">
           <Navbar />
-          <main className="h-[calc(100%-4rem)] overflow-auto">
+          <main className="h-[calc(100%-4rem)] overflow-auto bg-background">
             {children}
           </main>
           <Toaster position="bottom-right" />

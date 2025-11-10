@@ -7,7 +7,7 @@
   --radius-md: calc(0.5rem - 2px);
   --radius-sm: calc(0.5rem - 4px);
 
-  /* Light Mode Colors */
+  /* Light Mode Colors (Default) */
   --color-border: #e5e7eb;
   --color-input: #e5e7eb;
   --color-ring: #000000;
@@ -55,34 +55,74 @@
   --animate-accordion-up: accordion-up 0.2s ease-out;
 }
 
-/* Dark Mode Colors */
+/* Dark mode when .dark class is present on root element */
 .dark {
+  color-scheme: dark;
+  
   --color-border: #374151;
   --color-input: #374151;
   --color-ring: #FFFFFF;
-  --color-background: #111827;
-  --color-foreground: #f9fafb;
+  --color-background: #0f172a;
+  --color-foreground: #f1f5f9;
   
   --color-primary: #dc2626;
   --color-primary-foreground: #FFFFFF;
   
-  --color-secondary: #1f2937;
-  --color-secondary-foreground: #f9fafb;
+  --color-secondary: #1e293b;
+  --color-secondary-foreground: #f1f5f9;
   
   --color-destructive: #dc2626;
   --color-destructive-foreground: #FFFFFF;
   
-  --color-muted: #1f2937;
-  --color-muted-foreground: #9ca3af;
+  --color-muted: #1e293b;
+  --color-muted-foreground: #94a3b8;
   
   --color-accent: #b8925e;
   --color-accent-foreground: #FFFFFF;
   
-  --color-popover: #1f2937;
-  --color-popover-foreground: #f9fafb;
+  --color-popover: #1e293b;
+  --color-popover-foreground: #f1f5f9;
   
-  --color-card: #1f2937;
-  --color-card-foreground: #f9fafb;
+  --color-card: #1e293b;
+  --color-card-foreground: #f1f5f9;
+}
+
+.light {
+  color-scheme: light;
+}
+
+/* System dark mode preference */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    color-scheme: dark;
+    
+    --color-border: #374151;
+    --color-input: #374151;
+    --color-ring: #FFFFFF;
+    --color-background: #0f172a;
+    --color-foreground: #f1f5f9;
+    
+    --color-primary: #dc2626;
+    --color-primary-foreground: #FFFFFF;
+    
+    --color-secondary: #1e293b;
+    --color-secondary-foreground: #f1f5f9;
+    
+    --color-destructive: #dc2626;
+    --color-destructive-foreground: #FFFFFF;
+    
+    --color-muted: #1e293b;
+    --color-muted-foreground: #94a3b8;
+    
+    --color-accent: #b8925e;
+    --color-accent-foreground: #FFFFFF;
+    
+    --color-popover: #1e293b;
+    --color-popover-foreground: #f1f5f9;
+    
+    --color-card: #1e293b;
+    --color-card-foreground: #f1f5f9;
+  }
 }
 
 body {
@@ -93,8 +133,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
   margin: 0;
   padding: 0;
-  background-color: var(--color-background);
-  color: var(--color-foreground);
 }
 
 * {

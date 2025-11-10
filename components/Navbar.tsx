@@ -62,7 +62,7 @@ export function Navbar() {
   };
 
   return (
-    <nav className="bg-background border-b border-primary dark:border-primary/50 sticky top-0 z-50 shadow-sm h-16">
+    <nav className="bg-background border-b border-border sticky top-0 z-50 shadow-sm h-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo/Brand */}
@@ -139,7 +139,7 @@ export function Navbar() {
 
       {/* Mobile menu */}
       {isMenuOpen && (
-        <div className="md:hidden border-t border-primary dark:border-primary/50 bg-background shadow-lg">
+        <div className="md:hidden border-t border-border bg-background shadow-lg">
           <div className="px-2 pt-2 pb-3 space-y-1">
             {navLinks.map((link) => (
               <Link
