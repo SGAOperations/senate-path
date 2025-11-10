@@ -242,7 +242,7 @@ export default function EndorsementsPage() {
                       </Label>
                       <textarea
                         id="definingTraits"
-                        className="w-full min-h-[120px] px-3 py-2 text-sm border border-input bg-background rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                        className="w-full min-h-[120px] px-3 py-2 text-sm border border-input bg-background rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
                         placeholder="Please provide a detailed response (minimum 50 characters)"
                         {...register('definingTraits')}
                       />
@@ -257,7 +257,7 @@ export default function EndorsementsPage() {
                       </Label>
                       <textarea
                         id="leadershipQualities"
-                        className="w-full min-h-[120px] px-3 py-2 text-sm border border-input bg-background rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                        className="w-full min-h-[120px] px-3 py-2 text-sm border border-input bg-background rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
                         placeholder="Please provide a detailed response (minimum 50 characters)"
                         {...register('leadershipQualities')}
                       />
@@ -272,7 +272,7 @@ export default function EndorsementsPage() {
                       </Label>
                       <textarea
                         id="areasForDevelopment"
-                        className="w-full min-h-[120px] px-3 py-2 text-sm border border-input bg-background rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                        className="w-full min-h-[120px] px-3 py-2 text-sm border border-input bg-background rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
                         placeholder="Please provide a detailed response (minimum 50 characters)"
                         {...register('areasForDevelopment')}
                       />

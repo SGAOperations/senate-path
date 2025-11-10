@@ -477,7 +477,7 @@ export default function ApplicationForm({ communityConstituencies }: Application
                   </Label>
                   <textarea
                     id="whySenateLongAnswer"
-                    className="w-full min-h-[120px] px-3 py-2 text-sm border border-input bg-background rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                    className="w-full min-h-[120px] px-3 py-2 text-sm border border-input bg-background rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
                     placeholder="Please provide a detailed response (minimum 50 characters)"
                     {...register('whySenateLongAnswer')}
                   />
@@ -492,7 +492,7 @@ export default function ApplicationForm({ communityConstituencies }: Application
                   </Label>
                   <textarea
                     id="constituencyIssueLongAnswer"
-                    className="w-full min-h-[120px] px-3 py-2 text-sm border border-input bg-background rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                    className="w-full min-h-[120px] px-3 py-2 text-sm border border-input bg-background rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
                     placeholder="Please provide a detailed response (minimum 50 characters)"
                     {...register('constituencyIssueLongAnswer')}
                   />
@@ -507,7 +507,7 @@ export default function ApplicationForm({ communityConstituencies }: Application
                   </Label>
                   <textarea
                     id="diversityEquityInclusionLongAnswer"
-                    className="w-full min-h-[120px] px-3 py-2 text-sm border border-input bg-background rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                    className="w-full min-h-[120px] px-3 py-2 text-sm border border-input bg-background rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
                     placeholder="Please provide a detailed response (minimum 50 characters)"
                     {...register('diversityEquityInclusionLongAnswer')}
                   />
@@ -522,7 +522,7 @@ export default function ApplicationForm({ communityConstituencies }: Application
                   </Label>
                   <textarea
                     id="conflictSituationLongAnswer"
-                    className="w-full min-h-[120px] px-3 py-2 text-sm border border-input bg-background rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                    className="w-full min-h-[120px] px-3 py-2 text-sm border border-input bg-background rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
                     placeholder="Please provide a detailed response (minimum 50 characters)"
                     {...register('conflictSituationLongAnswer')}
                   />
