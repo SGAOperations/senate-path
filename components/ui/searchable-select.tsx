@@ -64,7 +64,7 @@ export function SearchableSelect({
               placeholder="Search..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="h-8 border-0 p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+              className="h-8 border-0 p-0 focus-visible:ring-0"
               onClick={(e) => e.stopPropagation()}
             />
           </div>
