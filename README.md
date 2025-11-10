@@ -133,6 +133,14 @@ npm start
 - **Application Submission** - Students can submit their senator applications
 - **Nomination System** - Constituents can nominate candidates
 - **Admin Dashboard** - View and manage all applications and nominations (protected by authentication)
+- **Nomination Approval System** - Admins can review and approve/reject nominations
+  - Dedicated nominations management page at `/admin/nominations`
+  - Filter nominations by status (Pending, Approved, Rejected) or by specific nominee
+  - Search across all nomination fields (nominee, nominator, email, college, major)
+  - Sort nominations by date, nominee name, or status
+  - Bulk approve or reject multiple nominations at once
+  - View statistics: total, pending, approved, rejected nominations and unique nominees
+  - New nominations are created with PENDING status and require admin approval
 - **User Management** - Admin page to create and remove authentication accounts
   - Create new admin users with email and password
   - Delete existing users (cannot delete your own account)
