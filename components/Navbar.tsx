@@ -8,6 +8,7 @@ import Image from 'next/image';
 import { createClient } from '@/lib/supabase/client';
 import { User } from '@supabase/supabase-js';
 import { APP_VERSION } from '@/lib/version';
+import { ThemeToggle } from './ThemeToggle';
 
 export function Navbar() {
   const pathname = usePathname();
@@ -54,7 +55,7 @@ export function Navbar() {
   };
 
   return (
-    <nav className="bg-white border-b border-primary sticky top-0 z-50 shadow-sm h-16">
+    <nav className="bg-white dark:bg-gray-900 border-b border-primary dark:border-primary/50 sticky top-0 z-50 shadow-sm h-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo/Brand */}
@@ -73,24 +74,28 @@ export function Navbar() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex space-x-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`inline-flex items-center px-1 pt-1 text-sm font-medium transition-colors ${
-                  isActive(link.href)
-                    ? 'text-primary border-b-2 border-primary'
-                    : 'text-foreground hover:text-primary hover:border-b-2 hover:border-primary/50'
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
+          <div className="hidden md:flex items-center space-x-4">
+            <div className="flex space-x-8">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`inline-flex items-center px-1 pt-1 text-sm font-medium transition-colors ${
+                    isActive(link.href)
+                      ? 'text-primary border-b-2 border-primary'
+                      : 'text-foreground hover:text-primary hover:border-b-2 hover:border-primary/50'
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+            <ThemeToggle />
           </div>
 
-          {/* Mobile menu button */}
-          <div className="md:hidden">
+          {/* Mobile menu button and theme toggle */}
+          <div className="md:hidden flex items-center gap-2">
+            <ThemeToggle />
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="inline-flex items-center justify-center p-2 rounded-md text-foreground hover:text-primary hover:bg-muted focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary"
@@ -109,7 +114,7 @@ export function Navbar() {
 
       {/* Mobile menu */}
       {isMenuOpen && (
-        <div className="md:hidden border-t border-primary">
+        <div className="md:hidden border-t border-primary dark:border-primary/50">
           <div className="px-2 pt-2 pb-3 space-y-1">
             {navLinks.map((link) => (
               <Link
