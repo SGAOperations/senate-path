@@ -18,7 +18,7 @@ export default function Home() {
         <div className="absolute inset-0 -z-10 bg-black/44" />
 
         {/* Content */}
-        <div className="relative z-10 flex flex-col items-center justify-center gap-3 sm:gap-4 text-center text-white px-3 py-4 sm:px-4 sm:py-6 max-w-5xl mx-auto">
+        <div className="relative z-10 flex flex-col items-center justify-center gap-3 sm:gap-4 text-center text-primary-foreground px-3 py-4 sm:px-4 sm:py-6 max-w-5xl mx-auto">
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[3.5rem] font-bold italic drop-shadow-[7px_7px_10px_rgba(0,0,0,0.8)] leading-tight">
             SENATE NOMINATIONS & APPLICATIONS
           </h1>

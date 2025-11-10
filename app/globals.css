@@ -35,6 +35,30 @@
   --color-card: #FFFFFF;
   --color-card-foreground: #000000;
 
+  /* Success, Warning, Info colors for light mode */
+  --color-success: #10b981;
+  --color-success-foreground: #FFFFFF;
+  --color-success-muted: #d1fae5;
+  --color-success-muted-foreground: #065f46;
+  
+  --color-warning: #f59e0b;
+  --color-warning-foreground: #FFFFFF;
+  --color-warning-muted: #fef3c7;
+  --color-warning-muted-foreground: #92400e;
+  
+  --color-info: #f97316;
+  --color-info-foreground: #FFFFFF;
+  --color-info-muted: #ffedd5;
+  --color-info-muted-foreground: #9a3412;
+  
+  --color-error: #ef4444;
+  --color-error-foreground: #FFFFFF;
+  --color-error-muted: #fee2e2;
+  --color-error-muted-foreground: #991b1b;
+
+  /* Progress bar inactive color */
+  --color-progress-inactive: #e5e7eb;
+
   /* Container */
   --container-center: true;
   --container-padding: 2rem;
@@ -85,6 +109,30 @@
   
   --color-card: #1e293b;
   --color-card-foreground: #f1f5f9;
+
+  /* Success, Warning, Info colors for dark mode (inverted/adjusted) */
+  --color-success: #22c55e;
+  --color-success-foreground: #FFFFFF;
+  --color-success-muted: #14532d;
+  --color-success-muted-foreground: #bbf7d0;
+  
+  --color-warning: #fbbf24;
+  --color-warning-foreground: #000000;
+  --color-warning-muted: #451a03;
+  --color-warning-muted-foreground: #fef3c7;
+  
+  --color-info: #fb923c;
+  --color-info-foreground: #FFFFFF;
+  --color-info-muted: #431407;
+  --color-info-muted-foreground: #fed7aa;
+  
+  --color-error: #f87171;
+  --color-error-foreground: #FFFFFF;
+  --color-error-muted: #450a0a;
+  --color-error-muted-foreground: #fecaca;
+
+  /* Progress bar inactive color */
+  --color-progress-inactive: #374151;
 }
 
 .light {
@@ -122,6 +170,30 @@
     
     --color-card: #1e293b;
     --color-card-foreground: #f1f5f9;
+
+    /* Success, Warning, Info colors for dark mode (inverted/adjusted) */
+    --color-success: #22c55e;
+    --color-success-foreground: #FFFFFF;
+    --color-success-muted: #14532d;
+    --color-success-muted-foreground: #bbf7d0;
+    
+    --color-warning: #fbbf24;
+    --color-warning-foreground: #000000;
+    --color-warning-muted: #451a03;
+    --color-warning-muted-foreground: #fef3c7;
+    
+    --color-info: #fb923c;
+    --color-info-foreground: #FFFFFF;
+    --color-info-muted: #431407;
+    --color-info-muted-foreground: #fed7aa;
+    
+    --color-error: #f87171;
+    --color-error-foreground: #FFFFFF;
+    --color-error-muted: #450a0a;
+    --color-error-muted-foreground: #fecaca;
+
+    /* Progress bar inactive color */
+    --color-progress-inactive: #374151;
   }
 }
 

@@ -171,8 +171,8 @@ export default function ApplicationForm({ communityConstituencies }: Application
               Thank you for your interest in becoming a Senator! {currentPage === 1 ? 'Please fill out all fields below.' : 'Please answer the following questions.'}
             </p>
             <div className="flex items-center gap-2 mt-4">
-              <div className={`h-2 flex-1 rounded ${currentPage >= 1 ? 'bg-primary' : 'bg-gray-200'}`} />
-              <div className={`h-2 flex-1 rounded ${currentPage >= 2 ? 'bg-primary' : 'bg-gray-200'}`} />
+              <div className={`h-2 flex-1 rounded ${currentPage >= 1 ? 'bg-primary' : 'bg-progress-inactive'}`} />
+              <div className={`h-2 flex-1 rounded ${currentPage >= 2 ? 'bg-primary' : 'bg-progress-inactive'}`} />
             </div>
             <p className="text-sm text-muted-foreground mt-2">
               Step {currentPage} of 2
@@ -298,7 +298,7 @@ export default function ApplicationForm({ communityConstituencies }: Application
               
               <div className="space-y-2">
                 <Label>College <span className="text-sm text-muted-foreground">(Select all that apply)</span></Label>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-2 sm:p-4 rounded-md border border-input bg-white">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-2 sm:p-4 rounded-md border border-input bg-card">
                   {[
                     'College of Arts, Media and Design',
                     "D'Amore-McKim School of Business",

@@ -148,7 +148,7 @@ export function Navbar() {
                 onClick={() => setIsMenuOpen(false)}
                 className={`block px-3 py-2 rounded-md text-base font-medium ${
                   isActive(link.href)
-                    ? 'bg-primary text-white'
+                    ? 'bg-primary text-primary-foreground'
                     : 'text-foreground hover:bg-primary/10 hover:text-primary'
                 }`}
               >

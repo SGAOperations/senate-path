@@ -209,7 +209,7 @@ export default function NominationsManager({ nominations: initialNominations }: 
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center mb-2">
-              <CheckCircle className="h-5 w-5 mr-2 text-green-600" />
+              <CheckCircle className="h-5 w-5 mr-2 text-success" />
               <h3 className="text-sm font-semibold">Approved</h3>
             </div>
             <p className="text-3xl font-bold">{stats.approved}</p>
@@ -219,7 +219,7 @@ export default function NominationsManager({ nominations: initialNominations }: 
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center mb-2">
-              <XCircle className="h-5 w-5 mr-2 text-red-600" />
+              <XCircle className="h-5 w-5 mr-2 text-error" />
               <h3 className="text-sm font-semibold">Rejected</h3>
             </div>
             <p className="text-3xl font-bold">{stats.rejected}</p>
@@ -292,7 +292,7 @@ export default function NominationsManager({ nominations: initialNominations }: 
               onClick={handleBulkApprove}
               disabled={isProcessing}
               variant="default"
-              className="bg-green-600 hover:bg-green-700"
+              className="bg-success hover:bg-success/90"
             >
               <CheckCircle className="h-4 w-4 mr-2" />
               Approve ({selectedIds.size})
@@ -378,7 +378,7 @@ export default function NominationsManager({ nominations: initialNominations }: 
                               onClick={() => handleApprove(nom.id)}
                               disabled={isProcessing}
                               variant="outline"
-                              className="border-green-600 text-green-600 hover:bg-green-50"
+                              className="border-success text-success hover:bg-success-muted"
                             >
                               <CheckCircle className="h-3 w-3 mr-1" />
                               Approve
@@ -390,7 +390,7 @@ export default function NominationsManager({ nominations: initialNominations }: 
                               onClick={() => handleReject(nom.id)}
                               disabled={isProcessing}
                               variant="outline"
-                              className="border-red-600 text-red-600 hover:bg-red-50"
+                              className="border-error text-error hover:bg-error-muted"
                             >
                               <XCircle className="h-3 w-3 mr-1" />
                               Reject

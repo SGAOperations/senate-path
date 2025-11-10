@@ -132,8 +132,8 @@ export default function EndorsementsPage() {
               Support a candidate by providing an endorsement. Your endorsement will help us understand the applicant's strengths and potential.
             </p>
             <div className="flex items-center gap-2 mt-4">
-              <div className={`h-2 flex-1 rounded ${currentPage >= 1 ? 'bg-primary' : 'bg-gray-200'}`} />
-              <div className={`h-2 flex-1 rounded ${currentPage >= 2 ? 'bg-primary' : 'bg-gray-200'}`} />
+              <div className={`h-2 flex-1 rounded ${currentPage >= 1 ? 'bg-primary' : 'bg-progress-inactive'}`} />
+              <div className={`h-2 flex-1 rounded ${currentPage >= 2 ? 'bg-primary' : 'bg-progress-inactive'}`} />
             </div>
             <p className="text-sm text-muted-foreground mt-2">
               Step {currentPage} of 2
