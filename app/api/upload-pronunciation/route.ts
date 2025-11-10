@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient();
+    // Use anon key directly for public uploads without cookies
+    const supabase = createSupabaseClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
 
     const formData = await request.formData();
     const file = formData.get('audio') as File;
@@ -32,10 +36,10 @@ export async function POST(request: NextRequest) {
       console.error('Upload error:', error);
       
       // Provide more specific error message for RLS policy issues
-      if (error.message?.includes('row-level security') || error.statusCode === '403') {
+      if (error.message?.includes('row-level security') || error.message?.includes('policy')) {
         return NextResponse.json(
           { 
-            error: 'Storage bucket not configured. Please create a bucket named "applications" in Supabase Storage with public access enabled.',
+            error: 'Storage bucket not configured correctly. Check that RLS policies allow anonymous INSERT on the "applications" bucket.',
             details: error.message 
           },
           { status: 500 }
