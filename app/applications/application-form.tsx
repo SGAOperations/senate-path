@@ -104,12 +104,12 @@ export default function ApplicationForm({ communityConstituencies }: Application
   const colleges = watch('college');
   const constituency = watch('constituency');
 
-  // Auto-select constituency if only one college is selected, clear if multiple
+  // Auto-select constituency if only one college is selected, clear if invalid
   useEffect(() => {
     if (colleges.length === 1 && colleges[0] !== constituency) {
       setValue('constituency', colleges[0], { shouldValidate: true });
-    } else if (colleges.length > 1 && constituency) {
-      // Clear constituency when multiple colleges are selected
+    } else if (constituency && !colleges.includes(constituency)) {
+      // Clear constituency only when it's no longer in the list of selected colleges
       setValue('constituency', '', { shouldValidate: false });
     }
   }, [colleges, constituency, setValue]);
