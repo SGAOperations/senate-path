@@ -81,9 +81,9 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
   return (
     <div>
       {/* Overview Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="pt-4 sm:pt-6">
             <div className="flex items-center mb-2">
               <User className="h-5 w-5 mr-2 text-primary" />
               <h3 className="text-base sm:text-lg font-semibold">Total Applications</h3>
@@ -93,7 +93,7 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
         </Card>
         
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="pt-4 sm:pt-6">
             <div className="flex items-center mb-2">
               <Vote className="h-5 w-5 mr-2 text-primary" />
               <h3 className="text-base sm:text-lg font-semibold">Total Nominations</h3>
@@ -103,7 +103,7 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
         </Card>
         
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="pt-4 sm:pt-6">
             <div className="flex items-center mb-2">
               <TrendingUp className="h-5 w-5 mr-2 text-primary" />
               <h3 className="text-base sm:text-lg font-semibold">Avg Nominations</h3>
@@ -131,7 +131,7 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
       )}
 
       {/* Search and Export */}
-      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6">
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-4 sm:mb-6">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input

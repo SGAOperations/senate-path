@@ -163,7 +163,7 @@ export default function ApplicationForm({ communityConstituencies }: Application
 
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-slate-50">
-      <div className="container max-w-4xl mx-auto py-4 sm:py-6 lg:py-8 px-4">
+      <div className="container max-w-4xl mx-auto py-3 sm:py-6 lg:py-8 px-3 sm:px-4">
         <Card className="shadow-lg">
           <CardHeader className="bg-linear-to-r from-primary/10 to-primary/5 border-b">
             <CardTitle className="text-2xl sm:text-3xl font-bold">Senator Application</CardTitle>

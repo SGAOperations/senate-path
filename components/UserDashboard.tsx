@@ -64,11 +64,11 @@ export default function UserDashboard({ getApplicationByNuid }: UserDashboardPro
   return (
     <div>
       {/* Search Form */}
-      <Card className="mb-6">
-        <CardHeader>
+      <Card className="mb-4 sm:mb-6">
+        <CardHeader className="pb-4 sm:pb-6">
           <CardTitle className="text-xl sm:text-2xl">Enter Your NUID</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-0">
           <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3 sm:gap-4">
             <div className="flex-1">
               <Input
@@ -109,9 +109,9 @@ export default function UserDashboard({ getApplicationByNuid }: UserDashboardPro
       {/* Overview Stats */}
       {applicantDetails && (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
             <Card>
-              <CardContent className="pt-6">
+              <CardContent className="pt-4 sm:pt-6">
                 <div className="flex items-center mb-2">
                   <User className="h-5 w-5 mr-2 text-primary" />
                   <h3 className="text-base sm:text-lg font-semibold">Your Application</h3>
@@ -122,7 +122,7 @@ export default function UserDashboard({ getApplicationByNuid }: UserDashboardPro
             </Card>
             
             <Card>
-              <CardContent className="pt-6">
+              <CardContent className="pt-4 sm:pt-6">
                 <div className="flex items-center mb-2">
                   <Vote className="h-5 w-5 mr-2 text-primary" />
                   <h3 className="text-base sm:text-lg font-semibold">Total Nominations</h3>
@@ -133,7 +133,7 @@ export default function UserDashboard({ getApplicationByNuid }: UserDashboardPro
             </Card>
             
             <Card>
-              <CardContent className="pt-6">
+              <CardContent className="pt-4 sm:pt-6">
                 <div className="flex items-center mb-2">
                   <TrendingDown className="h-5 w-5 mr-2 text-primary" />
                   <h3 className="text-base sm:text-lg font-semibold">Missing Nominations</h3>

@@ -17,8 +17,8 @@ export default async function AdminPage() {
   const applications = await getApplicationsWithNominationCounts();
 
   return (
-    <div className="container max-w-[1600px] mx-auto py-4 sm:py-6 px-4">
-      <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+    <div className="container max-w-[1600px] mx-auto py-3 sm:py-6 px-3 sm:px-4">
+      <div className="mb-3 sm:mb-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">Admin Dashboard</h1>
         <Link href="/admin/community-constituencies">
           <Button variant="outline" className="w-full sm:w-auto">
