@@ -62,7 +62,7 @@ export function Navbar() {
   };
 
   return (
-    <nav className="bg-white dark:bg-gray-900 border-b border-primary dark:border-primary/50 sticky top-0 z-50 shadow-sm h-16">
+    <nav className="bg-background border-b border-primary dark:border-primary/50 sticky top-0 z-50 shadow-sm h-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo/Brand */}
@@ -97,7 +97,6 @@ export function Navbar() {
                 </Link>
               ))}
             </div>
-            <ThemeToggle />
             {user && (
               <Button 
                 onClick={handleLogout}
@@ -107,10 +106,20 @@ export function Navbar() {
                 Logout
               </Button>
             )}
+            <ThemeToggle />
           </div>
 
           {/* Mobile menu button and theme toggle */}
           <div className="md:hidden flex items-center gap-2">
+            {user && (
+              <Button 
+                onClick={handleLogout}
+                variant="destructive"
+                size="sm"
+              >
+                Logout
+              </Button>
+            )}
             <ThemeToggle />
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -130,7 +139,7 @@ export function Navbar() {
 
       {/* Mobile menu */}
       {isMenuOpen && (
-        <div className="md:hidden border-t border-primary dark:border-primary/50 bg-white shadow-lg">
+        <div className="md:hidden border-t border-primary dark:border-primary/50 bg-background shadow-lg">
           <div className="px-2 pt-2 pb-3 space-y-1">
             {navLinks.map((link) => (
               <Link
@@ -146,18 +155,6 @@ export function Navbar() {
                 {link.label}
               </Link>
             ))}
-            {user && (
-              <Button 
-                onClick={() => {
-                  setIsMenuOpen(false);
-                  handleLogout();
-                }}
-                variant="destructive"
-                className="w-full mt-2"
-              >
-                Logout
-              </Button>
-            )}
           </div>
         </div>
       )}
