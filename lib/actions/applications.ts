@@ -18,6 +18,7 @@ type ApplicationData = {
   minors?: string;
   year: string;
   constituency: string;
+  communityConstituencyId?: string;
   whySenateLongAnswer: string;
   constituencyIssueLongAnswer: string;
   diversityEquityInclusionLongAnswer: string;
@@ -57,6 +58,7 @@ export async function submitApplication(formData: ApplicationData) {
       year,
       semester: '',
       constituency: formData.constituency,
+      communityConstituencyId: formData.communityConstituencyId || null,
       whySenateLongAnswer: formData.whySenateLongAnswer,
       constituencyIssueLongAnswer: formData.constituencyIssueLongAnswer,
       diversityEquityInclusionLongAnswer: formData.diversityEquityInclusionLongAnswer,
