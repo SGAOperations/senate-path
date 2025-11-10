@@ -100,11 +100,11 @@ export default function NominationsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-muted via-background to-muted">
+    <div className="bg-gradient-to-br from-muted via-background to-muted">
       <div className="container max-w-4xl mx-auto py-8 px-4">
         <Card className="shadow-lg">
           <CardHeader className="bg-gradient-to-r from-primary/20 to-primary/10 border-b border-primary">
-            <CardTitle className="text-3xl font-bold text-primary">Nominate a Senator</CardTitle>
+            <CardTitle className="text-3xl font-bold">Nominate a Senator</CardTitle>
             <p className="text-muted-foreground mt-2">
               Nominate students to become senators. Senators must have submitted an application in order to be nominated.
             </p>
@@ -128,7 +128,7 @@ export default function NominationsPage() {
             {/* Nominator Information */}
             <Card className="border border-primary/30">
               <CardContent className="pt-6">
-                <h3 className="text-xl font-bold text-primary border-b border-primary pb-2 mb-4">Your Information (Nominator)</h3>
+                <h3 className="text-xl font-bold text-slate-800 border-b border-slate-200 pb-2 mb-4">Your Information (Nominator)</h3>
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
@@ -211,7 +211,7 @@ export default function NominationsPage() {
             {/* Nominee Information */}
             <Card className="border border-primary/30">
               <CardContent className="pt-6">
-                <h3 className="text-xl font-bold text-primary border-b border-primary pb-2 mb-4">Nominee Information</h3>
+                <h3 className="text-xl font-bold text-slate-800 border-b border-slate-200 pb-2 mb-4">Nominee Information</h3>
                 <div className="space-y-2">
                   <Controller
                     name="nominee"
