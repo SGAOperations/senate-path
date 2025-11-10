@@ -100,7 +100,7 @@ export default function NominationsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-muted via-background to-muted">
+    <div className="bg-gradient-to-br from-muted via-background to-muted">
       <div className="container max-w-4xl mx-auto py-8 px-4">
         <Card className="shadow-lg">
           <CardHeader className="bg-gradient-to-r from-primary/20 to-primary/10 border-b border-primary">
