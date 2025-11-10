@@ -89,12 +89,14 @@ DATABASE_URL="postgresql://user:password@host:port/database"
 DIRECT_URL="postgresql://user:password@host:port/database"
 NEXT_PUBLIC_SUPABASE_URL="your-supabase-project-url"
 NEXT_PUBLIC_SUPABASE_ANON_KEY="your-supabase-anon-key"
+SUPABASE_SERVICE_ROLE_KEY="your-supabase-service-role-key"
 ```
 
 To get your Supabase credentials:
 - Create a project at [Supabase](https://supabase.com)
 - Go to Project Settings > API
 - Copy the Project URL and anon/public key
+- Copy the service_role key (this is needed for user management - keep it secret!)
 
 4. Generate Prisma client and run migrations:
 ```bash
@@ -131,22 +133,25 @@ npm start
 - **Application Submission** - Students can submit their senator applications
 - **Nomination System** - Constituents can nominate candidates
 - **Admin Dashboard** - View and manage all applications and nominations (protected by authentication)
-- **Authentication** - Secure OTP email-based login via Supabase Auth
-  - No passwords required - users receive a magic link via email
-  - Admin page is protected and only accessible to logged-in users
+- **User Management** - Admin page to create and remove authentication accounts
+  - Create new admin users with email and password
+  - Delete existing users (cannot delete your own account)
+  - View all registered users and their activity
+- **Authentication** - Secure password-based login via Supabase Auth
+  - Email and password authentication
+  - Admin pages are protected and only accessible to logged-in users
   - Admin link only visible in navbar for authenticated users
 - **Constituency Validation** - Ensures nominators and nominees are in the same constituency
 - **Duplicate Prevention** - Prevents duplicate nominations and applications
 
 ## Authentication
 
-The application uses Supabase Auth with email OTP (One-Time Password) for authentication:
+The application uses Supabase Auth with email and password for authentication:
 
-1. Users click "Sign In" in the navbar
-2. They enter their email address
-3. They receive a magic link via email
-4. Clicking the link logs them in automatically
-5. Once authenticated, users can access the Admin Dashboard
+1. Users click "Login" in the navbar
+2. They enter their email address and password
+3. Once authenticated, users can access the Admin Dashboard and User Management
+4. Admin users can create new accounts from the User Management page (`/admin/users`)
 
 The admin page (`/admin`) is protected by middleware and requires authentication to access.
 
@@ -163,6 +168,7 @@ Make sure to set the following environment variables in your deployment platform
 - `DIRECT_URL` - Direct PostgreSQL connection string (for Prisma migrations)
 - `NEXT_PUBLIC_SUPABASE_URL` - Supabase project URL
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Supabase anonymous/public key
+- `SUPABASE_SERVICE_ROLE_KEY` - Supabase service role key (required for user management)
 
 ## Development Notes
 
