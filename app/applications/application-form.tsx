@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/select';
 import { SearchableSelect } from '@/components/ui/searchable-select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { XCircle, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { XCircle, Loader2, ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
 import { useUnsavedChangesWarning } from '@/lib/hooks/useUnsavedChangesWarning';
 import { toast } from 'sonner';
 import { CommunityConstituency } from '@prisma/client';
@@ -313,22 +313,19 @@ export default function ApplicationForm({ communityConstituencies }: Application
                   )}
                 </div>
 
-                <div className="space-y-2 col-span-1 md:col-span-2">
-                  <p className="text-sm font-medium text-slate-700 mb-2">
-                    Please provide the phonetic pronunciation and audio recording of your <strong>last name</strong>.{' '}
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Label htmlFor="phoneticPronunciation">Phonetic Pronunciation</Label>
                     <a 
                       href="https://www.wikihow.com/Write-Phonetically" 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="text-primary underline hover:text-primary/80"
+                      className="text-red-600 hover:text-red-700 flex items-center gap-1"
+                      title="See pronunciation guide"
                     >
-                      See pronunciation guide
+                      <ExternalLink className="h-3.5 w-3.5" />
                     </a>
-                  </p>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="phoneticPronunciation">Phonetic Pronunciation</Label>
+                  </div>
                   <Input
                     id="phoneticPronunciation"
                     {...register('phoneticPronunciation')}
@@ -356,6 +353,12 @@ export default function ApplicationForm({ communityConstituencies }: Application
                   {errors.pronunciationAudioUrl && (
                     <p className="text-sm text-destructive">{errors.pronunciationAudioUrl.message}</p>
                   )}
+                </div>
+
+                <div className="space-y-2 col-span-1 md:col-span-2">
+                  <p className="text-sm text-muted-foreground">
+                    Please provide the phonetic pronunciation and audio recording of your <strong>last name</strong>.
+                  </p>
                 </div>
               </div>
             </div>
