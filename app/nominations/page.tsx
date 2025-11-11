@@ -122,7 +122,7 @@ export default function NominationsPage() {
               an application in order to be nominated.
             </p>
           </CardHeader>
-          <CardContent className="pt-6 sm:pt-8">
+          <CardContent className="pt-6">
             {submitError && (
               <Alert variant="destructive" className="mb-4">
                 <XCircle className="h-4 w-4" />
