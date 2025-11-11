@@ -242,7 +242,7 @@ export default function ApplicationForm({
     <div className="bg-muted-background">
       <div className="container max-w-4xl mx-auto py-3 sm:py-6 lg:py-8 px-3 sm:px-4">
         <Card className="shadow-lg">
-          <CardHeader className="bg-linear-to-r from-primary/10 to-primary/5 border-b">
+          <CardHeader className="border-b">
             <CardTitle className="text-2xl sm:text-3xl font-bold">
               Senator Application
             </CardTitle>
@@ -264,7 +264,7 @@ export default function ApplicationForm({
               Step {currentPage} of 2
             </p>
           </CardHeader>
-          <CardContent className="pt-8">
+          <CardContent className="p-6">
             {submitError && (
               <Alert variant="destructive" className="mb-4">
                 <XCircle className="h-4 w-4" />
@@ -276,10 +276,8 @@ export default function ApplicationForm({
               {currentPage === 1 && (
                 <>
                   {/* Personal Information */}
-                  <div className="space-y-4 p-3 sm:p-6 rounded-lg bg-slate-50 border border-slate-200">
-                    <h3 className="text-xl font-bold text-slate-800">
-                      Personal Information
-                    </h3>
+                  <div className="space-y-4 p-3 sm:p-6 rounded-lg border">
+                    <h3 className="text-xl font-bold">Personal Information</h3>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
@@ -408,10 +406,8 @@ export default function ApplicationForm({
                   </div>
 
                   {/* Academic Information */}
-                  <div className="space-y-4 p-3 sm:p-6 rounded-lg bg-slate-50 border border-slate-200">
-                    <h3 className="text-xl font-bold text-slate-800">
-                      Academic Information
-                    </h3>
+                  <div className="space-y-4 p-3 sm:p-6 rounded-lg border">
+                    <h3 className="text-xl font-bold">Academic Information</h3>
 
                     <div className="space-y-2">
                       <Label>
@@ -420,7 +416,7 @@ export default function ApplicationForm({
                           (Select all that apply)
                         </span>
                       </Label>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-2 sm:p-4 rounded-md border border-input bg-white">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-2 sm:p-4 rounded-md border">
                         {[
                           'College of Arts, Media and Design',
                           "D'Amore-McKim School of Business",
@@ -532,10 +528,8 @@ export default function ApplicationForm({
                   </div>
 
                   {/* Constituency */}
-                  <div className="space-y-4 p-3 sm:p-6 rounded-lg bg-slate-50 border border-slate-200">
-                    <h3 className="text-xl font-bold text-slate-800">
-                      Constituency
-                    </h3>
+                  <div className="space-y-4 p-3 sm:p-6 rounded-lg border">
+                    <h3 className="text-xl font-bold">Constituency</h3>
 
                     <div className="space-y-2">
                       <Label htmlFor="constituency">
@@ -626,8 +620,8 @@ export default function ApplicationForm({
                 <>
                   {/* Long Answer Questions */}
                   <div className="space-y-6">
-                    <div className="space-y-4 p-3 sm:p-6 rounded-lg bg-slate-50 border border-slate-200">
-                      <h3 className="text-xl font-bold text-slate-800">
+                    <div className="space-y-4 p-3 sm:p-6 rounded-lg border">
+                      <h3 className="text-xl font-bold">
                         Application Questions
                       </h3>
                       <p className="text-sm text-muted-foreground">
