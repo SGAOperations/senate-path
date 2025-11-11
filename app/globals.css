@@ -7,7 +7,7 @@
   --radius-md: calc(0.5rem - 2px);
   --radius-sm: calc(0.5rem - 4px);
 
-  /* Colors */
+  /* Light Mode Colors (Default) */
   --color-border: #e5e7eb;
   --color-input: #e5e7eb;
   --color-ring: #000000;
@@ -35,6 +35,30 @@
   --color-card: #FFFFFF;
   --color-card-foreground: #000000;
 
+  /* Success, Warning, Info colors for light mode */
+  --color-success: #10b981;
+  --color-success-foreground: #FFFFFF;
+  --color-success-muted: #d1fae5;
+  --color-success-muted-foreground: #065f46;
+  
+  --color-warning: #f59e0b;
+  --color-warning-foreground: #FFFFFF;
+  --color-warning-muted: #fef3c7;
+  --color-warning-muted-foreground: #92400e;
+  
+  --color-info: #f97316;
+  --color-info-foreground: #FFFFFF;
+  --color-info-muted: #ffedd5;
+  --color-info-muted-foreground: #9a3412;
+  
+  --color-error: #ef4444;
+  --color-error-foreground: #FFFFFF;
+  --color-error-muted: #fee2e2;
+  --color-error-muted-foreground: #991b1b;
+
+  /* Progress bar inactive color */
+  --color-progress-inactive: #e5e7eb;
+
   /* Container */
   --container-center: true;
   --container-padding: 2rem;
@@ -53,6 +77,124 @@
   
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
+}
+
+/* Dark mode when .dark class is present on root element */
+.dark {
+  color-scheme: dark;
+  
+  --color-border: #374151;
+  --color-input: #374151;
+  --color-ring: #FFFFFF;
+  --color-background: #0f172a;
+  --color-foreground: #f1f5f9;
+  
+  --color-primary: #dc2626;
+  --color-primary-foreground: #FFFFFF;
+  
+  --color-secondary: #1e293b;
+  --color-secondary-foreground: #f1f5f9;
+  
+  --color-destructive: #dc2626;
+  --color-destructive-foreground: #FFFFFF;
+  
+  --color-muted: #1e293b;
+  --color-muted-foreground: #94a3b8;
+  
+  --color-accent: #b8925e;
+  --color-accent-foreground: #FFFFFF;
+  
+  --color-popover: #1e293b;
+  --color-popover-foreground: #f1f5f9;
+  
+  --color-card: #1e293b;
+  --color-card-foreground: #f1f5f9;
+
+  /* Success, Warning, Info colors for dark mode (inverted/adjusted) */
+  --color-success: #22c55e;
+  --color-success-foreground: #FFFFFF;
+  --color-success-muted: #14532d;
+  --color-success-muted-foreground: #bbf7d0;
+  
+  --color-warning: #fbbf24;
+  --color-warning-foreground: #000000;
+  --color-warning-muted: #451a03;
+  --color-warning-muted-foreground: #fef3c7;
+  
+  --color-info: #fb923c;
+  --color-info-foreground: #FFFFFF;
+  --color-info-muted: #431407;
+  --color-info-muted-foreground: #fed7aa;
+  
+  --color-error: #f87171;
+  --color-error-foreground: #FFFFFF;
+  --color-error-muted: #450a0a;
+  --color-error-muted-foreground: #fecaca;
+
+  /* Progress bar inactive color */
+  --color-progress-inactive: #374151;
+}
+
+.light {
+  color-scheme: light;
+}
+
+/* System dark mode preference */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    color-scheme: dark;
+    
+    --color-border: #374151;
+    --color-input: #374151;
+    --color-ring: #FFFFFF;
+    --color-background: #0f172a;
+    --color-foreground: #f1f5f9;
+    
+    --color-primary: #dc2626;
+    --color-primary-foreground: #FFFFFF;
+    
+    --color-secondary: #1e293b;
+    --color-secondary-foreground: #f1f5f9;
+    
+    --color-destructive: #dc2626;
+    --color-destructive-foreground: #FFFFFF;
+    
+    --color-muted: #1e293b;
+    --color-muted-foreground: #94a3b8;
+    
+    --color-accent: #b8925e;
+    --color-accent-foreground: #FFFFFF;
+    
+    --color-popover: #1e293b;
+    --color-popover-foreground: #f1f5f9;
+    
+    --color-card: #1e293b;
+    --color-card-foreground: #f1f5f9;
+
+    /* Success, Warning, Info colors for dark mode (inverted/adjusted) */
+    --color-success: #22c55e;
+    --color-success-foreground: #FFFFFF;
+    --color-success-muted: #14532d;
+    --color-success-muted-foreground: #bbf7d0;
+    
+    --color-warning: #fbbf24;
+    --color-warning-foreground: #000000;
+    --color-warning-muted: #451a03;
+    --color-warning-muted-foreground: #fef3c7;
+    
+    --color-info: #fb923c;
+    --color-info-foreground: #FFFFFF;
+    --color-info-muted: #431407;
+    --color-info-muted-foreground: #fed7aa;
+    
+    --color-error: #f87171;
+    --color-error-foreground: #FFFFFF;
+    --color-error-muted: #450a0a;
+    --color-error-muted-foreground: #fecaca;
+
+    /* Progress bar inactive color */
+    --color-progress-inactive: #374151;
+  }
 }
 
 body {

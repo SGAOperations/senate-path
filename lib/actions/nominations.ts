@@ -21,13 +21,14 @@ export async function createNomination(data: NominationData) {
   try {
     // Map college to constituency
     const collegeToConstituency: Record<string, string> = {
-      'College of Arts, Media and Design': 'CAMD',
-      "D'Amore-McKim School of Business": 'DMSB',
-      'Khoury College of Computer Sciences': 'Khoury',
-      'College of Engineering': 'COE',
-      'Bouvé College of Health Sciences': 'Bouve',
-      'College of Science': 'COS',
-      'College of Social Sciences and Humanities': 'CSSH',
+      'College of Arts, Media and Design': 'College of Arts, Media and Design',
+      "D'Amore-McKim School of Business": "D'Amore-McKim School of Business",
+      'Khoury College of Computer Sciences': 'Khoury College of Computer Sciences',
+      'College of Engineering': 'College of Engineering',
+      'Bouvé College of Health Sciences': 'Bouvé College of Health Sciences',
+      'College of Science': 'College of Science',
+      'College of Social Sciences and Humanities': 'College of Social Sciences and Humanities',
+      'Explore Program': 'Explore Program',
     };
 
     const nominatorConstituency = data.college ? collegeToConstituency[data.college] : undefined;

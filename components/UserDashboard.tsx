@@ -184,6 +184,22 @@ export default function UserDashboard({ getApplicationByNuid }: UserDashboardPro
                       <p className="text-sm text-muted-foreground">Phone</p>
                       <p className="font-medium break-all">{applicantDetails.phoneNumber}</p>
                     </div>
+                    <div className="col-span-1 sm:col-span-2">
+                      <p className="text-sm text-muted-foreground mb-1">Name Pronunciation</p>
+                      <p className="font-medium mb-2">{applicantDetails.phoneticPronunciation}</p>
+                      {applicantDetails.pronunciationAudioUrl && (
+                        <div className="flex items-center gap-2">
+                          <audio 
+                            controls 
+                            className="h-10 w-full max-w-md"
+                            preload="none"
+                          >
+                            <source src={applicantDetails.pronunciationAudioUrl} type="audio/webm" />
+                            Your browser does not support the audio element.
+                          </audio>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
 
@@ -208,10 +224,6 @@ export default function UserDashboard({ getApplicationByNuid }: UserDashboardPro
                     <div>
                       <p className="text-sm text-muted-foreground">Year</p>
                       <p className="font-medium">{applicantDetails.year}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground">Semester</p>
-                      <p className="font-medium">{applicantDetails.semester}</p>
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Constituency</p>

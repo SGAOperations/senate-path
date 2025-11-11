@@ -124,9 +124,9 @@ export default function UserManagement({ initialUsers }: UserManagementProps) {
       )}
 
       {success && (
-        <Alert className="border-green-500 bg-green-50">
-          <CheckCircle className="h-4 w-4 text-green-600" />
-          <AlertDescription className="flex items-center justify-between text-green-800">
+        <Alert variant="success">
+          <CheckCircle className="h-4 w-4" />
+          <AlertDescription className="flex items-center justify-between">
             <span>{success}</span>
             <button
               onClick={() => setSuccess(null)}
