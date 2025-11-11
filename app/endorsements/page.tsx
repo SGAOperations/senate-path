@@ -27,8 +27,12 @@ const endorsementSchema = z.object({
   endorserEmail: z.string().email('Valid email is required'),
   applicantName: z.string().min(1, 'Please select an applicant to endorse'),
   definingTraits: z.string().min(50, 'Please provide at least 50 characters'),
-  leadershipQualities: z.string().min(50, 'Please provide at least 50 characters'),
-  areasForDevelopment: z.string().min(50, 'Please provide at least 50 characters'),
+  leadershipQualities: z
+    .string()
+    .min(50, 'Please provide at least 50 characters'),
+  areasForDevelopment: z
+    .string()
+    .min(50, 'Please provide at least 50 characters'),
   currentPage: z.number().optional(),
 });
 
@@ -38,8 +42,12 @@ export default function EndorsementsPage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [applicants, setApplicants] = useState<Array<{ fullName: string; email: string }>>([]);
-  const [applicantsLoadError, setApplicantsLoadError] = useState<string | null>(null);
+  const [applicants, setApplicants] = useState<
+    Array<{ fullName: string; email: string }>
+  >([]);
+  const [applicantsLoadError, setApplicantsLoadError] = useState<string | null>(
+    null,
+  );
 
   const {
     register,
@@ -74,7 +82,9 @@ export default function EndorsementsPage() {
         setApplicantsLoadError(null);
       } catch (error) {
         console.error('Failed to fetch applicants:', error);
-        setApplicantsLoadError('Failed to load applicant list. Please refresh the page.');
+        setApplicantsLoadError(
+          'Failed to load applicant list. Please refresh the page.',
+        );
       }
     }
     fetchApplicants();
@@ -110,9 +120,13 @@ export default function EndorsementsPage() {
 
   const handleNextPage = async () => {
     // Validate page 1 fields before moving to page 2
-    const fieldsToValidate: (keyof EndorsementFormData)[] = ['endorserName', 'endorserEmail', 'applicantName'];
+    const fieldsToValidate: (keyof EndorsementFormData)[] = [
+      'endorserName',
+      'endorserEmail',
+      'applicantName',
+    ];
     const isValid = await trigger(fieldsToValidate);
-    
+
     if (isValid) {
       setValue('currentPage', 2);
     }
@@ -123,17 +137,24 @@ export default function EndorsementsPage() {
   };
 
   return (
-    <div className="bg-gradient-to-br from-slate-50 via-white to-slate-50">
+    <div>
       <div className="container max-w-4xl mx-auto py-3 sm:py-6 lg:py-8 px-3 sm:px-4">
         <Card className="shadow-lg">
-          <CardHeader className="bg-gradient-to-r from-primary/10 to-primary/5 border-b">
-            <CardTitle className="text-2xl sm:text-3xl font-bold">Endorse an Applicant</CardTitle>
+          <CardHeader>
+            <CardTitle className="text-2xl sm:text-3xl font-bold">
+              Endorse an Applicant
+            </CardTitle>
             <p className="text-sm sm:text-base text-muted-foreground mt-2">
-              Support a candidate by providing an endorsement. Your endorsement will help us understand the applicant's strengths and potential.
+              Support a candidate by providing an endorsement. Your endorsement
+              will help us understand the applicant's strengths and potential.
             </p>
             <div className="flex items-center gap-2 mt-4">
-              <div className={`h-2 flex-1 rounded ${currentPage >= 1 ? 'bg-primary' : 'bg-progress-inactive'}`} />
-              <div className={`h-2 flex-1 rounded ${currentPage >= 2 ? 'bg-primary' : 'bg-progress-inactive'}`} />
+              <div
+                className={`h-2 flex-1 rounded ${currentPage >= 1 ? 'bg-primary' : 'bg-progress-inactive'}`}
+              />
+              <div
+                className={`h-2 flex-1 rounded ${currentPage >= 2 ? 'bg-primary' : 'bg-progress-inactive'}`}
+              />
             </div>
             <p className="text-sm text-muted-foreground mt-2">
               Step {currentPage} of 2
@@ -158,20 +179,19 @@ export default function EndorsementsPage() {
               {/* Page 1: Endorser Information */}
               {currentPage === 1 && (
                 <div className="space-y-6">
-                  <div className="space-y-4 p-3 sm:p-6 rounded-lg bg-slate-50 border border-slate-200">
-                    <h3 className="text-xl font-bold text-slate-800">Your Information</h3>
+                  <div className="space-y-4 p-3 sm:p-6 rounded-lg bg-muted-background-50 border">
+                    <h3 className="text-xl font-bold">Your Information</h3>
                     <p className="text-sm text-muted-foreground">
                       Please provide your contact information
                     </p>
-                    
+
                     <div className="space-y-2">
                       <Label htmlFor="endorserName">Your Full Name</Label>
-                      <Input
-                        id="endorserName"
-                        {...register('endorserName')}
-                      />
+                      <Input id="endorserName" {...register('endorserName')} />
                       {errors.endorserName && (
-                        <p className="text-sm text-destructive">{errors.endorserName.message}</p>
+                        <p className="text-sm text-destructive">
+                          {errors.endorserName.message}
+                        </p>
                       )}
                     </div>
 
@@ -184,20 +204,26 @@ export default function EndorsementsPage() {
                         {...register('endorserEmail')}
                       />
                       {errors.endorserEmail && (
-                        <p className="text-sm text-destructive">{errors.endorserEmail.message}</p>
+                        <p className="text-sm text-destructive">
+                          {errors.endorserEmail.message}
+                        </p>
                       )}
                     </div>
                   </div>
 
-                  <div className="space-y-4 p-3 sm:p-6 rounded-lg bg-slate-50 border border-slate-200">
-                    <h3 className="text-xl font-bold text-slate-800">Applicant Information</h3>
-                    
+                  <div className="space-y-4 p-3 sm:p-6 rounded-lg bg-muted-background-50 border">
+                    <h3 className="text-xl font-bold">Applicant Information</h3>
+
                     <div className="space-y-2">
-                      <Label htmlFor="applicantName">Who are you endorsing?</Label>
+                      <Label htmlFor="applicantName">
+                        Who are you endorsing?
+                      </Label>
                       <Select
                         value={applicantName}
                         onValueChange={(value) => {
-                          setValue('applicantName', value, { shouldValidate: true });
+                          setValue('applicantName', value, {
+                            shouldValidate: true,
+                          });
                         }}
                       >
                         <SelectTrigger>
@@ -205,14 +231,19 @@ export default function EndorsementsPage() {
                         </SelectTrigger>
                         <SelectContent>
                           {applicants.map((applicant) => (
-                            <SelectItem key={applicant.email} value={applicant.fullName}>
+                            <SelectItem
+                              key={applicant.email}
+                              value={applicant.fullName}
+                            >
                               {applicant.fullName}
                             </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
                       {errors.applicantName && (
-                        <p className="text-sm text-destructive">{errors.applicantName.message}</p>
+                        <p className="text-sm text-destructive">
+                          {errors.applicantName.message}
+                        </p>
                       )}
                     </div>
                   </div>
@@ -230,15 +261,16 @@ export default function EndorsementsPage() {
               {/* Page 2: Endorsement Questions */}
               {currentPage === 2 && (
                 <div className="space-y-6">
-                  <div className="space-y-4 p-3 sm:p-6 rounded-lg bg-slate-50 border border-slate-200">
-                    <h3 className="text-xl font-bold text-slate-800">Endorsement Questions</h3>
+                  <div className="space-y-4 p-3 sm:p-6 rounded-lg bg-muted-background-50 border">
+                    <h3 className="text-xl font-bold">Endorsement Questions</h3>
                     <p className="text-sm text-muted-foreground">
                       Please answer the following questions about the applicant
                     </p>
 
                     <div className="space-y-2">
                       <Label htmlFor="definingTraits">
-                        When describing this applicant, what do you believe are some of their defining traits or qualities?
+                        When describing this applicant, what do you believe are
+                        some of their defining traits or qualities?
                       </Label>
                       <textarea
                         id="definingTraits"
@@ -247,13 +279,17 @@ export default function EndorsementsPage() {
                         {...register('definingTraits')}
                       />
                       {errors.definingTraits && (
-                        <p className="text-sm text-destructive">{errors.definingTraits.message}</p>
+                        <p className="text-sm text-destructive">
+                          {errors.definingTraits.message}
+                        </p>
                       )}
                     </div>
 
                     <div className="space-y-2">
                       <Label htmlFor="leadershipQualities">
-                        Of the applicant's qualities you just described, which of them do you believe will serve them best in a leadership position and why?
+                        Of the applicant's qualities you just described, which
+                        of them do you believe will serve them best in a
+                        leadership position and why?
                       </Label>
                       <textarea
                         id="leadershipQualities"
@@ -262,13 +298,20 @@ export default function EndorsementsPage() {
                         {...register('leadershipQualities')}
                       />
                       {errors.leadershipQualities && (
-                        <p className="text-sm text-destructive">{errors.leadershipQualities.message}</p>
+                        <p className="text-sm text-destructive">
+                          {errors.leadershipQualities.message}
+                        </p>
                       )}
                     </div>
 
                     <div className="space-y-2">
                       <Label htmlFor="areasForDevelopment">
-                        One of the benefits of leadership positions is that they allow for students to grow and develop skills vital for their personal, academic, and professional journeys. What are some areas or skills that you think would be most beneficial for this applicant to develop in order to become a more effective leader?
+                        One of the benefits of leadership positions is that they
+                        allow for students to grow and develop skills vital for
+                        their personal, academic, and professional journeys.
+                        What are some areas or skills that you think would be
+                        most beneficial for this applicant to develop in order
+                        to become a more effective leader?
                       </Label>
                       <textarea
                         id="areasForDevelopment"
@@ -277,7 +320,9 @@ export default function EndorsementsPage() {
                         {...register('areasForDevelopment')}
                       />
                       {errors.areasForDevelopment && (
-                        <p className="text-sm text-destructive">{errors.areasForDevelopment.message}</p>
+                        <p className="text-sm text-destructive">
+                          {errors.areasForDevelopment.message}
+                        </p>
                       )}
                     </div>
                   </div>
