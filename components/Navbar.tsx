@@ -67,10 +67,10 @@ export function Navbar() {
         <div className="flex justify-between items-center h-16">
           {/* Logo/Brand */}
           <Link href="/" className="flex items-center gap-3">
-            <Image 
-              src="/images/senate-logo.png" 
-              alt="SGA Senate Logo" 
-              width={120} 
+            <Image
+              src="/images/senate-logo.png"
+              alt="SGA Senate Logo"
+              width={120}
               height={40}
               className="h-10 w-auto"
               priority
@@ -98,11 +98,7 @@ export function Navbar() {
               ))}
             </div>
             {user && (
-              <Button 
-                onClick={handleLogout}
-                variant="destructive"
-                size="sm"
-              >
+              <Button onClick={handleLogout} variant="destructive" size="sm">
                 Logout
               </Button>
             )}
@@ -111,19 +107,10 @@ export function Navbar() {
 
           {/* Mobile menu button and theme toggle */}
           <div className="md:hidden flex items-center gap-2">
-            {user && (
-              <Button 
-                onClick={handleLogout}
-                variant="destructive"
-                size="sm"
-              >
-                Logout
-              </Button>
-            )}
             <ThemeToggle />
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-foreground hover:text-primary hover:bg-muted focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary"
+              className="inline-flex items-center justify-center rounded-md text-foreground hover:text-primary hover:bg-muted focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary"
               aria-expanded={isMenuOpen}
             >
               <span className="sr-only">Open main menu</span>
@@ -155,6 +142,16 @@ export function Navbar() {
                 {link.label}
               </Link>
             ))}
+            {user && (
+              <Button
+                onClick={handleLogout}
+                variant="destructive"
+                size="sm"
+                className="w-full"
+              >
+                Logout
+              </Button>
+            )}
           </div>
         </div>
       )}
