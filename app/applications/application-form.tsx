@@ -20,10 +20,17 @@ import {
 } from '@/components/ui/select';
 import { SearchableSelect } from '@/components/ui/searchable-select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { XCircle, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
+import {
+  XCircle,
+  Loader2,
+  ChevronLeft,
+  ChevronRight,
+  ExternalLink,
+} from 'lucide-react';
 import { useUnsavedChangesWarning } from '@/lib/hooks/useUnsavedChangesWarning';
 import { toast } from 'sonner';
 import { CommunityConstituency } from '@prisma/client';
+import { VoiceRecorder } from '@/components/ui/voice-recorder';
 
 const applicationSchema = z
   .object({
@@ -36,8 +43,10 @@ const applicationSchema = z
     nickname: z.string().optional(),
     phoneticPronunciation: z
       .string()
-      .min(1, 'Phonetic pronunciation is required'),
-    pronunciationAudioUrl: z.string().optional(),
+      .min(1, 'Phonetic pronunciation of last name is required'),
+    pronunciationAudioUrl: z
+      .string()
+      .min(1, 'Audio recording of last name pronunciation is required'),
     pronouns: z.string().min(1, 'Pronouns are required'),
     email: z
       .string()
@@ -92,6 +101,7 @@ export default function ApplicationForm({
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isUploadingAudio, setIsUploadingAudio] = useState(false);
 
   const {
     register,
@@ -142,6 +152,40 @@ export default function ApplicationForm({
   // Warn user about unsaved changes before leaving the page
   const hasUnsavedChanges = isDirty && !isSubmitting;
   useUnsavedChangesWarning(hasUnsavedChanges);
+
+  const handleAudioRecordingComplete = async (
+    audioBlob: Blob,
+    audioUrl: string,
+  ) => {
+    setIsUploadingAudio(true);
+    try {
+      const formData = new FormData();
+      formData.append('audio', audioBlob, 'pronunciation.webm');
+
+      const response = await fetch('/api/upload-pronunciation', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to upload audio');
+      }
+
+      const { url } = await response.json();
+      setValue('pronunciationAudioUrl', url, { shouldDirty: true });
+      toast.success('Audio recording uploaded successfully!');
+    } catch (error) {
+      console.error('Error uploading audio:', error);
+      toast.error('Failed to upload audio recording. Please try again.');
+    } finally {
+      setIsUploadingAudio(false);
+    }
+  };
+
+  const handleAudioRecordingDelete = () => {
+    setValue('pronunciationAudioUrl', '', { shouldDirty: true });
+    toast.success('Audio recording deleted');
+  };
 
   const handleNextPage = async () => {
     // Validate all fields on page 1 before proceeding
@@ -210,10 +254,10 @@ export default function ApplicationForm({
             </p>
             <div className="flex items-center gap-2 mt-4">
               <div
-                className={`h-2 flex-1 rounded ${currentPage >= 1 ? 'bg-primary' : 'bg-progress-inactive'}`}
+                className={`h-2 flex-1 rounded ${currentPage >= 1 ? 'bg-primary' : 'bg-gray-200'}`}
               />
               <div
-                className={`h-2 flex-1 rounded ${currentPage >= 2 ? 'bg-primary' : 'bg-progress-inactive'}`}
+                className={`h-2 flex-1 rounded ${currentPage >= 2 ? 'bg-primary' : 'bg-gray-200'}`}
               />
             </div>
             <p className="text-sm text-muted-foreground mt-2">
@@ -232,7 +276,7 @@ export default function ApplicationForm({
               {currentPage === 1 && (
                 <>
                   {/* Personal Information */}
-                  <div className="space-y-4 p-3 sm:p-6 rounded-lg bg-muted-background border border-foreground">
+                  <div className="space-y-4 p-3 sm:p-6 rounded-lg border">
                     <h3 className="text-xl font-bold">Personal Information</h3>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -372,7 +416,7 @@ export default function ApplicationForm({
                           (Select all that apply)
                         </span>
                       </Label>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-2 sm:p-4 rounded-md border border-input bg-card">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-2 sm:p-4 rounded-md border">
                         {[
                           'College of Arts, Media and Design',
                           "D'Amore-McKim School of Business",
@@ -484,7 +528,7 @@ export default function ApplicationForm({
                   </div>
 
                   {/* Constituency */}
-                  <div className="space-y-4 p-3 sm:p-6 rounded-lg bg-muted-background-50 border">
+                  <div className="space-y-4 p-3 sm:p-6 rounded-lg border">
                     <h3 className="text-xl font-bold">Constituency</h3>
 
                     <div className="space-y-2">
@@ -576,7 +620,7 @@ export default function ApplicationForm({
                 <>
                   {/* Long Answer Questions */}
                   <div className="space-y-6">
-                    <div className="space-y-4 p-3 sm:p-6 rounded-lg bg-muted-background-50 border">
+                    <div className="space-y-4 p-3 sm:p-6 rounded-lg border">
                       <h3 className="text-xl font-bold">
                         Application Questions
                       </h3>
