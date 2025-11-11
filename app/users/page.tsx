@@ -19,8 +19,8 @@ export default async function UsersPage() {
         <div className="mb-6">
           <h1 className="text-4xl font-bold">User Management</h1>
         </div>
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <p className="text-red-800">Error loading users: {error}</p>
+        <div className="bg-error-muted border border-error rounded-lg p-4">
+          <p className="text-error-muted-foreground">Error loading users: {error}</p>
         </div>
       </div>
     );
