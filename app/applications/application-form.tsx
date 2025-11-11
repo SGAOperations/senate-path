@@ -220,7 +220,7 @@ export default function ApplicationForm({
               Step {currentPage} of 2
             </p>
           </CardHeader>
-          <CardContent className="pt-8">
+          <CardContent className="p-6">
             {submitError && (
               <Alert variant="destructive" className="mb-4">
                 <XCircle className="h-4 w-4" />

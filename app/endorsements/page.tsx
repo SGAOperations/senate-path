@@ -140,7 +140,7 @@ export default function EndorsementsPage() {
     <div>
       <div className="container max-w-4xl mx-auto py-3 sm:py-6 lg:py-8 px-3 sm:px-4">
         <Card className="shadow-lg">
-          <CardHeader>
+          <CardHeader className="border-b">
             <CardTitle className="text-2xl sm:text-3xl font-bold">
               Endorse an Applicant
             </CardTitle>
@@ -160,7 +160,7 @@ export default function EndorsementsPage() {
               Step {currentPage} of 2
             </p>
           </CardHeader>
-          <CardContent className="pt-8">
+          <CardContent className="p-6">
             {submitError && (
               <Alert variant="destructive" className="mb-4">
                 <XCircle className="h-4 w-4" />
