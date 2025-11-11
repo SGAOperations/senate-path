@@ -317,7 +317,7 @@ export default function ApplicationForm({ communityConstituencies }: Application
                   <div className="flex items-center gap-2">
                     <Label htmlFor="phoneticPronunciation">Phonetic Pronunciation</Label>
                     <a 
-                      href="https://www.wikihow.com/Write-Phonetically" 
+                      href="https://www.cmu.edu/hub/registrar/docs/phonetic-spelling-instructions.pdf" 
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="text-red-600 hover:text-red-700 flex items-center gap-1"
