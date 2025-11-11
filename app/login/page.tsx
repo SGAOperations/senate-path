@@ -41,8 +41,10 @@ function LoginForm() {
 
   return (
     <Card className="w-full max-w-md shadow-lg">
-      <CardHeader className="bg-gradient-to-r from-primary/10 to-primary/5 border-b">
-        <CardTitle className="text-3xl font-bold text-center">Sign In</CardTitle>
+      <CardHeader>
+        <CardTitle className="text-3xl font-bold text-center">
+          Sign In
+        </CardTitle>
         <p className="text-muted-foreground text-center mt-2">
           Sign in with your email and password to access the admin dashboard
         </p>
@@ -81,7 +83,9 @@ function LoginForm() {
               />
             </div>
             {errors.password && (
-              <p className="text-sm text-destructive">{errors.password.message}</p>
+              <p className="text-sm text-destructive">
+                {errors.password.message}
+              </p>
             )}
           </div>
 
@@ -103,20 +107,24 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-muted via-background to-muted flex items-center justify-center py-12 px-4">
-      <Suspense fallback={
-        <Card className="w-full max-w-md shadow-lg">
-          <CardHeader className="bg-gradient-to-r from-primary/10 to-primary/5 border-b">
-            <CardTitle className="text-3xl font-bold text-center">Sign In</CardTitle>
-          </CardHeader>
-          <CardContent className="pt-6">
-            <div className="animate-pulse space-y-4">
-              <div className="h-10 bg-muted rounded" />
-              <div className="h-10 bg-muted rounded" />
-            </div>
-          </CardContent>
-        </Card>
-      }>
+    <div className="min-h-screen flex items-center justify-center py-12 px-4">
+      <Suspense
+        fallback={
+          <Card className="w-full max-w-md shadow-lg">
+            <CardHeader className="border-b">
+              <CardTitle className="text-3xl font-bold text-center">
+                Sign In
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-6">
+              <div className="animate-pulse space-y-4">
+                <div className="h-10 bg-muted rounded" />
+                <div className="h-10 bg-muted rounded" />
+              </div>
+            </CardContent>
+          </Card>
+        }
+      >
         <LoginForm />
       </Suspense>
     </div>

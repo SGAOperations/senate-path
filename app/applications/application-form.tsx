@@ -139,12 +139,12 @@ export default function ApplicationForm({
   const colleges = watch('college');
   const constituency = watch('constituency');
 
-  // Auto-select constituency if only one college is selected, clear if multiple
+  // Auto-select constituency if only one college is selected, clear if invalid
   useEffect(() => {
     if (colleges.length === 1 && colleges[0] !== constituency) {
       setValue('constituency', colleges[0], { shouldValidate: true });
-    } else if (colleges.length > 1 && constituency) {
-      // Clear constituency when multiple colleges are selected
+    } else if (constituency && !colleges.includes(constituency)) {
+      // Clear constituency only when it's no longer in the list of selected colleges
       setValue('constituency', '', { shouldValidate: false });
     }
   }, [colleges, constituency, setValue]);
@@ -194,9 +194,6 @@ export default function ApplicationForm({
       'fullName',
       'email',
       'phoneNumber',
-      'pronouns',
-      'phoneticPronunciation',
-      'pronunciationAudioUrl',
       'college',
       'major',
       'year',
@@ -242,7 +239,7 @@ export default function ApplicationForm({
   };
 
   return (
-    <div className="bg-linear-to-br from-slate-50 via-white to-slate-50">
+    <div className="bg-muted-background">
       <div className="container max-w-4xl mx-auto py-3 sm:py-6 lg:py-8 px-3 sm:px-4">
         <Card className="shadow-lg">
           <CardHeader className="bg-linear-to-r from-primary/10 to-primary/5 border-b">
@@ -285,15 +282,54 @@ export default function ApplicationForm({
                     </h3>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2 col-span-1 md:col-span-2">
+                      <div className="space-y-2">
+                        <Label htmlFor="nuid">NUID</Label>
+                        <Input
+                          id="nuid"
+                          {...register('nuid')}
+                          disabled={isSubmitting}
+                        />
+                        {errors.nuid && (
+                          <p className="text-sm text-destructive">
+                            {errors.nuid.message}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="email">Email</Label>
+                        <Input
+                          id="email"
+                          type="email"
+                          {...register('email')}
+                          disabled={isSubmitting}
+                        />
+                        {errors.email && (
+                          <p className="text-sm text-destructive">
+                            {errors.email.message}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="phoneNumber">Phone Number</Label>
+                        <Input
+                          id="phoneNumber"
+                          placeholder="(XXX) XXX-XXXX"
+                          {...register('phoneNumber')}
+                        />
+                        {errors.phoneNumber && (
+                          <p className="text-sm text-destructive">
+                            {errors.phoneNumber.message}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="space-y-2">
                         <Label htmlFor="fullName">
                           Full Name (as it appears on official documents)
                         </Label>
-                        <Input
-                          id="fullName"
-                          {...register('fullName')}
-                          disabled={isSubmitting}
-                        />
+                        <Input id="fullName" {...register('fullName')} />
                         {errors.fullName && (
                           <p className="text-sm text-destructive">
                             {errors.fullName.message}
@@ -340,15 +376,17 @@ export default function ApplicationForm({
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="nuid">NUID</Label>
+                        <Label htmlFor="phoneticPronunciation">
+                          Phonetic Pronunciation
+                        </Label>
                         <Input
-                          id="nuid"
-                          {...register('nuid')}
+                          id="phoneticPronunciation"
+                          {...register('phoneticPronunciation')}
                           disabled={isSubmitting}
                         />
-                        {errors.nuid && (
+                        {errors.phoneticPronunciation && (
                           <p className="text-sm text-destructive">
-                            {errors.nuid.message}
+                            {errors.phoneticPronunciation.message}
                           </p>
                         )}
                       </div>
@@ -365,92 +403,6 @@ export default function ApplicationForm({
                             {errors.pronouns.message}
                           </p>
                         )}
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="email">Email</Label>
-                        <Input
-                          id="email"
-                          type="email"
-                          {...register('email')}
-                          disabled={isSubmitting}
-                        />
-                        {errors.email && (
-                          <p className="text-sm text-destructive">
-                            {errors.email.message}
-                          </p>
-                        )}
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="phoneNumber">Phone Number</Label>
-                        <Input
-                          id="phoneNumber"
-                          placeholder="(XXX) XXX-XXXX"
-                          {...register('phoneNumber')}
-                          disabled={isSubmitting}
-                        />
-                        {errors.phoneNumber && (
-                          <p className="text-sm text-destructive">
-                            {errors.phoneNumber.message}
-                          </p>
-                        )}
-                      </div>
-
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2">
-                          <Label htmlFor="phoneticPronunciation">
-                            Phonetic Pronunciation
-                          </Label>
-                          <a
-                            href="https://www.cmu.edu/hub/registrar/docs/phonetic-spelling-instructions.pdf"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-xs text-red-600 hover:text-red-700 flex items-center gap-1"
-                            title="See pronunciation guide"
-                          >
-                            More Info
-                            <ExternalLink className="h-3.5 w-3.5" />
-                          </a>
-                        </div>
-                        <Input
-                          id="phoneticPronunciation"
-                          {...register('phoneticPronunciation')}
-                          disabled={isSubmitting}
-                        />
-                        {errors.phoneticPronunciation && (
-                          <p className="text-sm text-destructive">
-                            {errors.phoneticPronunciation.message}
-                          </p>
-                        )}
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label>Audio Recording</Label>
-                        <VoiceRecorder
-                          onRecordingComplete={handleAudioRecordingComplete}
-                          onRecordingDelete={handleAudioRecordingDelete}
-                          disabled={isSubmitting || isUploadingAudio}
-                          maxDuration={30}
-                        />
-                        {isUploadingAudio && (
-                          <p className="text-sm text-muted-foreground flex items-center gap-2">
-                            <Loader2 className="h-3 w-3 animate-spin" />
-                            Uploading audio...
-                          </p>
-                        )}
-                        {errors.pronunciationAudioUrl && (
-                          <p className="text-sm text-destructive">
-                            {errors.pronunciationAudioUrl.message}
-                          </p>
-                        )}
-                      </div>
-
-                      <div className="space-y-2 col-span-1 md:col-span-2">
-                        <p className="text-sm text-muted-foreground">
-                          Please provide the phonetic pronunciation and audio
-                          recording of your <strong>last name</strong>.
-                        </p>
                       </div>
                     </div>
                   </div>

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { Navbar } from '@/components/Navbar';
+import { ThemeProvider } from '@/components/ThemeProvider';
 import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
@@ -20,13 +21,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="h-full">
-      <body suppressHydrationWarning className="h-full overflow-hidden">
-        <Navbar />
-        <main className="h-[calc(100%-4rem)] overflow-auto">
-          {children}
-        </main>
-        <Toaster position="bottom-right" />
+    <html lang="en" className="h-full" suppressHydrationWarning>
+      <body suppressHydrationWarning className="h-full overflow-hidden bg-background text-foreground">
+        <ThemeProvider defaultTheme="system">
+          <Navbar />
+          <main className="h-[calc(100%-4rem)] overflow-auto bg-background">
+            {children}
+          </main>
+          <Toaster position="bottom-right" />
+        </ThemeProvider>
       </body>
     </html>
   );
