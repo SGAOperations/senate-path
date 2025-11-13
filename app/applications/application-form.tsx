@@ -603,6 +603,16 @@ export default function ApplicationForm({
                           No community constituencies available
                         </p>
                       )}
+                      <p className="text-sm text-muted-foreground">
+                        If your community constituency isn't listed, reach out
+                        to{' '}
+                        <a
+                          href="mailto:sgasenatespeaker@northeastern.edu"
+                          className="text-primary hover:underline"
+                        >
+                          sgasenatespeaker@northeastern.edu
+                        </a>
+                      </p>
                     </div>
                   </div>
 
