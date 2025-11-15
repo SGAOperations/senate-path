@@ -173,10 +173,6 @@ export default function UserDashboard({ getApplicationByNuid }: UserDashboardPro
                       <p className="font-medium">{applicantDetails.preferredFullName}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground">Nickname</p>
-                      <p className="font-medium">{applicantDetails.nickname}</p>
-                    </div>
-                    <div>
                       <p className="text-sm text-muted-foreground">Pronouns</p>
                       <p className="font-medium">{applicantDetails.pronouns}</p>
                     </div>
