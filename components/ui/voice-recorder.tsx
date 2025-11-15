@@ -161,17 +161,13 @@ export function VoiceRecorder({
               type="button"
               variant="destructive"
               onClick={stopRecording}
-              className="gap-2"
+              className="gap-2 w-full"
             >
               <Square className="h-4 w-4" />
               Stop Recording
             </Button>
-            <span className="text-sm text-muted-foreground">
+            <span className="text-sm text-muted-foreground min-w-20">
               {formatTime(recordingTime)} / {formatTime(maxDuration)}
-            </span>
-            <span className="flex items-center gap-1 text-sm text-destructive">
-              <span className="h-2 w-2 rounded-full bg-destructive animate-pulse" />
-              Recording...
             </span>
           </>
         )}
