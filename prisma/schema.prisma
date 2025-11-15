@@ -19,7 +19,6 @@ model Application {
   nuid                               String                 @unique
   fullName                           String
   preferredFullName                  String
-  nickname                           String
   phoneticPronunciation              String
   pronunciationAudioUrl              String
   pronouns                           String

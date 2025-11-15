@@ -40,7 +40,6 @@ const applicationSchema = z
       .max(9, 'NUID must be 9 digits'),
     fullName: z.string().min(1, 'Full name is required'),
     preferredFullName: z.string().optional(),
-    nickname: z.string().optional(),
     phoneticPronunciation: z
       .string()
       .min(1, 'Phonetic pronunciation of last name is required'),
@@ -117,7 +116,6 @@ export default function ApplicationForm({
       nuid: '',
       fullName: '',
       preferredFullName: '',
-      nickname: '',
       phoneticPronunciation: '',
       pronunciationAudioUrl: '',
       pronouns: '',
@@ -280,12 +278,31 @@ export default function ApplicationForm({
                     <h3 className="text-xl font-bold">Personal Information</h3>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2 md:col-span-2">
+                      <div className="space-y-2">
                         <Label htmlFor="fullName">Legal Full Name</Label>
                         <Input id="fullName" {...register('fullName')} />
                         {errors.fullName && (
                           <p className="text-sm text-destructive">
                             {errors.fullName.message}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="preferredFullName">
+                          Preferred Full Name{' '}
+                          <span className="text-muted-foreground">
+                            (optional)
+                          </span>
+                        </Label>
+                        <Input
+                          id="preferredFullName"
+                          {...register('preferredFullName')}
+                          disabled={isSubmitting}
+                        />
+                        {errors.preferredFullName && (
+                          <p className="text-sm text-destructive">
+                            {errors.preferredFullName.message}
                           </p>
                         )}
                       </div>
@@ -343,44 +360,6 @@ export default function ApplicationForm({
                         {errors.pronouns && (
                           <p className="text-sm text-destructive">
                             {errors.pronouns.message}
-                          </p>
-                        )}
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="preferredFullName">
-                          Preferred Full Name{' '}
-                          <span className="text-muted-foreground">
-                            (optional)
-                          </span>
-                        </Label>
-                        <Input
-                          id="preferredFullName"
-                          {...register('preferredFullName')}
-                          disabled={isSubmitting}
-                        />
-                        {errors.preferredFullName && (
-                          <p className="text-sm text-destructive">
-                            {errors.preferredFullName.message}
-                          </p>
-                        )}
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="nickname">
-                          Nickname{' '}
-                          <span className="text-muted-foreground">
-                            (optional)
-                          </span>
-                        </Label>
-                        <Input
-                          id="nickname"
-                          {...register('nickname')}
-                          disabled={isSubmitting}
-                        />
-                        {errors.nickname && (
-                          <p className="text-sm text-destructive">
-                            {errors.nickname.message}
                           </p>
                         )}
                       </div>

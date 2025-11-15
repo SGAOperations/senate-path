@@ -7,7 +7,6 @@ type ApplicationData = {
   nuid: string;
   fullName: string;
   preferredFullName?: string;
-  nickname?: string;
   phoneticPronunciation: string;
   pronunciationAudioUrl: string;
   pronouns: string;
@@ -46,7 +45,6 @@ export async function submitApplication(formData: ApplicationData) {
       nuid: formData.nuid,
       fullName: formData.fullName,
       preferredFullName: formData.preferredFullName || '',
-      nickname: formData.nickname || '',
       phoneticPronunciation: formData.phoneticPronunciation,
       pronunciationAudioUrl: formData.pronunciationAudioUrl,
       pronouns: formData.pronouns,
