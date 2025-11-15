@@ -75,6 +75,9 @@ export function Navbar() {
               className="h-10 w-auto"
               priority
             />
+            <span className="text-lg font-semibold text-foreground">
+              SenatePath
+            </span>
             <span className="text-xs text-muted-foreground font-medium">
               v{APP_VERSION}
             </span>
