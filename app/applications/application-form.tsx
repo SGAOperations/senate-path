@@ -603,6 +603,18 @@ export default function ApplicationForm({
                           No community constituencies available
                         </p>
                       )}
+                      <p className="text-sm text-muted-foreground">
+                        If you wish to represent a community constituency that
+                        isn't listed, please contact the Speaker of the Senate
+                        at{' '}
+                        <a
+                          href="mailto:sgasenatespeaker@northeastern.edu"
+                          className="text-primary hover:underline"
+                        >
+                          sgaSenateSpeaker@northeastern.edu
+                        </a>
+                        .
+                      </p>
                     </div>
                   </div>
 
