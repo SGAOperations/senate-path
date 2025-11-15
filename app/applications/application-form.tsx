@@ -394,7 +394,7 @@ export default function ApplicationForm({
                         >
                           Phonetic Pronunciation
                           <a
-                            href="https://www.wikihow.com/Write-Phonetically"
+                            href="https://www.cmu.edu/hub/registrar/docs/phonetic-spelling-instructions.pdf"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-primary flex items-center gap-1 text-xs hover:underline"
