@@ -410,6 +410,9 @@ export default function ApplicationForm({
                           {...register('phoneticPronunciation')}
                           disabled={isSubmitting}
                         />
+                        <p className="text-sm text-muted-foreground">
+                          Pronunciation for your <strong>last name</strong> only
+                        </p>
                         {errors.phoneticPronunciation && (
                           <p className="text-sm text-destructive">
                             {errors.phoneticPronunciation.message}
@@ -436,12 +439,8 @@ export default function ApplicationForm({
                             {errors.pronunciationAudioUrl.message}
                           </p>
                         )}
-                      </div>
-
-                      <div className="space-y-2 md:col-span-2">
                         <p className="text-sm text-muted-foreground">
-                          Please provide the phonetic pronunciation and audio
-                          recording of your <strong>last name</strong>.
+                          Pronunciation of your <strong>last name</strong> only
                         </p>
                       </div>
                     </div>
