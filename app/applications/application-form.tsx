@@ -402,6 +402,34 @@ export default function ApplicationForm({
                           </p>
                         )}
                       </div>
+
+                      <div className="space-y-2">
+                        <Label>Audio Recording</Label>
+                        <VoiceRecorder
+                          onRecordingComplete={handleAudioRecordingComplete}
+                          onRecordingDelete={handleAudioRecordingDelete}
+                          disabled={isSubmitting || isUploadingAudio}
+                          maxDuration={30}
+                        />
+                        {isUploadingAudio && (
+                          <p className="text-sm text-muted-foreground flex items-center gap-2">
+                            <Loader2 className="h-3 w-3 animate-spin" />
+                            Uploading audio...
+                          </p>
+                        )}
+                        {errors.pronunciationAudioUrl && (
+                          <p className="text-sm text-destructive">
+                            {errors.pronunciationAudioUrl.message}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="space-y-2 col-span-1 md:col-span-2">
+                        <p className="text-sm text-muted-foreground">
+                          Please provide the phonetic pronunciation and audio
+                          recording of your <strong>last name</strong>.
+                        </p>
+                      </div>
                     </div>
                   </div>
 
