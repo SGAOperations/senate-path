@@ -388,9 +388,23 @@ export default function ApplicationForm({
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="phoneticPronunciation">
+                        <Label
+                          htmlFor="phoneticPronunciation"
+                          className="flex gap-1"
+                        >
                           Phonetic Pronunciation
+                          <a
+                            href="https://www.wikihow.com/Write-Phonetically"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-primary flex items-center gap-1 text-xs hover:underline"
+                            title="See pronunciation guide"
+                          >
+                            See Guide
+                            <ExternalLink className="h-3.5 w-3.5" />
+                          </a>
                         </Label>
+
                         <Input
                           id="phoneticPronunciation"
                           {...register('phoneticPronunciation')}
