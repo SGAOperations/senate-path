@@ -280,16 +280,14 @@ export default function ApplicationForm({
                     <h3 className="text-xl font-bold">Personal Information</h3>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="nuid">NUID</Label>
-                        <Input
-                          id="nuid"
-                          {...register('nuid')}
-                          disabled={isSubmitting}
-                        />
-                        {errors.nuid && (
+                      <div className="space-y-2 col-span-2">
+                        <Label htmlFor="fullName">
+                          Full Name (as it appears on official documents)
+                        </Label>
+                        <Input id="fullName" {...register('fullName')} />
+                        {errors.fullName && (
                           <p className="text-sm text-destructive">
-                            {errors.nuid.message}
+                            {errors.fullName.message}
                           </p>
                         )}
                       </div>
@@ -324,13 +322,29 @@ export default function ApplicationForm({
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="fullName">
-                          Full Name (as it appears on official documents)
-                        </Label>
-                        <Input id="fullName" {...register('fullName')} />
-                        {errors.fullName && (
+                        <Label htmlFor="nuid">NUID</Label>
+                        <Input
+                          id="nuid"
+                          {...register('nuid')}
+                          disabled={isSubmitting}
+                        />
+                        {errors.nuid && (
                           <p className="text-sm text-destructive">
-                            {errors.fullName.message}
+                            {errors.nuid.message}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="pronouns">Pronouns</Label>
+                        <Input
+                          id="pronouns"
+                          {...register('pronouns')}
+                          disabled={isSubmitting}
+                        />
+                        {errors.pronouns && (
+                          <p className="text-sm text-destructive">
+                            {errors.pronouns.message}
                           </p>
                         )}
                       </div>
@@ -390,20 +404,6 @@ export default function ApplicationForm({
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="pronouns">Pronouns</Label>
-                        <Input
-                          id="pronouns"
-                          {...register('pronouns')}
-                          disabled={isSubmitting}
-                        />
-                        {errors.pronouns && (
-                          <p className="text-sm text-destructive">
-                            {errors.pronouns.message}
-                          </p>
-                        )}
-                      </div>
-
-                      <div className="space-y-2">
                         <Label>Audio Recording</Label>
                         <VoiceRecorder
                           onRecordingComplete={handleAudioRecordingComplete}
@@ -424,7 +424,7 @@ export default function ApplicationForm({
                         )}
                       </div>
 
-                      <div className="space-y-2 col-span-1 md:col-span-2">
+                      <div className="space-y-2 md:col-span-2">
                         <p className="text-sm text-muted-foreground">
                           Please provide the phonetic pronunciation and audio
                           recording of your <strong>last name</strong>.
