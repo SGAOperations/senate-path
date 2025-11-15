@@ -278,7 +278,7 @@ export default function ApplicationForm({
                     <h3 className="text-xl font-bold">Personal Information</h3>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2 md:col-span-2">
+                      <div className="space-y-2">
                         <Label htmlFor="fullName">Legal Full Name</Label>
                         <Input id="fullName" {...register('fullName')} />
                         {errors.fullName && (
@@ -288,7 +288,7 @@ export default function ApplicationForm({
                         )}
                       </div>
 
-                      <div className="space-y-2 md:col-span-2">
+                      <div className="space-y-2">
                         <Label htmlFor="preferredFullName">
                           Preferred Full Name{' '}
                           <span className="text-muted-foreground">
