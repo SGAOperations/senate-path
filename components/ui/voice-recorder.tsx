@@ -24,7 +24,7 @@ export function VoiceRecorder({
   const [isPlaying, setIsPlaying] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
   const [error, setError] = useState<string | null>(null);
-  
+
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -46,7 +46,7 @@ export function VoiceRecorder({
     try {
       setError(null);
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      
+
       const mediaRecorder = new MediaRecorder(stream);
       mediaRecorderRef.current = mediaRecorder;
       audioChunksRef.current = [];
@@ -58,16 +58,18 @@ export function VoiceRecorder({
       };
 
       mediaRecorder.onstop = () => {
-        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+        const audioBlob = new Blob(audioChunksRef.current, {
+          type: 'audio/webm',
+        });
         const url = URL.createObjectURL(audioBlob);
         setAudioUrl(url);
-        
+
         if (onRecordingComplete) {
           onRecordingComplete(audioBlob, url);
         }
-        
+
         // Stop all tracks to release the microphone
-        stream.getTracks().forEach(track => track.stop());
+        stream.getTracks().forEach((track) => track.stop());
       };
 
       mediaRecorder.start();
@@ -87,7 +89,9 @@ export function VoiceRecorder({
       }, 1000);
     } catch (err) {
       console.error('Error accessing microphone:', err);
-      setError('Unable to access microphone. Please check your browser permissions.');
+      setError(
+        'Unable to access microphone. Please check your browser permissions.',
+      );
     }
   };
 
@@ -95,7 +99,7 @@ export function VoiceRecorder({
     if (mediaRecorderRef.current && isRecording) {
       mediaRecorderRef.current.stop();
       setIsRecording(false);
-      
+
       if (timerRef.current) {
         clearInterval(timerRef.current);
         timerRef.current = null;
@@ -117,7 +121,7 @@ export function VoiceRecorder({
     setAudioUrl(null);
     setRecordingTime(0);
     setIsPlaying(false);
-    
+
     if (onRecordingDelete) {
       onRecordingDelete();
     }
@@ -130,7 +134,7 @@ export function VoiceRecorder({
   };
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2">
       {error && (
         <Alert variant="destructive">
           <AlertDescription>{error}</AlertDescription>
@@ -142,10 +146,9 @@ export function VoiceRecorder({
           <Button
             type="button"
             variant="outline"
-            size="sm"
             onClick={startRecording}
             disabled={disabled}
-            className="gap-2"
+            className="gap-2 w-full"
           >
             <Mic className="h-4 w-4" />
             Start Recording
@@ -157,7 +160,6 @@ export function VoiceRecorder({
             <Button
               type="button"
               variant="destructive"
-              size="sm"
               onClick={stopRecording}
               className="gap-2"
             >
@@ -179,7 +181,6 @@ export function VoiceRecorder({
             <Button
               type="button"
               variant="outline"
-              size="sm"
               onClick={playRecording}
               disabled={isPlaying}
               className="gap-2"
@@ -189,8 +190,7 @@ export function VoiceRecorder({
             </Button>
             <Button
               type="button"
-              variant="outline"
-              size="sm"
+              variant="destructive"
               onClick={deleteRecording}
               disabled={disabled}
               className="gap-2"
@@ -199,7 +199,7 @@ export function VoiceRecorder({
               Delete
             </Button>
             <span className="text-sm text-muted-foreground">
-              {formatTime(recordingTime)}
+              {formatTime(recordingTime)} seconds
             </span>
           </>
         )}
