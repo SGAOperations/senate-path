@@ -246,10 +246,6 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
                           <p className="font-medium">{selectedApplicant.preferredFullName}</p>
                         </div>
                         <div>
-                          <p className="text-sm text-muted-foreground">Nickname</p>
-                          <p className="font-medium">{selectedApplicant.nickname}</p>
-                        </div>
-                        <div>
                           <p className="text-sm text-muted-foreground">Pronouns</p>
                           <p className="font-medium">{selectedApplicant.pronouns}</p>
                         </div>
