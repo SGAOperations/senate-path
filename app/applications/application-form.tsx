@@ -281,9 +281,7 @@ export default function ApplicationForm({
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2 md:col-span-2">
-                        <Label htmlFor="fullName">
-                          Full Name (as it appears on official documents)
-                        </Label>
+                        <Label htmlFor="fullName">Legal Full Name</Label>
                         <Input id="fullName" {...register('fullName')} />
                         {errors.fullName && (
                           <p className="text-sm text-destructive">
