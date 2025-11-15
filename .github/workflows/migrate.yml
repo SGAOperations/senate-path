@@ -12,7 +12,7 @@ permissions:
 jobs:
   migrate:
     runs-on: ubuntu-latest
-    environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'development' }}
+    environment: ${{ github.ref == 'refs/heads/main' && 'Production' || 'Preview' }}
     
     steps:
       - name: Checkout code
@@ -22,7 +22,7 @@ jobs:
         uses: actions/setup-node@v3
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --ignore-scripts
 
       - name: Apply migrations
         env:
