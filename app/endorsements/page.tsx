@@ -21,6 +21,7 @@ import {
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { XCircle, ChevronLeft, ChevronRight } from 'lucide-react';
 import { toast } from 'sonner';
+import { useUnsavedChangesWarning } from '@/lib/hooks/useUnsavedChangesWarning';
 
 const endorsementSchema = z.object({
   endorserName: z.string().min(1, 'Your name is required'),
@@ -52,7 +53,7 @@ export default function EndorsementsPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
     reset,
     setValue,
     trigger,
@@ -73,6 +74,10 @@ export default function EndorsementsPage() {
 
   const currentPage = watch('currentPage') ?? 1;
   const applicantName = watch('applicantName');
+
+  // Warn user about unsaved changes before leaving the page
+  const hasUnsavedChanges = isDirty && !isSubmitting;
+  useUnsavedChangesWarning(hasUnsavedChanges);
 
   useEffect(() => {
     async function fetchApplicants() {
