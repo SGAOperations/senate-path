@@ -280,16 +280,12 @@ export default function ApplicationForm({
                     <h3 className="text-xl font-bold">Personal Information</h3>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="nuid">NUID</Label>
-                        <Input
-                          id="nuid"
-                          {...register('nuid')}
-                          disabled={isSubmitting}
-                        />
-                        {errors.nuid && (
+                      <div className="space-y-2 md:col-span-2">
+                        <Label htmlFor="fullName">Legal Full Name</Label>
+                        <Input id="fullName" {...register('fullName')} />
+                        {errors.fullName && (
                           <p className="text-sm text-destructive">
-                            {errors.nuid.message}
+                            {errors.fullName.message}
                           </p>
                         )}
                       </div>
@@ -324,13 +320,29 @@ export default function ApplicationForm({
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="fullName">
-                          Full Name (as it appears on official documents)
-                        </Label>
-                        <Input id="fullName" {...register('fullName')} />
-                        {errors.fullName && (
+                        <Label htmlFor="nuid">NUID</Label>
+                        <Input
+                          id="nuid"
+                          {...register('nuid')}
+                          disabled={isSubmitting}
+                        />
+                        {errors.nuid && (
                           <p className="text-sm text-destructive">
-                            {errors.fullName.message}
+                            {errors.nuid.message}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="pronouns">Pronouns</Label>
+                        <Input
+                          id="pronouns"
+                          {...register('pronouns')}
+                          disabled={isSubmitting}
+                        />
+                        {errors.pronouns && (
+                          <p className="text-sm text-destructive">
+                            {errors.pronouns.message}
                           </p>
                         )}
                       </div>
@@ -374,14 +386,31 @@ export default function ApplicationForm({
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="phoneticPronunciation">
+                        <Label
+                          htmlFor="phoneticPronunciation"
+                          className="flex gap-1"
+                        >
                           Phonetic Pronunciation
+                          <a
+                            href="https://www.cmu.edu/hub/registrar/docs/phonetic-spelling-instructions.pdf"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-primary flex items-center gap-1 text-xs hover:underline"
+                            title="See pronunciation guide"
+                          >
+                            See Guide
+                            <ExternalLink className="h-3.5 w-3.5" />
+                          </a>
                         </Label>
+
                         <Input
                           id="phoneticPronunciation"
                           {...register('phoneticPronunciation')}
                           disabled={isSubmitting}
                         />
+                        <p className="text-sm text-muted-foreground">
+                          Pronunciation for your <strong>last name</strong> only
+                        </p>
                         {errors.phoneticPronunciation && (
                           <p className="text-sm text-destructive">
                             {errors.phoneticPronunciation.message}
@@ -390,17 +419,27 @@ export default function ApplicationForm({
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="pronouns">Pronouns</Label>
-                        <Input
-                          id="pronouns"
-                          {...register('pronouns')}
-                          disabled={isSubmitting}
+                        <Label>Audio Recording</Label>
+                        <VoiceRecorder
+                          onRecordingComplete={handleAudioRecordingComplete}
+                          onRecordingDelete={handleAudioRecordingDelete}
+                          disabled={isSubmitting || isUploadingAudio}
+                          maxDuration={30}
                         />
-                        {errors.pronouns && (
-                          <p className="text-sm text-destructive">
-                            {errors.pronouns.message}
+                        {isUploadingAudio && (
+                          <p className="text-sm text-muted-foreground flex items-center gap-2">
+                            <Loader2 className="h-3 w-3 animate-spin" />
+                            Uploading audio...
                           </p>
                         )}
+                        {errors.pronunciationAudioUrl && (
+                          <p className="text-sm text-destructive">
+                            {errors.pronunciationAudioUrl.message}
+                          </p>
+                        )}
+                        <p className="text-sm text-muted-foreground">
+                          Pronunciation of your <strong>last name</strong> only
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -603,6 +642,18 @@ export default function ApplicationForm({
                           No community constituencies available
                         </p>
                       )}
+                      <p className="text-sm text-muted-foreground">
+                        If you wish to represent a community constituency that
+                        isn't listed, please contact the Speaker of the Senate
+                        at{' '}
+                        <a
+                          href="mailto:sgasenatespeaker@northeastern.edu"
+                          className="text-primary hover:underline"
+                        >
+                          sgaSenateSpeaker@northeastern.edu
+                        </a>
+                        .
+                      </p>
                     </div>
                   </div>
 
