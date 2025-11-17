@@ -329,8 +329,8 @@ export default function NominationsManager({ nominations: initialNominations }: 
                   </TableHead>
                   <TableHead>Nominee</TableHead>
                   <TableHead>Nominator</TableHead>
-                  <TableHead>College</TableHead>
-                  <TableHead>Major</TableHead>
+                  <TableHead>College(s)</TableHead>
+                  <TableHead>Major(s)</TableHead>
                   <TableHead>Submitted</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead className="text-right">Actions</TableHead>

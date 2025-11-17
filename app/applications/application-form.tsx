@@ -43,9 +43,7 @@ const applicationSchema = z
     phoneticPronunciation: z
       .string()
       .min(1, 'Phonetic pronunciation of last name is required'),
-    pronunciationAudioUrl: z
-      .string()
-      .min(1, 'Audio recording of last name pronunciation is required'),
+    pronunciationAudioUrl: z.string().optional(),
     pronouns: z.string().min(1, 'Pronouns are required'),
     email: z
       .string()
@@ -243,10 +241,19 @@ export default function ApplicationForm({
               Senator Application
             </CardTitle>
             <p className="text-sm sm:text-base text-muted-foreground mt-2">
-              Thank you for your interest in becoming a Senator!{' '}
-              {currentPage === 1
-                ? 'Please fill out all fields below.'
-                : 'Please answer the following questions.'}
+              Thank you for your interest in becoming a Senator! Please fill out
+              all fields below. Please note that this is only the initial
+              application and, to be considered, Candidates must complete
+              additional application items. See more information on the{' '}
+              <a
+                href="https://northeasternsga.com/senate-elections"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline font-medium"
+              >
+                Senate Elections page of the SGA website
+              </a>
+              .
             </p>
             <div className="flex items-center gap-2 mt-4">
               <div
@@ -306,7 +313,7 @@ export default function ApplicationForm({
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="email">Email</Label>
+                        <Label htmlFor="email">Northeastern Email</Label>
                         <Input
                           id="email"
                           type="email"
@@ -396,7 +403,12 @@ export default function ApplicationForm({
                       </div>
 
                       <div className="space-y-2">
-                        <Label>Audio Recording</Label>
+                        <Label>
+                          Audio Recording{' '}
+                          <span className="text-muted-foreground">
+                            (optional)
+                          </span>
+                        </Label>
                         <VoiceRecorder
                           onRecordingComplete={handleAudioRecordingComplete}
                           onRecordingDelete={handleAudioRecordingDelete}
@@ -427,7 +439,7 @@ export default function ApplicationForm({
 
                     <div className="space-y-2">
                       <Label>
-                        College{' '}
+                        College(s){' '}
                         <span className="text-sm text-muted-foreground">
                           (Select all that apply)
                         </span>
@@ -483,7 +495,7 @@ export default function ApplicationForm({
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="major">Major</Label>
+                        <Label htmlFor="major">Major(s)</Label>
                         <Input
                           id="major"
                           {...register('major')}
@@ -498,7 +510,7 @@ export default function ApplicationForm({
 
                       <div className="space-y-2">
                         <Label htmlFor="minors">
-                          Minors{' '}
+                          Minor(s){' '}
                           <span className="text-muted-foreground">
                             (optional)
                           </span>
@@ -545,13 +557,13 @@ export default function ApplicationForm({
 
                   {/* Constituency */}
                   <div className="space-y-4 p-3 sm:p-6 rounded-lg border">
-                    <h3 className="text-xl font-bold">Constituency</h3>
+                    <h3 className="text-xl font-bold">Constituencies</h3>
 
                     <div className="space-y-2">
                       <Label htmlFor="constituency">
                         Academic Constituency
                         <span className="block text-sm text-muted-foreground font-normal mt-1">
-                          Students in double or combined majors may select
+                          Students with double or combined majors may select
                           either college
                         </span>
                       </Label>
@@ -592,7 +604,8 @@ export default function ApplicationForm({
                       <Label htmlFor="communityConstituency">
                         Community Constituency
                         <span className="block text-sm text-muted-foreground font-normal mt-1">
-                          Select the community constituency you identify with
+                          Select the community constituency you've been approved
+                          to represent
                         </span>
                       </Label>
                       <SearchableSelect
@@ -652,10 +665,6 @@ export default function ApplicationForm({
                       <h3 className="text-xl font-bold">
                         Application Questions
                       </h3>
-                      <p className="text-sm text-muted-foreground">
-                        Please answer the following questions about your
-                        interest in Senate
-                      </p>
 
                       <div className="space-y-2">
                         <Label htmlFor="whySenateLongAnswer">
