@@ -115,7 +115,7 @@ export default function Home() {
                   Secure an Endorsement
                 </h3>
                 <p className="text-muted-foreground text-sm sm:text-base">
-                  Have a person of authority submit the endorsement form on your behalf using the Endorse button above.
+                  Have a person of authority submit the <Link href="/endorsements" className="text-primary hover:underline font-medium">endorsement form</Link> on your behalf using the Endorse button above.
                 </p>
               </div>
             </div>
