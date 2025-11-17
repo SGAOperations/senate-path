@@ -240,7 +240,7 @@ export default function ApplicationForm({
         <Card className="shadow-lg">
           <CardHeader className="border-b">
             <CardTitle className="text-2xl sm:text-3xl font-bold">
-              Initial Application
+              Senator Application
             </CardTitle>
             <p className="text-sm sm:text-base text-muted-foreground mt-2">
               Thank you for your interest in becoming a Senator! Please fill out
