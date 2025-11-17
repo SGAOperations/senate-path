@@ -206,15 +206,15 @@ export default function UserDashboard({ getApplicationByNuid }: UserDashboardPro
                   <h3 className="text-lg font-bold mb-3">Academic Information</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <p className="text-sm text-muted-foreground">College</p>
+                      <p className="text-sm text-muted-foreground">College(s)</p>
                       <p className="font-medium">{applicantDetails.college}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground">Major</p>
+                      <p className="text-sm text-muted-foreground">Major(s)</p>
                       <p className="font-medium">{applicantDetails.major}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground">Minors</p>
+                      <p className="text-sm text-muted-foreground">Minor(s)</p>
                       <p className="font-medium">{applicantDetails.minors || 'None'}</p>
                     </div>
                     <div>
@@ -253,10 +253,10 @@ export default function UserDashboard({ getApplicationByNuid }: UserDashboardPro
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm mt-2">
                           <div>
-                            <span className="text-muted-foreground">College:</span> {nomination.college}
+                            <span className="text-muted-foreground">College(s):</span> {nomination.college}
                           </div>
                           <div>
-                            <span className="text-muted-foreground">Major:</span> {nomination.major}
+                            <span className="text-muted-foreground">Major(s):</span> {nomination.major}
                           </div>
                           <div className="sm:col-span-2">
                             <span className="text-muted-foreground">Submitted:</span>{' '}

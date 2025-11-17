@@ -179,7 +179,7 @@ export default function NominationsPage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="college">Home College</Label>
+                        <Label htmlFor="college">Home College(s)</Label>
                         <Controller
                           name="college"
                           control={control}
@@ -233,7 +233,7 @@ export default function NominationsPage() {
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="major">Your Major</Label>
+                        <Label htmlFor="major">Your Major(s)</Label>
                         <Input id="major" {...register('major')} />
                         {errors.major && (
                           <p className="text-sm text-destructive">

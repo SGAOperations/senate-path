@@ -429,7 +429,7 @@ export default function ApplicationForm({
 
                     <div className="space-y-2">
                       <Label>
-                        College{' '}
+                        College(s){' '}
                         <span className="text-sm text-muted-foreground">
                           (Select all that apply)
                         </span>
@@ -485,7 +485,7 @@ export default function ApplicationForm({
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="major">Major</Label>
+                        <Label htmlFor="major">Major(s)</Label>
                         <Input
                           id="major"
                           {...register('major')}
@@ -500,7 +500,7 @@ export default function ApplicationForm({
 
                       <div className="space-y-2">
                         <Label htmlFor="minors">
-                          Minors{' '}
+                          Minor(s){' '}
                           <span className="text-muted-foreground">
                             (optional)
                           </span>
