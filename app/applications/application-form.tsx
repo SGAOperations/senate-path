@@ -204,6 +204,9 @@ export default function ApplicationForm({
     if (isValid) {
       setCurrentPage(2);
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      // Scroll to top to show validation errors
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 

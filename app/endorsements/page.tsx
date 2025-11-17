@@ -134,6 +134,10 @@ export default function EndorsementsPage() {
 
     if (isValid) {
       setValue('currentPage', 2);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      // Scroll to top to show validation errors
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
