@@ -101,7 +101,7 @@ export default function Home() {
                   Gather Nominations
                 </h3>
                 <p className="text-muted-foreground text-sm sm:text-base">
-                  Share the <Link href="/nominations" className="text-primary hover:underline font-medium">nominations link</Link> with members of your academic and community constituency. You must receive at least 30 nominations to proceed.
+                  Share the <Link href="/nominations" className="text-primary hover:underline font-medium">nominations link</Link> with members of your academic and community constituency. You must receive at least 30 nominations to proceed. Note: A maximum of 15 signatures can come from a community constituency.
                 </p>
               </div>
             </div>
