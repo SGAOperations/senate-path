@@ -48,14 +48,17 @@ enum NominationStatus {
 }
 
 model Nomination {
-  id        String           @id @default(uuid())
-  nominee   String
-  fullName  String
-  email     String
-  college   String
-  major     String
-  status    NominationStatus @default(PENDING)
-  createdAt DateTime         @default(now())
+  id                      String                 @id @default(uuid())
+  nominee                 String
+  fullName                String
+  email                   String
+  college                 String
+  major                   String
+  status                  NominationStatus       @default(PENDING)
+  constituencyType        String?                // 'academic' or 'community'
+  communityConstituencyId String?
+  communityConstituency   CommunityConstituency? @relation(fields: [communityConstituencyId], references: [id])
+  createdAt               DateTime               @default(now())
 
   @@map("nominations")
 }
@@ -80,6 +83,7 @@ model CommunityConstituency {
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   applications Application[]
+  nominations  Nomination[]
 
   @@map("community_constituencies")
 }

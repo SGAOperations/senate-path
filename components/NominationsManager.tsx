@@ -23,12 +23,16 @@ import {
 } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Search, CheckCircle, XCircle, AlertCircle, Clock, Users } from 'lucide-react';
-import { Nomination } from '@prisma/client';
+import { Nomination, CommunityConstituency } from '@prisma/client';
 import { approveNomination, rejectNomination, bulkApproveNominations, bulkRejectNominations } from '@/lib/actions/nominations';
 import { toast } from 'sonner';
 
+type NominationWithCommunity = Nomination & {
+  communityConstituency: { name: string } | null;
+};
+
 interface NominationsManagerProps {
-  nominations: Nomination[];
+  nominations: NominationWithCommunity[];
 }
 
 function getStatusBadge(status: string) {
@@ -42,6 +46,16 @@ function getStatusBadge(status: string) {
     default:
       return <Badge variant="outline">{status}</Badge>;
   }
+}
+
+function getConstituencyBadge(nom: NominationWithCommunity) {
+  if (nom.constituencyType === 'community' && nom.communityConstituency) {
+    return <Badge variant="secondary" className="text-xs">Community: {nom.communityConstituency.name}</Badge>;
+  } else if (nom.constituencyType === 'academic') {
+    return <Badge variant="outline" className="text-xs">Academic: {nom.college}</Badge>;
+  }
+  // Fallback for old nominations without constituencyType
+  return <Badge variant="outline" className="text-xs">{nom.college}</Badge>;
 }
 
 export default function NominationsManager({ nominations: initialNominations }: NominationsManagerProps) {
@@ -64,11 +78,12 @@ export default function NominationsManager({ nominations: initialNominations }: 
     const pending = initialNominations.filter(n => n.status === 'PENDING').length;
     const approved = initialNominations.filter(n => n.status === 'APPROVED').length;
     const rejected = initialNominations.filter(n => n.status === 'REJECTED').length;
+    const communityApproved = initialNominations.filter(n => n.status === 'APPROVED' && n.constituencyType === 'community').length;
     
     // Count unique nominees
     const uniqueNomineesCount = new Set(initialNominations.map(n => n.nominee)).size;
 
-    return { total, pending, approved, rejected, uniqueNominees: uniqueNomineesCount };
+    return { total, pending, approved, rejected, communityApproved, uniqueNominees: uniqueNomineesCount };
   }, [initialNominations]);
 
   // Filter and sort nominations
@@ -237,6 +252,16 @@ export default function NominationsManager({ nominations: initialNominations }: 
         </Card>
       </div>
 
+      {/* Warning about community nominations limit */}
+      {stats.communityApproved > 15 && (
+        <Alert variant="destructive" className="mb-6">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            <strong>Warning:</strong> There are {stats.communityApproved} approved community constituency nominations. Only 15 nominations may come from the community constituencies.
+          </AlertDescription>
+        </Alert>
+      )}
+
       {/* Filters and Bulk Actions */}
       <div className="flex gap-4 mb-6 flex-wrap">
         <div className="relative flex-1 min-w-[300px]">
@@ -329,7 +354,7 @@ export default function NominationsManager({ nominations: initialNominations }: 
                   </TableHead>
                   <TableHead>Nominee</TableHead>
                   <TableHead>Nominator</TableHead>
-                  <TableHead>College(s)</TableHead>
+                  <TableHead>Constituency</TableHead>
                   <TableHead>Major(s)</TableHead>
                   <TableHead>Submitted</TableHead>
                   <TableHead>Status</TableHead>
@@ -363,7 +388,7 @@ export default function NominationsManager({ nominations: initialNominations }: 
                         </div>
                       </TableCell>
                       <TableCell>
-                        <Badge variant="outline" className="text-xs">{nom.college}</Badge>
+                        {getConstituencyBadge(nom)}
                       </TableCell>
                       <TableCell className="text-sm">{nom.major}</TableCell>
                       <TableCell className="text-sm text-muted-foreground">
