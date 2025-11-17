@@ -118,8 +118,7 @@ export default function NominationsPage() {
               Nominate a Senator
             </CardTitle>
             <p className="text-sm sm:text-base text-muted-foreground mt-2">
-              Nominate students to become senators. Senators must have submitted
-              an application in order to be nominated.
+              Nominate a student to become a Senator in SGA's Senate and represent you. Nominations are an indication that you support your Nominee running to represent you; it is not a vote. You may nominate more than one person. You may only nominate students if you're their potential constituent.
             </p>
           </CardHeader>
           <CardContent className="pt-6">
@@ -179,7 +178,7 @@ export default function NominationsPage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="college">Home College(s)</Label>
+                        <Label htmlFor="college">Your Home College</Label>
                         <Controller
                           name="college"
                           control={control}
@@ -222,8 +221,7 @@ export default function NominationsPage() {
                           )}
                         />
                         <p className="text-sm text-muted-foreground">
-                          Your home college should be the same college that your
-                          advisor is housed under
+                          Your home college is the college that your advisor is housed under.
                         </p>
                         {errors.college && (
                           <p className="text-sm text-destructive">
