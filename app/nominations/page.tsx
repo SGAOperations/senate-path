@@ -160,7 +160,7 @@ export default function NominationsPage() {
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="email">Your Email</Label>
+                        <Label htmlFor="email">Northeastern Email</Label>
                         <Input
                           id="email"
                           type="email"
@@ -231,7 +231,7 @@ export default function NominationsPage() {
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="major">Your Major</Label>
+                        <Label htmlFor="major">Your Major(s)</Label>
                         <Input id="major" {...register('major')} />
                         {errors.major && (
                           <p className="text-sm text-destructive">

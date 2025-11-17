@@ -201,11 +201,11 @@ export default function EndorsementsPage() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="endorserEmail">Your Email</Label>
+                      <Label htmlFor="endorserEmail">Northeastern Email</Label>
                       <Input
                         id="endorserEmail"
                         type="email"
-                        placeholder="your.email@northeastern.edu"
+                        placeholder="email@example.com"
                         {...register('endorserEmail')}
                       />
                       {errors.endorserEmail && (
