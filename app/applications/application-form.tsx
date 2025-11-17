@@ -197,10 +197,16 @@ export default function ApplicationForm({
       'communityConstituencyId',
     ];
 
-    if (await trigger(fieldsToValidate)) {
+    const isValid = await trigger(fieldsToValidate);
+    
+    if (isValid) {
       setCurrentPage(2);
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    // Scroll to top after validation errors are rendered
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 0);
   };
 
   const handlePreviousPage = () => {

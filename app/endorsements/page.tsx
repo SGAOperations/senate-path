@@ -131,10 +131,16 @@ export default function EndorsementsPage() {
       'applicantName',
     ];
 
-    if (await trigger(fieldsToValidate)) {
+    const isValid = await trigger(fieldsToValidate);
+    
+    if (isValid) {
       setValue('currentPage', 2);
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    // Scroll to top after validation errors are rendered
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 0);
   };
 
   const handlePreviousPage = () => {
