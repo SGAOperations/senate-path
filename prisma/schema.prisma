@@ -36,6 +36,7 @@ model Application {
   constituencyIssueLongAnswer        String
   diversityEquityInclusionLongAnswer String
   conflictSituationLongAnswer        String
+  campaignBlurb                      String                 @default("")
   createdAt                          DateTime               @default(now())
 
   @@map("applications")
