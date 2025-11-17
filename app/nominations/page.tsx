@@ -161,7 +161,7 @@ export default function NominationsPage() {
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="email">Your Email</Label>
+                        <Label htmlFor="email">Northeastern Email</Label>
                         <Input
                           id="email"
                           type="email"
