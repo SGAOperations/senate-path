@@ -46,12 +46,9 @@ export default function Home() {
         </div>
 
         {/* Scroll Down Indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">
-          <p className="text-primary-foreground text-sm font-medium drop-shadow-[2px_2px_4px_rgba(0,0,0,0.8)]">
-            Scroll Down
-          </p>
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
           <svg 
-            className="w-6 h-6 text-primary-foreground drop-shadow-[2px_2px_4px_rgba(0,0,0,0.8)]" 
+            className="w-8 h-8 text-primary-foreground drop-shadow-[2px_2px_4px_rgba(0,0,0,0.8)]" 
             fill="none" 
             strokeLinecap="round" 
             strokeLinejoin="round" 
