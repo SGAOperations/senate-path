@@ -19,6 +19,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { SearchableSelect } from '@/components/ui/searchable-select';
 import { XCircle, Loader2 } from 'lucide-react';
 import { useUnsavedChangesWarning } from '@/lib/hooks/useUnsavedChangesWarning';
 import { toast } from 'sonner';
@@ -315,22 +316,16 @@ export default function NominationsPage() {
                             name="communityConstituencyId"
                             control={control}
                             render={({ field }) => (
-                              <Select
-                                value={field.value}
+                              <SearchableSelect
+                                value={field.value || ''}
                                 onValueChange={field.onChange}
+                                options={communityConstituencies.map((cc) => ({
+                                  value: cc.id,
+                                  label: cc.name,
+                                }))}
+                                placeholder="Search and select your community constituency"
                                 disabled={isSubmitting}
-                              >
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Select your community constituency" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {communityConstituencies.map((cc) => (
-                                    <SelectItem key={cc.id} value={cc.id}>
-                                      {cc.name}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
+                              />
                             )}
                           />
                           {errors.communityConstituencyId && (
