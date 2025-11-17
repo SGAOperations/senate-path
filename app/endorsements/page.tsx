@@ -223,6 +223,9 @@ export default function EndorsementsPage() {
                       <Label htmlFor="applicantName">
                         Who are you endorsing?
                       </Label>
+                      <p className="text-sm text-muted-foreground">
+                        Potential Candidates will only appear here once that have submitted their Initial Application.
+                      </p>
                       <Select
                         value={applicantName}
                         onValueChange={(value) => {
@@ -269,7 +272,7 @@ export default function EndorsementsPage() {
                   <div className="space-y-4 p-3 sm:p-6 rounded-lg bg-muted-background-50 border">
                     <h3 className="text-xl font-bold">Endorsement Questions</h3>
                     <p className="text-sm text-muted-foreground">
-                      Please answer the following questions about the applicant
+                      Please answer the following questions about the applicant.
                     </p>
 
                     <div className="space-y-2">
