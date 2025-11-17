@@ -204,14 +204,22 @@ export default function ApplicationForm({
     }
     
     // Scroll to top after validation errors are rendered
+    // The scrolling container is the <main> element, not window
     setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const mainElement = document.querySelector('main');
+      if (mainElement) {
+        mainElement.scrollTo({ top: 0, behavior: 'smooth' });
+      }
     }, 0);
   };
 
   const handlePreviousPage = () => {
     setCurrentPage(1);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // The scrolling container is the <main> element, not window
+    const mainElement = document.querySelector('main');
+    if (mainElement) {
+      mainElement.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   const onSubmit = async (data: ApplicationFormData) => {
