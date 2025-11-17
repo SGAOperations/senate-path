@@ -202,16 +202,28 @@ export default function ApplicationForm({
     ];
 
     const isValid = await trigger(fieldsToValidate);
-
+    
     if (isValid) {
       setCurrentPage(2);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+    
+    // Scroll to top after validation errors are rendered
+    // The scrolling container is the <main> element, not window
+    setTimeout(() => {
+      const mainElement = document.querySelector('main');
+      if (mainElement) {
+        mainElement.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }, 0);
   };
 
   const handlePreviousPage = () => {
     setCurrentPage(1);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // The scrolling container is the <main> element, not window
+    const mainElement = document.querySelector('main');
+    if (mainElement) {
+      mainElement.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   const onSubmit = async (data: ApplicationFormData) => {
