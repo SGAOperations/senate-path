@@ -72,6 +72,9 @@ const applicationSchema = z
     conflictSituationLongAnswer: z
       .string()
       .min(50, 'Please provide a detailed response (at least 50 characters)'),
+    campaignBlurb: z
+      .string()
+      .min(50, 'Please provide a detailed response (at least 50 characters)'),
   })
   .refine(
     (data) => {
@@ -129,6 +132,7 @@ export default function ApplicationForm({
       constituencyIssueLongAnswer: '',
       diversityEquityInclusionLongAnswer: '',
       conflictSituationLongAnswer: '',
+      campaignBlurb: '',
     },
   });
 
@@ -768,6 +772,26 @@ export default function ApplicationForm({
                         {errors.conflictSituationLongAnswer && (
                           <p className="text-sm text-destructive">
                             {errors.conflictSituationLongAnswer.message}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="campaignBlurb">
+                          Please provide a brief statement that will be shared
+                          publicly during the Senate Election campaign. This
+                          should highlight your goals and what you hope to
+                          accomplish as a Senator.
+                        </Label>
+                        <textarea
+                          id="campaignBlurb"
+                          className="w-full min-h-[120px] px-3 py-2 text-sm border border-input bg-background rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
+                          placeholder="Please provide a detailed response (minimum 50 characters)"
+                          {...register('campaignBlurb')}
+                        />
+                        {errors.campaignBlurb && (
+                          <p className="text-sm text-destructive">
+                            {errors.campaignBlurb.message}
                           </p>
                         )}
                       </div>

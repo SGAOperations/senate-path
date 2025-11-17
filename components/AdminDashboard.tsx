@@ -301,6 +301,35 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
                       </div>
                     </div>
 
+                    <div className="border-t pt-4" />
+
+                    {/* Application Questions */}
+                    <div>
+                      <h3 className="text-lg font-bold mb-3">Application Questions</h3>
+                      <div className="space-y-4">
+                        <div>
+                          <p className="text-sm font-semibold text-muted-foreground mb-1">Why Senate?</p>
+                          <p className="text-sm">{selectedApplicant.whySenateLongAnswer}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-muted-foreground mb-1">Constituency Issue</p>
+                          <p className="text-sm">{selectedApplicant.constituencyIssueLongAnswer}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-muted-foreground mb-1">Diversity, Equity, & Inclusion</p>
+                          <p className="text-sm">{selectedApplicant.diversityEquityInclusionLongAnswer}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-muted-foreground mb-1">Conflict Situation</p>
+                          <p className="text-sm">{selectedApplicant.conflictSituationLongAnswer}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-muted-foreground mb-1">Campaign Blurb</p>
+                          <p className="text-sm">{selectedApplicant.campaignBlurb}</p>
+                        </div>
+                      </div>
+                    </div>
+
                     {/* Nominations */}
                     {applicantDetails && applicantDetails.nominations.length > 0 && (
                       <>
