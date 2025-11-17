@@ -130,15 +130,30 @@ export default function EndorsementsPage() {
       'endorserEmail',
       'applicantName',
     ];
-    const isValid = await trigger(fieldsToValidate);
 
+    const isValid = await trigger(fieldsToValidate);
+    
     if (isValid) {
       setValue('currentPage', 2);
     }
+    
+    // Scroll to top after validation errors are rendered
+    // The scrolling container is the <main> element, not window
+    setTimeout(() => {
+      const mainElement = document.querySelector('main');
+      if (mainElement) {
+        mainElement.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }, 0);
   };
 
   const handlePreviousPage = () => {
     setValue('currentPage', 1);
+    // The scrolling container is the <main> element, not window
+    const mainElement = document.querySelector('main');
+    if (mainElement) {
+      mainElement.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   return (
