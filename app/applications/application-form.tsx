@@ -43,9 +43,7 @@ const applicationSchema = z
     phoneticPronunciation: z
       .string()
       .min(1, 'Phonetic pronunciation of last name is required'),
-    pronunciationAudioUrl: z
-      .string()
-      .min(1, 'Audio recording of last name pronunciation is required'),
+    pronunciationAudioUrl: z.string().optional(),
     pronouns: z.string().min(1, 'Pronouns are required'),
     email: z
       .string()
@@ -398,7 +396,12 @@ export default function ApplicationForm({
                       </div>
 
                       <div className="space-y-2">
-                        <Label>Audio Recording</Label>
+                        <Label>
+                          Audio Recording{' '}
+                          <span className="text-muted-foreground">
+                            (optional)
+                          </span>
+                        </Label>
                         <VoiceRecorder
                           onRecordingComplete={handleAudioRecordingComplete}
                           onRecordingDelete={handleAudioRecordingDelete}
