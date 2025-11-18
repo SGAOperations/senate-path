@@ -50,12 +50,12 @@ function getStatusBadge(status: string) {
 
 function getConstituencyBadge(nom: NominationWithCommunity) {
   if (nom.constituencyType === 'community' && nom.communityConstituency) {
-    return <Badge variant="secondary" className="text-xs">Community: {nom.communityConstituency.name}</Badge>;
+    return <Badge variant="secondary" className="text-xs border border-gray-400 dark:border-gray-500">Community: {nom.communityConstituency.name}</Badge>;
   } else if (nom.constituencyType === 'academic') {
-    return <Badge variant="outline" className="text-xs">Academic: {nom.college}</Badge>;
+    return <Badge variant="outline" className="text-xs border-gray-400 dark:border-gray-500">Academic: {nom.college}</Badge>;
   }
   // Fallback for old nominations without constituencyType
-  return <Badge variant="outline" className="text-xs">{nom.college}</Badge>;
+  return <Badge variant="outline" className="text-xs border-gray-400 dark:border-gray-500">{nom.college}</Badge>;
 }
 
 export default function NominationsManager({ nominations: initialNominations }: NominationsManagerProps) {

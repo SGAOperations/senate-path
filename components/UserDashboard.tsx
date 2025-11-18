@@ -270,9 +270,9 @@ export default function UserDashboard({ getApplicationByNuid }: UserDashboardPro
                           <div className="flex gap-2">
                             <Badge variant="outline" className="self-start">{nomination.status}</Badge>
                             {nomination.constituencyType === 'community' && nomination.communityConstituency ? (
-                              <Badge variant="secondary" className="self-start text-xs">Community</Badge>
+                              <Badge variant="secondary" className="self-start text-xs border border-gray-400 dark:border-gray-500">Community</Badge>
                             ) : nomination.constituencyType === 'academic' ? (
-                              <Badge variant="outline" className="self-start text-xs">Academic</Badge>
+                              <Badge variant="outline" className="self-start text-xs border-gray-400 dark:border-gray-500">Academic</Badge>
                             ) : null}
                           </div>
                         </div>
