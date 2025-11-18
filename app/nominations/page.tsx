@@ -19,6 +19,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { SearchableSelect } from '@/components/ui/searchable-select';
 import { XCircle, Loader2 } from 'lucide-react';
 import { useUnsavedChangesWarning } from '@/lib/hooks/useUnsavedChangesWarning';
 import { toast } from 'sonner';
@@ -36,7 +37,24 @@ const nominationSchema = z.object({
   nominee: z.string().min(1, 'Please select a nominee'),
   college: z.string().min(1, 'Please select your home college'),
   major: z.string().min(1, 'Major is required'),
-});
+  constituencyType: z.enum(['academic', 'community']).refine(
+    (val) => val === 'academic' || val === 'community',
+    { message: 'Please select a constituency type' }
+  ),
+  communityConstituencyId: z.string().optional(),
+}).refine(
+  (data) => {
+    // If constituency type is community, community constituency must be selected
+    if (data.constituencyType === 'community' && !data.communityConstituencyId) {
+      return false;
+    }
+    return true;
+  },
+  {
+    message: 'Please select a community constituency',
+    path: ['communityConstituencyId'],
+  }
+);
 
 type NominationFormData = z.infer<typeof nominationSchema>;
 
@@ -50,6 +68,9 @@ export default function NominationsPage() {
   const [nomineesLoadError, setNomineesLoadError] = useState<string | null>(
     null,
   );
+  const [communityConstituencies, setCommunityConstituencies] = useState<
+    Array<{ id: string; name: string }>
+  >([]);
 
   const {
     register,
@@ -57,6 +78,7 @@ export default function NominationsPage() {
     formState: { errors, isDirty },
     reset,
     control,
+    watch,
   } = useForm<NominationFormData>({
     resolver: zodResolver(nominationSchema),
     defaultValues: {
@@ -65,8 +87,13 @@ export default function NominationsPage() {
       nominee: '',
       college: '',
       major: '',
+      constituencyType: 'academic',
+      communityConstituencyId: '',
     },
   });
+
+  // Watch constituency type to show/hide community constituency field
+  const constituencyType = watch('constituencyType');
 
   // Warn user about unsaved changes before leaving the page
   const hasUnsavedChanges = isDirty && !isSubmitting;
@@ -77,6 +104,7 @@ export default function NominationsPage() {
       try {
         const data = await getNominationFormData();
         setNominees(data.nominees);
+        setCommunityConstituencies(data.communityConstituencies);
         setNomineesLoadError(null);
       } catch (error) {
         console.error('Failed to fetch nominees:', error);
@@ -239,6 +267,74 @@ export default function NominationsPage() {
                           </p>
                         )}
                       </div>
+                    </div>
+
+                    {/* Constituency Type Selection */}
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Label>Constituency Type</Label>
+                        <Controller
+                          name="constituencyType"
+                          control={control}
+                          render={({ field }) => (
+                            <Select
+                              value={field.value}
+                              onValueChange={field.onChange}
+                              disabled={isSubmitting}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select constituency type" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="academic">
+                                  Academic Constituency (College-based)
+                                </SelectItem>
+                                <SelectItem value="community">
+                                  Community Constituency
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                          )}
+                        />
+                        <p className="text-sm text-muted-foreground">
+                          Select whether you are nominating based on academic college or community constituency.
+                        </p>
+                        {errors.constituencyType && (
+                          <p className="text-sm text-destructive">
+                            {errors.constituencyType.message}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Conditional Community Constituency Field */}
+                      {constituencyType === 'community' && (
+                        <div className="space-y-2">
+                          <Label htmlFor="communityConstituencyId">
+                            Community Constituency
+                          </Label>
+                          <Controller
+                            name="communityConstituencyId"
+                            control={control}
+                            render={({ field }) => (
+                              <SearchableSelect
+                                value={field.value || ''}
+                                onValueChange={field.onChange}
+                                options={communityConstituencies.map((cc) => ({
+                                  value: cc.id,
+                                  label: cc.name,
+                                }))}
+                                placeholder="Search and select your community constituency"
+                                disabled={isSubmitting}
+                              />
+                            )}
+                          />
+                          {errors.communityConstituencyId && (
+                            <p className="text-sm text-destructive">
+                              {errors.communityConstituencyId.message}
+                            </p>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </CardContent>

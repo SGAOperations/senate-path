@@ -11,12 +11,22 @@ const Status = {
 
 export async function getNominations() {
   return db.nomination.findMany({
+    include: {
+      communityConstituency: {
+        select: { name: true },
+      },
+    },
     orderBy: { createdAt: 'desc' },
   });
 }
 
 export async function getAllNominations() {
   return db.nomination.findMany({
+    include: {
+      communityConstituency: {
+        select: { name: true },
+      },
+    },
     orderBy: { createdAt: 'desc' },
   });
 }
@@ -24,6 +34,11 @@ export async function getAllNominations() {
 export async function getNominationsByStatus(status: 'PENDING' | 'APPROVED' | 'REJECTED') {
   return db.nomination.findMany({
     where: { status },
+    include: {
+      communityConstituency: {
+        select: { name: true },
+      },
+    },
     orderBy: { createdAt: 'desc' },
   });
 }

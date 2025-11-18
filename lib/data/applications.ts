@@ -24,6 +24,11 @@ export async function getApplicationByNuidWithNominations(nuid: string) {
 
   const nominations = await db.nomination.findMany({
     where: { nominee: application.fullName },
+    include: {
+      communityConstituency: {
+        select: { name: true },
+      },
+    },
     orderBy: { createdAt: 'desc' },
   });
 
@@ -47,6 +52,11 @@ export async function getApplicationWithNominations(id: string) {
 
   const nominations = await db.nomination.findMany({
     where: { nominee: application.fullName },
+    include: {
+      communityConstituency: {
+        select: { name: true },
+      },
+    },
     orderBy: { createdAt: 'desc' },
   });
 
@@ -106,9 +116,16 @@ export async function getNominationFormData() {
     distinct: ['constituency'],
   });
 
+  const communityConstituencies = await db.communityConstituency.findMany({
+    where: { isActive: true },
+    select: { id: true, name: true },
+    orderBy: { name: 'asc' },
+  });
+
   return {
     nominees,
     constituencies: constituencies.map((c) => c.constituency),
+    communityConstituencies,
   };
 }
 
