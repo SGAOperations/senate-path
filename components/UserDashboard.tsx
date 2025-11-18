@@ -7,10 +7,14 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Search, User, Vote, TrendingDown, AlertCircle, X } from 'lucide-react';
-import { Application, Nomination } from '@prisma/client';
+import { Application, Nomination, CommunityConstituency } from '@prisma/client';
+
+type NominationWithCommunity = Nomination & {
+  communityConstituency: { name: string } | null;
+};
 
 type ApplicationWithNominations = Application & {
-  nominations: Nomination[];
+  nominations: NominationWithCommunity[];
   nominationCount: number;
 };
 
@@ -59,6 +63,10 @@ export default function UserDashboard({ getApplicationByNuid }: UserDashboardPro
 
   const missingNominations = applicantDetails 
     ? Math.max(0, 30 - applicantDetails.nominationCount)
+    : 0;
+
+  const communityNominationCount = applicantDetails
+    ? applicantDetails.nominations.filter(n => n.status === 'APPROVED' && n.constituencyType === 'community').length
     : 0;
 
   return (
@@ -144,6 +152,16 @@ export default function UserDashboard({ getApplicationByNuid }: UserDashboardPro
             </Card>
           </div>
 
+          {/* Warning about community nominations limit */}
+          {communityNominationCount > 15 && (
+            <Alert variant="destructive" className="mb-6">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
+                <strong>Warning:</strong> You have {communityNominationCount} approved community constituency nominations. Only 15 nominations may come from community constituencies.
+              </AlertDescription>
+            </Alert>
+          )}
+
           {/* Application Details */}
           <Card className="mb-6">
             <CardHeader>
@@ -206,15 +224,15 @@ export default function UserDashboard({ getApplicationByNuid }: UserDashboardPro
                   <h3 className="text-lg font-bold mb-3">Academic Information</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <p className="text-sm text-muted-foreground">College</p>
+                      <p className="text-sm text-muted-foreground">College(s)</p>
                       <p className="font-medium">{applicantDetails.college}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground">Major</p>
+                      <p className="text-sm text-muted-foreground">Major(s)</p>
                       <p className="font-medium">{applicantDetails.major}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground">Minors</p>
+                      <p className="text-sm text-muted-foreground">Minor(s)</p>
                       <p className="font-medium">{applicantDetails.minors || 'None'}</p>
                     </div>
                     <div>
@@ -249,15 +267,35 @@ export default function UserDashboard({ getApplicationByNuid }: UserDashboardPro
                             <p className="font-medium truncate">{nomination.fullName}</p>
                             <p className="text-sm text-muted-foreground truncate">{nomination.email}</p>
                           </div>
-                          <Badge variant="outline" className="self-start">{nomination.status}</Badge>
+                          <div className="flex gap-2">
+                            <Badge variant="outline" className="self-start">{nomination.status}</Badge>
+                            {nomination.constituencyType === 'community' && nomination.communityConstituency ? (
+                              <Badge variant="secondary" className="self-start text-xs border border-gray-400 dark:border-gray-500">Community</Badge>
+                            ) : nomination.constituencyType === 'academic' ? (
+                              <Badge variant="outline" className="self-start text-xs border-gray-400 dark:border-gray-500">Academic</Badge>
+                            ) : null}
+                          </div>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm mt-2">
-                          <div>
-                            <span className="text-muted-foreground">College:</span> {nomination.college}
-                          </div>
-                          <div>
-                            <span className="text-muted-foreground">Major:</span> {nomination.major}
-                          </div>
+                          {nomination.constituencyType === 'community' && nomination.communityConstituency ? (
+                            <>
+                              <div>
+                                <span className="text-muted-foreground">Community Constituency:</span> {nomination.communityConstituency.name}
+                              </div>
+                              <div>
+                                <span className="text-muted-foreground">Major(s):</span> {nomination.major}
+                              </div>
+                            </>
+                          ) : (
+                            <>
+                              <div>
+                                <span className="text-muted-foreground">College(s):</span> {nomination.college}
+                              </div>
+                              <div>
+                                <span className="text-muted-foreground">Major(s):</span> {nomination.major}
+                              </div>
+                            </>
+                          )}
                           <div className="sm:col-span-2">
                             <span className="text-muted-foreground">Submitted:</span>{' '}
                             {new Date(nomination.createdAt).toLocaleDateString()}

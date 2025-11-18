@@ -15,9 +15,13 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Search, User, Vote, TrendingUp, Download, AlertCircle, X } from 'lucide-react';
-import { Application, Nomination, Endorsement } from '@prisma/client';
+import { Application, Nomination, Endorsement, CommunityConstituency } from '@prisma/client';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+
+type NominationWithCommunity = Nomination & {
+  communityConstituency: { name: string } | null;
+};
 
 type ApplicationWithCount = Application & {
   nominationCount: number;
@@ -25,7 +29,7 @@ type ApplicationWithCount = Application & {
 };
 
 type ApplicationWithNominations = Application & {
-  nominations: Nomination[];
+  nominations: NominationWithCommunity[];
   endorsements: Endorsement[];
   nominationCount: number;
 };
@@ -279,15 +283,15 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
                       <h3 className="text-lg font-bold mb-3">Academic Information</h3>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                          <p className="text-sm text-muted-foreground">College</p>
+                          <p className="text-sm text-muted-foreground">College(s)</p>
                           <p className="font-medium">{selectedApplicant.college}</p>
                         </div>
                         <div>
-                          <p className="text-sm text-muted-foreground">Major</p>
+                          <p className="text-sm text-muted-foreground">Major(s)</p>
                           <p className="font-medium">{selectedApplicant.major}</p>
                         </div>
                         <div>
-                          <p className="text-sm text-muted-foreground">Minors</p>
+                          <p className="text-sm text-muted-foreground">Minor(s)</p>
                           <p className="font-medium">{selectedApplicant.minors || 'None'}</p>
                         </div>
                         <div>
@@ -297,6 +301,35 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
                         <div className="col-span-1 sm:col-span-2">
                           <p className="text-sm text-muted-foreground">Constituency</p>
                           <p className="font-medium">{selectedApplicant.constituency}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="border-t pt-4" />
+
+                    {/* Application Questions */}
+                    <div>
+                      <h3 className="text-lg font-bold mb-3">Application Questions</h3>
+                      <div className="space-y-4">
+                        <div>
+                          <p className="text-sm font-semibold text-muted-foreground mb-1">Why Senate?</p>
+                          <p className="text-sm">{selectedApplicant.whySenateLongAnswer}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-muted-foreground mb-1">Constituency Issue</p>
+                          <p className="text-sm">{selectedApplicant.constituencyIssueLongAnswer}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-muted-foreground mb-1">Diversity, Equity, & Inclusion</p>
+                          <p className="text-sm">{selectedApplicant.diversityEquityInclusionLongAnswer}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-muted-foreground mb-1">Conflict Situation</p>
+                          <p className="text-sm">{selectedApplicant.conflictSituationLongAnswer}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-muted-foreground mb-1">Campaign Blurb</p>
+                          <p className="text-sm">{selectedApplicant.campaignBlurb}</p>
                         </div>
                       </div>
                     </div>
@@ -318,15 +351,35 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
                                       <p className="font-medium truncate">{nomination.fullName}</p>
                                       <p className="text-sm text-muted-foreground truncate">{nomination.email}</p>
                                     </div>
-                                    <Badge variant="outline" className="self-start">{nomination.status}</Badge>
+                                    <div className="flex gap-2">
+                                      <Badge variant="outline" className="self-start">{nomination.status}</Badge>
+                                      {nomination.constituencyType === 'community' && nomination.communityConstituency ? (
+                                        <Badge variant="secondary" className="self-start text-xs border border-gray-400 dark:border-gray-500">Community</Badge>
+                                      ) : nomination.constituencyType === 'academic' ? (
+                                        <Badge variant="outline" className="self-start text-xs border-gray-400 dark:border-gray-500">Academic</Badge>
+                                      ) : null}
+                                    </div>
                                   </div>
                                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm mt-2">
-                                    <div>
-                                      <span className="text-muted-foreground">College:</span> {nomination.college}
-                                    </div>
-                                    <div>
-                                      <span className="text-muted-foreground">Major:</span> {nomination.major}
-                                    </div>
+                                    {nomination.constituencyType === 'community' && nomination.communityConstituency ? (
+                                      <>
+                                        <div>
+                                          <span className="text-muted-foreground">Community Constituency:</span> {nomination.communityConstituency.name}
+                                        </div>
+                                        <div>
+                                          <span className="text-muted-foreground">Major(s):</span> {nomination.major}
+                                        </div>
+                                      </>
+                                    ) : (
+                                      <>
+                                        <div>
+                                          <span className="text-muted-foreground">College(s):</span> {nomination.college}
+                                        </div>
+                                        <div>
+                                          <span className="text-muted-foreground">Major(s):</span> {nomination.major}
+                                        </div>
+                                      </>
+                                    )}
                                     <div className="sm:col-span-2">
                                       <span className="text-muted-foreground">Submitted:</span>{' '}
                                       {new Date(nomination.createdAt).toLocaleDateString()}

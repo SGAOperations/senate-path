@@ -17,12 +17,17 @@ export async function GET(request: NextRequest) {
       'Pronouns',
       'Email',
       'Phone Number',
-      'College',
-      'Major',
-      'Minors',
+      'College(s)',
+      'Major(s)',
+      'Minor(s)',
       'Year',
       'Semester',
       'Constituency',
+      'Why Senate?',
+      'Constituency Issue',
+      'Diversity, Equity, & Inclusion',
+      'Conflict Situation',
+      'Campaign Blurb',
       'Created At'
     ];
 
@@ -41,6 +46,11 @@ export async function GET(request: NextRequest) {
       app.year?.toString() || '',
       app.semester || '',
       app.constituency || '',
+      app.whySenateLongAnswer || '',
+      app.constituencyIssueLongAnswer || '',
+      app.diversityEquityInclusionLongAnswer || '',
+      app.conflictSituationLongAnswer || '',
+      app.campaignBlurb || '',
       app.createdAt?.toISOString() || ''
     ]);
 

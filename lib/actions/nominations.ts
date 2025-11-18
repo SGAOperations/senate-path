@@ -15,6 +15,8 @@ type NominationData = {
   nominee: string;
   college: string;
   major: string;
+  constituencyType: 'academic' | 'community';
+  communityConstituencyId?: string;
 };
 
 export async function createNomination(data: NominationData) {
@@ -38,18 +40,36 @@ export async function createNomination(data: NominationData) {
       throw new Error('You cannot nominate yourself for Senator');
     }
 
-    // Validate: Nominee must exist and be in same constituency
+    // Validate: Nominee must exist and get their constituency info
     const nomineeApp = await db.application.findFirst({
       where: { fullName: data.nominee },
-      select: { constituency: true },
+      select: { 
+        constituency: true,
+        communityConstituencyId: true,
+      },
     });
 
     if (!nomineeApp) {
       throw new Error(`Nominee ${data.nominee} not found`);
     }
 
-    if (nominatorConstituency && nomineeApp.constituency !== nominatorConstituency) {
-      throw new Error('The nominator must belong to the same constituency as the nominee');
+    // Validate constituency match based on nomination type
+    if (data.constituencyType === 'academic') {
+      // For academic nominations, check that colleges match
+      if (nominatorConstituency && nomineeApp.constituency !== nominatorConstituency) {
+        throw new Error('The nominator must belong to the same academic constituency (college) as the nominee');
+      }
+    } else if (data.constituencyType === 'community') {
+      // For community nominations, check that community constituencies match
+      if (!data.communityConstituencyId) {
+        throw new Error('Community constituency must be selected for community-based nominations');
+      }
+      if (!nomineeApp.communityConstituencyId) {
+        throw new Error('The nominee does not belong to a community constituency');
+      }
+      if (data.communityConstituencyId !== nomineeApp.communityConstituencyId) {
+        throw new Error('The nominator must belong to the same community constituency as the nominee');
+      }
     }
 
     // Check if already nominated
@@ -67,7 +87,13 @@ export async function createNomination(data: NominationData) {
     // Create nomination with PENDING status
     await db.nomination.create({
       data: {
-        ...data,
+        fullName: data.fullName,
+        email: data.email,
+        nominee: data.nominee,
+        college: data.college,
+        major: data.major,
+        constituencyType: data.constituencyType,
+        communityConstituencyId: data.constituencyType === 'community' ? data.communityConstituencyId : null,
         status: 'PENDING',
       },
     });

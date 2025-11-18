@@ -130,15 +130,30 @@ export default function EndorsementsPage() {
       'endorserEmail',
       'applicantName',
     ];
-    const isValid = await trigger(fieldsToValidate);
 
+    const isValid = await trigger(fieldsToValidate);
+    
     if (isValid) {
       setValue('currentPage', 2);
     }
+    
+    // Scroll to top after validation errors are rendered
+    // The scrolling container is the <main> element, not window
+    setTimeout(() => {
+      const mainElement = document.querySelector('main');
+      if (mainElement) {
+        mainElement.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }, 0);
   };
 
   const handlePreviousPage = () => {
     setValue('currentPage', 1);
+    // The scrolling container is the <main> element, not window
+    const mainElement = document.querySelector('main');
+    if (mainElement) {
+      mainElement.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   return (
@@ -201,11 +216,11 @@ export default function EndorsementsPage() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="endorserEmail">Your Email</Label>
+                      <Label htmlFor="endorserEmail">Northeastern Email</Label>
                       <Input
                         id="endorserEmail"
                         type="email"
-                        placeholder="your.email@northeastern.edu"
+                        placeholder="email@example.com"
                         {...register('endorserEmail')}
                       />
                       {errors.endorserEmail && (
@@ -223,6 +238,9 @@ export default function EndorsementsPage() {
                       <Label htmlFor="applicantName">
                         Who are you endorsing?
                       </Label>
+                      <p className="text-sm text-muted-foreground">
+                        Potential Candidates will only appear here once that have submitted their Initial Application.
+                      </p>
                       <Select
                         value={applicantName}
                         onValueChange={(value) => {
@@ -269,7 +287,7 @@ export default function EndorsementsPage() {
                   <div className="space-y-4 p-3 sm:p-6 rounded-lg bg-muted-background-50 border">
                     <h3 className="text-xl font-bold">Endorsement Questions</h3>
                     <p className="text-sm text-muted-foreground">
-                      Please answer the following questions about the applicant
+                      Please answer the following questions about the applicant.
                     </p>
 
                     <div className="space-y-2">

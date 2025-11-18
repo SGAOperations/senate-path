@@ -22,6 +22,7 @@ type ApplicationData = {
   constituencyIssueLongAnswer: string;
   diversityEquityInclusionLongAnswer: string;
   conflictSituationLongAnswer: string;
+  campaignBlurb: string;
 };
 
 export async function submitApplication(formData: ApplicationData) {
@@ -61,6 +62,7 @@ export async function submitApplication(formData: ApplicationData) {
       constituencyIssueLongAnswer: formData.constituencyIssueLongAnswer,
       diversityEquityInclusionLongAnswer: formData.diversityEquityInclusionLongAnswer,
       conflictSituationLongAnswer: formData.conflictSituationLongAnswer,
+      campaignBlurb: formData.campaignBlurb,
     };
 
     await createOrUpdateApplication(data);
