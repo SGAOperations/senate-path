@@ -26,12 +26,14 @@ type NominationWithCommunity = Nomination & {
 type ApplicationWithCount = Application & {
   nominationCount: number;
   endorsementCount: number;
+  communityConstituency: { name: string } | null;
 };
 
 type ApplicationWithNominations = Application & {
   nominations: NominationWithCommunity[];
   endorsements: Endorsement[];
   nominationCount: number;
+  communityConstituency: { name: string } | null;
 };
 
 interface AdminDashboardProps {
@@ -299,9 +301,15 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
                           <p className="font-medium">{selectedApplicant.year}</p>
                         </div>
                         <div className="col-span-1 sm:col-span-2">
-                          <p className="text-sm text-muted-foreground">Constituency</p>
+                          <p className="text-sm text-muted-foreground">Academic Constituency</p>
                           <p className="font-medium">{selectedApplicant.constituency}</p>
                         </div>
+                        {selectedApplicant.communityConstituency && (
+                          <div className="col-span-1 sm:col-span-2">
+                            <p className="text-sm text-muted-foreground">Community Constituency</p>
+                            <p className="font-medium">{selectedApplicant.communityConstituency.name}</p>
+                          </div>
+                        )}
                       </div>
                     </div>
 

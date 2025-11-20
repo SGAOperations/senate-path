@@ -16,6 +16,7 @@ type NominationWithCommunity = Nomination & {
 type ApplicationWithNominations = Application & {
   nominations: NominationWithCommunity[];
   nominationCount: number;
+  communityConstituency: { name: string } | null;
 };
 
 interface UserDashboardProps {
@@ -240,9 +241,15 @@ export default function UserDashboard({ getApplicationByNuid }: UserDashboardPro
                       <p className="font-medium">{applicantDetails.year}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground">Constituency</p>
+                      <p className="text-sm text-muted-foreground">Academic Constituency</p>
                       <p className="font-medium">{applicantDetails.constituency}</p>
                     </div>
+                    {applicantDetails.communityConstituency && (
+                      <div>
+                        <p className="text-sm text-muted-foreground">Community Constituency</p>
+                        <p className="font-medium">{applicantDetails.communityConstituency.name}</p>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
