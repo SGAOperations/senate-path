@@ -16,6 +16,11 @@ export async function getApplicationByNuid(nuid: string) {
 export async function getApplicationByNuidWithNominations(nuid: string) {
   const application = await db.application.findUnique({
     where: { nuid },
+    include: {
+      communityConstituency: {
+        select: { name: true },
+      },
+    },
   });
 
   if (!application) {
@@ -44,6 +49,11 @@ export async function getApplicationByNuidWithNominations(nuid: string) {
 export async function getApplicationWithNominations(id: string) {
   const application = await db.application.findUnique({
     where: { id },
+    include: {
+      communityConstituency: {
+        select: { name: true },
+      },
+    },
   });
 
   if (!application) {
@@ -77,6 +87,11 @@ export async function getApplicationWithNominations(id: string) {
 
 export async function getApplicationsWithNominationCounts() {
   const applications = await db.application.findMany({
+    include: {
+      communityConstituency: {
+        select: { name: true },
+      },
+    },
     orderBy: { createdAt: 'desc' },
   });
 
