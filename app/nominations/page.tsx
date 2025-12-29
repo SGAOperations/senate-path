@@ -24,6 +24,10 @@ import { XCircle, Loader2, Upload, FileText } from 'lucide-react';
 import { useUnsavedChangesWarning } from '@/lib/hooks/useUnsavedChangesWarning';
 import { toast } from 'sonner';
 
+// Constants
+const MAX_PDF_SIZE_MB = 10;
+const MAX_PDF_SIZE_BYTES = MAX_PDF_SIZE_MB * 1024 * 1024;
+
 const nominationSchema = z.object({
   fullName: z.string().min(1, 'Your full name is required'),
   email: z
@@ -160,10 +164,9 @@ export default function NominationsPage() {
         }
         return;
       }
-      // Validate file size (max 10MB)
-      const maxSize = 10 * 1024 * 1024;
-      if (file.size > maxSize) {
-        setSubmitError('File size must be less than 10MB');
+      // Validate file size
+      if (file.size > MAX_PDF_SIZE_BYTES) {
+        setSubmitError(`File size must be less than ${MAX_PDF_SIZE_MB}MB`);
         setPdfFile(null);
         if (fileInputRef.current) {
           fileInputRef.current.value = '';
@@ -232,12 +235,16 @@ export default function NominationsPage() {
 
       if (result.success) {
         toast.success('Paper nomination submitted successfully!');
+        // Clear form and file
         resetPdf();
         setPdfFile(null);
         if (fileInputRef.current) {
           fileInputRef.current.value = '';
         }
-        router.push('/');
+        // Small delay to ensure state is cleared before navigation
+        setTimeout(() => {
+          router.push('/');
+        }, 100);
       } else {
         setSubmitError(result.error || 'Failed to submit paper nomination');
       }
@@ -619,7 +626,7 @@ export default function NominationsPage() {
                     <div className="space-y-4">
                       <div className="space-y-2">
                         <Label htmlFor="pdfFile">
-                          Nomination Form PDF (Max 10MB)
+                          Nomination Form PDF (Max {MAX_PDF_SIZE_MB}MB)
                         </Label>
                         <Input
                           id="pdfFile"

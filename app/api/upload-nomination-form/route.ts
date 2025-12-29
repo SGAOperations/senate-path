@@ -2,8 +2,18 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { randomUUID } from 'crypto';
 
+// Constants
+const UPLOAD_FOLDER = 'nomination-forms';
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+
 export async function POST(request: NextRequest) {
   try {
+    // Note: This endpoint uses anonymous Supabase key for public uploads.
+    // Security is enforced through:
+    // 1. File type validation (PDF only)
+    // 2. File size limits (10MB max)
+    // 3. Supabase Storage RLS policies (should be configured to allow INSERT on 'applications' bucket)
+    // 4. Rate limiting should be configured at the infrastructure level
     // Use anon key directly for public uploads without cookies
     const supabase = createSupabaseClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -28,9 +38,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate file size (max 10MB)
-    const maxSize = 10 * 1024 * 1024; // 10MB
-    if (file.size > maxSize) {
+    // Validate file size
+    if (file.size > MAX_FILE_SIZE) {
       return NextResponse.json(
         { error: 'File size must be less than 10MB' },
         { status: 400 }
@@ -40,7 +49,7 @@ export async function POST(request: NextRequest) {
     // Generate a unique filename using timestamp and cryptographically secure random UUID
     const timestamp = Date.now();
     const uuid = randomUUID();
-    const fileName = `nomination-forms/${timestamp}-${uuid}.pdf`;
+    const fileName = `${UPLOAD_FOLDER}/${timestamp}-${uuid}.pdf`;
 
     // Upload to Supabase Storage
     const { data, error } = await supabase.storage
