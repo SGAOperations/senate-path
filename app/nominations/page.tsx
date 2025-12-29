@@ -221,7 +221,15 @@ export default function NominationsPage() {
 
       if (!uploadResponse.ok) {
         const errorData = await uploadResponse.json();
-        throw new Error(errorData.error || 'Failed to upload PDF');
+        
+        // Provide specific error messages based on response
+        if (uploadResponse.status === 400) {
+          throw new Error(errorData.error || 'Invalid file');
+        } else if (uploadResponse.status === 500) {
+          throw new Error('Server error while uploading file. Please try again.');
+        } else {
+          throw new Error(errorData.error || 'Failed to upload PDF');
+        }
       }
 
       const { url } = await uploadResponse.json();

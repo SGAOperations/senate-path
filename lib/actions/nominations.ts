@@ -212,6 +212,13 @@ type PaperNominationData = {
 
 export async function createPaperNomination(data: PaperNominationData) {
   try {
+    // Validate PDF URL format
+    try {
+      new URL(data.pdfUrl);
+    } catch {
+      throw new Error('Invalid PDF URL provided');
+    }
+
     // Create nomination with PDF URL and PENDING status
     // For paper nominations, we store minimal info since details are in the PDF
     await db.nomination.create({

@@ -13,7 +13,14 @@ export async function POST(request: NextRequest) {
     // 1. File type validation (PDF only)
     // 2. File size limits (10MB max)
     // 3. Supabase Storage RLS policies (should be configured to allow INSERT on 'applications' bucket)
-    // 4. Rate limiting should be configured at the infrastructure level
+    // 4. Rate limiting should be configured at the infrastructure level (e.g., Vercel, Cloudflare)
+    // 
+    // Additional security recommendations:
+    // - Configure Supabase Storage RLS policies to restrict bucket access
+    // - Enable rate limiting at the edge/CDN level
+    // - Consider implementing IP-based throttling
+    // - Monitor storage usage and set up alerts
+    
     // Use anon key directly for public uploads without cookies
     const supabase = createSupabaseClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
