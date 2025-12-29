@@ -9,6 +9,13 @@ const Status = {
   MANUAL_REVIEW: 'MANUAL_REVIEW',
 } as const;
 
+// Constants for paper nomination placeholders
+const PAPER_NOMINATION_CONSTANTS = {
+  NOMINEE: 'Paper Nomination - See PDF',
+  COLLEGE: 'See PDF',
+  MAJOR: 'See PDF',
+} as const;
+
 type NominationData = {
   fullName: string;
   email: string;
@@ -211,9 +218,9 @@ export async function createPaperNomination(data: PaperNominationData) {
       data: {
         fullName: data.nominatorName,
         email: data.nominatorEmail,
-        nominee: 'Paper Nomination - See PDF',
-        college: 'See PDF',
-        major: 'See PDF',
+        nominee: PAPER_NOMINATION_CONSTANTS.NOMINEE,
+        college: PAPER_NOMINATION_CONSTANTS.COLLEGE,
+        major: PAPER_NOMINATION_CONSTANTS.MAJOR,
         nominationFormPdfUrl: data.pdfUrl,
         status: 'PENDING',
       },

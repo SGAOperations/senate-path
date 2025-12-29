@@ -553,7 +553,16 @@ export default function NominationsPage() {
                   <AlertDescription>
                     <p className="font-semibold mb-2">Paper Nomination Form Instructions:</p>
                     <ol className="list-decimal list-inside space-y-1 text-sm">
-                      <li>Download a paper nomination form (if available from SGA)</li>
+                      <li>Obtain a paper nomination form from the SGA office or download it from the{' '}
+                        <a 
+                          href="https://northeasternsga.com/senate-election" 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-primary hover:underline font-medium"
+                        >
+                          SGA website
+                        </a>
+                      </li>
                       <li>Complete and sign the form</li>
                       <li>Scan the completed form as a PDF</li>
                       <li>Upload the PDF file below</li>

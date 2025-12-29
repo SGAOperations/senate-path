@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
+import { randomUUID } from 'crypto';
 
 export async function POST(request: NextRequest) {
   try {
@@ -36,10 +37,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Generate a unique filename using timestamp and random string
+    // Generate a unique filename using timestamp and cryptographically secure random UUID
     const timestamp = Date.now();
-    const randomString = Math.random().toString(36).substring(2, 15);
-    const fileName = `nomination-forms/${timestamp}-${randomString}.pdf`;
+    const uuid = randomUUID();
+    const fileName = `nomination-forms/${timestamp}-${uuid}.pdf`;
 
     // Upload to Supabase Storage
     const { data, error } = await supabase.storage

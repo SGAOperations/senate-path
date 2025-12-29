@@ -412,7 +412,13 @@ export default function NominationsManager({ nominations: initialNominations }: 
                           {nom.nominationFormPdfUrl && (
                             <Button
                               size="sm"
-                              onClick={() => window.open(nom.nominationFormPdfUrl!, '_blank')}
+                              onClick={() => {
+                                const link = document.createElement('a');
+                                link.href = nom.nominationFormPdfUrl!;
+                                link.target = '_blank';
+                                link.rel = 'noopener noreferrer';
+                                link.click();
+                              }}
                               variant="outline"
                               className="border-blue-500 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950"
                             >
