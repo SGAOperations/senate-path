@@ -196,3 +196,40 @@ export async function bulkRejectNominations(ids: string[]) {
     };
   }
 }
+
+type PaperNominationData = {
+  nominatorName: string;
+  nominatorEmail: string;
+  pdfUrl: string;
+};
+
+export async function createPaperNomination(data: PaperNominationData) {
+  try {
+    // Create nomination with PDF URL and PENDING status
+    // For paper nominations, we store minimal info since details are in the PDF
+    await db.nomination.create({
+      data: {
+        fullName: data.nominatorName,
+        email: data.nominatorEmail,
+        nominee: 'Paper Nomination - See PDF',
+        college: 'See PDF',
+        major: 'See PDF',
+        nominationFormPdfUrl: data.pdfUrl,
+        status: 'PENDING',
+      },
+    });
+
+    revalidatePath('/nominations');
+    revalidatePath('/admin');
+    revalidatePath('/admin/nominations');
+    revalidatePath('/dashboard');
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error creating paper nomination:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to create paper nomination'
+    };
+  }
+}

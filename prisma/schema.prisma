@@ -59,6 +59,7 @@ model Nomination {
   constituencyType        String?                // 'academic' or 'community'
   communityConstituencyId String?
   communityConstituency   CommunityConstituency? @relation(fields: [communityConstituencyId], references: [id])
+  nominationFormPdfUrl    String?                // URL to uploaded PDF nomination form
   createdAt               DateTime               @default(now())
 
   @@map("nominations")
