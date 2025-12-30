@@ -276,7 +276,7 @@ export default function NominationsPage() {
               Nominate a student to become a Senator in SGA's Senate and represent you. Nominations are an indication that you support your Nominee running to represent you; it is not a vote. You may nominate more than one person. You may only nominate students if you're their potential constituent.
             </p>
             <p className="text-sm sm:text-base text-muted-foreground mt-2">
-              You can either fill out the online nomination form below or upload a signed paper nomination form.
+              <strong>Important:</strong> You must submit all 30 nominations either fully online (one nomination at a time) or as one complete paper form upload containing all nominations.
             </p>
           </CardHeader>
           <CardContent className="pt-6">
@@ -311,7 +311,7 @@ export default function NominationsPage() {
                     <FileText className="h-6 w-6" />
                     <span className="font-semibold">Online Form</span>
                     <span className="text-xs font-normal opacity-80">
-                      Fill out the nomination form online
+                      Submit nominations online (one at a time)
                     </span>
                   </Button>
                   <Button
@@ -324,7 +324,7 @@ export default function NominationsPage() {
                     <Upload className="h-6 w-6" />
                     <span className="font-semibold">Upload Paper Form</span>
                     <span className="text-xs font-normal opacity-80">
-                      Upload a signed PDF nomination form
+                      Upload one PDF with all 30 nominations
                     </span>
                   </Button>
                 </div>
@@ -578,9 +578,10 @@ export default function NominationsPage() {
                           SGA website
                         </a>
                       </li>
+                      <li><strong>Collect all 30 nomination signatures</strong> on the paper form</li>
                       <li>Complete and sign the form</li>
                       <li>Scan the completed form as a PDF</li>
-                      <li>Upload the PDF file below</li>
+                      <li>Upload the PDF file below (must contain all 30 nominations)</li>
                     </ol>
                   </AlertDescription>
                 </Alert>
@@ -589,11 +590,11 @@ export default function NominationsPage() {
                 <Card className="border">
                   <CardContent className="pt-4 sm:pt-6 px-3 sm:px-6 pb-3 sm:pb-6">
                     <h3 className="text-xl font-bold border-b pb-2 mb-4">
-                      Your Information
+                      Nominee Information
                     </h3>
                     <div className="space-y-4">
                       <div className="space-y-2">
-                        <Label htmlFor="nominatorName">Your Full Name</Label>
+                        <Label htmlFor="nominatorName">Nominee's Full Name</Label>
                         <Input
                           id="nominatorName"
                           {...registerPdf('nominatorName')}
@@ -607,11 +608,11 @@ export default function NominationsPage() {
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="nominatorEmail">Northeastern Email</Label>
+                        <Label htmlFor="nominatorEmail">Nominee's Northeastern Email</Label>
                         <Input
                           id="nominatorEmail"
                           type="email"
-                          placeholder="your.email@northeastern.edu"
+                          placeholder="nominee.email@northeastern.edu"
                           {...registerPdf('nominatorEmail')}
                           disabled={isSubmitting}
                         />
@@ -631,6 +632,9 @@ export default function NominationsPage() {
                     <h3 className="text-xl font-bold border-b pb-2 mb-4">
                       Upload Nomination Form
                     </h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      <strong>Important:</strong> This PDF must include all 30 nominations for the nominee listed above.
+                    </p>
                     <div className="space-y-4">
                       <div className="space-y-2">
                         <Label htmlFor="pdfFile">

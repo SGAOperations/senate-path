@@ -98,7 +98,7 @@ export default function Home() {
                   Gather Nominations
                 </h3>
                 <p className="text-muted-foreground text-sm sm:text-base">
-                  Share the <Link href="/nominations" className="text-primary hover:underline font-medium">nominations link</Link> with members of your academic and community constituency. Constituents can submit nominations online or upload a signed paper nomination form. You must receive at least 30 nominations to proceed. Note: A maximum of 15 signatures can come from a community constituency.
+                  Share the <Link href="/nominations" className="text-primary hover:underline font-medium">nominations link</Link> with members of your academic and community constituency. Constituents can submit nominations online (one at a time) or you can upload one complete paper nomination form containing all 30 nominations. You must receive at least 30 nominations to proceed. Note: A maximum of 15 signatures can come from a community constituency.
                 </p>
               </div>
             </div>
