@@ -37,7 +37,7 @@ model Application {
   diversityEquityInclusionLongAnswer String
   conflictSituationLongAnswer        String
   campaignBlurb                      String                 @default("")
-  nominationFormPdfUrl               String?                // URL to uploaded PDF containing all 30 nomination signatures
+  nominationFormPdfUrl               String?
   createdAt                          DateTime               @default(now())
 
   @@map("applications")
