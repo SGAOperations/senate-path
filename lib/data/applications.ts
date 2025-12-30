@@ -126,9 +126,19 @@ export async function getApplicationsWithNominationCounts() {
 }
 
 export async function getNominationFormData() {
-  const nominees = await db.application.findMany({
-    select: { fullName: true, email: true },
+  // Get all nominees (applications)
+  const allNominees = await db.application.findMany({
+    select: { 
+      fullName: true, 
+      email: true,
+      nominationFormPdfUrl: true 
+    },
   });
+
+  // Filter out nominees who have uploaded a paper nomination form
+  const nominees = allNominees
+    .filter(nominee => !nominee.nominationFormPdfUrl)
+    .map(({ fullName, email }) => ({ fullName, email }));
 
   const constituencies = await db.application.findMany({
     select: { constituency: true },

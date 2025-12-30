@@ -373,6 +373,9 @@ export default function NominationsPage() {
                         {errors.nominee.message}
                       </p>
                     )}
+                    <p className="text-sm text-muted-foreground">
+                      <strong>Note:</strong> If you can't find the nominee you're looking for, they may have already uploaded a paper nomination form. Nominees who use paper nominations are not available for online nominations.
+                    </p>
                   </div>
                 </CardContent>
               </Card>

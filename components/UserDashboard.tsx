@@ -349,79 +349,112 @@ export default function UserDashboard({ getApplicationByNuid }: UserDashboardPro
               </p>
             </CardHeader>
             <CardContent>
-              {applicantDetails.nominationFormPdfUrl ? (
-                <div className="space-y-4">
-                  <Alert>
-                    <FileText className="h-4 w-4" />
-                    <AlertDescription>
-                      <div className="flex items-center justify-between">
-                        <span>Your nomination form PDF has been uploaded.</span>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => window.open(applicantDetails.nominationFormPdfUrl!, '_blank', 'noopener,noreferrer')}
-                        >
-                          <Download className="h-4 w-4 mr-2" />
-                          View PDF
-                        </Button>
-                      </div>
-                    </AlertDescription>
-                  </Alert>
-                  <Button
-                    variant="destructive"
-                    onClick={handleRemovePdf}
-                    disabled={isUploading}
-                  >
-                    {isUploading ? 'Removing...' : 'Remove PDF'}
-                  </Button>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  <Alert>
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertDescription>
-                      <p className="font-semibold mb-2">Instructions:</p>
-                      <ol className="list-decimal list-inside space-y-1 text-sm">
-                        <li>Collect 30 nomination signatures from your constituents on a paper form</li>
-                        <li>Scan the completed form as a PDF</li>
-                        <li>Upload the PDF below (max 10MB)</li>
-                      </ol>
-                      <p className="mt-2 text-sm">
-                        <strong>Note:</strong> This is an alternative to having constituents submit nominations online. Choose either paper OR online nominations, not both.
-                      </p>
-                    </AlertDescription>
-                  </Alert>
+              {(() => {
+                const hasOnlineNominations = applicantDetails.nominations.some(
+                  n => n.status === 'APPROVED' || n.status === 'PENDING'
+                );
+                
+                if (hasOnlineNominations && !applicantDetails.nominationFormPdfUrl) {
+                  return (
+                    <Alert variant="destructive">
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertDescription>
+                        <strong>Paper nomination upload is disabled.</strong>
+                        <p className="mt-2">You have existing online nominations (pending or approved). You must choose either online nominations OR paper upload, not both.</p>
+                        <p className="mt-2">If you want to use paper nominations instead, all online nominations must be removed first.</p>
+                      </AlertDescription>
+                    </Alert>
+                  );
+                }
 
-                  <div className="space-y-2">
-                    <label htmlFor="pdfFile" className="text-sm font-medium">
-                      Nomination Form PDF (Max 10MB)
-                    </label>
-                    <Input
-                      id="pdfFile"
-                      type="file"
-                      accept="application/pdf"
-                      onChange={handleFileChange}
-                      ref={fileInputRef}
-                      disabled={isUploading}
-                    />
-                    {pdfFile && (
-                      <p className="text-sm text-muted-foreground flex items-center gap-2">
+                if (applicantDetails.nominationFormPdfUrl) {
+                  return (
+                    <div className="space-y-4">
+                      <Alert>
                         <FileText className="h-4 w-4" />
-                        Selected: {pdfFile.name} ({(pdfFile.size / 1024 / 1024).toFixed(2)} MB)
-                      </p>
-                    )}
-                  </div>
+                        <AlertDescription>
+                          <div className="flex items-center justify-between">
+                            <span>Your nomination form PDF has been uploaded.</span>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => window.open(applicantDetails.nominationFormPdfUrl!, '_blank', 'noopener,noreferrer')}
+                            >
+                              <Download className="h-4 w-4 mr-2" />
+                              View PDF
+                            </Button>
+                          </div>
+                        </AlertDescription>
+                      </Alert>
+                      <Button
+                        variant="destructive"
+                        onClick={handleRemovePdf}
+                        disabled={isUploading}
+                      >
+                        {isUploading ? 'Removing...' : 'Remove PDF'}
+                      </Button>
+                    </div>
+                  );
+                }
 
-                  <Button
-                    onClick={handlePdfUpload}
-                    disabled={!pdfFile || isUploading}
-                    className="w-full sm:w-auto"
-                  >
-                    <Upload className="h-4 w-4 mr-2" />
-                    {isUploading ? 'Uploading...' : 'Upload Nomination Form'}
-                  </Button>
-                </div>
-              )}
+                return (
+                  <div className="space-y-4">
+                    <Alert>
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertDescription>
+                        <p className="font-semibold mb-2">Instructions:</p>
+                        <ol className="list-decimal list-inside space-y-1 text-sm">
+                          <li>Download the paper nomination form from the{' '}
+                            <a 
+                              href="https://northeasternsga.com/senate-election" 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="text-primary hover:underline font-medium"
+                            >
+                              SGA website (Senate Elections page)
+                            </a>
+                          </li>
+                          <li>Collect 30 nomination signatures from your constituents on the paper form</li>
+                          <li>Scan the completed form as a PDF</li>
+                          <li>Upload the PDF below (max 10MB)</li>
+                        </ol>
+                        <p className="mt-2 text-sm">
+                          <strong>Note:</strong> This is an alternative to having constituents submit nominations online. Choose either paper OR online nominations, not both.
+                        </p>
+                      </AlertDescription>
+                    </Alert>
+
+                    <div className="space-y-2">
+                      <label htmlFor="pdfFile" className="text-sm font-medium">
+                        Nomination Form PDF (Max 10MB)
+                      </label>
+                      <Input
+                        id="pdfFile"
+                        type="file"
+                        accept="application/pdf"
+                        onChange={handleFileChange}
+                        ref={fileInputRef}
+                        disabled={isUploading}
+                      />
+                      {pdfFile && (
+                        <p className="text-sm text-muted-foreground flex items-center gap-2">
+                          <FileText className="h-4 w-4" />
+                          Selected: {pdfFile.name} ({(pdfFile.size / 1024 / 1024).toFixed(2)} MB)
+                        </p>
+                      )}
+                    </div>
+
+                    <Button
+                      onClick={handlePdfUpload}
+                      disabled={!pdfFile || isUploading}
+                      className="w-full sm:w-auto"
+                    >
+                      <Upload className="h-4 w-4 mr-2" />
+                      {isUploading ? 'Uploading...' : 'Upload Nomination Form'}
+                    </Button>
+                  </div>
+                );
+              })()}
             </CardContent>
           </Card>
 
