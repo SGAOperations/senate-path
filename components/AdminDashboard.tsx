@@ -14,10 +14,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Search, User, Vote, TrendingUp, Download, AlertCircle, X } from 'lucide-react';
+import { Search, User, Vote, TrendingUp, Download, AlertCircle, X, Trash2 } from 'lucide-react';
 import { Application, Nomination, Endorsement, CommunityConstituency } from '@prisma/client';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { removeNominationFormPDF } from '@/lib/actions/applications';
+import { toast } from 'sonner';
 
 type NominationWithCommunity = Nomination & {
   communityConstituency: { name: string } | null;
@@ -54,6 +56,7 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
   const [applicantDetails, setApplicantDetails] = useState<ApplicationWithNominations | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isRemovingPdf, setIsRemovingPdf] = useState(false);
 
   const filteredApplications = applications.filter(
     (app) =>
@@ -75,6 +78,38 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
       setError('Failed to load applicant details. Please try again.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleRemovePdf = async () => {
+    if (!selectedApplicant) return;
+
+    if (!confirm('Are you sure you want to remove this paper nomination PDF? The nominee will be able to upload a new form or collect online nominations.')) {
+      return;
+    }
+
+    setIsRemovingPdf(true);
+    setError(null);
+
+    try {
+      const result = await removeNominationFormPDF(selectedApplicant.nuid);
+
+      if (result.success) {
+        toast.success('Paper nomination PDF removed successfully');
+        // Refresh the applicant details
+        const refreshed = await getApplicationDetails(selectedApplicant.id);
+        setApplicantDetails(refreshed);
+        // Also update selectedApplicant to remove the PDF URL
+        setSelectedApplicant({ ...selectedApplicant, nominationFormPdfUrl: null });
+      } else {
+        setError(result.error || 'Failed to remove PDF');
+        toast.error(result.error || 'Failed to remove PDF');
+      }
+    } catch (error) {
+      setError('An unexpected error occurred');
+      toast.error('An unexpected error occurred');
+    } finally {
+      setIsRemovingPdf(false);
     }
   };
 
@@ -317,18 +352,23 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
                                       <Download className="h-4 w-4 mr-2" />
                                       View PDF
                                     </Button>
+                                    <Button
+                                      variant="destructive"
+                                      size="sm"
+                                      onClick={handleRemovePdf}
+                                      disabled={isRemovingPdf}
+                                    >
+                                      <Trash2 className="h-4 w-4 mr-2" />
+                                      {isRemovingPdf ? 'Removing...' : 'Remove PDF'}
+                                    </Button>
                                   </div>
                                 </div>
                               </AlertDescription>
                             </Alert>
                             
                             <div className="bg-muted p-4 rounded-lg">
-                              <p className="text-sm font-semibold mb-2">Admin Actions:</p>
-                              <p className="text-sm text-muted-foreground mb-3">
-                                To reject this paper nomination, you can remove the PDF. The nominee will then be able to collect online nominations or upload a new paper form.
-                              </p>
                               <p className="text-sm text-muted-foreground">
-                                <strong>Note:</strong> Having the PDF uploaded indicates the paper nomination is "approved" for display purposes. Removing it is equivalent to rejecting/denying the paper nomination.
+                                To reject this paper nomination, click "Remove PDF" above. The nominee will then be able to collect online nominations or upload a new paper form.
                               </p>
                             </div>
                           </div>
