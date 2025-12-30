@@ -218,10 +218,21 @@ export default function UserDashboard({ getApplicationByNuid }: UserDashboardPro
               <CardContent className="pt-4 sm:pt-6">
                 <div className="flex items-center mb-2">
                   <Vote className="h-5 w-5 mr-2 text-primary" />
-                  <h3 className="text-base sm:text-lg font-semibold">Total Nominations</h3>
+                  <h3 className="text-base sm:text-lg font-semibold">
+                    {applicantDetails.nominationFormPdfUrl ? 'Nomination Status' : 'Total Nominations'}
+                  </h3>
                 </div>
-                <p className="text-3xl sm:text-4xl font-bold">{applicantDetails.nominationCount}</p>
-                <p className="text-sm text-muted-foreground">approved nominations</p>
+                {applicantDetails.nominationFormPdfUrl ? (
+                  <>
+                    <p className="text-xl sm:text-2xl font-bold text-info">Paper Form</p>
+                    <p className="text-sm text-muted-foreground">uploaded successfully</p>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-3xl sm:text-4xl font-bold">{applicantDetails.nominationCount}</p>
+                    <p className="text-sm text-muted-foreground">approved nominations</p>
+                  </>
+                )}
               </CardContent>
             </Card>
             
@@ -229,10 +240,21 @@ export default function UserDashboard({ getApplicationByNuid }: UserDashboardPro
               <CardContent className="pt-4 sm:pt-6">
                 <div className="flex items-center mb-2">
                   <TrendingDown className="h-5 w-5 mr-2 text-primary" />
-                  <h3 className="text-base sm:text-lg font-semibold">Missing Nominations</h3>
+                  <h3 className="text-base sm:text-lg font-semibold">
+                    {applicantDetails.nominationFormPdfUrl ? 'Nomination Method' : 'Missing Nominations'}
+                  </h3>
                 </div>
-                <p className="text-3xl sm:text-4xl font-bold">{missingNominations}</p>
-                <p className="text-sm text-muted-foreground">needed to reach 30</p>
+                {applicantDetails.nominationFormPdfUrl ? (
+                  <>
+                    <p className="text-xl sm:text-2xl font-bold">Paper</p>
+                    <p className="text-sm text-muted-foreground">30 signatures in PDF</p>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-3xl sm:text-4xl font-bold">{missingNominations}</p>
+                    <p className="text-sm text-muted-foreground">needed to reach 30</p>
+                  </>
+                )}
               </CardContent>
             </Card>
           </div>

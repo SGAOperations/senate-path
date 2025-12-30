@@ -197,9 +197,17 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
                             <Badge variant="outline" className="whitespace-nowrap">{app.constituency}</Badge>
                           </TableCell>
                           <TableCell className="text-center">
-                            <Badge variant={getNominationBadgeColor(app.nominationCount)}>
-                              {app.nominationCount}
-                            </Badge>
+                            {app.nominationFormPdfUrl ? (
+                              <Badge variant="info" className="text-xs">
+                                Paper Form
+                              </Badge>
+                            ) : app.nominationCount > 0 ? (
+                              <Badge variant={getNominationBadgeColor(app.nominationCount)}>
+                                {app.nominationCount}
+                              </Badge>
+                            ) : (
+                              <Badge variant="default">0</Badge>
+                            )}
                           </TableCell>
                           <TableCell className="text-center">
                             {app.endorsementCount > 0 ? (
@@ -225,9 +233,15 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
               <CardHeader>
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                   <CardTitle className="text-xl sm:text-2xl truncate">{selectedApplicant.fullName}</CardTitle>
-                  <Badge variant={getNominationBadgeColor(selectedApplicant.nominationCount)} className="text-sm self-start sm:self-auto">
-                    {selectedApplicant.nominationCount} Nominations
-                  </Badge>
+                  {selectedApplicant.nominationFormPdfUrl ? (
+                    <Badge variant="info" className="text-sm self-start sm:self-auto">
+                      Paper Form Uploaded
+                    </Badge>
+                  ) : (
+                    <Badge variant={getNominationBadgeColor(selectedApplicant.nominationCount)} className="text-sm self-start sm:self-auto">
+                      {selectedApplicant.nominationCount} Nominations
+                    </Badge>
+                  )}
                 </div>
               </CardHeader>
               <CardContent>
@@ -285,26 +299,38 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
                       <>
                         <div>
                           <h3 className="text-lg font-bold mb-3">Paper Nomination Form</h3>
-                          <div className="space-y-2">
+                          <div className="space-y-4">
                             <Alert>
                               <AlertCircle className="h-4 w-4" />
                               <AlertDescription>
-                                <div className="flex items-center justify-between">
+                                <div className="space-y-3">
                                   <div>
                                     <p className="font-semibold">Paper nomination form uploaded</p>
                                     <p className="text-sm mt-1">This nominee submitted their 30 nomination signatures via PDF instead of online nominations.</p>
                                   </div>
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => window.open(selectedApplicant.nominationFormPdfUrl!, '_blank', 'noopener,noreferrer')}
-                                  >
-                                    <Download className="h-4 w-4 mr-2" />
-                                    View PDF
-                                  </Button>
+                                  <div className="flex gap-2 flex-wrap">
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      onClick={() => window.open(selectedApplicant.nominationFormPdfUrl!, '_blank', 'noopener,noreferrer')}
+                                    >
+                                      <Download className="h-4 w-4 mr-2" />
+                                      View PDF
+                                    </Button>
+                                  </div>
                                 </div>
                               </AlertDescription>
                             </Alert>
+                            
+                            <div className="bg-muted p-4 rounded-lg">
+                              <p className="text-sm font-semibold mb-2">Admin Actions:</p>
+                              <p className="text-sm text-muted-foreground mb-3">
+                                To reject this paper nomination, you can remove the PDF. The nominee will then be able to collect online nominations or upload a new paper form.
+                              </p>
+                              <p className="text-sm text-muted-foreground">
+                                <strong>Note:</strong> Having the PDF uploaded indicates the paper nomination is "approved" for display purposes. Removing it is equivalent to rejecting/denying the paper nomination.
+                              </p>
+                            </div>
                           </div>
                         </div>
 
