@@ -37,6 +37,7 @@ model Application {
   diversityEquityInclusionLongAnswer String
   conflictSituationLongAnswer        String
   campaignBlurb                      String                 @default("")
+  nominationFormPdfUrl               String?                // URL to uploaded PDF containing all 30 nomination signatures
   createdAt                          DateTime               @default(now())
 
   @@map("applications")
@@ -59,7 +60,6 @@ model Nomination {
   constituencyType        String?                // 'academic' or 'community'
   communityConstituencyId String?
   communityConstituency   CommunityConstituency? @relation(fields: [communityConstituencyId], references: [id])
-  nominationFormPdfUrl    String?                // URL to uploaded PDF nomination form
   createdAt               DateTime               @default(now())
 
   @@map("nominations")

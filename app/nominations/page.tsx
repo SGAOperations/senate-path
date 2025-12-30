@@ -3,8 +3,8 @@
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useState, useEffect, useRef } from 'react';
-import { createNomination, createPaperNomination } from '@/lib/actions/nominations';
+import { useState, useEffect } from 'react';
+import { createNomination } from '@/lib/actions/nominations';
 import { getNominationFormData } from '@/lib/data/applications';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -20,13 +20,9 @@ import {
 } from '@/components/ui/select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { SearchableSelect } from '@/components/ui/searchable-select';
-import { XCircle, Loader2, Upload, FileText } from 'lucide-react';
+import { XCircle, Loader2 } from 'lucide-react';
 import { useUnsavedChangesWarning } from '@/lib/hooks/useUnsavedChangesWarning';
 import { toast } from 'sonner';
-
-// Constants
-const MAX_PDF_SIZE_MB = 10;
-const MAX_PDF_SIZE_BYTES = MAX_PDF_SIZE_MB * 1024 * 1024;
 
 const nominationSchema = z.object({
   fullName: z.string().min(1, 'Your full name is required'),
@@ -62,24 +58,8 @@ const nominationSchema = z.object({
 
 type NominationFormData = z.infer<typeof nominationSchema>;
 
-// PDF upload schema
-const pdfNominationSchema = z.object({
-  nominatorName: z.string().min(1, 'Your name is required'),
-  nominatorEmail: z
-    .string()
-    .min(1, 'Email is required')
-    .email('Valid email is required')
-    .refine(
-      (email) => email.endsWith('@northeastern.edu'),
-      'Email must be a @northeastern.edu address',
-    ),
-});
-
-type PdfNominationFormData = z.infer<typeof pdfNominationSchema>;
-
 export default function NominationsPage() {
   const router = useRouter();
-  const [submissionType, setSubmissionType] = useState<'online' | 'paper'>('online');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [nominees, setNominees] = useState<
@@ -91,9 +71,6 @@ export default function NominationsPage() {
   const [communityConstituencies, setCommunityConstituencies] = useState<
     Array<{ id: string; name: string }>
   >([]);
-  const [pdfFile, setPdfFile] = useState<File | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const {
     register,
@@ -115,24 +92,11 @@ export default function NominationsPage() {
     },
   });
 
-  const {
-    register: registerPdf,
-    handleSubmit: handleSubmitPdf,
-    formState: { errors: errorsPdf, isDirty: isDirtyPdf },
-    reset: resetPdf,
-  } = useForm<PdfNominationFormData>({
-    resolver: zodResolver(pdfNominationSchema),
-    defaultValues: {
-      nominatorName: '',
-      nominatorEmail: '',
-    },
-  });
-
   // Watch constituency type to show/hide community constituency field
   const constituencyType = watch('constituencyType');
 
   // Warn user about unsaved changes before leaving the page
-  const hasUnsavedChanges = (isDirty || isDirtyPdf || pdfFile !== null) && !isSubmitting;
+  const hasUnsavedChanges = isDirty && !isSubmitting;
   useUnsavedChangesWarning(hasUnsavedChanges);
 
   useEffect(() => {
@@ -151,32 +115,6 @@ export default function NominationsPage() {
     }
     fetchNominees();
   }, []);
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      // Validate file type
-      if (file.type !== 'application/pdf') {
-        setSubmitError('Only PDF files are allowed');
-        setPdfFile(null);
-        if (fileInputRef.current) {
-          fileInputRef.current.value = '';
-        }
-        return;
-      }
-      // Validate file size
-      if (file.size > MAX_PDF_SIZE_BYTES) {
-        setSubmitError(`File size must be less than ${MAX_PDF_SIZE_MB}MB`);
-        setPdfFile(null);
-        if (fileInputRef.current) {
-          fileInputRef.current.value = '';
-        }
-        return;
-      }
-      setPdfFile(file);
-      setSubmitError(null);
-    }
-  };
 
   const onSubmit = async (data: NominationFormData) => {
     setIsSubmitting(true);
@@ -199,71 +137,6 @@ export default function NominationsPage() {
     }
   };
 
-  const onSubmitPdf = async (data: PdfNominationFormData) => {
-    if (!pdfFile) {
-      setSubmitError('Please select a PDF file to upload');
-      return;
-    }
-
-    setIsSubmitting(true);
-    setIsUploading(true);
-    setSubmitError(null);
-
-    try {
-      // Upload PDF to storage
-      const formData = new FormData();
-      formData.append('pdf', pdfFile);
-
-      const uploadResponse = await fetch('/api/upload-nomination-form', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!uploadResponse.ok) {
-        const errorData = await uploadResponse.json();
-        
-        // Provide specific error messages based on response
-        if (uploadResponse.status === 400) {
-          throw new Error(errorData.error || 'Invalid file');
-        } else if (uploadResponse.status === 500) {
-          throw new Error('Server error while uploading file. Please try again.');
-        } else {
-          throw new Error(errorData.error || 'Failed to upload PDF');
-        }
-      }
-
-      const { url } = await uploadResponse.json();
-
-      // Create paper nomination record
-      const result = await createPaperNomination({
-        nominatorName: data.nominatorName,
-        nominatorEmail: data.nominatorEmail,
-        pdfUrl: url,
-      });
-
-      if (result.success) {
-        toast.success('Paper nomination submitted successfully!');
-        // Clear form and file
-        resetPdf();
-        setPdfFile(null);
-        if (fileInputRef.current) {
-          fileInputRef.current.value = '';
-        }
-        // Small delay to ensure state is cleared before navigation
-        setTimeout(() => {
-          router.push('/');
-        }, 100);
-      } else {
-        setSubmitError(result.error || 'Failed to submit paper nomination');
-      }
-    } catch (error) {
-      setSubmitError(error instanceof Error ? error.message : 'An unexpected error occurred');
-    } finally {
-      setIsSubmitting(false);
-      setIsUploading(false);
-    }
-  };
-
   return (
     <div>
       <div className="container max-w-4xl mx-auto py-3 sm:py-6 lg:py-8 px-3 sm:px-4">
@@ -275,9 +148,6 @@ export default function NominationsPage() {
             <p className="text-sm sm:text-base text-muted-foreground mt-2">
               Nominate a student to become a Senator in SGA's Senate and represent you. Nominations are an indication that you support your Nominee running to represent you; it is not a vote. You may nominate more than one person. You may only nominate students if you're their potential constituent.
             </p>
-            <p className="text-sm sm:text-base text-muted-foreground mt-2">
-              <strong>Important:</strong> You must submit all 30 nominations either fully online (one nomination at a time) or as one complete paper form upload containing all nominations.
-            </p>
           </CardHeader>
           <CardContent className="pt-6">
             {submitError && (
@@ -287,52 +157,14 @@ export default function NominationsPage() {
               </Alert>
             )}
 
-            {nomineesLoadError && submissionType === 'online' && (
+            {nomineesLoadError && (
               <Alert variant="destructive" className="mb-4">
                 <XCircle className="h-4 w-4" />
                 <AlertDescription>{nomineesLoadError}</AlertDescription>
               </Alert>
             )}
 
-            {/* Submission Type Selection */}
-            <Card className="border mb-6">
-              <CardContent className="pt-6">
-                <Label className="text-base font-semibold mb-3 block">
-                  Submission Method
-                </Label>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Button
-                    type="button"
-                    variant={submissionType === 'online' ? 'default' : 'outline'}
-                    onClick={() => setSubmissionType('online')}
-                    className="h-auto py-4 flex flex-col items-center gap-2"
-                    disabled={isSubmitting}
-                  >
-                    <FileText className="h-6 w-6" />
-                    <span className="font-semibold">Online Form</span>
-                    <span className="text-xs font-normal opacity-80">
-                      Submit nominations online (one at a time)
-                    </span>
-                  </Button>
-                  <Button
-                    type="button"
-                    variant={submissionType === 'paper' ? 'default' : 'outline'}
-                    onClick={() => setSubmissionType('paper')}
-                    className="h-auto py-4 flex flex-col items-center gap-2"
-                    disabled={isSubmitting}
-                  >
-                    <Upload className="h-6 w-6" />
-                    <span className="font-semibold">Upload Paper Form</span>
-                    <span className="text-xs font-normal opacity-80">
-                      Upload one PDF with all 30 nominations
-                    </span>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            {submissionType === 'online' ? (
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               {/* Nominator Information */}
               <Card className="border">
                 <CardContent className="pt-4 sm:pt-6 px-3 sm:px-6 pb-3 sm:pb-6">
@@ -560,124 +392,6 @@ export default function NominationsPage() {
                 )}
               </Button>
             </form>
-            ) : (
-              <form onSubmit={handleSubmitPdf(onSubmitPdf)} className="space-y-6">
-                {/* Paper Form Instructions */}
-                <Alert>
-                  <FileText className="h-4 w-4" />
-                  <AlertDescription>
-                    <p className="font-semibold mb-2">Paper Nomination Form Instructions:</p>
-                    <ol className="list-decimal list-inside space-y-1 text-sm">
-                      <li>Obtain a paper nomination form from the SGA office or download it from the{' '}
-                        <a 
-                          href="https://northeasternsga.com/senate-election" 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="text-primary hover:underline font-medium"
-                        >
-                          SGA website
-                        </a>
-                      </li>
-                      <li><strong>Collect all 30 nomination signatures</strong> on the paper form</li>
-                      <li>Complete and sign the form</li>
-                      <li>Scan the completed form as a PDF</li>
-                      <li>Upload the PDF file below (must contain all 30 nominations)</li>
-                    </ol>
-                  </AlertDescription>
-                </Alert>
-
-                {/* Nominator Information for PDF Upload */}
-                <Card className="border">
-                  <CardContent className="pt-4 sm:pt-6 px-3 sm:px-6 pb-3 sm:pb-6">
-                    <h3 className="text-xl font-bold border-b pb-2 mb-4">
-                      Nominee Information
-                    </h3>
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="nominatorName">Nominee's Full Name</Label>
-                        <Input
-                          id="nominatorName"
-                          {...registerPdf('nominatorName')}
-                          disabled={isSubmitting}
-                        />
-                        {errorsPdf.nominatorName && (
-                          <p className="text-sm text-destructive">
-                            {errorsPdf.nominatorName.message}
-                          </p>
-                        )}
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="nominatorEmail">Nominee's Northeastern Email</Label>
-                        <Input
-                          id="nominatorEmail"
-                          type="email"
-                          placeholder="nominee.email@northeastern.edu"
-                          {...registerPdf('nominatorEmail')}
-                          disabled={isSubmitting}
-                        />
-                        {errorsPdf.nominatorEmail && (
-                          <p className="text-sm text-destructive">
-                            {errorsPdf.nominatorEmail.message}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* PDF Upload */}
-                <Card className="border">
-                  <CardContent className="pt-4 sm:pt-6 px-3 sm:px-6 pb-3 sm:pb-6">
-                    <h3 className="text-xl font-bold border-b pb-2 mb-4">
-                      Upload Nomination Form
-                    </h3>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      <strong>Important:</strong> This PDF must include all 30 nominations for the nominee listed above.
-                    </p>
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="pdfFile">
-                          Nomination Form PDF (Max {MAX_PDF_SIZE_MB}MB)
-                        </Label>
-                        <Input
-                          id="pdfFile"
-                          type="file"
-                          accept="application/pdf"
-                          onChange={handleFileChange}
-                          ref={fileInputRef}
-                          disabled={isSubmitting}
-                        />
-                        {pdfFile && (
-                          <p className="text-sm text-muted-foreground flex items-center gap-2">
-                            <FileText className="h-4 w-4" />
-                            Selected: {pdfFile.name} ({(pdfFile.size / 1024 / 1024).toFixed(2)} MB)
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Button
-                  type="submit"
-                  className="w-full h-12 font-bold text-lg shadow-md hover:shadow-lg transition-shadow"
-                  disabled={isSubmitting || !pdfFile}
-                >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                      {isUploading ? 'Uploading...' : 'Submitting...'}
-                    </>
-                  ) : (
-                    <>
-                      <Upload className="mr-2 h-5 w-5" />
-                      Submit Paper Nomination
-                    </>
-                  )}
-                </Button>
-              </form>
-            )}
           </CardContent>
         </Card>
       </div>

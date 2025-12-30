@@ -9,13 +9,6 @@ const Status = {
   MANUAL_REVIEW: 'MANUAL_REVIEW',
 } as const;
 
-// Constants for paper nomination placeholders
-const PAPER_NOMINATION_CONSTANTS = {
-  NOMINEE: 'Paper Nomination - See PDF',
-  COLLEGE: 'See PDF',
-  MAJOR: 'See PDF',
-} as const;
-
 type NominationData = {
   fullName: string;
   email: string;
@@ -200,50 +193,6 @@ export async function bulkRejectNominations(ids: string[]) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Failed to reject nominations'
-    };
-  }
-}
-
-type PaperNominationData = {
-  nominatorName: string;
-  nominatorEmail: string;
-  pdfUrl: string;
-};
-
-export async function createPaperNomination(data: PaperNominationData) {
-  try {
-    // Validate PDF URL format
-    try {
-      new URL(data.pdfUrl);
-    } catch {
-      throw new Error('Invalid PDF URL provided');
-    }
-
-    // Create nomination with PDF URL and PENDING status
-    // For paper nominations, we store minimal info since details are in the PDF
-    await db.nomination.create({
-      data: {
-        fullName: data.nominatorName,
-        email: data.nominatorEmail,
-        nominee: PAPER_NOMINATION_CONSTANTS.NOMINEE,
-        college: PAPER_NOMINATION_CONSTANTS.COLLEGE,
-        major: PAPER_NOMINATION_CONSTANTS.MAJOR,
-        nominationFormPdfUrl: data.pdfUrl,
-        status: 'PENDING',
-      },
-    });
-
-    revalidatePath('/nominations');
-    revalidatePath('/admin');
-    revalidatePath('/admin/nominations');
-    revalidatePath('/dashboard');
-
-    return { success: true };
-  } catch (error) {
-    console.error('Error creating paper nomination:', error);
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Failed to create paper nomination'
     };
   }
 }

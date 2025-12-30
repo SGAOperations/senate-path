@@ -1,13 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Search, User, Vote, TrendingDown, AlertCircle, X } from 'lucide-react';
+import { Search, User, Vote, TrendingDown, AlertCircle, X, Upload, FileText, Download } from 'lucide-react';
 import { Application, Nomination, CommunityConstituency } from '@prisma/client';
+import { uploadNominationFormPDF, removeNominationFormPDF } from '@/lib/actions/applications';
+import { toast } from 'sonner';
 
 type NominationWithCommunity = Nomination & {
   communityConstituency: { name: string } | null;
@@ -35,6 +37,9 @@ export default function UserDashboard({ getApplicationByNuid }: UserDashboardPro
   const [applicantDetails, setApplicantDetails] = useState<ApplicationWithNominations | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [pdfFile, setPdfFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,6 +74,85 @@ export default function UserDashboard({ getApplicationByNuid }: UserDashboardPro
   const communityNominationCount = applicantDetails
     ? applicantDetails.nominations.filter(n => n.status === 'APPROVED' && n.constituencyType === 'community').length
     : 0;
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      if (file.type !== 'application/pdf') {
+        setError('Only PDF files are allowed');
+        setPdfFile(null);
+        if (fileInputRef.current) fileInputRef.current.value = '';
+        return;
+      }
+      const maxSize = 10 * 1024 * 1024; // 10MB
+      if (file.size > maxSize) {
+        setError('File size must be less than 10MB');
+        setPdfFile(null);
+        if (fileInputRef.current) fileInputRef.current.value = '';
+        return;
+      }
+      setPdfFile(file);
+      setError(null);
+    }
+  };
+
+  const handlePdfUpload = async () => {
+    if (!pdfFile || !applicantDetails) return;
+
+    setIsUploading(true);
+    setError(null);
+
+    try {
+      const formData = new FormData();
+      formData.append('pdf', pdfFile);
+      formData.append('nuid', applicantDetails.nuid);
+
+      const result = await uploadNominationFormPDF(formData);
+
+      if (result.success) {
+        toast.success('Nomination form PDF uploaded successfully!');
+        // Refresh the application data
+        const refreshed = await getApplicationByNuid(applicantDetails.nuid);
+        if (refreshed) {
+          setApplicantDetails(refreshed);
+        }
+        setPdfFile(null);
+        if (fileInputRef.current) fileInputRef.current.value = '';
+      } else {
+        setError(result.error || 'Failed to upload PDF');
+      }
+    } catch (error) {
+      setError('An unexpected error occurred');
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleRemovePdf = async () => {
+    if (!applicantDetails) return;
+
+    setIsUploading(true);
+    setError(null);
+
+    try {
+      const result = await removeNominationFormPDF(applicantDetails.nuid);
+
+      if (result.success) {
+        toast.success('Nomination form PDF removed successfully!');
+        // Refresh the application data
+        const refreshed = await getApplicationByNuid(applicantDetails.nuid);
+        if (refreshed) {
+          setApplicantDetails(refreshed);
+        }
+      } else {
+        setError(result.error || 'Failed to remove PDF');
+      }
+    } catch (error) {
+      setError('An unexpected error occurred');
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   return (
     <div>
@@ -253,6 +337,91 @@ export default function UserDashboard({ getApplicationByNuid }: UserDashboardPro
                   </div>
                 </div>
               </div>
+            </CardContent>
+          </Card>
+
+          {/* Paper Nomination Form Upload */}
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle className="text-2xl">Paper Nomination Form</CardTitle>
+              <p className="text-sm text-muted-foreground mt-2">
+                <strong>Alternative to online nominations:</strong> Upload a single PDF containing all 30 nomination signatures you collected from constituents.
+              </p>
+            </CardHeader>
+            <CardContent>
+              {applicantDetails.nominationFormPdfUrl ? (
+                <div className="space-y-4">
+                  <Alert>
+                    <FileText className="h-4 w-4" />
+                    <AlertDescription>
+                      <div className="flex items-center justify-between">
+                        <span>Your nomination form PDF has been uploaded.</span>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => window.open(applicantDetails.nominationFormPdfUrl!, '_blank', 'noopener,noreferrer')}
+                        >
+                          <Download className="h-4 w-4 mr-2" />
+                          View PDF
+                        </Button>
+                      </div>
+                    </AlertDescription>
+                  </Alert>
+                  <Button
+                    variant="destructive"
+                    onClick={handleRemovePdf}
+                    disabled={isUploading}
+                  >
+                    {isUploading ? 'Removing...' : 'Remove PDF'}
+                  </Button>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <Alert>
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription>
+                      <p className="font-semibold mb-2">Instructions:</p>
+                      <ol className="list-decimal list-inside space-y-1 text-sm">
+                        <li>Collect 30 nomination signatures from your constituents on a paper form</li>
+                        <li>Scan the completed form as a PDF</li>
+                        <li>Upload the PDF below (max 10MB)</li>
+                      </ol>
+                      <p className="mt-2 text-sm">
+                        <strong>Note:</strong> This is an alternative to having constituents submit nominations online. Choose either paper OR online nominations, not both.
+                      </p>
+                    </AlertDescription>
+                  </Alert>
+
+                  <div className="space-y-2">
+                    <label htmlFor="pdfFile" className="text-sm font-medium">
+                      Nomination Form PDF (Max 10MB)
+                    </label>
+                    <Input
+                      id="pdfFile"
+                      type="file"
+                      accept="application/pdf"
+                      onChange={handleFileChange}
+                      ref={fileInputRef}
+                      disabled={isUploading}
+                    />
+                    {pdfFile && (
+                      <p className="text-sm text-muted-foreground flex items-center gap-2">
+                        <FileText className="h-4 w-4" />
+                        Selected: {pdfFile.name} ({(pdfFile.size / 1024 / 1024).toFixed(2)} MB)
+                      </p>
+                    )}
+                  </div>
+
+                  <Button
+                    onClick={handlePdfUpload}
+                    disabled={!pdfFile || isUploading}
+                    className="w-full sm:w-auto"
+                  >
+                    <Upload className="h-4 w-4 mr-2" />
+                    {isUploading ? 'Uploading...' : 'Upload Nomination Form'}
+                  </Button>
+                </div>
+              )}
             </CardContent>
           </Card>
 

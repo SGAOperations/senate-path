@@ -22,7 +22,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Search, CheckCircle, XCircle, AlertCircle, Clock, Users, Download } from 'lucide-react';
+import { Search, CheckCircle, XCircle, AlertCircle, Clock, Users } from 'lucide-react';
 import { Nomination, CommunityConstituency } from '@prisma/client';
 import { approveNomination, rejectNomination, bulkApproveNominations, bulkRejectNominations } from '@/lib/actions/nominations';
 import { toast } from 'sonner';
@@ -356,7 +356,6 @@ export default function NominationsManager({ nominations: initialNominations }: 
                   <TableHead>Nominator</TableHead>
                   <TableHead>Constituency</TableHead>
                   <TableHead>Major(s)</TableHead>
-                  <TableHead>Type</TableHead>
                   <TableHead>Submitted</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
@@ -365,7 +364,7 @@ export default function NominationsManager({ nominations: initialNominations }: 
               <TableBody>
                 {filteredNominations.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={9} className="text-center text-muted-foreground py-8">
+                    <TableCell colSpan={8} className="text-center text-muted-foreground py-8">
                       No nominations found
                     </TableCell>
                   </TableRow>
@@ -392,34 +391,12 @@ export default function NominationsManager({ nominations: initialNominations }: 
                         {getConstituencyBadge(nom)}
                       </TableCell>
                       <TableCell className="text-sm">{nom.major}</TableCell>
-                      <TableCell>
-                        {nom.nominationFormPdfUrl ? (
-                          <Badge variant="secondary" className="text-xs">
-                            Paper
-                          </Badge>
-                        ) : (
-                          <Badge variant="outline" className="text-xs">
-                            Online
-                          </Badge>
-                        )}
-                      </TableCell>
                       <TableCell className="text-sm text-muted-foreground">
                         {new Date(nom.createdAt).toLocaleDateString()}
                       </TableCell>
                       <TableCell>{getStatusBadge(nom.status)}</TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-2">
-                          {nom.nominationFormPdfUrl && (
-                            <Button
-                              size="sm"
-                              onClick={() => window.open(nom.nominationFormPdfUrl!, '_blank', 'noopener,noreferrer')}
-                              variant="outline"
-                              className="border-blue-500 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950"
-                            >
-                              <Download className="h-3 w-3 mr-1" />
-                              PDF
-                            </Button>
-                          )}
                           {nom.status !== 'APPROVED' && (
                             <Button
                               size="sm"
