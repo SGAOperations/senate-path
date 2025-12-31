@@ -329,55 +329,6 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
 
                     <div className="border-t pt-4" />
 
-                    {/* Paper Nomination Form */}
-                    {selectedApplicant.nominationFormPdfUrl && (
-                      <>
-                        <div>
-                          <h3 className="text-lg font-bold mb-3">Paper Nomination Form</h3>
-                          <div className="space-y-4">
-                            <Alert>
-                              <AlertCircle className="h-4 w-4" />
-                              <AlertDescription>
-                                <div className="space-y-3">
-                                  <div>
-                                    <p className="font-semibold">Paper nomination form uploaded</p>
-                                    <p className="text-sm mt-1">This nominee submitted their 30 nomination signatures via PDF instead of online nominations.</p>
-                                  </div>
-                                  <div className="flex gap-2 flex-wrap">
-                                    <Button
-                                      variant="outline"
-                                      size="sm"
-                                      onClick={() => window.open(selectedApplicant.nominationFormPdfUrl!, '_blank', 'noopener,noreferrer')}
-                                    >
-                                      <Download className="h-4 w-4 mr-2" />
-                                      View PDF
-                                    </Button>
-                                    <Button
-                                      variant="destructive"
-                                      size="sm"
-                                      onClick={handleRemovePdf}
-                                      disabled={isRemovingPdf}
-                                    >
-                                      <Trash2 className="h-4 w-4 mr-2" />
-                                      {isRemovingPdf ? 'Removing...' : 'Remove PDF'}
-                                    </Button>
-                                  </div>
-                                </div>
-                              </AlertDescription>
-                            </Alert>
-                            
-                            <div className="bg-muted p-4 rounded-lg">
-                              <p className="text-sm text-muted-foreground">
-                                To reject this paper nomination, click "Remove PDF" above. The nominee will then be able to collect online nominations or upload a new paper form.
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="border-t pt-4" />
-                      </>
-                    )}
-
                     {/* Academic Information */}
                     <div>
                       <h3 className="text-lg font-bold mb-3">Academic Information</h3>
@@ -439,6 +390,54 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
                         </div>
                       </div>
                     </div>
+
+                    {/* Paper Nomination Form */}
+                    {selectedApplicant.nominationFormPdfUrl && (
+                      <>
+                        <div className="border-t pt-4" />
+                        <div>
+                          <h3 className="text-lg font-bold mb-3">Paper Nomination Form</h3>
+                          <div className="space-y-4">
+                            <Alert>
+                              <AlertCircle className="h-4 w-4" />
+                              <AlertDescription>
+                                <div className="space-y-3">
+                                  <div>
+                                    <p className="font-semibold">Paper nomination form uploaded</p>
+                                    <p className="text-sm mt-1">This nominee submitted their 30 nomination signatures via PDF instead of online nominations.</p>
+                                  </div>
+                                  <div className="flex gap-2 flex-wrap">
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      onClick={() => window.open(selectedApplicant.nominationFormPdfUrl!, '_blank', 'noopener,noreferrer')}
+                                    >
+                                      <Download className="h-4 w-4 mr-2" />
+                                      View PDF
+                                    </Button>
+                                    <Button
+                                      variant="destructive"
+                                      size="sm"
+                                      onClick={handleRemovePdf}
+                                      disabled={isRemovingPdf}
+                                    >
+                                      <Trash2 className="h-4 w-4 mr-2" />
+                                      {isRemovingPdf ? 'Removing...' : 'Remove PDF'}
+                                    </Button>
+                                  </div>
+                                </div>
+                              </AlertDescription>
+                            </Alert>
+                            
+                            <div className="bg-muted p-4 rounded-lg">
+                              <p className="text-sm text-muted-foreground">
+                                To reject this paper nomination, click "Remove PDF" above. The nominee will then be able to collect online nominations or upload a new paper form.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    )}
 
                     {/* Nominations */}
                     {applicantDetails && applicantDetails.nominations.length > 0 && (
