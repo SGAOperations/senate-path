@@ -37,7 +37,9 @@ export async function getApplicationByNuidWithNominations(nuid: string) {
     orderBy: { createdAt: 'desc' },
   });
 
-  const nominationCount = nominations.filter(n => n.status === 'APPROVED').length;
+  const nominationCount = nominations.filter(
+    (n) => n.status === 'APPROVED',
+  ).length;
 
   return {
     ...application,
@@ -75,7 +77,9 @@ export async function getApplicationWithNominations(id: string) {
     orderBy: { createdAt: 'desc' },
   });
 
-  const nominationCount = nominations.filter(n => n.status === 'APPROVED').length;
+  const nominationCount = nominations.filter(
+    (n) => n.status === 'APPROVED',
+  ).length;
 
   return {
     ...application,
@@ -115,16 +119,26 @@ export async function getApplicationsWithNominationCounts() {
         nominationCount,
         endorsementCount,
       };
-    })
+    }),
   );
 
   return applicationsWithCounts;
 }
 
 export async function getNominationFormData() {
-  const nominees = await db.application.findMany({
-    select: { fullName: true, email: true },
+  // Get all nominees (applications)
+  const allNominees = await db.application.findMany({
+    select: { 
+      fullName: true, 
+      email: true,
+      nominationFormPdfUrl: true 
+    },
   });
+
+  // Filter out nominees who have uploaded a paper nomination form
+  const nominees = allNominees
+    .filter(nominee => !nominee.nominationFormPdfUrl)
+    .map(({ fullName, email }) => ({ fullName, email }));
 
   const constituencies = await db.application.findMany({
     select: { constituency: true },
@@ -144,7 +158,9 @@ export async function getNominationFormData() {
   };
 }
 
-export async function createOrUpdateApplication(data: Omit<Application, 'id' | 'createdAt'>) {
+export async function createOrUpdateApplication(
+  data: Omit<Application, 'id' | 'createdAt' | 'nominationFormPdfUrl'>,
+) {
   const existing = await db.application.findUnique({
     where: { nuid: data.nuid },
   });
@@ -170,7 +186,10 @@ export async function createOrUpdateApplication(data: Omit<Application, 'id' | '
   });
 }
 
-export async function updateApplication(id: string, data: Partial<Application>) {
+export async function updateApplication(
+  id: string,
+  data: Partial<Application>,
+) {
   return db.application.update({
     where: { id },
     data,

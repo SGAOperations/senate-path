@@ -14,10 +14,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Search, User, Vote, TrendingUp, Download, AlertCircle, X } from 'lucide-react';
+import { Search, User, Vote, TrendingUp, Download, AlertCircle, X, Trash2 } from 'lucide-react';
 import { Application, Nomination, Endorsement, CommunityConstituency } from '@prisma/client';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { removeNominationFormPDF } from '@/lib/actions/applications';
+import { toast } from 'sonner';
 
 type NominationWithCommunity = Nomination & {
   communityConstituency: { name: string } | null;
@@ -54,6 +56,7 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
   const [applicantDetails, setApplicantDetails] = useState<ApplicationWithNominations | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isRemovingPdf, setIsRemovingPdf] = useState(false);
 
   const filteredApplications = applications.filter(
     (app) =>
@@ -75,6 +78,38 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
       setError('Failed to load applicant details. Please try again.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleRemovePdf = async () => {
+    if (!selectedApplicant) return;
+
+    if (!confirm('Are you sure you want to remove this paper nomination PDF? The nominee will be able to upload a new form or collect online nominations.')) {
+      return;
+    }
+
+    setIsRemovingPdf(true);
+    setError(null);
+
+    try {
+      const result = await removeNominationFormPDF(selectedApplicant.nuid);
+
+      if (result.success) {
+        toast.success('Paper nomination PDF removed successfully');
+        // Refresh the applicant details
+        const refreshed = await getApplicationDetails(selectedApplicant.id);
+        setApplicantDetails(refreshed);
+        // Also update selectedApplicant to remove the PDF URL
+        setSelectedApplicant({ ...selectedApplicant, nominationFormPdfUrl: null });
+      } else {
+        setError(result.error || 'Failed to remove PDF');
+        toast.error(result.error || 'Failed to remove PDF');
+      }
+    } catch (error) {
+      setError('An unexpected error occurred');
+      toast.error('An unexpected error occurred');
+    } finally {
+      setIsRemovingPdf(false);
     }
   };
 
@@ -197,9 +232,17 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
                             <Badge variant="outline" className="whitespace-nowrap">{app.constituency}</Badge>
                           </TableCell>
                           <TableCell className="text-center">
-                            <Badge variant={getNominationBadgeColor(app.nominationCount)}>
-                              {app.nominationCount}
-                            </Badge>
+                            {app.nominationFormPdfUrl ? (
+                              <Badge variant="info" className="text-xs">
+                                Paper Form
+                              </Badge>
+                            ) : app.nominationCount > 0 ? (
+                              <Badge variant={getNominationBadgeColor(app.nominationCount)}>
+                                {app.nominationCount}
+                              </Badge>
+                            ) : (
+                              <Badge variant="default">0</Badge>
+                            )}
                           </TableCell>
                           <TableCell className="text-center">
                             {app.endorsementCount > 0 ? (
@@ -225,9 +268,15 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
               <CardHeader>
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                   <CardTitle className="text-xl sm:text-2xl truncate">{selectedApplicant.fullName}</CardTitle>
-                  <Badge variant={getNominationBadgeColor(selectedApplicant.nominationCount)} className="text-sm self-start sm:self-auto">
-                    {selectedApplicant.nominationCount} Nominations
-                  </Badge>
+                  {selectedApplicant.nominationFormPdfUrl ? (
+                    <Badge variant="info" className="text-sm self-start sm:self-auto">
+                      Paper Form Uploaded
+                    </Badge>
+                  ) : (
+                    <Badge variant={getNominationBadgeColor(selectedApplicant.nominationCount)} className="text-sm self-start sm:self-auto">
+                      {selectedApplicant.nominationCount} Nominations
+                    </Badge>
+                  )}
                 </div>
               </CardHeader>
               <CardContent>
@@ -341,6 +390,54 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
                         </div>
                       </div>
                     </div>
+
+                    {/* Paper Nomination Form */}
+                    {selectedApplicant.nominationFormPdfUrl && (
+                      <>
+                        <div className="border-t pt-4" />
+                        <div>
+                          <h3 className="text-lg font-bold mb-3">Paper Nomination Form</h3>
+                          <div className="space-y-4">
+                            <Alert>
+                              <AlertCircle className="h-4 w-4" />
+                              <AlertDescription>
+                                <div className="space-y-3">
+                                  <div>
+                                    <p className="font-semibold">Paper nomination form uploaded</p>
+                                    <p className="text-sm mt-1">This nominee submitted their 30 nomination signatures via PDF instead of online nominations.</p>
+                                  </div>
+                                  <div className="flex gap-2 flex-wrap">
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      onClick={() => window.open(selectedApplicant.nominationFormPdfUrl!, '_blank', 'noopener,noreferrer')}
+                                    >
+                                      <Download className="h-4 w-4 mr-2" />
+                                      View PDF
+                                    </Button>
+                                    <Button
+                                      variant="destructive"
+                                      size="sm"
+                                      onClick={handleRemovePdf}
+                                      disabled={isRemovingPdf}
+                                    >
+                                      <Trash2 className="h-4 w-4 mr-2" />
+                                      {isRemovingPdf ? 'Removing...' : 'Remove PDF'}
+                                    </Button>
+                                  </div>
+                                </div>
+                              </AlertDescription>
+                            </Alert>
+                            
+                            <div className="bg-muted p-4 rounded-lg">
+                              <p className="text-sm text-muted-foreground">
+                                To reject this paper nomination, click "Remove PDF" above. The nominee will then be able to collect online nominations or upload a new paper form.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    )}
 
                     {/* Nominations */}
                     {applicantDetails && applicantDetails.nominations.length > 0 && (
