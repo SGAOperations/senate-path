@@ -37,6 +37,7 @@ model Application {
   diversityEquityInclusionLongAnswer String
   conflictSituationLongAnswer        String
   campaignBlurb                      String                 @default("")
+  nominationFormPdfUrl               String?
   createdAt                          DateTime               @default(now())
 
   @@map("applications")
