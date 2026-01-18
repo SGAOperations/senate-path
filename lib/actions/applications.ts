@@ -88,7 +88,8 @@ export async function submitApplication(formData: ApplicationData) {
 
 /**
  * Server action to upload a nomination form PDF and associate it with an application
- * This allows nominees to upload a single PDF containing all 30 nomination signatures
+ * TEMPORARY: Updated for Issue #148 - This allows nominees to upload a single PDF 
+ * containing all required nomination signatures (currently 15, originally 30)
  */
 export async function uploadNominationFormPDF(formData: FormData) {
   try {

@@ -10,6 +10,7 @@ import { User } from '@supabase/supabase-js';
 import { Button } from '@/components/ui/button';
 import { APP_VERSION } from '@/lib/version';
 import { ThemeToggle } from './ThemeToggle';
+import { ENDORSEMENT_REQUIRED } from '@/lib/config/requirements';
 
 export function Navbar() {
   const pathname = usePathname();
@@ -34,11 +35,12 @@ export function Navbar() {
     return () => subscription.unsubscribe();
   }, [supabase.auth]);
 
+  // TEMPORARY: Filter out Endorse link if endorsement not required (Issue #148)
   const baseNavLinks = [
     { href: '/', label: 'Home' },
     { href: '/applications', label: 'Apply' },
     { href: '/nominations', label: 'Nominate' },
-    { href: '/endorsements', label: 'Endorse' },
+    ...(ENDORSEMENT_REQUIRED ? [{ href: '/endorsements', label: 'Endorse' }] : []),
     { href: '/dashboard', label: 'Dashboard' },
   ];
 

@@ -26,6 +26,7 @@ import { Search, CheckCircle, XCircle, AlertCircle, Clock, Users } from 'lucide-
 import { Nomination, CommunityConstituency } from '@prisma/client';
 import { approveNomination, rejectNomination, bulkApproveNominations, bulkRejectNominations } from '@/lib/actions/nominations';
 import { toast } from 'sonner';
+import { MAX_COMMUNITY_NOMINATIONS } from '@/lib/config/requirements';
 
 type NominationWithCommunity = Nomination & {
   communityConstituency: { name: string } | null;
@@ -252,12 +253,12 @@ export default function NominationsManager({ nominations: initialNominations }: 
         </Card>
       </div>
 
-      {/* Warning about community nominations limit */}
-      {stats.communityApproved > 15 && (
+      {/* Warning about community nominations limit - TEMPORARY: Updated for Issue #148 */}
+      {stats.communityApproved > MAX_COMMUNITY_NOMINATIONS && (
         <Alert variant="destructive" className="mb-6">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
-            <strong>Warning:</strong> There are {stats.communityApproved} approved community constituency nominations. Only 15 nominations may come from the community constituencies.
+            <strong>Warning:</strong> There are {stats.communityApproved} approved community constituency nominations. Only {MAX_COMMUNITY_NOMINATIONS} nominations may come from the community constituencies.
           </AlertDescription>
         </Alert>
       )}
