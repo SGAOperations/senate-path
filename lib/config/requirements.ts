@@ -7,13 +7,16 @@
  * 1. Change REQUIRED_NOMINATIONS from 15 to 30
  * 2. Change MAX_COMMUNITY_NOMINATIONS from 7 to 15
  * 3. Change ENDORSEMENT_REQUIRED from false to true
- * 4. Update the temporary notices in app/page.tsx
- * 5. Re-enable endorsement button in components/Navbar.tsx
+ * 4. Optionally change SHOW_TEMPORARY_NOTICE from true to false
+ * 
+ * That's it! All UI components automatically update based on these values.
+ * See REVERT_INSTRUCTIONS.md in the project root for detailed information.
  * 
  * Original requirements (pre-Issue #148):
  * - REQUIRED_NOMINATIONS: 30
  * - MAX_COMMUNITY_NOMINATIONS: 15
  * - ENDORSEMENT_REQUIRED: true
+ * - SHOW_TEMPORARY_NOTICE: false
  */
 
 // TEMPORARY: Reduced from 30 to 15
