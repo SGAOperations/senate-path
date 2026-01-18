@@ -2,6 +2,9 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { REQUIRED_NOMINATIONS, MAX_COMMUNITY_NOMINATIONS, ENDORSEMENT_REQUIRED, SHOW_TEMPORARY_NOTICE } from '@/lib/config/requirements';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { AlertCircle } from 'lucide-react';
 
 export default function Home() {
   return (
@@ -35,13 +38,16 @@ export default function Home() {
             >
               <Link href="/nominations">Nominate</Link>
             </Button>
-            <Button
-              asChild
-              size="lg"
-              className="font-bold w-full sm:min-w-[150px] h-12 sm:h-14 text-base sm:text-lg bg-primary hover:bg-primary/90"
-            >
-              <Link href="/endorsements">Endorse</Link>
-            </Button>
+            {/* TEMPORARY: Endorsement disabled for Issue #148 - Remove this condition to re-enable */}
+            {ENDORSEMENT_REQUIRED && (
+              <Button
+                asChild
+                size="lg"
+                className="font-bold w-full sm:min-w-[150px] h-12 sm:h-14 text-base sm:text-lg bg-primary hover:bg-primary/90"
+              >
+                <Link href="/endorsements">Endorse</Link>
+              </Button>
+            )}
           </div>
         </div>
 
@@ -64,6 +70,16 @@ export default function Home() {
       {/* Steps Section */}
       <div className="bg-background py-12 sm:py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
+          {/* TEMPORARY NOTICE - Issue #148: Remove this block to restore normal requirements */}
+          {SHOW_TEMPORARY_NOTICE && (
+            <Alert className="mb-8 border-orange-500 bg-orange-50 dark:bg-orange-950/30">
+              <AlertCircle className="h-4 w-4 text-orange-600 dark:text-orange-500" />
+              <AlertDescription className="text-orange-800 dark:text-orange-300">
+                <strong>Updated Requirements:</strong> The nomination requirements have been temporarily reduced for this election cycle. Only {REQUIRED_NOMINATIONS} nominations are required (maximum {MAX_COMMUNITY_NOMINATIONS} from community constituency){ENDORSEMENT_REQUIRED ? '' : ', and the endorsement requirement has been temporarily waived'}.
+              </AlertDescription>
+            </Alert>
+          )}
+          
           <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-12 text-foreground">
             How to Become a Candidate
           </h2>
@@ -97,34 +113,37 @@ export default function Home() {
                 <h3 className="text-lg sm:text-xl font-semibold mb-2 text-foreground">
                   Gather Nominations
                 </h3>
+                {/* TEMPORARY: Updated text for Issue #148 - Original was 30 nominations, max 15 community */}
                 <p className="text-muted-foreground text-sm sm:text-base">
-                  You need 30 nominations from constituents. You can collect them in two ways: <strong>(1) Online</strong> - Share the <Link href="/nominations" className="text-primary hover:underline font-medium">nominations link</Link> with constituents to submit nominations individually, or <strong>(2) Paper</strong> - Collect signatures on a paper form and upload the PDF in your <Link href="/dashboard" className="text-primary hover:underline font-medium">dashboard</Link>. Choose one method, not both. Note: A maximum of 15 signatures can come from a community constituency.
+                  You need {REQUIRED_NOMINATIONS} nominations from constituents. You can collect them in two ways: <strong>(1) Online</strong> - Share the <Link href="/nominations" className="text-primary hover:underline font-medium">nominations link</Link> with constituents to submit nominations individually, or <strong>(2) Paper</strong> - Collect signatures on a paper form and upload the PDF in your <Link href="/dashboard" className="text-primary hover:underline font-medium">dashboard</Link>. Choose one method, not both. Note: A maximum of {MAX_COMMUNITY_NOMINATIONS} signatures can come from a community constituency.
                 </p>
               </div>
             </div>
 
-            {/* Step 3 */}
-            <div className="flex gap-4">
-              <div className="flex-shrink-0">
-                <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-primary text-primary-foreground font-bold text-lg sm:text-xl">
-                  3
+            {/* Step 3 - TEMPORARY: Hidden for Issue #148 when endorsement not required */}
+            {ENDORSEMENT_REQUIRED && (
+              <div className="flex gap-4">
+                <div className="flex-shrink-0">
+                  <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-primary text-primary-foreground font-bold text-lg sm:text-xl">
+                    3
+                  </div>
+                </div>
+                <div className="flex-1 pt-1">
+                  <h3 className="text-lg sm:text-xl font-semibold mb-2 text-foreground">
+                    Secure an Endorsement
+                  </h3>
+                  <p className="text-muted-foreground text-sm sm:text-base">
+                    Have a person of authority submit the <Link href="/endorsements" className="text-primary hover:underline font-medium">endorsement form</Link> on your behalf using the Endorse button above.
+                  </p>
                 </div>
               </div>
-              <div className="flex-1 pt-1">
-                <h3 className="text-lg sm:text-xl font-semibold mb-2 text-foreground">
-                  Secure an Endorsement
-                </h3>
-                <p className="text-muted-foreground text-sm sm:text-base">
-                  Have a person of authority submit the <Link href="/endorsements" className="text-primary hover:underline font-medium">endorsement form</Link> on your behalf using the Endorse button above.
-                </p>
-              </div>
-            </div>
+            )}
 
-            {/* Step 4 */}
+            {/* Step 4 (or 3 if endorsement not required) */}
             <div className="flex gap-4">
               <div className="flex-shrink-0">
                 <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-primary text-primary-foreground font-bold text-lg sm:text-xl">
-                  4
+                  {ENDORSEMENT_REQUIRED ? '4' : '3'}
                 </div>
               </div>
               <div className="flex-1 pt-1">

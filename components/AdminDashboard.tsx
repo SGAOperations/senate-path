@@ -20,6 +20,7 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { removeNominationFormPDF } from '@/lib/actions/applications';
 import { toast } from 'sonner';
+import { REQUIRED_NOMINATIONS, MAX_COMMUNITY_NOMINATIONS } from '@/lib/config/requirements';
 
 type NominationWithCommunity = Nomination & {
   communityConstituency: { name: string } | null;
@@ -43,10 +44,11 @@ interface AdminDashboardProps {
   getApplicationDetails: (id: string) => Promise<ApplicationWithNominations | null>;
 }
 
+// TEMPORARY: Updated thresholds for Issue #148 - Original was 30/25 for success/warning
 function getNominationBadgeColor(count: number): "success" | "warning" | "info" | "default" {
-  if (count >= 30) return "success";  // Green for 30+
-  if (count >= 25) return "warning";  // Yellow for 25-30
-  if (count >= 2) return "info";      // Orange for 2-24
+  if (count >= REQUIRED_NOMINATIONS) return "success";  // Green for meeting requirement
+  if (count >= Math.floor(REQUIRED_NOMINATIONS * 0.8)) return "warning";  // Yellow for 80%+
+  if (count >= 2) return "info";      // Orange for 2+
   return "default";                   // Gray for 0-1
 }
 
@@ -404,7 +406,8 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
                                 <div className="space-y-3">
                                   <div>
                                     <p className="font-semibold">Paper nomination form uploaded</p>
-                                    <p className="text-sm mt-1">This nominee submitted their 30 nomination signatures via PDF instead of online nominations.</p>
+                                    {/* TEMPORARY: Updated for Issue #148 - Original was "their 30 nomination signatures" */}
+                                    <p className="text-sm mt-1">This nominee submitted their {REQUIRED_NOMINATIONS} nomination signatures via PDF instead of online nominations.</p>
                                   </div>
                                   <div className="flex gap-2 flex-wrap">
                                     <Button
