@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useState, useMemo, useEffect, useRef } from 'react';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -63,6 +63,8 @@ function getConstituencyBadge(nom: NominationWithCommunity) {
 export default function NominationsManager({ nominations: initialNominations }: NominationsManagerProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const isInitialMount = useRef(true);
   
   // Initialize state from URL parameters
   const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
@@ -74,6 +76,12 @@ export default function NominationsManager({ nominations: initialNominations }: 
 
   // Sync state with URL parameters
   useEffect(() => {
+    // Skip URL update on initial mount to prevent redundant history operations
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+    
     const params = new URLSearchParams(searchParams.toString());
     
     if (searchTerm) {
@@ -100,9 +108,9 @@ export default function NominationsManager({ nominations: initialNominations }: 
       params.delete('sort');
     }
     
-    const newUrl = params.toString() ? `?${params.toString()}` : window.location.pathname;
+    const newUrl = params.toString() ? `${pathname}?${params.toString()}` : pathname;
     window.history.replaceState(null, '', newUrl);
-  }, [searchTerm, statusFilter, nomineeFilter, sortBy, searchParams]);
+  }, [searchTerm, statusFilter, nomineeFilter, sortBy, searchParams, pathname]);
 
   // Get unique nominees for filter
   const uniqueNominees = useMemo(() => {
