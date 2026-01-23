@@ -24,7 +24,7 @@ import {
 } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Search, CheckCircle, XCircle, AlertCircle, Clock, Users } from 'lucide-react';
-import { Nomination, CommunityConstituency } from '@prisma/client';
+import { Nomination, CommunityConstituency, NominationStatus } from '@prisma/client';
 import { approveNomination, rejectNomination, bulkApproveNominations, bulkRejectNominations } from '@/lib/actions/nominations';
 import { toast } from 'sonner';
 import { MAX_COMMUNITY_NOMINATIONS } from '@/lib/config/requirements';
@@ -68,7 +68,7 @@ export default function NominationsManager({ nominations: initialNominations }: 
   // Use optimistic updates for nominations
   const [optimisticNominations, updateOptimisticNominations] = useOptimistic(
     initialNominations,
-    (state, { id, status, ids }: { id?: string; status?: string; ids?: string[] }) => {
+    (state, { id, status, ids }: { id?: string; status?: NominationStatus; ids?: string[] }) => {
       if (ids && status) {
         // Bulk update
         return state.map(nom => 
@@ -203,7 +203,7 @@ export default function NominationsManager({ nominations: initialNominations }: 
   const handleApprove = async (id: string) => {
     setIsProcessing(true);
     // Optimistically update the UI
-    updateOptimisticNominations({ id, status: 'APPROVED' });
+    updateOptimisticNominations({ id, status: NominationStatus.APPROVED });
     
     const result = await approveNomination(id);
     setIsProcessing(false);
@@ -219,7 +219,7 @@ export default function NominationsManager({ nominations: initialNominations }: 
   const handleReject = async (id: string) => {
     setIsProcessing(true);
     // Optimistically update the UI
-    updateOptimisticNominations({ id, status: 'REJECTED' });
+    updateOptimisticNominations({ id, status: NominationStatus.REJECTED });
     
     const result = await rejectNomination(id);
     setIsProcessing(false);
@@ -238,7 +238,7 @@ export default function NominationsManager({ nominations: initialNominations }: 
     setIsProcessing(true);
     const ids = Array.from(selectedIds);
     // Optimistically update the UI
-    updateOptimisticNominations({ ids, status: 'APPROVED' });
+    updateOptimisticNominations({ ids, status: NominationStatus.APPROVED });
     
     const result = await bulkApproveNominations(ids);
     setIsProcessing(false);
@@ -258,7 +258,7 @@ export default function NominationsManager({ nominations: initialNominations }: 
     setIsProcessing(true);
     const ids = Array.from(selectedIds);
     // Optimistically update the UI
-    updateOptimisticNominations({ ids, status: 'REJECTED' });
+    updateOptimisticNominations({ ids, status: NominationStatus.REJECTED });
     
     const result = await bulkRejectNominations(ids);
     setIsProcessing(false);
