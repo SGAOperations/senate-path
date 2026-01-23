@@ -64,7 +64,7 @@ export default function NominationsManager({ nominations: initialNominations }: 
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const isInitialMount = useRef(true);
+  const isInitialMount = useRef(false);
   
   // Initialize state from URL parameters
   const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
@@ -77,12 +77,12 @@ export default function NominationsManager({ nominations: initialNominations }: 
   // Sync state with URL parameters
   useEffect(() => {
     // Skip URL update on initial mount to prevent redundant history operations
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
+    if (!isInitialMount.current) {
+      isInitialMount.current = true;
       return;
     }
     
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(searchParams);
     
     if (searchTerm) {
       params.set('search', searchTerm);
@@ -110,7 +110,7 @@ export default function NominationsManager({ nominations: initialNominations }: 
     
     const newUrl = params.toString() ? `${pathname}?${params.toString()}` : pathname;
     window.history.replaceState(null, '', newUrl);
-  }, [searchTerm, statusFilter, nomineeFilter, sortBy, searchParams, pathname]);
+  }, [searchTerm, statusFilter, nomineeFilter, sortBy, pathname]);
 
   // Get unique nominees for filter
   const uniqueNominees = useMemo(() => {
