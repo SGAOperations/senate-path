@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useMemo, useEffect, useRef } from 'react';
-import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+import { useState, useMemo, useEffect, useRef, useOptimistic } from 'react';
+import { useSearchParams, usePathname } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -61,10 +61,28 @@ function getConstituencyBadge(nom: NominationWithCommunity) {
 }
 
 export default function NominationsManager({ nominations: initialNominations }: NominationsManagerProps) {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const isInitialMount = useRef(false);
+  
+  // Use optimistic updates for nominations
+  const [optimisticNominations, updateOptimisticNominations] = useOptimistic(
+    initialNominations,
+    (state, { id, status, ids }: { id?: string; status?: string; ids?: string[] }) => {
+      if (ids && status) {
+        // Bulk update
+        return state.map(nom => 
+          ids.includes(nom.id) ? { ...nom, status } : nom
+        );
+      } else if (id && status) {
+        // Single update
+        return state.map(nom => 
+          nom.id === id ? { ...nom, status } : nom
+        );
+      }
+      return state;
+    }
+  );
   
   // Initialize state from URL parameters
   const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
@@ -114,27 +132,27 @@ export default function NominationsManager({ nominations: initialNominations }: 
 
   // Get unique nominees for filter
   const uniqueNominees = useMemo(() => {
-    const nominees = new Set(initialNominations.map(n => n.nominee));
+    const nominees = new Set(optimisticNominations.map(n => n.nominee));
     return Array.from(nominees).sort();
-  }, [initialNominations]);
+  }, [optimisticNominations]);
 
   // Compute stats
   const stats = useMemo(() => {
-    const total = initialNominations.length;
-    const pending = initialNominations.filter(n => n.status === 'PENDING').length;
-    const approved = initialNominations.filter(n => n.status === 'APPROVED').length;
-    const rejected = initialNominations.filter(n => n.status === 'REJECTED').length;
-    const communityApproved = initialNominations.filter(n => n.status === 'APPROVED' && n.constituencyType === 'community').length;
+    const total = optimisticNominations.length;
+    const pending = optimisticNominations.filter(n => n.status === 'PENDING').length;
+    const approved = optimisticNominations.filter(n => n.status === 'APPROVED').length;
+    const rejected = optimisticNominations.filter(n => n.status === 'REJECTED').length;
+    const communityApproved = optimisticNominations.filter(n => n.status === 'APPROVED' && n.constituencyType === 'community').length;
     
     // Count unique nominees
-    const uniqueNomineesCount = new Set(initialNominations.map(n => n.nominee)).size;
+    const uniqueNomineesCount = new Set(optimisticNominations.map(n => n.nominee)).size;
 
     return { total, pending, approved, rejected, communityApproved, uniqueNominees: uniqueNomineesCount };
-  }, [initialNominations]);
+  }, [optimisticNominations]);
 
   // Filter and sort nominations
   const filteredNominations = useMemo(() => {
-    let filtered = initialNominations.filter((nom) => {
+    let filtered = optimisticNominations.filter((nom) => {
       const matchesSearch = 
         nom.nominee.toLowerCase().includes(searchTerm.toLowerCase()) ||
         nom.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -162,7 +180,7 @@ export default function NominationsManager({ nominations: initialNominations }: 
     });
 
     return filtered;
-  }, [initialNominations, searchTerm, statusFilter, nomineeFilter, sortBy]);
+  }, [optimisticNominations, searchTerm, statusFilter, nomineeFilter, sortBy]);
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
@@ -184,12 +202,15 @@ export default function NominationsManager({ nominations: initialNominations }: 
 
   const handleApprove = async (id: string) => {
     setIsProcessing(true);
+    // Optimistically update the UI
+    updateOptimisticNominations({ id, status: 'APPROVED' });
+    
     const result = await approveNomination(id);
     setIsProcessing(false);
     
     if (result.success) {
       toast.success('Nomination approved successfully');
-      router.refresh();
+      // Server action already called revalidatePath, no need to refresh
     } else {
       toast.error(result.error || 'Failed to approve nomination');
     }
@@ -197,12 +218,15 @@ export default function NominationsManager({ nominations: initialNominations }: 
 
   const handleReject = async (id: string) => {
     setIsProcessing(true);
+    // Optimistically update the UI
+    updateOptimisticNominations({ id, status: 'REJECTED' });
+    
     const result = await rejectNomination(id);
     setIsProcessing(false);
     
     if (result.success) {
       toast.success('Nomination rejected successfully');
-      router.refresh();
+      // Server action already called revalidatePath, no need to refresh
     } else {
       toast.error(result.error || 'Failed to reject nomination');
     }
@@ -212,13 +236,17 @@ export default function NominationsManager({ nominations: initialNominations }: 
     if (selectedIds.size === 0) return;
     
     setIsProcessing(true);
-    const result = await bulkApproveNominations(Array.from(selectedIds));
+    const ids = Array.from(selectedIds);
+    // Optimistically update the UI
+    updateOptimisticNominations({ ids, status: 'APPROVED' });
+    
+    const result = await bulkApproveNominations(ids);
     setIsProcessing(false);
     
     if (result.success) {
       toast.success(`${selectedIds.size} nomination(s) approved successfully`);
       setSelectedIds(new Set());
-      router.refresh();
+      // Server action already called revalidatePath, no need to refresh
     } else {
       toast.error(result.error || 'Failed to approve nominations');
     }
@@ -228,13 +256,17 @@ export default function NominationsManager({ nominations: initialNominations }: 
     if (selectedIds.size === 0) return;
     
     setIsProcessing(true);
-    const result = await bulkRejectNominations(Array.from(selectedIds));
+    const ids = Array.from(selectedIds);
+    // Optimistically update the UI
+    updateOptimisticNominations({ ids, status: 'REJECTED' });
+    
+    const result = await bulkRejectNominations(ids);
     setIsProcessing(false);
     
     if (result.success) {
       toast.success(`${selectedIds.size} nomination(s) rejected successfully`);
       setSelectedIds(new Set());
-      router.refresh();
+      // Server action already called revalidatePath, no need to refresh
     } else {
       toast.error(result.error || 'Failed to reject nominations');
     }
