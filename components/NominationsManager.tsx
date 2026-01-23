@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -60,12 +61,48 @@ function getConstituencyBadge(nom: NominationWithCommunity) {
 }
 
 export default function NominationsManager({ nominations: initialNominations }: NominationsManagerProps) {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [nomineeFilter, setNomineeFilter] = useState<string>('all');
-  const [sortBy, setSortBy] = useState<'date' | 'nominee' | 'status'>('date');
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  
+  // Initialize state from URL parameters
+  const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
+  const [statusFilter, setStatusFilter] = useState<string>(searchParams.get('status') || 'all');
+  const [nomineeFilter, setNomineeFilter] = useState<string>(searchParams.get('nominee') || 'all');
+  const [sortBy, setSortBy] = useState<'date' | 'nominee' | 'status'>((searchParams.get('sort') as 'date' | 'nominee' | 'status') || 'date');
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [isProcessing, setIsProcessing] = useState(false);
+
+  // Sync state with URL parameters
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
+    
+    if (searchTerm) {
+      params.set('search', searchTerm);
+    } else {
+      params.delete('search');
+    }
+    
+    if (statusFilter !== 'all') {
+      params.set('status', statusFilter);
+    } else {
+      params.delete('status');
+    }
+    
+    if (nomineeFilter !== 'all') {
+      params.set('nominee', nomineeFilter);
+    } else {
+      params.delete('nominee');
+    }
+    
+    if (sortBy !== 'date') {
+      params.set('sort', sortBy);
+    } else {
+      params.delete('sort');
+    }
+    
+    const newUrl = params.toString() ? `?${params.toString()}` : window.location.pathname;
+    window.history.replaceState(null, '', newUrl);
+  }, [searchTerm, statusFilter, nomineeFilter, sortBy, searchParams]);
 
   // Get unique nominees for filter
   const uniqueNominees = useMemo(() => {
@@ -144,7 +181,7 @@ export default function NominationsManager({ nominations: initialNominations }: 
     
     if (result.success) {
       toast.success('Nomination approved successfully');
-      window.location.reload();
+      router.refresh();
     } else {
       toast.error(result.error || 'Failed to approve nomination');
     }
@@ -157,7 +194,7 @@ export default function NominationsManager({ nominations: initialNominations }: 
     
     if (result.success) {
       toast.success('Nomination rejected successfully');
-      window.location.reload();
+      router.refresh();
     } else {
       toast.error(result.error || 'Failed to reject nomination');
     }
@@ -173,7 +210,7 @@ export default function NominationsManager({ nominations: initialNominations }: 
     if (result.success) {
       toast.success(`${selectedIds.size} nomination(s) approved successfully`);
       setSelectedIds(new Set());
-      window.location.reload();
+      router.refresh();
     } else {
       toast.error(result.error || 'Failed to approve nominations');
     }
@@ -189,7 +226,7 @@ export default function NominationsManager({ nominations: initialNominations }: 
     if (result.success) {
       toast.success(`${selectedIds.size} nomination(s) rejected successfully`);
       setSelectedIds(new Set());
-      window.location.reload();
+      router.refresh();
     } else {
       toast.error(result.error || 'Failed to reject nominations');
     }
