@@ -38,7 +38,7 @@ export async function getApplicationByNuidWithNominations(nuid: string) {
   });
 
   const nominationCount = nominations.filter(
-    (n) => n.status === 'APPROVED',
+    (n) => n.status === 'APPROVED' || n.status === 'PENDING',
   ).length;
 
   return {
@@ -78,7 +78,7 @@ export async function getApplicationWithNominations(id: string) {
   });
 
   const nominationCount = nominations.filter(
-    (n) => n.status === 'APPROVED',
+    (n) => n.status === 'APPROVED' || n.status === 'PENDING',
   ).length;
 
   return {
@@ -104,7 +104,9 @@ export async function getApplicationsWithNominationCounts() {
       const nominationCount = await db.nomination.count({
         where: {
           nominee: app.fullName,
-          status: 'APPROVED',
+          status: {
+            in: ['APPROVED', 'PENDING'],
+          },
         },
       });
 
