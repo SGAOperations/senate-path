@@ -233,7 +233,7 @@ export default function UserDashboard({ getApplicationByNuid }: UserDashboardPro
                 ) : (
                   <>
                     <p className="text-3xl sm:text-4xl font-bold">{applicantDetails.nominationCount}</p>
-                    <p className="text-sm text-muted-foreground">approved nominations</p>
+                    <p className="text-sm text-muted-foreground">submitted nominations</p>
                   </>
                 )}
               </CardContent>
