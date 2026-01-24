@@ -142,20 +142,13 @@ export default function NominationsManager({ nominations: initialNominations }: 
     const pending = optimisticNominations.filter(n => n.status === 'PENDING').length;
     const approved = optimisticNominations.filter(n => n.status === 'APPROVED').length;
     const rejected = optimisticNominations.filter(n => n.status === 'REJECTED').length;
-    const communityApproved = optimisticNominations.filter(n => n.status === 'APPROVED' && n.constituencyType === 'community').length;
-    const total = initialNominations.length;
-    const pending = initialNominations.filter(n => n.status === 'PENDING').length;
-    const approved = initialNominations.filter(n => n.status === 'APPROVED').length;
-    const rejected = initialNominations.filter(n => n.status === 'REJECTED').length;
     
     // Count unique nominees
     const uniqueNomineesCount = new Set(optimisticNominations.map(n => n.nominee)).size;
 
-    return { total, pending, approved, rejected, communityApproved, uniqueNominees: uniqueNomineesCount };
-  }, [optimisticNominations]);
     // Calculate per-nominee community constituency counts
     const nomineeCommunityCountsMap = new Map<string, number>();
-    initialNominations
+    optimisticNominations
       .filter(n => n.status === 'APPROVED' && n.constituencyType === 'community')
       .forEach(n => {
         nomineeCommunityCountsMap.set(n.nominee, (nomineeCommunityCountsMap.get(n.nominee) || 0) + 1);
@@ -170,7 +163,7 @@ export default function NominationsManager({ nominations: initialNominations }: 
     });
 
     return { total, pending, approved, rejected, uniqueNominees: uniqueNomineesCount, nomineesOverLimit };
-  }, [initialNominations]);
+  }, [optimisticNominations]);
 
   // Filter and sort nominations
   const filteredNominations = useMemo(() => {
