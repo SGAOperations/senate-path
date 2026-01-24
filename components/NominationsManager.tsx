@@ -143,12 +143,34 @@ export default function NominationsManager({ nominations: initialNominations }: 
     const approved = optimisticNominations.filter(n => n.status === 'APPROVED').length;
     const rejected = optimisticNominations.filter(n => n.status === 'REJECTED').length;
     const communityApproved = optimisticNominations.filter(n => n.status === 'APPROVED' && n.constituencyType === 'community').length;
+    const total = initialNominations.length;
+    const pending = initialNominations.filter(n => n.status === 'PENDING').length;
+    const approved = initialNominations.filter(n => n.status === 'APPROVED').length;
+    const rejected = initialNominations.filter(n => n.status === 'REJECTED').length;
     
     // Count unique nominees
     const uniqueNomineesCount = new Set(optimisticNominations.map(n => n.nominee)).size;
 
     return { total, pending, approved, rejected, communityApproved, uniqueNominees: uniqueNomineesCount };
   }, [optimisticNominations]);
+    // Calculate per-nominee community constituency counts
+    const nomineeCommunityCountsMap = new Map<string, number>();
+    initialNominations
+      .filter(n => n.status === 'APPROVED' && n.constituencyType === 'community')
+      .forEach(n => {
+        nomineeCommunityCountsMap.set(n.nominee, (nomineeCommunityCountsMap.get(n.nominee) || 0) + 1);
+      });
+
+    // Find nominees exceeding the community constituency limit
+    const nomineesOverLimit: string[] = [];
+    nomineeCommunityCountsMap.forEach((count, nominee) => {
+      if (count > MAX_COMMUNITY_NOMINATIONS) {
+        nomineesOverLimit.push(nominee);
+      }
+    });
+
+    return { total, pending, approved, rejected, uniqueNominees: uniqueNomineesCount, nomineesOverLimit };
+  }, [initialNominations]);
 
   // Filter and sort nominations
   const filteredNominations = useMemo(() => {
@@ -331,11 +353,11 @@ export default function NominationsManager({ nominations: initialNominations }: 
       </div>
 
       {/* Warning about community nominations limit - TEMPORARY: Updated for Issue #148 */}
-      {stats.communityApproved > MAX_COMMUNITY_NOMINATIONS && (
+      {stats.nomineesOverLimit.length > 0 && (
         <Alert variant="destructive" className="mb-6">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
-            <strong>Warning:</strong> There are {stats.communityApproved} approved community constituency nominations. Only {MAX_COMMUNITY_NOMINATIONS} nominations may come from the community constituencies.
+            <strong>Warning:</strong> The following nominee(s) have more than {MAX_COMMUNITY_NOMINATIONS} approved community constituency nominations: <strong>{stats.nomineesOverLimit.join(', ')}</strong>. Each nominee may only have a maximum of {MAX_COMMUNITY_NOMINATIONS} nominations from community constituencies.
           </AlertDescription>
         </Alert>
       )}
