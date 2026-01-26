@@ -89,3 +89,18 @@ model CommunityConstituency {
 
   @@map("community_constituencies")
 }
+
+model Settings {
+  id                            String    @id @default(uuid())
+  requiredNominations           Int       @default(15)
+  maxCommunityNominations       Int       @default(7)
+  endorsementRequired           Boolean   @default(false)
+  applicationDeadline           DateTime?
+  applicationsOpen              Boolean   @default(true)
+  nominationsOpen               Boolean   @default(true)
+  customMessage                 String?
+  createdAt                     DateTime  @default(now())
+  updatedAt                     DateTime  @updatedAt
+
+  @@map("settings")
+}

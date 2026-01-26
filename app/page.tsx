@@ -1,12 +1,29 @@
-'use client';
-
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { REQUIRED_NOMINATIONS, MAX_COMMUNITY_NOMINATIONS, ENDORSEMENT_REQUIRED, SHOW_TEMPORARY_NOTICE } from '@/lib/config/requirements';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, Calendar } from 'lucide-react';
+import { getSettings } from '@/lib/data/settings';
 
-export default function Home() {
+export default async function Home() {
+  const settings = await getSettings();
+  
+  // Check if deadline has passed
+  const now = new Date();
+  const deadlinePassed = settings.applicationDeadline && new Date(settings.applicationDeadline) < now;
+  
+  // Format deadline for display
+  const formatDeadline = (date: Date) => {
+    return new Intl.DateTimeFormat('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      timeZoneName: 'short'
+    }).format(date);
+  };
+
   return (
     <div className="h-full overflow-y-auto">
       {/* Hero Section */}
@@ -23,23 +40,41 @@ export default function Home() {
             NORTHEASTERN'S STUDENT GOVERNMENT ASSOCIATION
           </h2>
 
+          {/* Deadline Display */}
+          {settings.applicationDeadline && (
+            <div className="mt-2 px-4 py-2 bg-background/90 backdrop-blur-sm rounded-lg shadow-lg border border-border">
+              <div className="flex items-center gap-2 text-foreground">
+                <Calendar className="h-5 w-5" />
+                <div className="text-left">
+                  <p className="text-xs font-semibold">Application Deadline:</p>
+                  <p className="text-sm font-bold">
+                    {formatDeadline(new Date(settings.applicationDeadline))}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="flex flex-col sm:flex-row gap-3 mt-2 sm:mt-4 w-full max-w-md px-2 sm:px-0">
-            <Button
-              asChild
-              size="lg"
-              className="font-bold w-full sm:min-w-[150px] h-12 sm:h-14 text-base sm:text-lg bg-primary hover:bg-primary/90"
-            >
-              <Link href="/applications">Apply</Link>
-            </Button>
-            <Button
-              asChild
-              size="lg"
-              className="font-bold w-full sm:min-w-[150px] h-12 sm:h-14 text-base sm:text-lg bg-primary hover:bg-primary/90"
-            >
-              <Link href="/nominations">Nominate</Link>
-            </Button>
-            {/* TEMPORARY: Endorsement disabled for Issue #148 - Remove this condition to re-enable */}
-            {ENDORSEMENT_REQUIRED && (
+            {settings.applicationsOpen && !deadlinePassed && (
+              <Button
+                asChild
+                size="lg"
+                className="font-bold w-full sm:min-w-[150px] h-12 sm:h-14 text-base sm:text-lg bg-primary hover:bg-primary/90"
+              >
+                <Link href="/applications">Apply</Link>
+              </Button>
+            )}
+            {settings.nominationsOpen && (
+              <Button
+                asChild
+                size="lg"
+                className="font-bold w-full sm:min-w-[150px] h-12 sm:h-14 text-base sm:text-lg bg-primary hover:bg-primary/90"
+              >
+                <Link href="/nominations">Nominate</Link>
+              </Button>
+            )}
+            {settings.endorsementRequired && (
               <Button
                 asChild
                 size="lg"
@@ -48,6 +83,8 @@ export default function Home() {
                 <Link href="/endorsements">Endorse</Link>
               </Button>
             )}
+          </div>
+        </div>
           </div>
         </div>
 
@@ -70,12 +107,22 @@ export default function Home() {
       {/* Steps Section */}
       <div className="bg-background py-12 sm:py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
-          {/* TEMPORARY NOTICE - Issue #148: Remove this block to restore normal requirements */}
-          {SHOW_TEMPORARY_NOTICE && (
-            <Alert className="mb-8 border-orange-500 bg-orange-50 dark:bg-orange-950/30">
-              <AlertCircle className="h-4 w-4 text-orange-600 dark:text-orange-500" />
-              <AlertDescription className="text-orange-800 dark:text-orange-300">
-                <strong>Updated Requirements:</strong> The nomination requirements have been temporarily reduced for this election cycle. Only {REQUIRED_NOMINATIONS} nominations are required (maximum {MAX_COMMUNITY_NOMINATIONS} from community constituency){ENDORSEMENT_REQUIRED ? '' : ', and the endorsement requirement has been temporarily waived'}.
+          {/* Custom Message */}
+          {settings.customMessage && (
+            <Alert className="mb-8 border-blue-500 bg-blue-50 dark:bg-blue-950/30">
+              <AlertCircle className="h-4 w-4 text-blue-600 dark:text-blue-500" />
+              <AlertDescription className="text-blue-800 dark:text-blue-300 whitespace-pre-wrap">
+                {settings.customMessage}
+              </AlertDescription>
+            </Alert>
+          )}
+          
+          {/* Closed Notice */}
+          {(!settings.applicationsOpen || deadlinePassed) && (
+            <Alert className="mb-8 border-red-500 bg-red-50 dark:bg-red-950/30">
+              <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-500" />
+              <AlertDescription className="text-red-800 dark:text-red-300">
+                <strong>Applications Closed:</strong> {deadlinePassed ? 'The application deadline has passed.' : 'Applications are currently closed.'}
               </AlertDescription>
             </Alert>
           )}
@@ -97,7 +144,11 @@ export default function Home() {
                   Complete Your Application
                 </h3>
                 <p className="text-muted-foreground text-sm sm:text-base">
-                  Click <Link href="/applications" className="text-primary hover:underline font-medium">Apply</Link> to fill out and submit your application for Senate candidacy.
+                  {settings.applicationsOpen && !deadlinePassed ? (
+                    <>Click <Link href="/applications" className="text-primary hover:underline font-medium">Apply</Link> to fill out and submit your application for Senate candidacy.</>
+                  ) : (
+                    <>Applications are currently closed.</>
+                  )}
                 </p>
               </div>
             </div>
@@ -113,15 +164,14 @@ export default function Home() {
                 <h3 className="text-lg sm:text-xl font-semibold mb-2 text-foreground">
                   Gather Nominations
                 </h3>
-                {/* TEMPORARY: Updated text for Issue #148 - Original was 30 nominations, max 15 community */}
                 <p className="text-muted-foreground text-sm sm:text-base">
-                  You need {REQUIRED_NOMINATIONS} nominations from constituents. You can collect them in two ways: <strong>(1) Online</strong> - Share the <Link href="/nominations" className="text-primary hover:underline font-medium">nominations link</Link> with constituents to submit nominations individually, or <strong>(2) Paper</strong> - Collect signatures on a paper form and upload the PDF in your <Link href="/dashboard" className="text-primary hover:underline font-medium">dashboard</Link>. Choose one method, not both. Note: A maximum of {MAX_COMMUNITY_NOMINATIONS} signatures can come from a community constituency.
+                  You need {settings.requiredNominations} nominations from constituents. You can collect them in two ways: <strong>(1) Online</strong> - Share the {settings.nominationsOpen ? <Link href="/nominations" className="text-primary hover:underline font-medium">nominations link</Link> : 'nominations link'} with constituents to submit nominations individually, or <strong>(2) Paper</strong> - Collect signatures on a paper form and upload the PDF in your <Link href="/dashboard" className="text-primary hover:underline font-medium">dashboard</Link>. Choose one method, not both. Note: A maximum of {settings.maxCommunityNominations} signatures can come from a community constituency.
                 </p>
               </div>
             </div>
 
-            {/* Step 3 - TEMPORARY: Hidden for Issue #148 when endorsement not required */}
-            {ENDORSEMENT_REQUIRED && (
+            {/* Step 3 - Only show if endorsement is required */}
+            {settings.endorsementRequired && (
               <div className="flex gap-4">
                 <div className="flex-shrink-0">
                   <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-primary text-primary-foreground font-bold text-lg sm:text-xl">
@@ -143,7 +193,7 @@ export default function Home() {
             <div className="flex gap-4">
               <div className="flex-shrink-0">
                 <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-primary text-primary-foreground font-bold text-lg sm:text-xl">
-                  {ENDORSEMENT_REQUIRED ? '4' : '3'}
+                  {settings.endorsementRequired ? '4' : '3'}
                 </div>
               </div>
               <div className="flex-1 pt-1">
