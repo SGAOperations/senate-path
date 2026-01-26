@@ -16,6 +16,9 @@ import { Settings } from '@/lib/data/settings';
 import { toast } from 'sonner';
 import { Loader2, Save, AlertCircle } from 'lucide-react';
 
+// Validation limits for nomination requirements
+// Max 100 is chosen as a reasonable upper limit for manual nomination collection
+// while still allowing flexibility for different election cycles
 const settingsSchema = z.object({
   requiredNominations: z.number().min(1).max(100),
   maxCommunityNominations: z.number().min(0).max(100),

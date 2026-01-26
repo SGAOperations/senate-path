@@ -19,6 +19,11 @@ export interface Settings {
 /**
  * Get the application settings. If no settings exist, create default settings.
  * This is cached to reduce database queries.
+ * 
+ * Note: This implementation uses findFirst() and assumes a single settings record.
+ * While the database schema allows multiple records, the application logic ensures
+ * only one record is created and used. If needed, a unique constraint could be added
+ * to enforce this at the database level, or we could use a fixed ID.
  */
 export const getSettings = cache(async (): Promise<Settings> => {
   try {
