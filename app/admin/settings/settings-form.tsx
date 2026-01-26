@@ -17,8 +17,8 @@ import { toast } from 'sonner';
 import { Loader2, Save, AlertCircle } from 'lucide-react';
 
 const settingsSchema = z.object({
-  requiredNominations: z.coerce.number().min(1).max(100),
-  maxCommunityNominations: z.coerce.number().min(0).max(100),
+  requiredNominations: z.number().min(1).max(100),
+  maxCommunityNominations: z.number().min(0).max(100),
   endorsementRequired: z.boolean(),
   applicationDeadline: z.string().optional(),
   applicationsOpen: z.boolean(),
@@ -117,7 +117,7 @@ export default function SettingsForm({ settings }: SettingsFormProps) {
                 type="number"
                 min="1"
                 max="100"
-                {...register('requiredNominations')}
+                {...register('requiredNominations', { valueAsNumber: true })}
                 disabled={isSubmitting}
               />
               {errors.requiredNominations && (
@@ -139,7 +139,7 @@ export default function SettingsForm({ settings }: SettingsFormProps) {
                 type="number"
                 min="0"
                 max="100"
-                {...register('maxCommunityNominations')}
+                {...register('maxCommunityNominations', { valueAsNumber: true })}
                 disabled={isSubmitting}
               />
               {errors.maxCommunityNominations && (
