@@ -2,12 +2,13 @@
 
 import { db } from '@/lib/db';
 import { cache } from 'react';
+import { EndorsementStatus } from '@prisma/client';
 
 export interface Settings {
   id: string;
   requiredNominations: number;
   maxCommunityNominations: number;
-  endorsementRequired: boolean;
+  endorsementStatus: EndorsementStatus;
   applicationDeadline: Date | null;
   applicationsOpen: boolean;
   nominationsOpen: boolean;
@@ -36,7 +37,7 @@ export const getSettings = cache(async (): Promise<Settings> => {
         data: {
           requiredNominations: 15,
           maxCommunityNominations: 7,
-          endorsementRequired: false,
+          endorsementStatus: 'NOT_REQUIRED',
           applicationsOpen: true,
           nominationsOpen: true,
         },
@@ -51,7 +52,7 @@ export const getSettings = cache(async (): Promise<Settings> => {
       id: 'default',
       requiredNominations: 15,
       maxCommunityNominations: 7,
-      endorsementRequired: false,
+      endorsementStatus: 'NOT_REQUIRED' as EndorsementStatus,
       applicationDeadline: null,
       applicationsOpen: true,
       nominationsOpen: true,

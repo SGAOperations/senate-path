@@ -74,7 +74,7 @@ export default async function Home() {
                 <Link href="/nominations">Nominate</Link>
               </Button>
             )}
-            {settings.endorsementRequired && (
+            {settings.endorsementStatus !== 'CLOSED' && (
               <Button
                 asChild
                 size="lg"
@@ -169,7 +169,7 @@ export default async function Home() {
             </div>
 
             {/* Step 3 - Only show if endorsement is required */}
-            {settings.endorsementRequired && (
+            {settings.endorsementStatus === 'REQUIRED' && (
               <div className="flex gap-4">
                 <div className="flex-shrink-0">
                   <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-primary text-primary-foreground font-bold text-lg sm:text-xl">
@@ -191,7 +191,7 @@ export default async function Home() {
             <div className="flex gap-4">
               <div className="flex-shrink-0">
                 <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-primary text-primary-foreground font-bold text-lg sm:text-xl">
-                  {settings.endorsementRequired ? '4' : '3'}
+                  {settings.endorsementStatus === 'REQUIRED' ? '4' : '3'}
                 </div>
               </div>
               <div className="flex-1 pt-1">

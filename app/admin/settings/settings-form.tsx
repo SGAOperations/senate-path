@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,10 +11,18 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { updateSettings, UpdateSettingsData } from '@/lib/actions/settings';
 import { Settings } from '@/lib/data/settings';
 import { toast } from 'sonner';
 import { Loader2, Save, AlertCircle } from 'lucide-react';
+import { EndorsementStatus } from '@prisma/client';
 
 // Validation limits for nomination requirements
 // Max 100 is chosen as a reasonable upper limit for manual nomination collection
@@ -22,7 +30,7 @@ import { Loader2, Save, AlertCircle } from 'lucide-react';
 const settingsSchema = z.object({
   requiredNominations: z.number().min(1).max(100),
   maxCommunityNominations: z.number().min(0).max(100),
-  endorsementRequired: z.boolean(),
+  endorsementStatus: z.enum(['REQUIRED', 'NOT_REQUIRED', 'CLOSED']),
   applicationDeadline: z.string().optional(),
   applicationsOpen: z.boolean(),
   nominationsOpen: z.boolean(),
@@ -45,12 +53,13 @@ export default function SettingsForm({ settings }: SettingsFormProps) {
     formState: { errors, isDirty },
     watch,
     setValue,
+    control,
   } = useForm<SettingsFormData>({
     resolver: zodResolver(settingsSchema),
     defaultValues: {
       requiredNominations: settings.requiredNominations,
       maxCommunityNominations: settings.maxCommunityNominations,
-      endorsementRequired: settings.endorsementRequired,
+      endorsementStatus: settings.endorsementStatus,
       applicationDeadline: settings.applicationDeadline
         ? new Date(settings.applicationDeadline).toISOString().slice(0, 16)
         : '',
@@ -60,7 +69,7 @@ export default function SettingsForm({ settings }: SettingsFormProps) {
     },
   });
 
-  const endorsementRequired = watch('endorsementRequired');
+  const endorsementStatus = watch('endorsementStatus');
   const applicationsOpen = watch('applicationsOpen');
   const nominationsOpen = watch('nominationsOpen');
 
@@ -72,7 +81,7 @@ export default function SettingsForm({ settings }: SettingsFormProps) {
       const updateData: UpdateSettingsData = {
         requiredNominations: data.requiredNominations,
         maxCommunityNominations: data.maxCommunityNominations,
-        endorsementRequired: data.endorsementRequired,
+        endorsementStatus: data.endorsementStatus as EndorsementStatus,
         applicationDeadline: data.applicationDeadline
           ? new Date(data.applicationDeadline)
           : null,
@@ -156,28 +165,44 @@ export default function SettingsForm({ settings }: SettingsFormProps) {
             </div>
           </div>
 
-          <div className="flex items-start space-x-3 pt-2">
-            <Checkbox
-              id="endorsementRequired"
-              checked={endorsementRequired}
-              onCheckedChange={(checked) =>
-                setValue('endorsementRequired', checked === true, {
-                  shouldDirty: true,
-                })
-              }
-              disabled={isSubmitting}
+          <div className="space-y-2">
+            <Label htmlFor="endorsementStatus">
+              Endorsement Status
+            </Label>
+            <Controller
+              name="endorsementStatus"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  value={field.value}
+                  onValueChange={field.onChange}
+                  disabled={isSubmitting}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select endorsement status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="REQUIRED">
+                      Endorsements Required
+                    </SelectItem>
+                    <SelectItem value="NOT_REQUIRED">
+                      Endorsements Not Required
+                    </SelectItem>
+                    <SelectItem value="CLOSED">
+                      Endorsements No Longer Accepted
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
             />
-            <div className="space-y-1">
-              <Label
-                htmlFor="endorsementRequired"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                Require Endorsement
-              </Label>
-              <p className="text-sm text-muted-foreground">
-                When enabled, applicants must receive an endorsement to complete their application
+            {errors.endorsementStatus && (
+              <p className="text-sm text-destructive">
+                {errors.endorsementStatus.message}
               </p>
-            </div>
+            )}
+            <p className="text-sm text-muted-foreground">
+              Control whether endorsements are required, optional, or closed for this election cycle
+            </p>
           </div>
         </CardContent>
       </Card>

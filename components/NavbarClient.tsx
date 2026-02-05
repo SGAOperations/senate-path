@@ -43,7 +43,7 @@ export function NavbarClient({ settings }: NavbarClientProps) {
     { href: '/', label: 'Home' },
     ...(settings.applicationsOpen ? [{ href: '/applications', label: 'Apply' }] : []),
     ...(settings.nominationsOpen ? [{ href: '/nominations', label: 'Nominate' }] : []),
-    ...(settings.endorsementRequired ? [{ href: '/endorsements', label: 'Endorse' }] : []),
+    ...(settings.endorsementStatus !== 'CLOSED' ? [{ href: '/endorsements', label: 'Endorse' }] : []),
     { href: '/dashboard', label: 'Dashboard' },
   ];
 
