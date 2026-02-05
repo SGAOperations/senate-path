@@ -35,7 +35,13 @@ const settingsSchema = z.object({
   applicationsOpen: z.boolean(),
   nominationsOpen: z.boolean(),
   customMessage: z.string().optional(),
-});
+}).refine(
+  (data) => data.maxCommunityNominations <= data.requiredNominations,
+  {
+    message: 'Max community nominations cannot exceed total required nominations',
+    path: ['maxCommunityNominations'],
+  }
+);
 
 type SettingsFormData = z.infer<typeof settingsSchema>;
 
@@ -160,7 +166,7 @@ export default function SettingsForm({ settings }: SettingsFormProps) {
                 </p>
               )}
               <p className="text-sm text-muted-foreground">
-                Maximum number of nominations that can come from community constituencies
+                Maximum number of nominations that can come from community constituencies (cannot exceed total required nominations)
               </p>
             </div>
           </div>
