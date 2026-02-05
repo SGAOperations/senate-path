@@ -95,7 +95,7 @@ model Settings {
   requiredNominations           Int       @default(15)
   maxCommunityNominations       Int       @default(7)
   endorsementRequired           Boolean   @default(false)
-  endorsementsClosed            Boolean   @default(false)
+  endorsementsOpen              Boolean   @default(true)
   applicationDeadline           DateTime?
   applicationsOpen              Boolean   @default(true)
   nominationsOpen               Boolean   @default(true)

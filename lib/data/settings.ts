@@ -8,7 +8,7 @@ export interface Settings {
   requiredNominations: number;
   maxCommunityNominations: number;
   endorsementRequired: boolean;
-  endorsementsClosed: boolean;
+  endorsementsOpen: boolean;
   applicationDeadline: Date | null;
   applicationsOpen: boolean;
   nominationsOpen: boolean;
@@ -38,7 +38,7 @@ export const getSettings = cache(async (): Promise<Settings> => {
           requiredNominations: 15,
           maxCommunityNominations: 7,
           endorsementRequired: false,
-          endorsementsClosed: false,
+          endorsementsOpen: true,
           applicationsOpen: true,
           nominationsOpen: true,
         },
@@ -54,7 +54,7 @@ export const getSettings = cache(async (): Promise<Settings> => {
       requiredNominations: 15,
       maxCommunityNominations: 7,
       endorsementRequired: false,
-      endorsementsClosed: false,
+      endorsementsOpen: true,
       applicationDeadline: null,
       applicationsOpen: true,
       nominationsOpen: true,

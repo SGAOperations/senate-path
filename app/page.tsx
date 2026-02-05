@@ -74,7 +74,7 @@ export default async function Home() {
                 <Link href="/nominations">Nominate</Link>
               </Button>
             )}
-            {settings.endorsementRequired && !settings.endorsementsClosed && (
+            {settings.endorsementRequired && settings.endorsementsOpen && (
               <Button
                 asChild
                 size="lg"

@@ -23,7 +23,7 @@ const settingsSchema = z.object({
   requiredNominations: z.number().min(1).max(100),
   maxCommunityNominations: z.number().min(0).max(100),
   endorsementRequired: z.boolean(),
-  endorsementsClosed: z.boolean(),
+  endorsementsOpen: z.boolean(),
   applicationDeadline: z.string().optional(),
   applicationsOpen: z.boolean(),
   nominationsOpen: z.boolean(),
@@ -35,10 +35,10 @@ const settingsSchema = z.object({
     path: ['maxCommunityNominations'],
   }
 ).refine(
-  (data) => !(data.endorsementRequired && data.endorsementsClosed),
+  (data) => !(data.endorsementRequired && !data.endorsementsOpen),
   {
     message: 'Endorsements cannot be both required and closed',
-    path: ['endorsementsClosed'],
+    path: ['endorsementsOpen'],
   }
 );
 
@@ -64,7 +64,7 @@ export default function SettingsForm({ settings }: SettingsFormProps) {
       requiredNominations: settings.requiredNominations,
       maxCommunityNominations: settings.maxCommunityNominations,
       endorsementRequired: settings.endorsementRequired,
-      endorsementsClosed: settings.endorsementsClosed,
+      endorsementsOpen: settings.endorsementsOpen,
       applicationDeadline: settings.applicationDeadline
         ? new Date(settings.applicationDeadline).toISOString().slice(0, 16)
         : '',
@@ -75,7 +75,7 @@ export default function SettingsForm({ settings }: SettingsFormProps) {
   });
 
   const endorsementRequired = watch('endorsementRequired');
-  const endorsementsClosed = watch('endorsementsClosed');
+  const endorsementsOpen = watch('endorsementsOpen');
   const applicationsOpen = watch('applicationsOpen');
   const nominationsOpen = watch('nominationsOpen');
 
@@ -88,7 +88,7 @@ export default function SettingsForm({ settings }: SettingsFormProps) {
         requiredNominations: data.requiredNominations,
         maxCommunityNominations: data.maxCommunityNominations,
         endorsementRequired: data.endorsementRequired,
-        endorsementsClosed: data.endorsementsClosed,
+        endorsementsOpen: data.endorsementsOpen,
         applicationDeadline: data.applicationDeadline
           ? new Date(data.applicationDeadline)
           : null,
@@ -180,9 +180,9 @@ export default function SettingsForm({ settings }: SettingsFormProps) {
                 setValue('endorsementRequired', checked === true, {
                   shouldDirty: true,
                 });
-                // Auto-uncheck endorsementsClosed if endorsementRequired is checked
-                if (checked === true) {
-                  setValue('endorsementsClosed', false, {
+                // Auto-close endorsementsOpen if endorsementRequired is unchecked
+                if (checked === false) {
+                  setValue('endorsementsOpen', false, {
                     shouldDirty: true,
                   });
                 }
@@ -285,15 +285,15 @@ export default function SettingsForm({ settings }: SettingsFormProps) {
 
           <div className="flex items-start space-x-3 pt-2">
             <Checkbox
-              id="endorsementsClosed"
-              checked={endorsementsClosed}
+              id="endorsementsOpen"
+              checked={endorsementsOpen}
               onCheckedChange={(checked) => {
-                setValue('endorsementsClosed', checked === true, {
+                setValue('endorsementsOpen', checked === true, {
                   shouldDirty: true,
                 });
-                // Auto-uncheck endorsementRequired if endorsementsClosed is checked
+                // Auto-enable endorsementRequired if endorsementsOpen is checked
                 if (checked === true) {
-                  setValue('endorsementRequired', false, {
+                  setValue('endorsementRequired', true, {
                     shouldDirty: true,
                   });
                 }
@@ -302,17 +302,17 @@ export default function SettingsForm({ settings }: SettingsFormProps) {
             />
             <div className="space-y-1">
               <Label
-                htmlFor="endorsementsClosed"
+                htmlFor="endorsementsOpen"
                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
-                Endorsements Closed
+                Endorsements Open
               </Label>
               <p className="text-sm text-muted-foreground">
-                When enabled, the endorsement form will be closed and links will be hidden
+                When enabled, the endorsement form will be accessible and links will be shown
               </p>
-              {errors.endorsementsClosed && (
+              {errors.endorsementsOpen && (
                 <p className="text-sm text-destructive">
-                  {errors.endorsementsClosed.message}
+                  {errors.endorsementsOpen.message}
                 </p>
               )}
             </div>

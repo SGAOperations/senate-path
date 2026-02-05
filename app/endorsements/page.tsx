@@ -6,8 +6,8 @@ import EndorsementFormClient from './endorsement-form';
 export default async function EndorsementsPage() {
   const settings = await getSettings();
   
-  // Check if endorsements are closed
-  if (settings.endorsementsClosed) {
+  // Check if endorsements are closed (endorsementsOpen = false)
+  if (!settings.endorsementsOpen) {
     return (
       <div className="container max-w-4xl mx-auto py-12 px-4">
         <Alert variant="destructive">

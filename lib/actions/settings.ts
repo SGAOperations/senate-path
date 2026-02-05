@@ -9,7 +9,7 @@ export interface UpdateSettingsData {
   requiredNominations: number;
   maxCommunityNominations: number;
   endorsementRequired: boolean;
-  endorsementsClosed: boolean;
+  endorsementsOpen: boolean;
   applicationDeadline: Date | null;
   applicationsOpen: boolean;
   nominationsOpen: boolean;
@@ -38,7 +38,7 @@ export async function updateSettings(data: UpdateSettingsData) {
           requiredNominations: data.requiredNominations,
           maxCommunityNominations: data.maxCommunityNominations,
           endorsementRequired: data.endorsementRequired,
-          endorsementsClosed: data.endorsementsClosed,
+          endorsementsOpen: data.endorsementsOpen,
           applicationDeadline: data.applicationDeadline,
           applicationsOpen: data.applicationsOpen,
           nominationsOpen: data.nominationsOpen,
@@ -53,7 +53,7 @@ export async function updateSettings(data: UpdateSettingsData) {
           requiredNominations: data.requiredNominations,
           maxCommunityNominations: data.maxCommunityNominations,
           endorsementRequired: data.endorsementRequired,
-          endorsementsClosed: data.endorsementsClosed,
+          endorsementsOpen: data.endorsementsOpen,
           applicationDeadline: data.applicationDeadline,
           applicationsOpen: data.applicationsOpen,
           nominationsOpen: data.nominationsOpen,
