@@ -49,12 +49,6 @@ enum NominationStatus {
   REJECTED
 }
 
-enum EndorsementStatus {
-  REQUIRED
-  NOT_REQUIRED
-  CLOSED
-}
-
 model Nomination {
   id                      String                 @id @default(uuid())
   nominee                 String
@@ -97,16 +91,17 @@ model CommunityConstituency {
 }
 
 model Settings {
-  id                            String            @id @default(uuid())
-  requiredNominations           Int               @default(15)
-  maxCommunityNominations       Int               @default(7)
-  endorsementStatus             EndorsementStatus @default(NOT_REQUIRED)
+  id                            String    @id @default(uuid())
+  requiredNominations           Int       @default(15)
+  maxCommunityNominations       Int       @default(7)
+  endorsementRequired           Boolean   @default(false)
+  endorsementsClosed            Boolean   @default(false)
   applicationDeadline           DateTime?
-  applicationsOpen              Boolean           @default(true)
-  nominationsOpen               Boolean           @default(true)
+  applicationsOpen              Boolean   @default(true)
+  nominationsOpen               Boolean   @default(true)
   customMessage                 String?
-  createdAt                     DateTime          @default(now())
-  updatedAt                     DateTime          @updatedAt
+  createdAt                     DateTime  @default(now())
+  updatedAt                     DateTime  @updatedAt
 
   @@map("settings")
 }

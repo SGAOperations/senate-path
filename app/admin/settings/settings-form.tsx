@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,18 +11,10 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { updateSettings, UpdateSettingsData } from '@/lib/actions/settings';
 import { Settings } from '@/lib/data/settings';
 import { toast } from 'sonner';
 import { Loader2, Save, AlertCircle } from 'lucide-react';
-import { EndorsementStatus } from '@prisma/client';
 
 // Validation limits for nomination requirements
 // Max 100 is chosen as a reasonable upper limit for manual nomination collection
@@ -30,7 +22,8 @@ import { EndorsementStatus } from '@prisma/client';
 const settingsSchema = z.object({
   requiredNominations: z.number().min(1).max(100),
   maxCommunityNominations: z.number().min(0).max(100),
-  endorsementStatus: z.enum(['REQUIRED', 'NOT_REQUIRED', 'CLOSED']),
+  endorsementRequired: z.boolean(),
+  endorsementsClosed: z.boolean(),
   applicationDeadline: z.string().optional(),
   applicationsOpen: z.boolean(),
   nominationsOpen: z.boolean(),
@@ -40,6 +33,12 @@ const settingsSchema = z.object({
   {
     message: 'Max community nominations cannot exceed total required nominations',
     path: ['maxCommunityNominations'],
+  }
+).refine(
+  (data) => !(data.endorsementRequired && data.endorsementsClosed),
+  {
+    message: 'Endorsements cannot be both required and closed',
+    path: ['endorsementsClosed'],
   }
 );
 
@@ -59,13 +58,13 @@ export default function SettingsForm({ settings }: SettingsFormProps) {
     formState: { errors, isDirty },
     watch,
     setValue,
-    control,
   } = useForm<SettingsFormData>({
     resolver: zodResolver(settingsSchema),
     defaultValues: {
       requiredNominations: settings.requiredNominations,
       maxCommunityNominations: settings.maxCommunityNominations,
-      endorsementStatus: settings.endorsementStatus,
+      endorsementRequired: settings.endorsementRequired,
+      endorsementsClosed: settings.endorsementsClosed,
       applicationDeadline: settings.applicationDeadline
         ? new Date(settings.applicationDeadline).toISOString().slice(0, 16)
         : '',
@@ -75,7 +74,8 @@ export default function SettingsForm({ settings }: SettingsFormProps) {
     },
   });
 
-  const endorsementStatus = watch('endorsementStatus');
+  const endorsementRequired = watch('endorsementRequired');
+  const endorsementsClosed = watch('endorsementsClosed');
   const applicationsOpen = watch('applicationsOpen');
   const nominationsOpen = watch('nominationsOpen');
 
@@ -87,7 +87,8 @@ export default function SettingsForm({ settings }: SettingsFormProps) {
       const updateData: UpdateSettingsData = {
         requiredNominations: data.requiredNominations,
         maxCommunityNominations: data.maxCommunityNominations,
-        endorsementStatus: data.endorsementStatus as EndorsementStatus,
+        endorsementRequired: data.endorsementRequired,
+        endorsementsClosed: data.endorsementsClosed,
         applicationDeadline: data.applicationDeadline
           ? new Date(data.applicationDeadline)
           : null,
@@ -171,44 +172,34 @@ export default function SettingsForm({ settings }: SettingsFormProps) {
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="endorsementStatus">
-              Endorsement Status
-            </Label>
-            <Controller
-              name="endorsementStatus"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  value={field.value}
-                  onValueChange={field.onChange}
-                  disabled={isSubmitting}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select endorsement status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="REQUIRED">
-                      Endorsements Required
-                    </SelectItem>
-                    <SelectItem value="NOT_REQUIRED">
-                      Endorsements Not Required
-                    </SelectItem>
-                    <SelectItem value="CLOSED">
-                      Endorsements No Longer Accepted
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              )}
+          <div className="flex items-start space-x-3 pt-2">
+            <Checkbox
+              id="endorsementRequired"
+              checked={endorsementRequired}
+              onCheckedChange={(checked) => {
+                setValue('endorsementRequired', checked === true, {
+                  shouldDirty: true,
+                });
+                // Auto-uncheck endorsementsClosed if endorsementRequired is checked
+                if (checked === true) {
+                  setValue('endorsementsClosed', false, {
+                    shouldDirty: true,
+                  });
+                }
+              }}
+              disabled={isSubmitting}
             />
-            {errors.endorsementStatus && (
-              <p className="text-sm text-destructive">
-                {errors.endorsementStatus.message}
+            <div className="space-y-1">
+              <Label
+                htmlFor="endorsementRequired"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Require Endorsement
+              </Label>
+              <p className="text-sm text-muted-foreground">
+                When enabled, applicants must receive an endorsement to complete their application
               </p>
-            )}
-            <p className="text-sm text-muted-foreground">
-              Control whether endorsements are required, optional, or closed for this election cycle
-            </p>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -219,6 +210,13 @@ export default function SettingsForm({ settings }: SettingsFormProps) {
           <CardTitle>Application Controls</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
+          <Alert className="border-orange-500 bg-orange-50 dark:bg-orange-950/30">
+            <AlertCircle className="h-4 w-4 text-orange-600 dark:text-orange-500" />
+            <AlertDescription className="text-orange-800 dark:text-orange-300">
+              <strong>Important:</strong> Forms will NOT automatically close when the deadline passes. You must manually toggle the checkboxes below to close forms.
+            </AlertDescription>
+          </Alert>
+
           <div className="space-y-2">
             <Label htmlFor="applicationDeadline">Application Deadline</Label>
             <Input
@@ -233,7 +231,7 @@ export default function SettingsForm({ settings }: SettingsFormProps) {
               </p>
             )}
             <p className="text-sm text-muted-foreground">
-              Deadline for applications to be submitted (leave empty for no deadline)
+              Deadline for applications to be submitted (leave empty for no deadline). Note: This is informational only and does not automatically close forms.
             </p>
           </div>
 
@@ -282,6 +280,41 @@ export default function SettingsForm({ settings }: SettingsFormProps) {
               <p className="text-sm text-muted-foreground">
                 When disabled, the nomination form will be closed for people who have already applied
               </p>
+            </div>
+          </div>
+
+          <div className="flex items-start space-x-3 pt-2">
+            <Checkbox
+              id="endorsementsClosed"
+              checked={endorsementsClosed}
+              onCheckedChange={(checked) => {
+                setValue('endorsementsClosed', checked === true, {
+                  shouldDirty: true,
+                });
+                // Auto-uncheck endorsementRequired if endorsementsClosed is checked
+                if (checked === true) {
+                  setValue('endorsementRequired', false, {
+                    shouldDirty: true,
+                  });
+                }
+              }}
+              disabled={isSubmitting}
+            />
+            <div className="space-y-1">
+              <Label
+                htmlFor="endorsementsClosed"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Endorsements Closed
+              </Label>
+              <p className="text-sm text-muted-foreground">
+                When enabled, the endorsement form will be closed and links will be hidden
+              </p>
+              {errors.endorsementsClosed && (
+                <p className="text-sm text-destructive">
+                  {errors.endorsementsClosed.message}
+                </p>
+              )}
             </div>
           </div>
         </CardContent>

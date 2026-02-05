@@ -3,12 +3,13 @@
 import { db } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
-import { EndorsementStatus } from '@prisma/client';
+import { redirect } from 'next/navigation';
 
 export interface UpdateSettingsData {
   requiredNominations: number;
   maxCommunityNominations: number;
-  endorsementStatus: EndorsementStatus;
+  endorsementRequired: boolean;
+  endorsementsClosed: boolean;
   applicationDeadline: Date | null;
   applicationsOpen: boolean;
   nominationsOpen: boolean;
@@ -36,7 +37,8 @@ export async function updateSettings(data: UpdateSettingsData) {
         data: {
           requiredNominations: data.requiredNominations,
           maxCommunityNominations: data.maxCommunityNominations,
-          endorsementStatus: data.endorsementStatus,
+          endorsementRequired: data.endorsementRequired,
+          endorsementsClosed: data.endorsementsClosed,
           applicationDeadline: data.applicationDeadline,
           applicationsOpen: data.applicationsOpen,
           nominationsOpen: data.nominationsOpen,
@@ -50,7 +52,8 @@ export async function updateSettings(data: UpdateSettingsData) {
         data: {
           requiredNominations: data.requiredNominations,
           maxCommunityNominations: data.maxCommunityNominations,
-          endorsementStatus: data.endorsementStatus,
+          endorsementRequired: data.endorsementRequired,
+          endorsementsClosed: data.endorsementsClosed,
           applicationDeadline: data.applicationDeadline,
           applicationsOpen: data.applicationsOpen,
           nominationsOpen: data.nominationsOpen,
