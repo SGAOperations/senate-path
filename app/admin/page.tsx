@@ -2,6 +2,7 @@ import {
   getApplicationsWithNominationCounts,
   getApplicationWithNominations,
 } from '@/lib/data/applications';
+import { getSettings } from '@/lib/data/settings';
 import AdminDashboard from '@/components/AdminDashboard';
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
@@ -20,6 +21,7 @@ export default async function AdminPage() {
   }
 
   const applications = await getApplicationsWithNominationCounts();
+  const settings = await getSettings();
 
   return (
     <div className="container max-w-[1600px] mx-auto py-3 sm:py-6 px-3 sm:px-4">
@@ -27,7 +29,13 @@ export default async function AdminPage() {
         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">
           Admin Dashboard
         </h1>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
+          <Link href="/admin/settings">
+            <Button variant="default">
+              <Settings className="h-4 w-4 mr-2" />
+              Settings
+            </Button>
+          </Link>
           <Link href="/admin/nominations">
             <Button variant="outline">
               <Settings className="h-4 w-4 mr-2" />
@@ -45,6 +53,7 @@ export default async function AdminPage() {
       <AdminDashboard
         applications={applications}
         getApplicationDetails={getApplicationWithNominations}
+        settings={settings}
       />
     </div>
   );

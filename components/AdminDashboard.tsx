@@ -20,7 +20,7 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { removeNominationFormPDF } from '@/lib/actions/applications';
 import { toast } from 'sonner';
-import { REQUIRED_NOMINATIONS, MAX_COMMUNITY_NOMINATIONS } from '@/lib/config/requirements';
+import { Settings } from '@/lib/data/settings';
 
 type NominationWithCommunity = Nomination & {
   communityConstituency: { name: string } | null;
@@ -42,17 +42,17 @@ type ApplicationWithNominations = Application & {
 interface AdminDashboardProps {
   applications: ApplicationWithCount[];
   getApplicationDetails: (id: string) => Promise<ApplicationWithNominations | null>;
+  settings: Settings;
 }
 
-// TEMPORARY: Updated thresholds for Issue #148 - Original was 30/25 for success/warning
-function getNominationBadgeColor(count: number): "success" | "warning" | "info" | "default" {
-  if (count >= REQUIRED_NOMINATIONS) return "success";  // Green for meeting requirement
-  if (count >= Math.floor(REQUIRED_NOMINATIONS * 0.8)) return "warning";  // Yellow for 80%+
+function getNominationBadgeColor(count: number, requiredNominations: number): "success" | "warning" | "info" | "default" {
+  if (count >= requiredNominations) return "success";  // Green for meeting requirement
+  if (count >= Math.floor(requiredNominations * 0.8)) return "warning";  // Yellow for 80%+
   if (count >= 2) return "info";      // Orange for 2+
   return "default";                   // Gray for 0-1
 }
 
-export default function AdminDashboard({ applications, getApplicationDetails }: AdminDashboardProps) {
+export default function AdminDashboard({ applications, getApplicationDetails, settings }: AdminDashboardProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedApplicant, setSelectedApplicant] = useState<ApplicationWithCount | null>(null);
   const [applicantDetails, setApplicantDetails] = useState<ApplicationWithNominations | null>(null);
@@ -239,7 +239,7 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
                                 Paper Form
                               </Badge>
                             ) : app.nominationCount > 0 ? (
-                              <Badge variant={getNominationBadgeColor(app.nominationCount)}>
+                              <Badge variant={getNominationBadgeColor(app.nominationCount, settings.requiredNominations)}>
                                 {app.nominationCount}
                               </Badge>
                             ) : (
@@ -275,7 +275,7 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
                       Paper Form Uploaded
                     </Badge>
                   ) : (
-                    <Badge variant={getNominationBadgeColor(selectedApplicant.nominationCount)} className="text-sm self-start sm:self-auto">
+                    <Badge variant={getNominationBadgeColor(selectedApplicant.nominationCount, settings.requiredNominations)} className="text-sm self-start sm:self-auto">
                       {selectedApplicant.nominationCount} Nominations
                     </Badge>
                   )}
@@ -406,8 +406,7 @@ export default function AdminDashboard({ applications, getApplicationDetails }: 
                                 <div className="space-y-3">
                                   <div>
                                     <p className="font-semibold">Paper nomination form uploaded</p>
-                                    {/* TEMPORARY: Updated for Issue #148 - Original was "their 30 nomination signatures" */}
-                                    <p className="text-sm mt-1">This nominee submitted their {REQUIRED_NOMINATIONS} nomination signatures via PDF instead of online nominations.</p>
+                                    <p className="text-sm mt-1">This nominee submitted their {settings.requiredNominations} nomination signatures via PDF instead of online nominations.</p>
                                   </div>
                                   <div className="flex gap-2 flex-wrap">
                                     <Button

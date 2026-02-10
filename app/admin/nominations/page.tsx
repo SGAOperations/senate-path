@@ -1,4 +1,5 @@
 import { getAllNominations } from '@/lib/data/nominations';
+import { getSettings } from '@/lib/data/settings';
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import NominationsManager from '@/components/NominationsManager';
@@ -12,6 +13,7 @@ export default async function NominationsAdminPage() {
   }
 
   const nominations = await getAllNominations();
+  const settings = await getSettings();
 
   return (
     <div className="container max-w-[1600px] mx-auto py-6 px-4">
@@ -21,7 +23,7 @@ export default async function NominationsAdminPage() {
           Review and approve or reject nominations submitted by constituents.
         </p>
       </div>
-      <NominationsManager nominations={nominations} />
+      <NominationsManager nominations={nominations} settings={settings} />
     </div>
   );
 }

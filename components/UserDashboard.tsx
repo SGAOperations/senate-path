@@ -10,7 +10,7 @@ import { Search, User, Vote, TrendingDown, AlertCircle, X, Upload, FileText, Dow
 import { Application, Nomination, CommunityConstituency } from '@prisma/client';
 import { uploadNominationFormPDF, removeNominationFormPDF } from '@/lib/actions/applications';
 import { toast } from 'sonner';
-import { REQUIRED_NOMINATIONS, MAX_COMMUNITY_NOMINATIONS } from '@/lib/config/requirements';
+import { Settings } from '@/lib/data/settings';
 
 type NominationWithCommunity = Nomination & {
   communityConstituency: { name: string } | null;
@@ -24,17 +24,17 @@ type ApplicationWithNominations = Application & {
 
 interface UserDashboardProps {
   getApplicationByNuid: (nuid: string) => Promise<ApplicationWithNominations | null>;
+  settings: Settings;
 }
 
-// TEMPORARY: Updated thresholds for Issue #148 - Original was 30/25 for success/warning
-function getNominationBadgeColor(count: number): "success" | "warning" | "info" | "default" {
-  if (count >= REQUIRED_NOMINATIONS) return "success";  // Green for meeting requirement
-  if (count >= Math.floor(REQUIRED_NOMINATIONS * 0.8)) return "warning";  // Yellow for 80%+
+function getNominationBadgeColor(count: number, requiredNominations: number): "success" | "warning" | "info" | "default" {
+  if (count >= requiredNominations) return "success";  // Green for meeting requirement
+  if (count >= Math.floor(requiredNominations * 0.8)) return "warning";  // Yellow for 80%+
   if (count >= 2) return "info";      // Orange for 2+
   return "default";                   // Gray for 0-1
 }
 
-export default function UserDashboard({ getApplicationByNuid }: UserDashboardProps) {
+export default function UserDashboard({ getApplicationByNuid, settings }: UserDashboardProps) {
   const [nuid, setNuid] = useState('');
   const [applicantDetails, setApplicantDetails] = useState<ApplicationWithNominations | null>(null);
   const [loading, setLoading] = useState(false);
@@ -69,9 +69,8 @@ export default function UserDashboard({ getApplicationByNuid }: UserDashboardPro
     }
   };
 
-  // TEMPORARY: Updated for Issue #148 - Original was 30
   const missingNominations = applicantDetails 
-    ? Math.max(0, REQUIRED_NOMINATIONS - applicantDetails.nominationCount)
+    ? Math.max(0, settings.requiredNominations - applicantDetails.nominationCount)
     : 0;
 
   const communityNominationCount = applicantDetails
@@ -250,26 +249,24 @@ export default function UserDashboard({ getApplicationByNuid }: UserDashboardPro
                 {applicantDetails.nominationFormPdfUrl ? (
                   <>
                     <p className="text-xl sm:text-2xl font-bold">Paper</p>
-                    {/* TEMPORARY: Updated for Issue #148 - Original was "30 signatures" */}
-                    <p className="text-sm text-muted-foreground">{REQUIRED_NOMINATIONS} signatures in PDF</p>
+                    <p className="text-sm text-muted-foreground">{settings.requiredNominations} signatures in PDF</p>
                   </>
                 ) : (
                   <>
                     <p className="text-3xl sm:text-4xl font-bold">{missingNominations}</p>
-                    {/* TEMPORARY: Updated for Issue #148 - Original was "needed to reach 30" */}
-                    <p className="text-sm text-muted-foreground">needed to reach {REQUIRED_NOMINATIONS}</p>
+                    <p className="text-sm text-muted-foreground">needed to reach {settings.requiredNominations}</p>
                   </>
                 )}
               </CardContent>
             </Card>
           </div>
 
-          {/* Warning about community nominations limit - TEMPORARY: Updated for Issue #148 */}
-          {communityNominationCount > MAX_COMMUNITY_NOMINATIONS && (
+          {/* Warning about community nominations limit */}
+          {communityNominationCount > settings.maxCommunityNominations && (
             <Alert variant="destructive" className="mb-6">
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>
-                <strong>Warning:</strong> You have {communityNominationCount} approved community constituency nominations. Only {MAX_COMMUNITY_NOMINATIONS} nominations may come from community constituencies.
+                <strong>Warning:</strong> You have {communityNominationCount} approved community constituency nominations. Only {settings.maxCommunityNominations} nominations may come from community constituencies.
               </AlertDescription>
             </Alert>
           )}
@@ -279,7 +276,7 @@ export default function UserDashboard({ getApplicationByNuid }: UserDashboardPro
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle className="text-2xl">Your Information</CardTitle>
-                <Badge variant={getNominationBadgeColor(applicantDetails.nominationCount)} className="text-sm">
+                <Badge variant={getNominationBadgeColor(applicantDetails.nominationCount, settings.requiredNominations)} className="text-sm">
                   {applicantDetails.nominationCount} Nominations
                 </Badge>
               </div>
@@ -371,9 +368,8 @@ export default function UserDashboard({ getApplicationByNuid }: UserDashboardPro
           <Card className="mb-6">
             <CardHeader>
               <CardTitle className="text-2xl">Paper Nomination Form</CardTitle>
-              {/* TEMPORARY: Updated for Issue #148 - Original was "all 30 nomination signatures" */}
               <p className="text-sm text-muted-foreground mt-2">
-                <strong>Alternative to online nominations:</strong> Upload a single PDF containing all {REQUIRED_NOMINATIONS} nomination signatures you collected from constituents.
+                <strong>Alternative to online nominations:</strong> Upload a single PDF containing all {settings.requiredNominations} nomination signatures you collected from constituents.
               </p>
             </CardHeader>
             <CardContent>
@@ -442,8 +438,7 @@ export default function UserDashboard({ getApplicationByNuid }: UserDashboardPro
                               SGA website (Senate Elections page)
                             </a>
                           </li>
-                          {/* TEMPORARY: Updated for Issue #148 - Original was "Collect 30 nomination signatures" */}
-                          <li>Collect {REQUIRED_NOMINATIONS} nomination signatures from your constituents on the paper form</li>
+                          <li>Collect {settings.requiredNominations} nomination signatures from your constituents on the paper form</li>
                           <li>Scan the completed form as a PDF</li>
                           <li>Upload the PDF below (max 10MB)</li>
                         </ol>
