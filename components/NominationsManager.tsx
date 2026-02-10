@@ -27,7 +27,7 @@ import { Search, CheckCircle, XCircle, AlertCircle, Clock, Users } from 'lucide-
 import { Nomination, CommunityConstituency, NominationStatus } from '@prisma/client';
 import { approveNomination, rejectNomination, bulkApproveNominations, bulkRejectNominations } from '@/lib/actions/nominations';
 import { toast } from 'sonner';
-import { MAX_COMMUNITY_NOMINATIONS } from '@/lib/config/requirements';
+import { Settings } from '@/lib/data/settings';
 
 type NominationWithCommunity = Nomination & {
   communityConstituency: { name: string } | null;
@@ -35,6 +35,7 @@ type NominationWithCommunity = Nomination & {
 
 interface NominationsManagerProps {
   nominations: NominationWithCommunity[];
+  settings: Settings;
 }
 
 function getStatusBadge(status: string) {
@@ -60,7 +61,7 @@ function getConstituencyBadge(nom: NominationWithCommunity) {
   return <Badge variant="outline" className="text-xs border-gray-400 dark:border-gray-500">{nom.college}</Badge>;
 }
 
-export default function NominationsManager({ nominations: initialNominations }: NominationsManagerProps) {
+export default function NominationsManager({ nominations: initialNominations, settings }: NominationsManagerProps) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const isInitialMount = useRef(false);
@@ -157,7 +158,7 @@ export default function NominationsManager({ nominations: initialNominations }: 
     // Find nominees exceeding the community constituency limit
     const nomineesOverLimit: string[] = [];
     nomineeCommunityCountsMap.forEach((count, nominee) => {
-      if (count > MAX_COMMUNITY_NOMINATIONS) {
+      if (count > settings.maxCommunityNominations) {
         nomineesOverLimit.push(nominee);
       }
     });
@@ -350,7 +351,7 @@ export default function NominationsManager({ nominations: initialNominations }: 
         <Alert variant="destructive" className="mb-6">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
-            <strong>Warning:</strong> The following nominee(s) have more than {MAX_COMMUNITY_NOMINATIONS} approved community constituency nominations: <strong>{stats.nomineesOverLimit.join(', ')}</strong>. Each nominee may only have a maximum of {MAX_COMMUNITY_NOMINATIONS} nominations from community constituencies.
+            <strong>Warning:</strong> The following nominee(s) have more than {settings.maxCommunityNominations} approved community constituency nominations: <strong>{stats.nomineesOverLimit.join(', ')}</strong>. Each nominee may only have a maximum of {settings.maxCommunityNominations} nominations from community constituencies.
           </AlertDescription>
         </Alert>
       )}
