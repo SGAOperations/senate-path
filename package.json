@@ -9,7 +9,7 @@
     "lint": "next lint",
     "db:start": "docker compose up -d",
     "db:stop": "docker compose down",
-    "db:reset": "docker compose down -v && docker compose up -d && npm run prisma:migrate",
+    "db:reset": "docker compose down -v && docker compose up -d && sleep 3 && npm run prisma:migrate",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
