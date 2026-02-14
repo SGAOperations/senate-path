@@ -16,7 +16,9 @@ const PRONOUNS = ['he/him', 'she/her', 'they/them', 'she/they', 'he/they']
 const randomItem = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)]
 
 async function main() {
-  if (process.env.NODE_ENV === 'production') {
+  const nodeEnv = process.env.NODE_ENV || 'development'
+  
+  if (nodeEnv === 'production') {
     console.log('Seeding disabled in production')
     return
   }

@@ -16,6 +16,9 @@
     "prisma:studio": "prisma studio",
     "postinstall": "prisma generate"
   },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
   "private": true,
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
