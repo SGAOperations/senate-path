@@ -1,7 +1,6 @@
 'use server';
 
 import { db } from '@/lib/db';
-import { cache } from 'react';
 
 export interface Settings {
   id: string;
@@ -19,14 +18,13 @@ export interface Settings {
 
 /**
  * Get the application settings. If no settings exist, create default settings.
- * This is cached to reduce database queries.
  * 
  * Note: This implementation uses findFirst() and assumes a single settings record.
  * While the database schema allows multiple records, the application logic ensures
  * only one record is created and used. If needed, a unique constraint could be added
  * to enforce this at the database level, or we could use a fixed ID.
  */
-export const getSettings = cache(async (): Promise<Settings> => {
+export async function getSettings(): Promise<Settings> {
   try {
     // Try to get the first settings record
     let settings = await db.settings.findFirst();
@@ -63,4 +61,4 @@ export const getSettings = cache(async (): Promise<Settings> => {
       updatedAt: new Date(),
     };
   }
-});
+}
