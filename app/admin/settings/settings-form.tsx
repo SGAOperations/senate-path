@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -49,6 +50,7 @@ interface SettingsFormProps {
 }
 
 export default function SettingsForm({ settings }: SettingsFormProps) {
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -101,6 +103,7 @@ export default function SettingsForm({ settings }: SettingsFormProps) {
 
       if (result.success) {
         toast.success('Settings updated successfully!');
+        router.refresh();
       } else {
         setError(result.error || 'Failed to update settings');
       }
