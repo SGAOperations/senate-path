@@ -11,4 +11,7 @@ export default defineConfig({
     url: env("DATABASE_URL"),
     directUrl: env("DIRECT_URL"),
   },
+  seed: {
+    command: "tsx prisma/seed.ts",
+  },
 });
