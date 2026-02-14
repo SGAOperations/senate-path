@@ -203,34 +203,12 @@ git push
 **Migration conflicts**
 - If you have uncommitted migrations, you may need to reset: `npm run db:reset`
 - Delete problematic migration folders from `prisma/migrations/` and re-create them
-- For production conflicts, coordinate with your team before resetting
 
 ### Database Deployment Notes
 
-- **Local database** is completely separate from production/staging databases
-- **Migration files** in `prisma/migrations/` are version controlled and committed to git
-- **Vercel deployment** automatically runs migrations when code is merged to `dev` or `main` branches
-- **Production database** (Supabase) is updated through the Vercel deployment process
-- You can safely reset your local database anytime without affecting production
-
-### Old Setup Instructions (PostgreSQL without Docker)
-
-If you prefer to use a cloud-hosted database or local PostgreSQL installation instead of Docker:
-
-1. [PostgreSQL](https://www.postgresql.org/download/) database
-   - Local installation or cloud service (Supabase, Neon, etc.)
-
-2. Update your `.env.local` with your database credentials:
-```
-DATABASE_URL="postgresql://user:password@host:port/database"
-DIRECT_URL="postgresql://user:password@host:port/database"
-```
-
-3. Generate Prisma client and run migrations:
-```bash
-npm run prisma:generate
-npm run prisma:migrate
-```
+- Local database is completely separate from production/staging databases
+- Migration files in `prisma/migrations/` are version controlled
+- Migrations run automatically on deployment when merged to `dev` or `main` branches
 
 ## Running the app
 
