@@ -21,6 +21,20 @@ export interface Settings {
 }
 
 /**
+ * Default settings values used when creating initial settings
+ */
+const DEFAULT_SETTINGS_VALUES = {
+  requiredNominations: 15,
+  maxCommunityNominations: 7,
+  endorsementRequired: false,
+  endorsementsOpen: true,
+  applicationDeadline: null,
+  applicationsOpen: true,
+  nominationsOpen: true,
+  customMessage: null,
+} as const;
+
+/**
  * Get the application settings. If no settings exist, create default settings.
  * This is cached to reduce database queries.
  * 
@@ -41,14 +55,7 @@ export const getSettings = cache(async (): Promise<Settings> => {
     if (!settings) {
       console.log('No settings found in database, creating default settings...');
       settings = await db.settings.create({
-        data: {
-          requiredNominations: 15,
-          maxCommunityNominations: 7,
-          endorsementRequired: false,
-          endorsementsOpen: true,
-          applicationsOpen: true,
-          nominationsOpen: true,
-        },
+        data: DEFAULT_SETTINGS_VALUES,
       });
       console.log('Default settings created successfully');
     }
