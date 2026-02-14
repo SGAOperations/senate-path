@@ -81,9 +81,10 @@ app/
   ├── (routes)/           # route groups
 components/               # shared components
 lib/
+  ├── actions/           # server actions
+  ├── data/              # data queries and services
   ├── db.ts              # Prisma client
-  ├── utils.ts           # utility functions
-  └── validations/       # Zod schemas
+  └── utils.ts           # utility functions
 ```
 
 ## Code Style Preferences
