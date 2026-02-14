@@ -75,17 +75,17 @@ export const getSettings = cache(async (): Promise<Settings> => {
     return settings;
   } catch (error) {
     // Handle different types of Prisma errors
-    if (error instanceof PrismaClientInitializationError) {
-      console.error('Database connection error:', error.message);
+    const isDatabaseConnectionError = 
+      error instanceof PrismaClientInitializationError ||
+      (error && typeof error === 'object' && 'name' in error && error.name === 'PrismaClientInitializationError');
+    
+    if (isDatabaseConnectionError) {
+      console.error('Database connection error:', (error as Error).message);
       console.warn('Database is not available. Using in-memory default settings.');
     } else if (error instanceof PrismaClientKnownRequestError) {
       console.error('Database request error:', error.message, error.code);
     } else if (error instanceof PrismaClientValidationError) {
       console.error('Database validation error:', error.message);
-    } else if (error && typeof error === 'object' && 'name' in error && error.name === 'PrismaClientInitializationError') {
-      // Sometimes during build, instanceof doesn't work, so check by name
-      console.error('Database connection error (detected by name):', (error as Error).message);
-      console.warn('Database is not available. Using in-memory default settings.');
     } else {
       console.error('Unexpected error fetching settings:', error);
     }
