@@ -182,7 +182,8 @@ git push
 ### Troubleshooting
 
 **Port 5432 already in use**
-- Check if PostgreSQL is already running locally: `sudo lsof -i :5432` (Mac/Linux) or check Task Manager (Windows)
+- Mac/Linux: Check if PostgreSQL is running: `sudo lsof -i :5432`
+- Windows: Check port usage: `netstat -ano | findstr :5432`
 - Stop the existing PostgreSQL service or change the port in `docker-compose.yml`
 
 **Container won't start**

@@ -2,6 +2,8 @@ services:
   postgres:
     image: postgres:15-alpine
     container_name: senate-path-db
+    # WARNING: These credentials are for LOCAL DEVELOPMENT ONLY
+    # DO NOT use this docker-compose.yml in production
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
