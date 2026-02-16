@@ -31,29 +31,25 @@ export async function updateSettings(data: UpdateSettingsData) {
       return { success: false, error: 'Unauthorized' };
     }
 
+    // Prepare settings data
+    const settingsData = {
+      requiredNominations: data.requiredNominations,
+      maxCommunityNominations: data.maxCommunityNominations,
+      endorsementRequired: data.endorsementRequired,
+      endorsementsOpen: data.endorsementsOpen,
+      applicationDeadline: data.applicationDeadline,
+      applicationsOpen: data.applicationsOpen,
+      nominationsOpen: data.nominationsOpen,
+      customMessage: data.customMessage,
+    };
+
     // Use upsert to atomically create or update settings
     const settings = await db.settings.upsert({
       where: { id: SETTINGS_ID },
-      update: {
-        requiredNominations: data.requiredNominations,
-        maxCommunityNominations: data.maxCommunityNominations,
-        endorsementRequired: data.endorsementRequired,
-        endorsementsOpen: data.endorsementsOpen,
-        applicationDeadline: data.applicationDeadline,
-        applicationsOpen: data.applicationsOpen,
-        nominationsOpen: data.nominationsOpen,
-        customMessage: data.customMessage,
-      },
+      update: settingsData,
       create: {
         id: SETTINGS_ID,
-        requiredNominations: data.requiredNominations,
-        maxCommunityNominations: data.maxCommunityNominations,
-        endorsementRequired: data.endorsementRequired,
-        endorsementsOpen: data.endorsementsOpen,
-        applicationDeadline: data.applicationDeadline,
-        applicationsOpen: data.applicationsOpen,
-        nominationsOpen: data.nominationsOpen,
-        customMessage: data.customMessage,
+        ...settingsData,
       },
     });
 
