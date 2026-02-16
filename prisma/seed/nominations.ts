@@ -1,5 +1,5 @@
 import { CommunityConstituency } from '@prisma/client'
-import { db } from '../../lib/db'
+import { db } from '@/lib/db'
 import { 
   FIRST_NAMES, 
   LAST_NAMES, 
@@ -8,7 +8,7 @@ import {
   randomItem,
   generateEmail,
   getRandomConstituencyId,
-} from './constants'
+} from '@/prisma/seed/constants'
 
 const STATUSES = ['PENDING', 'APPROVED', 'REJECTED', 'PENDING', 'APPROVED'] as const
 

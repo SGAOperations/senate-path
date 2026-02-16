@@ -1,5 +1,5 @@
-import { db } from '../../lib/db'
-import { COMMUNITY_CONSTITUENCIES } from './constants'
+import { db } from '@/lib/db'
+import { COMMUNITY_CONSTITUENCIES } from '@/prisma/seed/constants'
 
 export async function seedCommunityConstituencies() {
   await db.communityConstituency.createMany({

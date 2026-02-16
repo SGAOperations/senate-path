@@ -1,5 +1,5 @@
 import { CommunityConstituency } from '@prisma/client'
-import { db } from '../../lib/db'
+import { db } from '@/lib/db'
 import {
   FIRST_NAMES,
   LAST_NAMES,
@@ -15,7 +15,7 @@ import {
   generateNUID,
   generateEmail,
   generatePhoneNumber,
-} from './constants'
+} from '@/prisma/seed/constants'
 
 export async function seedApplications(constituencies: CommunityConstituency[]) {
   const applications = []

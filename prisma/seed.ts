@@ -1,9 +1,9 @@
-import { seedCommunityConstituencies } from './seed/community-constituencies'
-import { seedSettings } from './seed/settings'
-import { seedApplications } from './seed/applications'
-import { seedNominations } from './seed/nominations'
-import { seedEndorsements } from './seed/endorsements'
-import { db } from '../lib/db'
+import { seedCommunityConstituencies } from '@/prisma/seed/community-constituencies'
+import { seedSettings } from '@/prisma/seed/settings'
+import { seedApplications } from '@/prisma/seed/applications'
+import { seedNominations } from '@/prisma/seed/nominations'
+import { seedEndorsements } from '@/prisma/seed/endorsements'
+import { db } from '@/lib/db'
 
 async function main() {
   const nodeEnv = process.env.NODE_ENV || 'development'
