@@ -9,11 +9,15 @@
     "lint": "next lint",
     "db:start": "docker compose up -d",
     "db:stop": "docker compose down",
-    "db:reset": "docker compose down -v && docker compose up -d --wait && npm run prisma:migrate",
+    "db:reset": "docker compose down -v && docker compose up -d --wait && npm run prisma:migrate && npm run prisma:seed",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
+    "prisma:seed": "prisma db seed",
     "prisma:studio": "prisma studio",
     "postinstall": "prisma generate"
+  },
+  "prisma": {
+    "seed": "tsx --tsconfig tsconfig.json prisma/seed.ts"
   },
   "private": true,
   "dependencies": {
@@ -51,6 +55,7 @@
     "postcss": "^8.5.6",
     "prettier": "^3.8.1",
     "tailwindcss": "^4.1.16",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   }
 }
