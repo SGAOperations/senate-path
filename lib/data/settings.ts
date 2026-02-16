@@ -1,7 +1,6 @@
 'use server';
 
 import { db } from '@/lib/db';
-import { cache } from 'react';
 
 export interface Settings {
   id: string;
@@ -17,23 +16,26 @@ export interface Settings {
   updatedAt: Date;
 }
 
-export const getSettings = cache(async (): Promise<Settings> => {
-  let settings = await db.settings.findFirst();
-  
-  if (!settings) {
-    settings = await db.settings.create({
-      data: {
-        requiredNominations: 15,
-        maxCommunityNominations: 7,
-        endorsementRequired: false,
-        endorsementsOpen: true,
-        applicationDeadline: null,
-        applicationsOpen: true,
-        nominationsOpen: true,
-        customMessage: null,
-      },
-    });
-  }
-  
+// Fixed ID for the singleton settings record
+const SETTINGS_ID = 'default';
+
+export async function getSettings(): Promise<Settings> {
+  // Use upsert to atomically get or create settings
+  const settings = await db.settings.upsert({
+    where: { id: SETTINGS_ID },
+    update: {},
+    create: {
+      id: SETTINGS_ID,
+      requiredNominations: 15,
+      maxCommunityNominations: 7,
+      endorsementRequired: false,
+      endorsementsOpen: true,
+      applicationDeadline: null,
+      applicationsOpen: true,
+      nominationsOpen: true,
+      customMessage: null,
+    },
+  });
+
   return settings;
-});
+}
