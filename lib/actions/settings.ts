@@ -16,6 +16,9 @@ export interface UpdateSettingsData {
   customMessage: string | null;
 }
 
+// Fixed ID for the singleton settings record
+const SETTINGS_ID = 'default';
+
 export async function updateSettings(data: UpdateSettingsData) {
   try {
     // Check if user is authenticated
@@ -28,39 +31,27 @@ export async function updateSettings(data: UpdateSettingsData) {
       return { success: false, error: 'Unauthorized' };
     }
 
-    // Get or create settings
-    let settings = await db.settings.findFirst();
-    
-    if (!settings) {
-      // Create new settings
-      settings = await db.settings.create({
-        data: {
-          requiredNominations: data.requiredNominations,
-          maxCommunityNominations: data.maxCommunityNominations,
-          endorsementRequired: data.endorsementRequired,
-          endorsementsOpen: data.endorsementsOpen,
-          applicationDeadline: data.applicationDeadline,
-          applicationsOpen: data.applicationsOpen,
-          nominationsOpen: data.nominationsOpen,
-          customMessage: data.customMessage,
-        },
-      });
-    } else {
-      // Update existing settings
-      settings = await db.settings.update({
-        where: { id: settings.id },
-        data: {
-          requiredNominations: data.requiredNominations,
-          maxCommunityNominations: data.maxCommunityNominations,
-          endorsementRequired: data.endorsementRequired,
-          endorsementsOpen: data.endorsementsOpen,
-          applicationDeadline: data.applicationDeadline,
-          applicationsOpen: data.applicationsOpen,
-          nominationsOpen: data.nominationsOpen,
-          customMessage: data.customMessage,
-        },
-      });
-    }
+    // Prepare settings data
+    const settingsData = {
+      requiredNominations: data.requiredNominations,
+      maxCommunityNominations: data.maxCommunityNominations,
+      endorsementRequired: data.endorsementRequired,
+      endorsementsOpen: data.endorsementsOpen,
+      applicationDeadline: data.applicationDeadline,
+      applicationsOpen: data.applicationsOpen,
+      nominationsOpen: data.nominationsOpen,
+      customMessage: data.customMessage,
+    };
+
+    // Use upsert to atomically create or update settings
+    const settings = await db.settings.upsert({
+      where: { id: SETTINGS_ID },
+      update: settingsData,
+      create: {
+        id: SETTINGS_ID,
+        ...settingsData,
+      },
+    });
 
     // Revalidate all pages that might use settings
     revalidatePath('/');

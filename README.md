@@ -62,8 +62,9 @@ The application manages three main entities:
    - To check if it's installed: `node -v`
    - To install: [mac/linux](https://github.com/nvm-sh/nvm) or [windows](https://github.com/coreybutler/nvm-windows)
 
-2. [PostgreSQL](https://www.postgresql.org/download/) database
-   - Local installation or cloud service (Supabase, Neon, etc.)
+2. [Docker Desktop](https://www.docker.com/products/docker-desktop/) (for local database)
+   - Required for running the local PostgreSQL database
+   - To check if it's installed: `docker --version`
 
 ### Installation
 
@@ -83,7 +84,9 @@ npm install
 cp .env.example .env.local
 ```
 
-Edit `.env.local` and add your database connection strings and Supabase credentials:
+The `.env.example` file comes pre-configured with local database settings. For local development, you can use these defaults as-is.
+
+For production or if you want to use a different database:
 ```
 DATABASE_URL="postgresql://user:password@host:port/database"
 DIRECT_URL="postgresql://user:password@host:port/database"
@@ -98,11 +101,114 @@ To get your Supabase credentials:
 - Copy the Project URL and anon/public key
 - Copy the service_role key (this is needed for user management - keep it secret!)
 
-4. Generate Prisma client and run migrations:
+## Local Development Database
+
+This project uses Docker to run a local PostgreSQL database for development. This allows you to test database schema changes locally before deploying to production.
+
+### Prerequisites
+
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) must be installed and running
+- Ensure port 5432 is available on your machine
+
+### Initial Setup
+
+1. Make sure you have copied `.env.example` to `.env.local`:
 ```bash
-npm run prisma:generate
+cp .env.example .env.local
+```
+
+The default local database connection is already configured in `.env.example`:
+```
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/senate_path_dev?schema=public"
+DIRECT_URL="postgresql://postgres:postgres@localhost:5432/senate_path_dev?schema=public"
+```
+
+2. Start the local PostgreSQL database:
+```bash
+npm run db:start
+```
+
+3. Run Prisma migrations to create the database schema:
+```bash
 npm run prisma:migrate
 ```
+
+You're now ready to develop! The local database will persist data between restarts.
+
+### Common Commands
+
+| Command | Description |
+|---------|-------------|
+| `npm run db:start` | Start the Docker PostgreSQL container in the background |
+| `npm run db:stop` | Stop the Docker container (data is preserved) |
+| `npm run db:reset` | Stop container, remove all data, start fresh, and run migrations |
+| `npm run prisma:migrate` | Create and apply a new Prisma migration (will prompt for migration name) |
+| `npm run prisma:studio` | Open Prisma Studio to visually browse and edit your local database |
+| `npm run prisma:generate` | Regenerate Prisma client after schema changes |
+
+### Development Workflow
+
+1. Create a new branch for your work:
+```bash
+git checkout -b 123-add-new-feature
+```
+
+2. Start the local database (if not already running):
+```bash
+npm run db:start
+```
+
+3. Make changes to your Prisma schema in `prisma/schema.prisma`
+
+4. Create and apply the migration:
+```bash
+npm run prisma:migrate
+```
+Prisma will prompt you for a migration name (e.g., "add_user_role_field")
+
+5. Test your changes locally using Prisma Studio or your application:
+```bash
+npm run prisma:studio  # Visual database browser
+npm run dev            # Start Next.js dev server
+```
+
+6. Commit both your schema changes AND the migration files:
+```bash
+git add prisma/schema.prisma prisma/migrations/
+git commit -m "#123 add new feature"
+git push
+```
+
+### Troubleshooting
+
+**Port 5432 already in use**
+- Mac/Linux: Check if PostgreSQL is running: `sudo lsof -i :5432`
+- Windows: Check port usage: `netstat -ano | findstr :5432`
+- Stop the existing PostgreSQL service or change the port in `docker-compose.yml`
+
+**Container won't start**
+- Make sure Docker Desktop is running
+- Check Docker logs: `docker logs senate-path-db`
+- Try removing the container: `docker compose down -v` then `npm run db:start`
+
+**Database connection errors**
+- Verify the container is running: `docker ps`
+- Check your `.env.local` file has the correct `DATABASE_URL`
+- Try restarting the container: `npm run db:stop && npm run db:start`
+
+**Need to start fresh**
+- Use `npm run db:reset` to completely reset your local database
+- This will delete all data and re-run migrations
+
+**Migration conflicts**
+- If you have uncommitted migrations, you may need to reset: `npm run db:reset`
+- Delete problematic migration folders from `prisma/migrations/` and re-create them
+
+### Database Deployment Notes
+
+- Local database is completely separate from production/staging databases
+- Migration files in `prisma/migrations/` are version controlled
+- Migrations run automatically on deployment when merged to `dev` or `main` branches
 
 ## Running the app
 
@@ -121,12 +227,21 @@ npm start
 
 ## Available Scripts
 
+### Development
 - `npm run dev` - Start development server
 - `npm run build` - Build for production
 - `npm start` - Start production server
 - `npm run lint` - Run ESLint
+
+### Database Management
+- `npm run db:start` - Start local Docker PostgreSQL container
+- `npm run db:stop` - Stop local Docker container
+- `npm run db:reset` - Reset local database (removes all data and re-runs migrations)
+
+### Prisma
 - `npm run prisma:generate` - Generate Prisma client
-- `npm run prisma:migrate` - Run database migrations
+- `npm run prisma:migrate` - Create and apply database migrations
+- `npm run prisma:studio` - Open Prisma Studio for database inspection
 
 ## Key Features
 
