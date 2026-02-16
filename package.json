@@ -17,7 +17,7 @@
     "postinstall": "prisma generate"
   },
   "prisma": {
-    "seed": "tsx prisma/seed.ts"
+    "seed": "tsx --tsconfig tsconfig.json prisma/seed.ts"
   },
   "private": true,
   "dependencies": {
