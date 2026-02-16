@@ -1,11 +1,11 @@
-import { prisma } from '../seed'
+import { db } from '../../lib/db'
 import { COMMUNITY_CONSTITUENCIES } from './constants'
 
 export async function seedCommunityConstituencies() {
-  await prisma.communityConstituency.createMany({
+  await db.communityConstituency.createMany({
     data: COMMUNITY_CONSTITUENCIES,
     skipDuplicates: true,
   })
 
-  return prisma.communityConstituency.findMany()
+  return db.communityConstituency.findMany()
 }

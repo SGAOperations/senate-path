@@ -1,5 +1,5 @@
 import { CommunityConstituency } from '@prisma/client'
-import { prisma } from '../seed'
+import { db } from '../../lib/db'
 import { 
   FIRST_NAMES, 
   LAST_NAMES, 
@@ -33,7 +33,7 @@ export async function seedNominations(constituencies: CommunityConstituency[]) {
     })
   }
 
-  await prisma.nomination.createMany({
+  await db.nomination.createMany({
     data: nominations,
     skipDuplicates: true,
   })

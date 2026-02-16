@@ -1,7 +1,7 @@
-import { prisma } from '../seed'
+import { db } from '../../lib/db'
 
 export async function seedSettings() {
-  await prisma.settings.create({
+  await db.settings.create({
     data: {
       requiredNominations: 15,
       maxCommunityNominations: 7,

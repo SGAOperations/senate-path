@@ -1,4 +1,4 @@
-import { prisma } from '../seed'
+import { db } from '../../lib/db'
 import { 
   FIRST_NAMES, 
   LAST_NAMES, 
@@ -26,7 +26,7 @@ export async function seedEndorsements() {
     })
   }
 
-  await prisma.endorsement.createMany({
+  await db.endorsement.createMany({
     data: endorsements,
     skipDuplicates: true,
   })
