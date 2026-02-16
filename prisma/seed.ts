@@ -5,7 +5,7 @@ import { seedApplications } from './seed/applications'
 import { seedNominations } from './seed/nominations'
 import { seedEndorsements } from './seed/endorsements'
 
-const prisma = new PrismaClient()
+export const prisma = new PrismaClient()
 
 async function main() {
   const nodeEnv = process.env.NODE_ENV || 'development'
@@ -15,15 +15,13 @@ async function main() {
   }
 
   const existingData = await prisma.communityConstituency.findFirst()
-  if (existingData) {
-    return
-  }
+  if (existingData) return
 
-  const constituencies = await seedCommunityConstituencies(prisma)
-  await seedSettings(prisma)
-  await seedApplications(prisma, constituencies)
-  await seedNominations(prisma, constituencies)
-  await seedEndorsements(prisma)
+  const constituencies = await seedCommunityConstituencies()
+  await seedSettings()
+  await seedApplications(constituencies)
+  await seedNominations(constituencies)
+  await seedEndorsements()
 }
 
 main()

@@ -1,4 +1,5 @@
-import { PrismaClient, CommunityConstituency } from '@prisma/client'
+import { CommunityConstituency } from '@prisma/client'
+import { prisma } from '../seed'
 import {
   FIRST_NAMES,
   LAST_NAMES,
@@ -11,12 +12,12 @@ import {
   PRONOUNS,
   LONG_ANSWERS,
   randomItem,
+  generateNUID,
+  generateEmail,
+  generatePhoneNumber,
 } from './constants'
 
-export async function seedApplications(
-  prisma: PrismaClient,
-  constituencies: CommunityConstituency[]
-) {
+export async function seedApplications(constituencies: CommunityConstituency[]) {
   const applications = []
 
   for (let i = 0; i < 5; i++) {
@@ -25,14 +26,14 @@ export async function seedApplications(
     const fullName = `${firstName} ${lastName}`
 
     applications.push({
-      nuid: `00100000${i}`,
+      nuid: generateNUID(),
       fullName,
       preferredFullName: fullName,
       phoneticPronunciation: fullName,
       pronunciationAudioUrl: `https://example.com/audio/${i}.mp3`,
       pronouns: randomItem(PRONOUNS),
-      email: `user${i + 1}@northeastern.edu`,
-      phoneNumber: `617-555-010${i}`,
+      email: generateEmail(firstName, lastName),
+      phoneNumber: generatePhoneNumber(),
       college: randomItem(COLLEGES),
       major: randomItem(MAJORS),
       minors: randomItem(MINORS),

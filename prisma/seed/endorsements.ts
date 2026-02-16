@@ -1,7 +1,13 @@
-import { PrismaClient } from '@prisma/client'
-import { FIRST_NAMES, LAST_NAMES, ENDORSEMENT_CONTENT, randomItem } from './constants'
+import { prisma } from '../seed'
+import { 
+  FIRST_NAMES, 
+  LAST_NAMES, 
+  ENDORSEMENT_CONTENT, 
+  randomItem,
+  generateEmail,
+} from './constants'
 
-export async function seedEndorsements(prisma: PrismaClient) {
+export async function seedEndorsements() {
   const endorsements = []
 
   for (let i = 0; i < 5; i++) {
@@ -12,7 +18,7 @@ export async function seedEndorsements(prisma: PrismaClient) {
 
     endorsements.push({
       endorserName: `${endorserFirst} ${endorserLast}`,
-      endorserEmail: `endorser${i + 1}@northeastern.edu`,
+      endorserEmail: generateEmail(endorserFirst, endorserLast),
       applicantName: `${applicantFirst} ${applicantLast}`,
       definingTraits: randomItem(ENDORSEMENT_CONTENT.definingTraits),
       leadershipQualities: randomItem(ENDORSEMENT_CONTENT.leadershipQualities),

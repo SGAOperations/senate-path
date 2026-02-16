@@ -1,4 +1,3 @@
-// Predefined data arrays
 export const FIRST_NAMES = ['Alex', 'Jordan', 'Taylor', 'Morgan', 'Casey']
 export const LAST_NAMES = ['Smith', 'Johnson', 'Williams', 'Brown', 'Davis']
 export const COLLEGES = [
@@ -79,3 +78,34 @@ export const ENDORSEMENT_CONTENT = {
 }
 
 export const randomItem = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)]
+
+export const randomInt = (min: number, max: number): number => 
+  Math.floor(Math.random() * (max - min + 1)) + min
+
+export const generateNUID = (): string => {
+  const randomDigits = randomInt(100000, 999999)
+  return `001${randomDigits}`
+}
+
+export const generateEmail = (firstName: string, lastName: string): string => {
+  const randomNum = randomInt(1, 9999)
+  const cleanFirst = firstName.toLowerCase().replace(/[^a-z]/g, '')
+  const cleanLast = lastName.toLowerCase().replace(/[^a-z]/g, '')
+  return `${cleanFirst}.${cleanLast}${randomNum}@northeastern.edu`
+}
+
+export const generatePhoneNumber = (): string => {
+  const areaCode = randomInt(200, 999)
+  const prefix = randomInt(200, 999)
+  const lineNumber = randomInt(1000, 9999)
+  return `${areaCode}-${prefix}-${lineNumber}`
+}
+
+export const getRandomConstituencyId = (
+  index: number,
+  constituencies: Array<{ id: string }>
+): string | null => {
+  if (index % 2 === 0) return null
+  if (index >= 4) return null
+  return constituencies[Math.floor(index / 2)].id
+}
