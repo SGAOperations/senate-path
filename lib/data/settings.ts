@@ -12,12 +12,15 @@ export interface Settings {
   applicationsOpen: boolean;
   nominationsOpen: boolean;
   customMessage: string | null;
+  cycleId: string;
   createdAt: Date;
   updatedAt: Date;
 }
 
 // Fixed ID for the singleton settings record
 const SETTINGS_ID = 'default';
+// Default cycle ID used in initial migration
+const DEFAULT_CYCLE_ID = 'default-cycle';
 
 export async function getSettings(): Promise<Settings> {
   // Use upsert to atomically get or create settings
@@ -34,6 +37,7 @@ export async function getSettings(): Promise<Settings> {
       applicationsOpen: true,
       nominationsOpen: true,
       customMessage: null,
+      cycleId: DEFAULT_CYCLE_ID,
     },
   });
 

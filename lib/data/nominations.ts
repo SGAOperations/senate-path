@@ -122,7 +122,7 @@ export async function getNomineesWithMinVotes(minVotes: number) {
     .sort((a, b) => b.count - a.count);
 }
 
-export async function createNomination(data: Omit<Nomination, 'id' | 'createdAt' | 'status'>) {
+export async function createNomination(data: Omit<Nomination, 'id' | 'createdAt' | 'status' | 'cycleId'>) {
   // Validate: Can't nominate yourself
   if (data.fullName === data.nominee) {
     throw new Error('You cannot nominate yourself for Senator');
@@ -150,11 +150,17 @@ export async function createNomination(data: Omit<Nomination, 'id' | 'createdAt'
     throw new Error(`This nominator has already nominated ${data.nominee}`);
   }
 
+  const activeCycle = await db.cycle.findFirst({ where: { isActive: true } });
+  if (!activeCycle) {
+    throw new Error('No active cycle found');
+  }
+
   // Create nomination
   return db.nomination.create({
     data: {
       ...data,
       status: Status.APPROVED,
+      cycleId: activeCycle.id,
     },
   });
 }

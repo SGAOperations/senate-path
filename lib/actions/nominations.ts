@@ -85,6 +85,11 @@ export async function createNomination(data: NominationData) {
     }
 
     // Create nomination with PENDING status
+    const activeCycle = await db.cycle.findFirst({ where: { isActive: true } });
+    if (!activeCycle) {
+      throw new Error('No active cycle found');
+    }
+
     await db.nomination.create({
       data: {
         fullName: data.fullName,
@@ -95,6 +100,7 @@ export async function createNomination(data: NominationData) {
         constituencyType: data.constituencyType,
         communityConstituencyId: data.constituencyType === 'community' ? data.communityConstituencyId : null,
         status: 'PENDING',
+        cycleId: activeCycle.id,
       },
     });
 

@@ -18,6 +18,8 @@ export interface UpdateSettingsData {
 
 // Fixed ID for the singleton settings record
 const SETTINGS_ID = 'default';
+// Default cycle ID used in initial migration
+const DEFAULT_CYCLE_ID = 'default-cycle';
 
 export async function updateSettings(data: UpdateSettingsData) {
   try {
@@ -50,6 +52,7 @@ export async function updateSettings(data: UpdateSettingsData) {
       create: {
         id: SETTINGS_ID,
         ...settingsData,
+        cycleId: DEFAULT_CYCLE_ID,
       },
     });
 

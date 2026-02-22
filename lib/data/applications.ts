@@ -161,8 +161,13 @@ export async function getNominationFormData() {
 }
 
 export async function createOrUpdateApplication(
-  data: Omit<Application, 'id' | 'createdAt' | 'nominationFormPdfUrl'>,
+  data: Omit<Application, 'id' | 'createdAt' | 'nominationFormPdfUrl' | 'cycleId'>,
 ) {
+  const activeCycle = await db.cycle.findFirst({ where: { isActive: true } });
+  if (!activeCycle) {
+    throw new Error('No active cycle found');
+  }
+
   const existing = await db.application.findUnique({
     where: { nuid: data.nuid },
   });
@@ -184,7 +189,7 @@ export async function createOrUpdateApplication(
 
   // Create new application
   return db.application.create({
-    data,
+    data: { ...data, cycleId: activeCycle.id },
   });
 }
 
