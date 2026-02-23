@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -10,7 +9,6 @@ import Link from 'next/link';
 import AdminDashboard from '@/components/AdminDashboard';
 import NominationsManager from '@/components/NominationsManager';
 import SettingsForm from '@/app/admin/settings/settings-form';
-import { SetActiveModal } from '@/app/admin/cycles/set-active-modal';
 import { EndorsementsView } from './endorsements-view';
 import { Settings } from '@/lib/data/settings';
 import { Endorsement, Nomination, Application } from '@prisma/client';
@@ -55,21 +53,6 @@ export function CycleDashboard({
   endorsements,
   settings,
 }: CycleDashboardProps) {
-  const router = useRouter();
-  const [showSetActiveModal, setShowSetActiveModal] = useState(false);
-
-  const cycleWithCounts = {
-    id: cycle.id,
-    name: cycle.name,
-    isActive: cycle.isActive,
-    createdAt: new Date(),
-    _count: {
-      applications: applications.length,
-      nominations: nominations.length,
-      endorsements: endorsements.length,
-    },
-  };
-
   const defaultSettings: Settings = settings ?? {
     id: '',
     requiredNominations: 15,
@@ -96,38 +79,23 @@ export function CycleDashboard({
           <ArrowLeft className="h-4 w-4 mr-1" />
           Back to Cycle Archive
         </Link>
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">{cycle.name}</h1>
-            <Badge variant={cycle.isActive ? 'success' : 'secondary'}>
-              {cycle.isActive ? 'Active' : 'Inactive'}
-            </Badge>
-          </div>
-          {!cycle.isActive && (
-            <Button onClick={() => setShowSetActiveModal(true)}>
-              Set as Active
-            </Button>
-          )}
+        <div className="flex items-center gap-3">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">{cycle.name}</h1>
+          <Badge variant={cycle.isActive ? 'success' : 'secondary'}>
+            {cycle.isActive ? 'Active' : 'Inactive'}
+          </Badge>
         </div>
       </div>
 
-      {showSetActiveModal && (
-        <SetActiveModal
-          cycle={cycleWithCounts}
-          onClose={() => {
-            setShowSetActiveModal(false);
-            router.refresh();
-          }}
-        />
-      )}
-
       {/* Tabs */}
       <Tabs defaultValue="applications">
-        <TabsList className="mb-6">
+        <TabsList className="mb-6 w-full">
           <TabsTrigger value="applications">Applications</TabsTrigger>
           <TabsTrigger value="nominations">Nominations</TabsTrigger>
           <TabsTrigger value="endorsements">Endorsements</TabsTrigger>
-          <TabsTrigger value="settings">Settings</TabsTrigger>
+          {settings !== null && (
+            <TabsTrigger value="settings">Settings</TabsTrigger>
+          )}
         </TabsList>
 
         <TabsContent value="applications">
@@ -149,9 +117,11 @@ export function CycleDashboard({
           <EndorsementsView endorsements={endorsements} />
         </TabsContent>
 
-        <TabsContent value="settings">
-          <SettingsForm settings={defaultSettings} readOnly={!cycle.isActive} />
-        </TabsContent>
+        {settings !== null && (
+          <TabsContent value="settings">
+            <SettingsForm settings={settings} readOnly />
+          </TabsContent>
+        )}
       </Tabs>
     </div>
   );

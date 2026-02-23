@@ -113,12 +113,14 @@ export function CyclesManager({ cycles }: CyclesManagerProps) {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                        <Link href={`/admin/cycles/${cycle.id}`}>
-                          <Button size="sm" variant="outline">
-                            <ExternalLink className="h-4 w-4 mr-1" />
-                            View
-                          </Button>
-                        </Link>
+                        {!cycle.isActive && (
+                          <Link href={`/admin/cycles/${cycle.id}`}>
+                            <Button size="sm" variant="outline">
+                              <ExternalLink className="h-4 w-4 mr-1" />
+                              View
+                            </Button>
+                          </Link>
+                        )}
                         {!cycle.isActive && (
                           <Button
                             size="sm"

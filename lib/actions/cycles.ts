@@ -65,7 +65,6 @@ export async function setActiveCycle(id: string): Promise<Record<string, never> 
     });
 
     revalidatePath('/admin');
-    revalidatePath('/admin/cycles');
 
     return {};
   } catch {
