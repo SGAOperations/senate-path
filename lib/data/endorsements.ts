@@ -2,9 +2,17 @@
 
 import { db } from '@/lib/db';
 import { Endorsement } from '@prisma/client';
+import { getActiveCycle } from '@/lib/data/cycles';
 
 export async function getEndorsements() {
   return db.endorsement.findMany({
+    orderBy: { createdAt: 'desc' },
+  });
+}
+
+export async function getEndorsementsByCycleId(cycleId: string) {
+  return db.endorsement.findMany({
+    where: { cycleId },
     orderBy: { createdAt: 'desc' },
   });
 }
@@ -23,7 +31,7 @@ export async function getEndorsementsByEmail(email: string) {
   });
 }
 
-export async function createEndorsement(data: Omit<Endorsement, 'id' | 'createdAt'>) {
+export async function createEndorsement(data: Omit<Endorsement, 'id' | 'createdAt' | 'cycleId'>) {
   // Validate: Applicant must exist
   const applicant = await db.application.findFirst({
     where: { fullName: data.applicantName },
@@ -45,9 +53,11 @@ export async function createEndorsement(data: Omit<Endorsement, 'id' | 'createdA
     throw new Error(`You have already endorsed ${data.applicantName}`);
   }
 
+  const activeCycle = await getActiveCycle();
+
   // Create endorsement
   return db.endorsement.create({
-    data,
+    data: { ...data, cycleId: activeCycle.id },
   });
 }
 

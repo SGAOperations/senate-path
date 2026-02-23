@@ -2,6 +2,7 @@
 
 import { db } from '@/lib/db';
 import { Nomination } from '@prisma/client';
+import { getActiveCycle } from '@/lib/data/cycles';
 
 const Status = {
   APPROVED: 'APPROVED',
@@ -11,6 +12,18 @@ const Status = {
 
 export async function getNominations() {
   return db.nomination.findMany({
+    include: {
+      communityConstituency: {
+        select: { name: true },
+      },
+    },
+    orderBy: { createdAt: 'desc' },
+  });
+}
+
+export async function getNominationsByCycleId(cycleId: string) {
+  return db.nomination.findMany({
+    where: { cycleId },
     include: {
       communityConstituency: {
         select: { name: true },
@@ -122,7 +135,7 @@ export async function getNomineesWithMinVotes(minVotes: number) {
     .sort((a, b) => b.count - a.count);
 }
 
-export async function createNomination(data: Omit<Nomination, 'id' | 'createdAt' | 'status'>) {
+export async function createNomination(data: Omit<Nomination, 'id' | 'createdAt' | 'status' | 'cycleId'>) {
   // Validate: Can't nominate yourself
   if (data.fullName === data.nominee) {
     throw new Error('You cannot nominate yourself for Senator');
@@ -150,11 +163,14 @@ export async function createNomination(data: Omit<Nomination, 'id' | 'createdAt'
     throw new Error(`This nominator has already nominated ${data.nominee}`);
   }
 
+  const activeCycle = await getActiveCycle();
+
   // Create nomination
   return db.nomination.create({
     data: {
       ...data,
       status: Status.APPROVED,
+      cycleId: activeCycle.id,
     },
   });
 }

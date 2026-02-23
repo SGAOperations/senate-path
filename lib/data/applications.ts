@@ -2,6 +2,7 @@
 
 import { db } from '@/lib/db';
 import { Application } from '@prisma/client';
+import { getActiveCycle } from '@/lib/data/cycles';
 
 export async function getApplications() {
   return db.application.findMany();
@@ -63,7 +64,8 @@ export async function getApplicationWithNominations(id: string) {
   }
 
   const nominations = await db.nomination.findMany({
-    where: { nominee: application.fullName },
+    // Filter by the application's own cycleId to ensure nominations are from the same cycle
+    where: { nominee: application.fullName, cycleId: application.cycleId },
     include: {
       communityConstituency: {
         select: { name: true },
@@ -73,7 +75,48 @@ export async function getApplicationWithNominations(id: string) {
   });
 
   const endorsements = await db.endorsement.findMany({
-    where: { applicantName: application.fullName },
+    where: { applicantName: application.fullName, cycleId: application.cycleId },
+    orderBy: { createdAt: 'desc' },
+  });
+
+  const nominationCount = nominations.filter(
+    (n) => n.status === 'APPROVED' || n.status === 'PENDING',
+  ).length;
+
+  return {
+    ...application,
+    nominations,
+    endorsements,
+    nominationCount,
+  };
+}
+
+export async function getApplicationWithNominationsByCycleId(cycleId: string, id: string) {
+  const application = await db.application.findUnique({
+    where: { id },
+    include: {
+      communityConstituency: {
+        select: { name: true },
+      },
+    },
+  });
+
+  if (!application) {
+    return null;
+  }
+
+  const nominations = await db.nomination.findMany({
+    where: { nominee: application.fullName, cycleId },
+    include: {
+      communityConstituency: {
+        select: { name: true },
+      },
+    },
+    orderBy: { createdAt: 'desc' },
+  });
+
+  const endorsements = await db.endorsement.findMany({
+    where: { applicantName: application.fullName, cycleId },
     orderBy: { createdAt: 'desc' },
   });
 
@@ -90,7 +133,10 @@ export async function getApplicationWithNominations(id: string) {
 }
 
 export async function getApplicationsWithNominationCounts() {
+  const activeCycle = await getActiveCycle();
+
   const applications = await db.application.findMany({
+    where: { cycleId: activeCycle.id },
     include: {
       communityConstituency: {
         select: { name: true },
@@ -104,6 +150,7 @@ export async function getApplicationsWithNominationCounts() {
       const nominationCount = await db.nomination.count({
         where: {
           nominee: app.fullName,
+          cycleId: activeCycle.id,
           status: {
             in: ['APPROVED', 'PENDING'],
           },
@@ -113,6 +160,7 @@ export async function getApplicationsWithNominationCounts() {
       const endorsementCount = await db.endorsement.count({
         where: {
           applicantName: app.fullName,
+          cycleId: activeCycle.id,
         },
       });
 
@@ -160,9 +208,52 @@ export async function getNominationFormData() {
   };
 }
 
+export async function getApplicationsWithNominationCountsByCycleId(cycleId: string) {
+  const applications = await db.application.findMany({
+    where: { cycleId },
+    include: {
+      communityConstituency: {
+        select: { name: true },
+      },
+    },
+    orderBy: { createdAt: 'desc' },
+  });
+
+  const applicationsWithCounts = await Promise.all(
+    applications.map(async (app) => {
+      const nominationCount = await db.nomination.count({
+        where: {
+          nominee: app.fullName,
+          cycleId,
+          status: {
+            in: ['APPROVED', 'PENDING'],
+          },
+        },
+      });
+
+      const endorsementCount = await db.endorsement.count({
+        where: {
+          applicantName: app.fullName,
+          cycleId,
+        },
+      });
+
+      return {
+        ...app,
+        nominationCount,
+        endorsementCount,
+      };
+    }),
+  );
+
+  return applicationsWithCounts;
+}
+
 export async function createOrUpdateApplication(
-  data: Omit<Application, 'id' | 'createdAt' | 'nominationFormPdfUrl'>,
+  data: Omit<Application, 'id' | 'createdAt' | 'nominationFormPdfUrl' | 'cycleId'>,
 ) {
+  const activeCycle = await getActiveCycle();
+
   const existing = await db.application.findUnique({
     where: { nuid: data.nuid },
   });
@@ -184,7 +275,7 @@ export async function createOrUpdateApplication(
 
   // Create new application
   return db.application.create({
-    data,
+    data: { ...data, cycleId: activeCycle.id },
   });
 }
 

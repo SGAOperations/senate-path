@@ -1,6 +1,7 @@
 'use server';
 
 import { db } from '@/lib/db';
+import { getActiveCycle } from '@/lib/data/cycles';
 
 export interface Settings {
   id: string;
@@ -12,20 +13,25 @@ export interface Settings {
   applicationsOpen: boolean;
   nominationsOpen: boolean;
   customMessage: string | null;
+  cycleId: string;
   createdAt: Date;
   updatedAt: Date;
 }
 
-// Fixed ID for the singleton settings record
-const SETTINGS_ID = 'default';
+export async function getSettingsByCycleId(cycleId: string): Promise<Settings | null> {
+  return db.settings.findUnique({
+    where: { cycleId },
+  });
+}
 
 export async function getSettings(): Promise<Settings> {
-  // Use upsert to atomically get or create settings
+  const activeCycle = await getActiveCycle();
+
+  // Use upsert to atomically get or create settings for the active cycle
   const settings = await db.settings.upsert({
-    where: { id: SETTINGS_ID },
+    where: { cycleId: activeCycle.id },
     update: {},
     create: {
-      id: SETTINGS_ID,
       requiredNominations: 15,
       maxCommunityNominations: 7,
       endorsementRequired: false,
@@ -34,6 +40,7 @@ export async function getSettings(): Promise<Settings> {
       applicationsOpen: true,
       nominationsOpen: true,
       customMessage: null,
+      cycleId: activeCycle.id,
     },
   });
 

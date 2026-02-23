@@ -3,7 +3,7 @@
 import { db } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
-import { redirect } from 'next/navigation';
+import { getActiveCycle } from '@/lib/data/cycles';
 
 export interface UpdateSettingsData {
   requiredNominations: number;
@@ -16,9 +16,6 @@ export interface UpdateSettingsData {
   customMessage: string | null;
 }
 
-// Fixed ID for the singleton settings record
-const SETTINGS_ID = 'default';
-
 export async function updateSettings(data: UpdateSettingsData) {
   try {
     // Check if user is authenticated
@@ -29,6 +26,12 @@ export async function updateSettings(data: UpdateSettingsData) {
 
     if (!user) {
       return { success: false, error: 'Unauthorized' };
+    }
+
+    const activeCycle = await getActiveCycle();
+
+    if (!activeCycle.isActive) {
+      return { success: false, error: 'Cannot update settings for an inactive cycle' };
     }
 
     // Prepare settings data
@@ -43,14 +46,10 @@ export async function updateSettings(data: UpdateSettingsData) {
       customMessage: data.customMessage,
     };
 
-    // Use upsert to atomically create or update settings
-    const settings = await db.settings.upsert({
-      where: { id: SETTINGS_ID },
-      update: settingsData,
-      create: {
-        id: SETTINGS_ID,
-        ...settingsData,
-      },
+    // Only update settings that belong to the active cycle
+    const settings = await db.settings.update({
+      where: { cycleId: activeCycle.id },
+      data: settingsData,
     });
 
     // Revalidate all pages that might use settings
