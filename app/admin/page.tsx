@@ -35,7 +35,7 @@ export default async function AdminPage() {
             Admin Dashboard
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Viewing: {activeCycle.name}
+            {activeCycle.name}
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
