@@ -24,3 +24,9 @@ export async function getCycles() {
     orderBy: { createdAt: 'desc' },
   });
 }
+
+export async function getCycleById(id: string) {
+  return db.cycle.findUnique({
+    where: { id },
+  });
+}

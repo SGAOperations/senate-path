@@ -1,9 +1,14 @@
-import { getSettings } from '@/lib/data/settings';
+import { getSettings, getSettingsByCycleId } from '@/lib/data/settings';
+import { getCycleById } from '@/lib/data/cycles';
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import SettingsForm from './settings-form';
 
-export default async function SettingsPage() {
+export default async function SettingsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ cycleId?: string }>;
+}) {
   const supabase = await createClient();
   const {
     data: { user },
@@ -13,7 +18,25 @@ export default async function SettingsPage() {
     redirect('/login');
   }
 
-  const settings = await getSettings();
+  const { cycleId } = await searchParams;
+
+  let settings;
+  let isReadOnly = false;
+
+  if (cycleId) {
+    const cycle = await getCycleById(cycleId);
+    if (!cycle) {
+      redirect('/admin/settings');
+    }
+    isReadOnly = !cycle.isActive;
+    settings = await getSettingsByCycleId(cycleId);
+    if (!settings) {
+      // Inactive cycle with no settings - redirect back to avoid confusion
+      redirect('/admin/settings');
+    }
+  } else {
+    settings = await getSettings();
+  }
 
   return (
     <div className="container max-w-4xl mx-auto py-3 sm:py-6 px-3 sm:px-4">
@@ -25,7 +48,7 @@ export default async function SettingsPage() {
           Configure the application and nomination process settings
         </p>
       </div>
-      <SettingsForm settings={settings} />
+      <SettingsForm settings={settings} isReadOnly={isReadOnly} />
     </div>
   );
 }

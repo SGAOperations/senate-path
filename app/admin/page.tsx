@@ -30,6 +30,12 @@ export default async function AdminPage() {
           Admin Dashboard
         </h1>
         <div className="flex flex-wrap gap-2">
+          <Link href="/admin/cycles">
+            <Button variant="outline">
+              <Settings className="h-4 w-4 mr-2" />
+              Manage Cycles
+            </Button>
+          </Link>
           <Link href="/admin/settings">
             <Button variant="default">
               <Settings className="h-4 w-4 mr-2" />
