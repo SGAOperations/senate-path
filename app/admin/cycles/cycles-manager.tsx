@@ -97,7 +97,6 @@ export function CyclesManager({ cycles }: CyclesManagerProps) {
                 {cycles.map((cycle) => (
                   <TableRow
                     key={cycle.id}
-                    className={cycle.isActive ? 'bg-success/10' : undefined}
                   >
                     <TableCell className="font-medium">{cycle.name}</TableCell>
                     <TableCell>
