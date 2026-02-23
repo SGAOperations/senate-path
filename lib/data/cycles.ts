@@ -24,3 +24,20 @@ export async function getCycles() {
     orderBy: { createdAt: 'desc' },
   });
 }
+
+export async function getCyclesWithCounts() {
+  const cycles = await db.cycle.findMany({
+    where: { deletedAt: null },
+    orderBy: { createdAt: 'desc' },
+    include: {
+      _count: {
+        select: {
+          applications: true,
+          nominations: true,
+          endorsements: true,
+        },
+      },
+    },
+  });
+  return cycles;
+}
