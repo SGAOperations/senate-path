@@ -1,6 +1,6 @@
 {
   "name": "@nomination-system/source",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "license": "MIT",
   "scripts": {
     "dev": "next dev",
