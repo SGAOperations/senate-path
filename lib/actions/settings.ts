@@ -30,6 +30,10 @@ export async function updateSettings(data: UpdateSettingsData) {
 
     const activeCycle = await getActiveCycle();
 
+    if (!activeCycle.isActive) {
+      return { success: false, error: 'Cannot update settings for an inactive cycle' };
+    }
+
     // Prepare settings data
     const settingsData = {
       requiredNominations: data.requiredNominations,
@@ -42,14 +46,10 @@ export async function updateSettings(data: UpdateSettingsData) {
       customMessage: data.customMessage,
     };
 
-    // Use upsert to atomically create or update settings for the active cycle
-    const settings = await db.settings.upsert({
+    // Only update settings that belong to the active cycle
+    const settings = await db.settings.update({
       where: { cycleId: activeCycle.id },
-      update: settingsData,
-      create: {
-        ...settingsData,
-        cycleId: activeCycle.id,
-      },
+      data: settingsData,
     });
 
     // Revalidate all pages that might use settings
