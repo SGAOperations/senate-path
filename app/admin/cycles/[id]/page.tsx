@@ -43,7 +43,7 @@ export default async function CyclePage({ params }: CyclePageProps) {
     <CycleDashboard
       cycle={cycle}
       applications={applications}
-      getApplicationDetails={(appId) => getApplicationWithNominationsByCycleId(appId, id)}
+      getApplicationDetails={getApplicationWithNominationsByCycleId.bind(null, id)}
       nominations={nominations}
       endorsements={endorsements}
       settings={settings}

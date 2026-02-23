@@ -91,7 +91,7 @@ export async function getApplicationWithNominations(id: string) {
   };
 }
 
-export async function getApplicationWithNominationsByCycleId(id: string, cycleId: string) {
+export async function getApplicationWithNominationsByCycleId(cycleId: string, id: string) {
   const application = await db.application.findUnique({
     where: { id },
     include: {
