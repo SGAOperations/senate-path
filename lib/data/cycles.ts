@@ -25,6 +25,12 @@ export async function getCycles() {
   });
 }
 
+export async function getCycleById(id: string) {
+  return db.cycle.findUnique({
+    where: { id },
+  });
+}
+
 export async function getCyclesWithCounts() {
   const cycles = await db.cycle.findMany({
     where: { deletedAt: null },

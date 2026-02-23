@@ -21,6 +21,18 @@ export async function getNominations() {
   });
 }
 
+export async function getNominationsByCycleId(cycleId: string) {
+  return db.nomination.findMany({
+    where: { cycleId },
+    include: {
+      communityConstituency: {
+        select: { name: true },
+      },
+    },
+    orderBy: { createdAt: 'desc' },
+  });
+}
+
 export async function getAllNominations() {
   return db.nomination.findMany({
     include: {

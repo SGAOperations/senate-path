@@ -47,9 +47,10 @@ type SettingsFormData = z.infer<typeof settingsSchema>;
 
 interface SettingsFormProps {
   settings: Settings;
+  readOnly?: boolean;
 }
 
-export default function SettingsForm({ settings }: SettingsFormProps) {
+export default function SettingsForm({ settings, readOnly = false }: SettingsFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -116,6 +117,15 @@ export default function SettingsForm({ settings }: SettingsFormProps) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      {readOnly && (
+        <Alert>
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            This is an inactive cycle. Settings cannot be modified.
+          </AlertDescription>
+        </Alert>
+      )}
+
       {error && (
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
@@ -140,7 +150,7 @@ export default function SettingsForm({ settings }: SettingsFormProps) {
                 min="1"
                 max="100"
                 {...register('requiredNominations', { valueAsNumber: true })}
-                disabled={isSubmitting}
+                disabled={isSubmitting || readOnly}
               />
               {errors.requiredNominations && (
                 <p className="text-sm text-destructive">
@@ -162,7 +172,7 @@ export default function SettingsForm({ settings }: SettingsFormProps) {
                 min="0"
                 max="100"
                 {...register('maxCommunityNominations', { valueAsNumber: true })}
-                disabled={isSubmitting}
+                disabled={isSubmitting || readOnly}
               />
               {errors.maxCommunityNominations && (
                 <p className="text-sm text-destructive">
@@ -190,7 +200,7 @@ export default function SettingsForm({ settings }: SettingsFormProps) {
                   });
                 }
               }}
-              disabled={isSubmitting}
+              disabled={isSubmitting || readOnly}
             />
             <div className="space-y-1">
               <Label
@@ -226,7 +236,7 @@ export default function SettingsForm({ settings }: SettingsFormProps) {
               id="applicationDeadline"
               type="datetime-local"
               {...register('applicationDeadline')}
-              disabled={isSubmitting}
+              disabled={isSubmitting || readOnly}
             />
             {errors.applicationDeadline && (
               <p className="text-sm text-destructive">
@@ -247,7 +257,7 @@ export default function SettingsForm({ settings }: SettingsFormProps) {
                   shouldDirty: true,
                 })
               }
-              disabled={isSubmitting}
+              disabled={isSubmitting || readOnly}
             />
             <div className="space-y-1">
               <Label
@@ -271,7 +281,7 @@ export default function SettingsForm({ settings }: SettingsFormProps) {
                   shouldDirty: true,
                 })
               }
-              disabled={isSubmitting}
+              disabled={isSubmitting || readOnly}
             />
             <div className="space-y-1">
               <Label
@@ -301,7 +311,7 @@ export default function SettingsForm({ settings }: SettingsFormProps) {
                   });
                 }
               }}
-              disabled={isSubmitting}
+              disabled={isSubmitting || readOnly}
             />
             <div className="space-y-1">
               <Label
@@ -338,7 +348,7 @@ export default function SettingsForm({ settings }: SettingsFormProps) {
               rows={4}
               placeholder="Enter a custom message to display to applicants..."
               {...register('customMessage')}
-              disabled={isSubmitting}
+              disabled={isSubmitting || readOnly}
             />
             {errors.customMessage && (
               <p className="text-sm text-destructive">
@@ -352,26 +362,28 @@ export default function SettingsForm({ settings }: SettingsFormProps) {
         </CardContent>
       </Card>
 
-      <div className="flex justify-end gap-3">
-        <Button
-          type="submit"
-          disabled={isSubmitting || !isDirty}
-          size="lg"
-          className="min-w-[150px]"
-        >
-          {isSubmitting ? (
-            <>
-              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-              Saving...
-            </>
-          ) : (
-            <>
-              <Save className="mr-2 h-5 w-5" />
-              Save Settings
-            </>
-          )}
-        </Button>
-      </div>
+      {!readOnly && (
+        <div className="flex justify-end gap-3">
+          <Button
+            type="submit"
+            disabled={isSubmitting || !isDirty}
+            size="lg"
+            className="min-w-[150px]"
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              <>
+                <Save className="mr-2 h-5 w-5" />
+                Save Settings
+              </>
+            )}
+          </Button>
+        </div>
+      )}
     </form>
   );
 }

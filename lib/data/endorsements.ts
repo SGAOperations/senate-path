@@ -10,6 +10,13 @@ export async function getEndorsements() {
   });
 }
 
+export async function getEndorsementsByCycleId(cycleId: string) {
+  return db.endorsement.findMany({
+    where: { cycleId },
+    orderBy: { createdAt: 'desc' },
+  });
+}
+
 export async function getEndorsementsByApplicant(applicantName: string) {
   return db.endorsement.findMany({
     where: { applicantName },
