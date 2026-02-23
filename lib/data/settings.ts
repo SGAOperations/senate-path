@@ -46,3 +46,9 @@ export async function getSettings(): Promise<Settings> {
 
   return settings;
 }
+
+export async function getSettingsByCycleId(cycleId: string): Promise<Settings | null> {
+  return db.settings.findUnique({
+    where: { cycleId },
+  });
+}

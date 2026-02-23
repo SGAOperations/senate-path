@@ -20,28 +20,26 @@ import { Loader2, Save, AlertCircle } from 'lucide-react';
 // Validation limits for nomination requirements
 // Max 100 is chosen as a reasonable upper limit for manual nomination collection
 // while still allowing flexibility for different election cycles
-const settingsSchema = z.object({
-  requiredNominations: z.number().min(1).max(100),
-  maxCommunityNominations: z.number().min(0).max(100),
-  endorsementRequired: z.boolean(),
-  endorsementsOpen: z.boolean(),
-  applicationDeadline: z.string().optional(),
-  applicationsOpen: z.boolean(),
-  nominationsOpen: z.boolean(),
-  customMessage: z.string().optional(),
-}).refine(
-  (data) => data.maxCommunityNominations <= data.requiredNominations,
-  {
-    message: 'Max community nominations cannot exceed total required nominations',
+const settingsSchema = z
+  .object({
+    requiredNominations: z.number().min(1).max(100),
+    maxCommunityNominations: z.number().min(0).max(100),
+    endorsementRequired: z.boolean(),
+    endorsementsOpen: z.boolean(),
+    applicationDeadline: z.string().optional(),
+    applicationsOpen: z.boolean(),
+    nominationsOpen: z.boolean(),
+    customMessage: z.string().optional(),
+  })
+  .refine((data) => data.maxCommunityNominations <= data.requiredNominations, {
+    message:
+      'Max community nominations cannot exceed total required nominations',
     path: ['maxCommunityNominations'],
-  }
-).refine(
-  (data) => !(data.endorsementRequired && !data.endorsementsOpen),
-  {
+  })
+  .refine((data) => !(data.endorsementRequired && !data.endorsementsOpen), {
     message: 'Endorsements cannot be both required and closed',
     path: ['endorsementsOpen'],
-  }
-);
+  });
 
 type SettingsFormData = z.infer<typeof settingsSchema>;
 
@@ -50,7 +48,10 @@ interface SettingsFormProps {
   readOnly?: boolean;
 }
 
-export default function SettingsForm({ settings, readOnly = false }: SettingsFormProps) {
+export default function SettingsForm({
+  settings,
+  readOnly = false,
+}: SettingsFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -118,9 +119,9 @@ export default function SettingsForm({ settings, readOnly = false }: SettingsFor
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       {readOnly && (
-        <Alert>
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>
+        <Alert className="border-yellow-500 bg-yellow-50 dark:bg-yellow-950/30">
+          <AlertCircle className="h-4 w-4 text-yellow-600 dark:text-yellow-500" />
+          <AlertDescription className="text-yellow-800 dark:text-yellow-300">
             This is an inactive cycle. Settings cannot be modified.
           </AlertDescription>
         </Alert>
@@ -171,7 +172,9 @@ export default function SettingsForm({ settings, readOnly = false }: SettingsFor
                 type="number"
                 min="0"
                 max="100"
-                {...register('maxCommunityNominations', { valueAsNumber: true })}
+                {...register('maxCommunityNominations', {
+                  valueAsNumber: true,
+                })}
                 disabled={isSubmitting || readOnly}
               />
               {errors.maxCommunityNominations && (
@@ -180,7 +183,8 @@ export default function SettingsForm({ settings, readOnly = false }: SettingsFor
                 </p>
               )}
               <p className="text-sm text-muted-foreground">
-                Maximum number of nominations that can come from community constituencies (cannot exceed total required nominations)
+                Maximum number of nominations that can come from community
+                constituencies (cannot exceed total required nominations)
               </p>
             </div>
           </div>
@@ -210,7 +214,8 @@ export default function SettingsForm({ settings, readOnly = false }: SettingsFor
                 Require Endorsement
               </Label>
               <p className="text-sm text-muted-foreground">
-                When enabled, applicants must receive an endorsement to complete their application
+                When enabled, applicants must receive an endorsement to complete
+                their application
               </p>
             </div>
           </div>
@@ -226,7 +231,9 @@ export default function SettingsForm({ settings, readOnly = false }: SettingsFor
           <Alert className="border-orange-500 bg-orange-50 dark:bg-orange-950/30">
             <AlertCircle className="h-4 w-4 text-orange-600 dark:text-orange-500" />
             <AlertDescription className="text-orange-800 dark:text-orange-300">
-              <strong>Important:</strong> Forms will NOT automatically close when the deadline passes. You must manually toggle the checkboxes below to close forms.
+              <strong>Important:</strong> Forms will NOT automatically close
+              when the deadline passes. You must manually toggle the checkboxes
+              below to close forms.
             </AlertDescription>
           </Alert>
 
@@ -244,7 +251,9 @@ export default function SettingsForm({ settings, readOnly = false }: SettingsFor
               </p>
             )}
             <p className="text-sm text-muted-foreground">
-              Deadline for applications to be submitted (leave empty for no deadline). Note: This is informational only and does not automatically close forms.
+              Deadline for applications to be submitted (leave empty for no
+              deadline). Note: This is informational only and does not
+              automatically close forms.
             </p>
           </div>
 
@@ -267,7 +276,8 @@ export default function SettingsForm({ settings, readOnly = false }: SettingsFor
                 Applications Open
               </Label>
               <p className="text-sm text-muted-foreground">
-                When disabled, the application form will be closed and links will be hidden
+                When disabled, the application form will be closed and links
+                will be hidden
               </p>
             </div>
           </div>
@@ -291,7 +301,8 @@ export default function SettingsForm({ settings, readOnly = false }: SettingsFor
                 Nominations Open
               </Label>
               <p className="text-sm text-muted-foreground">
-                When disabled, the nomination form will be closed for people who have already applied
+                When disabled, the nomination form will be closed for people who
+                have already applied
               </p>
             </div>
           </div>
@@ -321,7 +332,8 @@ export default function SettingsForm({ settings, readOnly = false }: SettingsFor
                 Endorsements Open
               </Label>
               <p className="text-sm text-muted-foreground">
-                When enabled, the endorsement form will be accessible and links will be shown
+                When enabled, the endorsement form will be accessible and links
+                will be shown
               </p>
               {errors.endorsementsOpen && (
                 <p className="text-sm text-destructive">
@@ -340,9 +352,7 @@ export default function SettingsForm({ settings, readOnly = false }: SettingsFor
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="customMessage">
-              Custom Message for Applicants
-            </Label>
+            <Label htmlFor="customMessage">Custom Message for Applicants</Label>
             <Textarea
               id="customMessage"
               rows={4}
@@ -356,7 +366,8 @@ export default function SettingsForm({ settings, readOnly = false }: SettingsFor
               </p>
             )}
             <p className="text-sm text-muted-foreground">
-              This message will be displayed on the home page and application forms
+              This message will be displayed on the home page and application
+              forms
             </p>
           </div>
         </CardContent>

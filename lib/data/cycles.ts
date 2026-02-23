@@ -30,7 +30,7 @@ export async function getCycleById(id: string) {
     where: { id },
   });
 }
-
+  
 export async function getCyclesWithCounts() {
   const cycles = await db.cycle.findMany({
     where: { deletedAt: null },
