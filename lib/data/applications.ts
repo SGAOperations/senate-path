@@ -2,6 +2,7 @@
 
 import { db } from '@/lib/db';
 import { Application } from '@prisma/client';
+import { getActiveCycle } from '@/lib/data/cycles';
 
 export async function getApplications() {
   return db.application.findMany();
@@ -163,10 +164,7 @@ export async function getNominationFormData() {
 export async function createOrUpdateApplication(
   data: Omit<Application, 'id' | 'createdAt' | 'nominationFormPdfUrl' | 'cycleId'>,
 ) {
-  const activeCycle = await db.cycle.findFirst({ where: { isActive: true } });
-  if (!activeCycle) {
-    throw new Error('No active cycle found');
-  }
+  const activeCycle = await getActiveCycle();
 
   const existing = await db.application.findUnique({
     where: { nuid: data.nuid },
