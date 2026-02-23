@@ -10,7 +10,8 @@ import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
-import { createCycle, isActionError } from '@/lib/actions/cycles';
+import { createCycle } from '@/lib/actions/cycles';
+import { isActionError } from '@/lib/actions/utils';
 
 const createCycleSchema = z.object({
   name: z.string().min(1, 'Cycle name is required'),

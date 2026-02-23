@@ -15,7 +15,8 @@ import {
 import { Plus, Trash2, ExternalLink } from 'lucide-react';
 import { toast } from 'sonner';
 import Link from 'next/link';
-import { deleteCycle, isActionError } from '@/lib/actions/cycles';
+import { deleteCycle } from '@/lib/actions/cycles';
+import { isActionError } from '@/lib/actions/utils';
 import { CreateCycleModal } from './create-cycle-modal';
 import { SetActiveModal } from './set-active-modal';
 

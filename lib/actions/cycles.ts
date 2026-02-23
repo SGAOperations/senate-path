@@ -3,12 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/db';
 import type { Cycle } from '@prisma/client';
-
-type ActionError = { error: string };
-
-export function isActionError(result: unknown): result is ActionError {
-  return typeof result === 'object' && result !== null && 'error' in result;
-}
+import type { ActionError } from '@/lib/actions/utils';
 
 /**
  * Create a new cycle. If setActive is true, deactivate all other cycles.

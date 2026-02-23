@@ -11,7 +11,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { setActiveCycle, isActionError } from '@/lib/actions/cycles';
+import { setActiveCycle } from '@/lib/actions/cycles';
+import { isActionError } from '@/lib/actions/utils';
 import type { CycleWithCounts } from './cycles-manager';
 
 interface SetActiveModalProps {
