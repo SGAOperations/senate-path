@@ -3,7 +3,7 @@
 import { db } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
-import { redirect } from 'next/navigation';
+import { getActiveCycle } from '@/lib/data/cycles';
 
 export interface UpdateSettingsData {
   requiredNominations: number;
@@ -15,9 +15,6 @@ export interface UpdateSettingsData {
   nominationsOpen: boolean;
   customMessage: string | null;
 }
-
-// Fixed ID for the singleton settings record
-const SETTINGS_ID = 'default';
 
 export async function updateSettings(data: UpdateSettingsData) {
   try {
@@ -31,6 +28,8 @@ export async function updateSettings(data: UpdateSettingsData) {
       return { success: false, error: 'Unauthorized' };
     }
 
+    const activeCycle = await getActiveCycle();
+
     // Prepare settings data
     const settingsData = {
       requiredNominations: data.requiredNominations,
@@ -43,13 +42,13 @@ export async function updateSettings(data: UpdateSettingsData) {
       customMessage: data.customMessage,
     };
 
-    // Use upsert to atomically create or update settings
+    // Use upsert to atomically create or update settings for the active cycle
     const settings = await db.settings.upsert({
-      where: { id: SETTINGS_ID },
+      where: { cycleId: activeCycle.id },
       update: settingsData,
       create: {
-        id: SETTINGS_ID,
         ...settingsData,
+        cycleId: activeCycle.id,
       },
     });
 

@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/db';
+import { getActiveCycle } from '@/lib/data/cycles';
 
 const Status = {
   APPROVED: 'APPROVED',
@@ -85,6 +86,8 @@ export async function createNomination(data: NominationData) {
     }
 
     // Create nomination with PENDING status
+    const activeCycle = await getActiveCycle();
+
     await db.nomination.create({
       data: {
         fullName: data.fullName,
@@ -95,6 +98,7 @@ export async function createNomination(data: NominationData) {
         constituencyType: data.constituencyType,
         communityConstituencyId: data.constituencyType === 'community' ? data.communityConstituencyId : null,
         status: 'PENDING',
+        cycleId: activeCycle.id,
       },
     });
 
