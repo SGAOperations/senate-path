@@ -57,6 +57,12 @@ export default async function AdminPage() {
               Manage Community Constituencies
             </Button>
           </Link>
+          <Link href="/admin/cycles">
+            <Button variant="outline" className="w-full sm:w-auto">
+              <Settings className="h-4 w-4 mr-2" />
+              Manage Cycles
+            </Button>
+          </Link>
         </div>
       </div>
       <AdminDashboard
