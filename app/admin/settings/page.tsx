@@ -31,8 +31,7 @@ export default async function SettingsPage({
     isReadOnly = !cycle.isActive;
     settings = await getSettingsByCycleId(cycleId);
     if (!settings) {
-      // Inactive cycle with no settings - redirect back to avoid confusion
-      redirect('/admin/settings');
+      throw new Error(`Settings not found for cycle ${cycleId}. All cycles should have a settings record.`);
     }
   } else {
     settings = await getSettings();
