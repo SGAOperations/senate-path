@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -16,7 +15,7 @@ import {
 import { Plus, Trash2, ExternalLink } from 'lucide-react';
 import { toast } from 'sonner';
 import Link from 'next/link';
-import { deleteCycle } from '@/lib/actions/cycles';
+import { deleteCycle, isActionError } from '@/lib/actions/cycles';
 import { CreateCycleModal } from './create-cycle-modal';
 import { SetActiveModal } from './set-active-modal';
 
@@ -37,7 +36,6 @@ interface CyclesManagerProps {
 }
 
 export function CyclesManager({ cycles }: CyclesManagerProps) {
-  const router = useRouter();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [activeCycleToSet, setActiveCycleToSet] = useState<CycleWithCounts | null>(null);
 
@@ -45,11 +43,10 @@ export function CyclesManager({ cycles }: CyclesManagerProps) {
     if (!confirm(`Are you sure you want to delete cycle "${cycle.name}"?`)) return;
 
     const result = await deleteCycle(cycle.id);
-    if (result.success) {
-      toast.success(`Cycle "${cycle.name}" deleted`);
-      router.refresh();
+    if (isActionError(result)) {
+      toast.error(result.error);
     } else {
-      toast.error(result.error || 'Failed to delete cycle');
+      toast.success(`Cycle "${cycle.name}" deleted`);
     }
   };
 
@@ -130,11 +127,12 @@ export function CyclesManager({ cycles }: CyclesManagerProps) {
                             Set Active
                           </Button>
                         )}
-                        {!cycle.isActive && isEmpty(cycle) && (
+                        {!cycle.isActive && (
                           <Button
                             size="sm"
                             variant="destructive"
                             onClick={() => handleDelete(cycle)}
+                            disabled={!isEmpty(cycle)}
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -151,3 +149,4 @@ export function CyclesManager({ cycles }: CyclesManagerProps) {
     </div>
   );
 }
+

@@ -1,7 +1,5 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -12,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
-import { createCycle } from '@/lib/actions/cycles';
+import { createCycle, isActionError } from '@/lib/actions/cycles';
 
 const createCycleSchema = z.object({
   name: z.string().min(1, 'Cycle name is required'),
@@ -25,12 +23,10 @@ interface CreateCycleModalProps {
 }
 
 export function CreateCycleModal({ onClose }: CreateCycleModalProps) {
-  const router = useRouter();
-  const [serverError, setServerError] = useState<string | null>(null);
-
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<CreateCycleFormData>({
     resolver: zodResolver(createCycleSchema),
@@ -38,18 +34,16 @@ export function CreateCycleModal({ onClose }: CreateCycleModalProps) {
 
   const handleCreate = (setActive: boolean) =>
     handleSubmit(async (data) => {
-      setServerError(null);
       const result = await createCycle(data.name, setActive);
-      if (result.success) {
+      if (isActionError(result)) {
+        setError('root', { message: result.error });
+      } else {
         toast.success(
           setActive
             ? `Cycle "${data.name}" created and set as active`
             : `Cycle "${data.name}" created`
         );
         onClose();
-        router.refresh();
-      } else {
-        setServerError(result.error || 'Failed to create cycle');
       }
     });
 
@@ -60,10 +54,10 @@ export function CreateCycleModal({ onClose }: CreateCycleModalProps) {
           <CardTitle>Create New Cycle</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          {serverError && (
+          {errors.root && (
             <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
-              <AlertDescription>{serverError}</AlertDescription>
+              <AlertDescription>{errors.root.message}</AlertDescription>
             </Alert>
           )}
           <div>

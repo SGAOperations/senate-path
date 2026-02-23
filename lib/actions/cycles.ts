@@ -2,11 +2,21 @@
 
 import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/db';
+import type { Cycle } from '@prisma/client';
+
+type ActionError = { error: string };
+
+export function isActionError(result: unknown): result is ActionError {
+  return typeof result === 'object' && result !== null && 'error' in result;
+}
 
 /**
  * Create a new cycle. If setActive is true, deactivate all other cycles.
  */
-export async function createCycle(name: string, setActive: boolean) {
+export async function createCycle(
+  name: string,
+  setActive: boolean
+): Promise<{ cycle: Cycle } | ActionError> {
   try {
     if (setActive) {
       await db.cycle.updateMany({
@@ -28,14 +38,11 @@ export async function createCycle(name: string, setActive: boolean) {
       });
     }
 
-    revalidatePath('/admin/cycles');
     revalidatePath('/admin');
-    revalidatePath('/cycles');
 
-    return { success: true, cycle };
-  } catch (error) {
-    console.error('Error creating cycle:', error);
-    return { success: false, error: 'Failed to create cycle' };
+    return { cycle };
+  } catch {
+    return { error: 'Failed to create cycle' };
   }
 }
 
@@ -43,7 +50,7 @@ export async function createCycle(name: string, setActive: boolean) {
  * Set a cycle as active, deactivating all others.
  * Creates default Settings for the cycle if none exist.
  */
-export async function setActiveCycle(id: string) {
+export async function setActiveCycle(id: string): Promise<Record<string, never> | ActionError> {
   try {
     await db.cycle.updateMany({
       where: { isActive: true },
@@ -62,21 +69,18 @@ export async function setActiveCycle(id: string) {
       create: { cycleId: id },
     });
 
-    revalidatePath('/admin/cycles');
     revalidatePath('/admin');
-    revalidatePath('/cycles');
 
-    return { success: true };
-  } catch (error) {
-    console.error('Error setting active cycle:', error);
-    return { success: false, error: 'Failed to set active cycle' };
+    return {};
+  } catch {
+    return { error: 'Failed to set active cycle' };
   }
 }
 
 /**
  * Soft-delete an inactive cycle. Only allowed if the cycle has no data.
  */
-export async function deleteCycle(id: string) {
+export async function deleteCycle(id: string): Promise<Record<string, never> | ActionError> {
   try {
     const cycle = await db.cycle.findUnique({
       where: { id },
@@ -92,18 +96,17 @@ export async function deleteCycle(id: string) {
     });
 
     if (!cycle) {
-      return { success: false, error: 'Cycle not found' };
+      return { error: 'Cycle not found' };
     }
 
     if (cycle.isActive) {
-      return { success: false, error: 'Cannot delete the active cycle' };
+      return { error: 'Cannot delete the active cycle' };
     }
 
     const total =
       cycle._count.applications + cycle._count.nominations + cycle._count.endorsements;
     if (total > 0) {
       return {
-        success: false,
         error: 'Cannot delete a cycle that has applications, nominations, or endorsements',
       };
     }
@@ -113,13 +116,11 @@ export async function deleteCycle(id: string) {
       data: { deletedAt: new Date() },
     });
 
-    revalidatePath('/admin/cycles');
     revalidatePath('/admin');
-    revalidatePath('/cycles');
 
-    return { success: true };
-  } catch (error) {
-    console.error('Error deleting cycle:', error);
-    return { success: false, error: 'Failed to delete cycle' };
+    return {};
+  } catch {
+    return { error: 'Failed to delete cycle' };
   }
 }
+
