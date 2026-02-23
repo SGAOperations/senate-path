@@ -35,10 +35,7 @@ export default async function AdminPage() {
             Admin Dashboard
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Viewing: {activeCycle.name}{' '}
-            <Link href="/admin/cycles" className="underline hover:text-foreground transition-colors">
-              View All Cycles
-            </Link>
+            Viewing: {activeCycle.name}
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
