@@ -3,6 +3,7 @@ import {
   getApplicationWithNominations,
 } from '@/lib/data/applications';
 import { getSettings } from '@/lib/data/settings';
+import { getActiveCycle } from '@/lib/data/cycles';
 import AdminDashboard from '@/components/AdminDashboard';
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
@@ -20,15 +21,26 @@ export default async function AdminPage() {
     redirect('/login');
   }
 
-  const applications = await getApplicationsWithNominationCounts();
-  const settings = await getSettings();
+  const [applications, settings, activeCycle] = await Promise.all([
+    getApplicationsWithNominationCounts(),
+    getSettings(),
+    getActiveCycle(),
+  ]);
 
   return (
     <div className="container max-w-[1600px] mx-auto py-3 sm:py-6 px-3 sm:px-4">
       <div className="mb-3 sm:mb-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 flex-wrap">
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">
-          Admin Dashboard
-        </h1>
+        <div>
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">
+            Admin Dashboard
+          </h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            Viewing: {activeCycle.name}{' '}
+            <Link href="/admin/cycles" className="underline hover:text-foreground transition-colors">
+              View All Cycles
+            </Link>
+          </p>
+        </div>
         <div className="flex flex-wrap gap-2">
           <Link href="/admin/settings">
             <Button variant="default">
