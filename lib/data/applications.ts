@@ -91,6 +91,47 @@ export async function getApplicationWithNominations(id: string) {
   };
 }
 
+export async function getApplicationWithNominationsByCycleId(cycleId: string, id: string) {
+  const application = await db.application.findUnique({
+    where: { id },
+    include: {
+      communityConstituency: {
+        select: { name: true },
+      },
+    },
+  });
+
+  if (!application) {
+    return null;
+  }
+
+  const nominations = await db.nomination.findMany({
+    where: { nominee: application.fullName, cycleId },
+    include: {
+      communityConstituency: {
+        select: { name: true },
+      },
+    },
+    orderBy: { createdAt: 'desc' },
+  });
+
+  const endorsements = await db.endorsement.findMany({
+    where: { applicantName: application.fullName, cycleId },
+    orderBy: { createdAt: 'desc' },
+  });
+
+  const nominationCount = nominations.filter(
+    (n) => n.status === 'APPROVED' || n.status === 'PENDING',
+  ).length;
+
+  return {
+    ...application,
+    nominations,
+    endorsements,
+    nominationCount,
+  };
+}
+
 export async function getApplicationsWithNominationCounts() {
   const activeCycle = await getActiveCycle();
 
@@ -165,6 +206,47 @@ export async function getNominationFormData() {
     constituencies: constituencies.map((c) => c.constituency),
     communityConstituencies,
   };
+}
+
+export async function getApplicationsWithNominationCountsByCycleId(cycleId: string) {
+  const applications = await db.application.findMany({
+    where: { cycleId },
+    include: {
+      communityConstituency: {
+        select: { name: true },
+      },
+    },
+    orderBy: { createdAt: 'desc' },
+  });
+
+  const applicationsWithCounts = await Promise.all(
+    applications.map(async (app) => {
+      const nominationCount = await db.nomination.count({
+        where: {
+          nominee: app.fullName,
+          cycleId,
+          status: {
+            in: ['APPROVED', 'PENDING'],
+          },
+        },
+      });
+
+      const endorsementCount = await db.endorsement.count({
+        where: {
+          applicantName: app.fullName,
+          cycleId,
+        },
+      });
+
+      return {
+        ...app,
+        nominationCount,
+        endorsementCount,
+      };
+    }),
+  );
+
+  return applicationsWithCounts;
 }
 
 export async function createOrUpdateApplication(
