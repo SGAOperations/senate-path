@@ -7,10 +7,6 @@ import { db } from '@/lib/db';
  * Create a new cycle. If setActive is true, deactivate all other cycles.
  */
 export async function createCycle(name: string, setActive: boolean) {
-  if (!name.trim()) {
-    return { success: false, error: 'Cycle name is required' };
-  }
-
   try {
     if (setActive) {
       await db.cycle.updateMany({
@@ -24,6 +20,7 @@ export async function createCycle(name: string, setActive: boolean) {
     });
 
     if (setActive) {
+      // Create default settings for the new active cycle if none exist
       await db.settings.upsert({
         where: { cycleId: cycle.id },
         update: {},
@@ -33,14 +30,12 @@ export async function createCycle(name: string, setActive: boolean) {
 
     revalidatePath('/admin/cycles');
     revalidatePath('/admin');
+    revalidatePath('/cycles');
 
     return { success: true, cycle };
   } catch (error) {
     console.error('Error creating cycle:', error);
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Failed to create cycle',
-    };
+    return { success: false, error: 'Failed to create cycle' };
   }
 }
 
@@ -60,6 +55,7 @@ export async function setActiveCycle(id: string) {
       data: { isActive: true },
     });
 
+    // Create default settings for the newly active cycle if none exist
     await db.settings.upsert({
       where: { cycleId: id },
       update: {},
@@ -68,14 +64,12 @@ export async function setActiveCycle(id: string) {
 
     revalidatePath('/admin/cycles');
     revalidatePath('/admin');
+    revalidatePath('/cycles');
 
     return { success: true };
   } catch (error) {
     console.error('Error setting active cycle:', error);
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Failed to set active cycle',
-    };
+    return { success: false, error: 'Failed to set active cycle' };
   }
 }
 
@@ -121,13 +115,11 @@ export async function deleteCycle(id: string) {
 
     revalidatePath('/admin/cycles');
     revalidatePath('/admin');
+    revalidatePath('/cycles');
 
     return { success: true };
   } catch (error) {
     console.error('Error deleting cycle:', error);
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Failed to delete cycle',
-    };
+    return { success: false, error: 'Failed to delete cycle' };
   }
 }

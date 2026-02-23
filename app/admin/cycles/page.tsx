@@ -1,5 +1,5 @@
 import { getCyclesWithCounts } from '@/lib/data/cycles';
-import CyclesManager from '@/components/CyclesManager';
+import { CyclesManager } from './cycles-manager';
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 
