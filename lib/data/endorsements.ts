@@ -2,6 +2,7 @@
 
 import { db } from '@/lib/db';
 import { Endorsement } from '@prisma/client';
+import { getActiveCycle } from '@/lib/data/cycles';
 
 export async function getEndorsements() {
   return db.endorsement.findMany({
@@ -45,10 +46,7 @@ export async function createEndorsement(data: Omit<Endorsement, 'id' | 'createdA
     throw new Error(`You have already endorsed ${data.applicantName}`);
   }
 
-  const activeCycle = await db.cycle.findFirst({ where: { isActive: true } });
-  if (!activeCycle) {
-    throw new Error('No active cycle found');
-  }
+  const activeCycle = await getActiveCycle();
 
   // Create endorsement
   return db.endorsement.create({

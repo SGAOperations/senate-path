@@ -1,6 +1,7 @@
 'use server';
 
 import { db } from '@/lib/db';
+import { getActiveCycle } from '@/lib/data/cycles';
 
 export interface Settings {
   id: string;
@@ -17,18 +18,14 @@ export interface Settings {
   updatedAt: Date;
 }
 
-// Fixed ID for the singleton settings record
-const SETTINGS_ID = 'default';
-// Default cycle ID used in initial migration
-const DEFAULT_CYCLE_ID = 'default-cycle';
-
 export async function getSettings(): Promise<Settings> {
-  // Use upsert to atomically get or create settings
+  const activeCycle = await getActiveCycle();
+
+  // Use upsert to atomically get or create settings for the active cycle
   const settings = await db.settings.upsert({
-    where: { id: SETTINGS_ID },
+    where: { cycleId: activeCycle.id },
     update: {},
     create: {
-      id: SETTINGS_ID,
       requiredNominations: 15,
       maxCommunityNominations: 7,
       endorsementRequired: false,
@@ -37,7 +34,7 @@ export async function getSettings(): Promise<Settings> {
       applicationsOpen: true,
       nominationsOpen: true,
       customMessage: null,
-      cycleId: DEFAULT_CYCLE_ID,
+      cycleId: activeCycle.id,
     },
   });
 

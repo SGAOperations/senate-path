@@ -2,6 +2,7 @@
 
 import { db } from '@/lib/db';
 import { Nomination } from '@prisma/client';
+import { getActiveCycle } from '@/lib/data/cycles';
 
 const Status = {
   APPROVED: 'APPROVED',
@@ -150,10 +151,7 @@ export async function createNomination(data: Omit<Nomination, 'id' | 'createdAt'
     throw new Error(`This nominator has already nominated ${data.nominee}`);
   }
 
-  const activeCycle = await db.cycle.findFirst({ where: { isActive: true } });
-  if (!activeCycle) {
-    throw new Error('No active cycle found');
-  }
+  const activeCycle = await getActiveCycle();
 
   // Create nomination
   return db.nomination.create({

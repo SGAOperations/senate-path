@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/db';
+import { getActiveCycle } from '@/lib/data/cycles';
 
 const Status = {
   APPROVED: 'APPROVED',
@@ -85,10 +86,7 @@ export async function createNomination(data: NominationData) {
     }
 
     // Create nomination with PENDING status
-    const activeCycle = await db.cycle.findFirst({ where: { isActive: true } });
-    if (!activeCycle) {
-      throw new Error('No active cycle found');
-    }
+    const activeCycle = await getActiveCycle();
 
     await db.nomination.create({
       data: {

@@ -3,9 +3,18 @@
 import { db } from '@/lib/db';
 
 export async function getActiveCycle() {
-  return db.cycle.findFirst({
+  const cycle = await db.cycle.findFirst({
     where: { isActive: true },
     orderBy: { createdAt: 'desc' },
+  });
+
+  if (cycle) {
+    return cycle;
+  }
+
+  // Create a default cycle if none exists
+  return db.cycle.create({
+    data: { name: 'Current Cycle', isActive: true },
   });
 }
 
