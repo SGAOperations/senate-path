@@ -18,13 +18,6 @@ export async function getActiveCycle() {
   });
 }
 
-export async function getActiveCycleOrNull() {
-  return db.cycle.findFirst({
-    where: { isActive: true },
-    orderBy: { createdAt: 'desc' },
-  });
-}
-
 export async function getCycles() {
   return db.cycle.findMany({
     where: { deletedAt: null },

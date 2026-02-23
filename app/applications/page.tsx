@@ -1,6 +1,6 @@
 import { getActiveCommunityConstituencies } from '@/lib/data/community-constituencies';
 import { getSettings } from '@/lib/data/settings';
-import { getActiveCycleOrNull } from '@/lib/data/cycles';
+import { redirect } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
 import ApplicationForm from './application-form';
@@ -8,21 +8,6 @@ import ApplicationForm from './application-form';
 export const dynamic = 'force-dynamic';
 
 export default async function ApplicationsPage() {
-  const activeCycle = await getActiveCycleOrNull();
-
-  if (!activeCycle) {
-    return (
-      <div className="container max-w-4xl mx-auto py-12 px-4">
-        <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>
-            <strong>No Active Cycle:</strong> There is no active election cycle configured. Please contact an administrator.
-          </AlertDescription>
-        </Alert>
-      </div>
-    );
-  }
-
   const settings = await getSettings();
   const communityConstituencies = await getActiveCommunityConstituencies();
 
