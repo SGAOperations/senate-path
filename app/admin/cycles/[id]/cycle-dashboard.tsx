@@ -103,6 +103,7 @@ export function CycleDashboard({
             applications={applications}
             getApplicationDetails={getApplicationDetails}
             settings={defaultSettings}
+            readOnly={!cycle.isActive}
           />
         </TabsContent>
 
@@ -110,6 +111,7 @@ export function CycleDashboard({
           <NominationsManager
             nominations={nominations}
             settings={defaultSettings}
+            readOnly={!cycle.isActive}
           />
         </TabsContent>
 
