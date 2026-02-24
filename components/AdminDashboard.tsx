@@ -43,6 +43,7 @@ interface AdminDashboardProps {
   applications: ApplicationWithCount[];
   getApplicationDetails: (id: string) => Promise<ApplicationWithNominations | null>;
   settings: Settings;
+  readOnly?: boolean;
 }
 
 function getNominationBadgeColor(count: number, requiredNominations: number): "success" | "warning" | "info" | "default" {
@@ -52,7 +53,7 @@ function getNominationBadgeColor(count: number, requiredNominations: number): "s
   return "default";                   // Gray for 0-1
 }
 
-export default function AdminDashboard({ applications, getApplicationDetails, settings }: AdminDashboardProps) {
+export default function AdminDashboard({ applications, getApplicationDetails, settings, readOnly = false }: AdminDashboardProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedApplicant, setSelectedApplicant] = useState<ApplicationWithCount | null>(null);
   const [applicantDetails, setApplicantDetails] = useState<ApplicationWithNominations | null>(null);
@@ -417,25 +418,29 @@ export default function AdminDashboard({ applications, getApplicationDetails, se
                                       <Download className="h-4 w-4 mr-2" />
                                       View PDF
                                     </Button>
-                                    <Button
-                                      variant="destructive"
-                                      size="sm"
-                                      onClick={handleRemovePdf}
-                                      disabled={isRemovingPdf}
-                                    >
-                                      <Trash2 className="h-4 w-4 mr-2" />
-                                      {isRemovingPdf ? 'Removing...' : 'Remove PDF'}
-                                    </Button>
+                                    {!readOnly && (
+                                      <Button
+                                        variant="destructive"
+                                        size="sm"
+                                        onClick={handleRemovePdf}
+                                        disabled={isRemovingPdf}
+                                      >
+                                        <Trash2 className="h-4 w-4 mr-2" />
+                                        {isRemovingPdf ? 'Removing...' : 'Remove PDF'}
+                                      </Button>
+                                    )}
                                   </div>
                                 </div>
                               </AlertDescription>
                             </Alert>
                             
-                            <div className="bg-muted p-4 rounded-lg">
-                              <p className="text-sm text-muted-foreground">
-                                To reject this paper nomination, click "Remove PDF" above. The nominee will then be able to collect online nominations or upload a new paper form.
-                              </p>
-                            </div>
+                            {!readOnly && (
+                              <div className="bg-muted p-4 rounded-lg">
+                                <p className="text-sm text-muted-foreground">
+                                  To reject this paper nomination, click "Remove PDF" above. The nominee will then be able to collect online nominations or upload a new paper form.
+                                </p>
+                              </div>
+                            )}
                           </div>
                         </div>
                       </>
