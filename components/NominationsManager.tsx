@@ -36,6 +36,7 @@ type NominationWithCommunity = Nomination & {
 interface NominationsManagerProps {
   nominations: NominationWithCommunity[];
   settings: Settings;
+  readOnly?: boolean;
 }
 
 function getStatusBadge(status: string) {
@@ -61,7 +62,7 @@ function getConstituencyBadge(nom: NominationWithCommunity) {
   return <Badge variant="outline" className="text-xs border-gray-400 dark:border-gray-500">{nom.college}</Badge>;
 }
 
-export default function NominationsManager({ nominations: initialNominations, settings }: NominationsManagerProps) {
+export default function NominationsManager({ nominations: initialNominations, settings, readOnly = false }: NominationsManagerProps) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const isInitialMount = useRef(false);
@@ -405,7 +406,7 @@ export default function NominationsManager({ nominations: initialNominations, se
           </SelectContent>
         </Select>
 
-        {selectedIds.size > 0 && (
+        {!readOnly && selectedIds.size > 0 && (
           <div className="flex gap-2">
             <Button 
               onClick={handleBulkApprove}
@@ -438,40 +439,44 @@ export default function NominationsManager({ nominations: initialNominations, se
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-12">
-                    <Checkbox
-                      checked={allSelected}
-                      onCheckedChange={handleSelectAll}
-                      aria-label="Select all"
-                      className={someSelected ? "data-[state=checked]:bg-primary" : ""}
-                    />
-                  </TableHead>
+                  {!readOnly && (
+                    <TableHead className="w-12">
+                      <Checkbox
+                        checked={allSelected}
+                        onCheckedChange={handleSelectAll}
+                        aria-label="Select all"
+                        className={someSelected ? "data-[state=checked]:bg-primary" : ""}
+                      />
+                    </TableHead>
+                  )}
                   <TableHead>Nominee</TableHead>
                   <TableHead>Nominator</TableHead>
                   <TableHead>Constituency</TableHead>
                   <TableHead>Major(s)</TableHead>
                   <TableHead>Submitted</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  {!readOnly && <TableHead className="text-right">Actions</TableHead>}
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredNominations.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={8} className="text-center text-muted-foreground py-8">
+                    <TableCell colSpan={readOnly ? 7 : 8} className="text-center text-muted-foreground py-8">
                       No nominations found
                     </TableCell>
                   </TableRow>
                 ) : (
                   filteredNominations.map((nom) => (
                     <TableRow key={nom.id}>
-                      <TableCell>
-                        <Checkbox
-                          checked={selectedIds.has(nom.id)}
-                          onCheckedChange={(checked) => handleSelectOne(nom.id, checked as boolean)}
-                          aria-label={`Select ${nom.nominee}`}
-                        />
-                      </TableCell>
+                      {!readOnly && (
+                        <TableCell>
+                          <Checkbox
+                            checked={selectedIds.has(nom.id)}
+                            onCheckedChange={(checked) => handleSelectOne(nom.id, checked as boolean)}
+                            aria-label={`Select ${nom.nominee}`}
+                          />
+                        </TableCell>
+                      )}
                       <TableCell>
                         <div className="font-medium">{nom.nominee}</div>
                       </TableCell>
@@ -489,34 +494,36 @@ export default function NominationsManager({ nominations: initialNominations, se
                         {new Date(nom.createdAt).toLocaleDateString()}
                       </TableCell>
                       <TableCell>{getStatusBadge(nom.status)}</TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex justify-end gap-2">
-                          {nom.status !== 'APPROVED' && (
-                            <Button
-                              size="sm"
-                              onClick={() => handleApprove(nom.id)}
-                              disabled={isProcessing}
-                              variant="outline"
-                              className="border-success text-success hover:bg-success-muted"
-                            >
-                              <CheckCircle className="h-3 w-3 mr-1" />
-                              Approve
-                            </Button>
-                          )}
-                          {nom.status !== 'REJECTED' && (
-                            <Button
-                              size="sm"
-                              onClick={() => handleReject(nom.id)}
-                              disabled={isProcessing}
-                              variant="outline"
-                              className="border-error text-error hover:bg-error-muted"
-                            >
-                              <XCircle className="h-3 w-3 mr-1" />
-                              Reject
-                            </Button>
-                          )}
-                        </div>
-                      </TableCell>
+                      {!readOnly && (
+                        <TableCell className="text-right">
+                          <div className="flex justify-end gap-2">
+                            {nom.status !== 'APPROVED' && (
+                              <Button
+                                size="sm"
+                                onClick={() => handleApprove(nom.id)}
+                                disabled={isProcessing}
+                                variant="outline"
+                                className="border-success text-success hover:bg-success-muted"
+                              >
+                                <CheckCircle className="h-3 w-3 mr-1" />
+                                Approve
+                              </Button>
+                            )}
+                            {nom.status !== 'REJECTED' && (
+                              <Button
+                                size="sm"
+                                onClick={() => handleReject(nom.id)}
+                                disabled={isProcessing}
+                                variant="outline"
+                                className="border-error text-error hover:bg-error-muted"
+                              >
+                                <XCircle className="h-3 w-3 mr-1" />
+                                Reject
+                              </Button>
+                            )}
+                          </div>
+                        </TableCell>
+                      )}
                     </TableRow>
                   ))
                 )}
