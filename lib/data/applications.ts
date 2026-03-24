@@ -176,8 +176,11 @@ export async function getApplicationsWithNominationCounts() {
 }
 
 export async function getNominationFormData() {
-  // Get all nominees (applications)
+  const activeCycle = await getActiveCycle();
+
+  // Get nominees from the active cycle only
   const allNominees = await db.application.findMany({
+    where: { cycleId: activeCycle.id },
     select: { 
       fullName: true, 
       email: true,
@@ -191,6 +194,7 @@ export async function getNominationFormData() {
     .map(({ fullName, email }) => ({ fullName, email }));
 
   const constituencies = await db.application.findMany({
+    where: { cycleId: activeCycle.id },
     select: { constituency: true },
     distinct: ['constituency'],
   });
