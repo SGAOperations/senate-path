@@ -41,9 +41,10 @@ export async function createNomination(data: NominationData) {
       throw new Error('You cannot nominate yourself for Senator');
     }
 
-    // Validate: Nominee must exist and get their constituency info
+    // Validate: Nominee must exist in the active cycle and get their constituency info
+    const activeCycle = await getActiveCycle();
     const nomineeApp = await db.application.findFirst({
-      where: { fullName: data.nominee },
+      where: { fullName: data.nominee, cycleId: activeCycle.id },
       select: { 
         constituency: true,
         communityConstituencyId: true,
@@ -86,8 +87,6 @@ export async function createNomination(data: NominationData) {
     }
 
     // Create nomination with PENDING status
-    const activeCycle = await getActiveCycle();
-
     await db.nomination.create({
       data: {
         fullName: data.fullName,
