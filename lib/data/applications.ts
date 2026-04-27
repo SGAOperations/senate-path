@@ -8,12 +8,6 @@ export async function getApplications() {
   return db.application.findMany();
 }
 
-export async function getApplicationByNuid(nuid: string) {
-  return db.application.findUnique({
-    where: { nuid },
-  });
-}
-
 export async function getApplicationByNuidWithNominations(nuid: string) {
   const application = await db.application.findUnique({
     where: { nuid },
