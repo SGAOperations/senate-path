@@ -4,10 +4,6 @@ import { db } from '@/lib/db';
 import { Application } from '@prisma/client';
 import { getActiveCycle } from '@/lib/data/cycles';
 
-export async function getApplications() {
-  return db.application.findMany();
-}
-
 export async function getApplicationByNuidWithNominations(nuid: string) {
   const application = await db.application.findUnique({
     where: { nuid },
