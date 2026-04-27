@@ -10,17 +10,6 @@ const Status = {
   MANUAL_REVIEW: 'MANUAL_REVIEW',
 } as const;
 
-export async function getNominations() {
-  return db.nomination.findMany({
-    include: {
-      communityConstituency: {
-        select: { name: true },
-      },
-    },
-    orderBy: { createdAt: 'desc' },
-  });
-}
-
 export async function getNominationsByCycleId(cycleId: string) {
   return db.nomination.findMany({
     where: { cycleId },
