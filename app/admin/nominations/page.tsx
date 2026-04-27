@@ -1,4 +1,4 @@
-import { getAllNominations } from '@/lib/data/nominations';
+import { getActiveNominations } from '@/lib/data/nominations';
 import { getSettings } from '@/lib/data/settings';
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
@@ -12,7 +12,7 @@ export default async function NominationsAdminPage() {
     redirect('/login');
   }
 
-  const nominations = await getAllNominations();
+  const nominations = await getActiveNominations();
   const settings = await getSettings();
 
   return (

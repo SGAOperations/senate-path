@@ -22,8 +22,9 @@ export async function getNominationsByCycleId(cycleId: string) {
   });
 }
 
-export async function getAllNominations() {
+export async function getActiveNominations() {
   return db.nomination.findMany({
+    where: { cycle: { isActive: true } },
     include: {
       communityConstituency: {
         select: { name: true },
@@ -33,7 +34,9 @@ export async function getAllNominations() {
   });
 }
 
-export async function getNominationsByStatus(status: 'PENDING' | 'APPROVED' | 'REJECTED') {
+export async function getNominationsByStatus(
+  status: 'PENDING' | 'APPROVED' | 'REJECTED',
+) {
   return db.nomination.findMany({
     where: { status },
     include: {
@@ -124,7 +127,9 @@ export async function getNomineesWithMinVotes(minVotes: number) {
     .sort((a, b) => b.count - a.count);
 }
 
-export async function createNomination(data: Omit<Nomination, 'id' | 'createdAt' | 'status' | 'cycleId'>) {
+export async function createNomination(
+  data: Omit<Nomination, 'id' | 'createdAt' | 'status' | 'cycleId'>,
+) {
   // Validate: Can't nominate yourself
   if (data.fullName === data.nominee) {
     throw new Error('You cannot nominate yourself for Senator');
