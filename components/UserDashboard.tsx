@@ -6,9 +6,22 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Search, User, Vote, TrendingDown, AlertCircle, X, Upload, FileText, Download } from 'lucide-react';
+import {
+  Search,
+  User,
+  Vote,
+  TrendingDown,
+  AlertCircle,
+  X,
+  Upload,
+  FileText,
+  Download,
+} from 'lucide-react';
 import { Application, Nomination, CommunityConstituency } from '@prisma/client';
-import { uploadNominationFormPDF, removeNominationFormPDF } from '@/lib/actions/applications';
+import {
+  uploadNominationFormPDF,
+  removeNominationFormPDF,
+} from '@/lib/actions/applications';
 import { toast } from 'sonner';
 import { Settings } from '@/lib/data/settings';
 
@@ -23,20 +36,29 @@ type ApplicationWithNominations = Application & {
 };
 
 interface UserDashboardProps {
-  getApplicationByNuid: (nuid: string) => Promise<ApplicationWithNominations | null>;
+  getApplicationByNuid: (
+    nuid: string,
+  ) => Promise<ApplicationWithNominations | null>;
   settings: Settings;
 }
 
-function getNominationBadgeColor(count: number, requiredNominations: number): "success" | "warning" | "info" | "default" {
-  if (count >= requiredNominations) return "success";  // Green for meeting requirement
-  if (count >= Math.floor(requiredNominations * 0.8)) return "warning";  // Yellow for 80%+
-  if (count >= 2) return "info";      // Orange for 2+
-  return "default";                   // Gray for 0-1
+function getNominationBadgeColor(
+  count: number,
+  requiredNominations: number,
+): 'success' | 'warning' | 'info' | 'default' {
+  if (count >= requiredNominations) return 'success'; // Green for meeting requirement
+  if (count >= Math.floor(requiredNominations * 0.8)) return 'warning'; // Yellow for 80%+
+  if (count >= 2) return 'info'; // Orange for 2+
+  return 'default'; // Gray for 0-1
 }
 
-export default function UserDashboard({ getApplicationByNuid, settings }: UserDashboardProps) {
+export default function UserDashboard({
+  getApplicationByNuid,
+  settings,
+}: UserDashboardProps) {
   const [nuid, setNuid] = useState('');
-  const [applicantDetails, setApplicantDetails] = useState<ApplicationWithNominations | null>(null);
+  const [applicantDetails, setApplicantDetails] =
+    useState<ApplicationWithNominations | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pdfFile, setPdfFile] = useState<File | null>(null);
@@ -57,7 +79,9 @@ export default function UserDashboard({ getApplicationByNuid, settings }: UserDa
     try {
       const data = await getApplicationByNuid(nuid);
       if (!data) {
-        setError('No application found for this NUID. Please make sure you have submitted an application.');
+        setError(
+          'No application found for this NUID in the current application cycle. Please make sure you have submitted an application.',
+        );
       } else {
         setApplicantDetails(data);
       }
@@ -69,12 +93,17 @@ export default function UserDashboard({ getApplicationByNuid, settings }: UserDa
     }
   };
 
-  const missingNominations = applicantDetails 
-    ? Math.max(0, settings.requiredNominations - applicantDetails.nominationCount)
+  const missingNominations = applicantDetails
+    ? Math.max(
+        0,
+        settings.requiredNominations - applicantDetails.nominationCount,
+      )
     : 0;
 
   const communityNominationCount = applicantDetails
-    ? applicantDetails.nominations.filter(n => n.status === 'APPROVED' && n.constituencyType === 'community').length
+    ? applicantDetails.nominations.filter(
+        (n) => n.status === 'APPROVED' && n.constituencyType === 'community',
+      ).length
     : 0;
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -164,7 +193,10 @@ export default function UserDashboard({ getApplicationByNuid, settings }: UserDa
           <CardTitle className="text-xl sm:text-2xl">Enter Your NUID</CardTitle>
         </CardHeader>
         <CardContent className="pt-0">
-          <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+          <form
+            onSubmit={handleSearch}
+            className="flex flex-col sm:flex-row gap-3 sm:gap-4"
+          >
             <div className="flex-1">
               <Input
                 placeholder="Enter your 9-digit NUID..."
@@ -176,7 +208,11 @@ export default function UserDashboard({ getApplicationByNuid, settings }: UserDa
                 className="h-12 text-base"
               />
             </div>
-            <Button type="submit" disabled={loading} className="h-12 text-base w-full sm:w-auto">
+            <Button
+              type="submit"
+              disabled={loading}
+              className="h-12 text-base w-full sm:w-auto"
+            >
               <Search className="h-4 w-4 mr-2" />
               {loading ? 'Searching...' : 'View My Dashboard'}
             </Button>
@@ -209,52 +245,76 @@ export default function UserDashboard({ getApplicationByNuid, settings }: UserDa
               <CardContent className="pt-4 sm:pt-6">
                 <div className="flex items-center mb-2">
                   <User className="h-5 w-5 mr-2 text-primary" />
-                  <h3 className="text-base sm:text-lg font-semibold">Your Application</h3>
+                  <h3 className="text-base sm:text-lg font-semibold">
+                    Your Application
+                  </h3>
                 </div>
-                <p className="text-xl sm:text-2xl font-bold truncate">{applicantDetails.fullName}</p>
-                <p className="text-sm text-muted-foreground truncate">{applicantDetails.constituency}</p>
+                <p className="text-xl sm:text-2xl font-bold truncate">
+                  {applicantDetails.fullName}
+                </p>
+                <p className="text-sm text-muted-foreground truncate">
+                  {applicantDetails.constituency}
+                </p>
               </CardContent>
             </Card>
-            
+
             <Card>
               <CardContent className="pt-4 sm:pt-6">
                 <div className="flex items-center mb-2">
                   <Vote className="h-5 w-5 mr-2 text-primary" />
                   <h3 className="text-base sm:text-lg font-semibold">
-                    {applicantDetails.nominationFormPdfUrl ? 'Nomination Status' : 'Total Nominations'}
+                    {applicantDetails.nominationFormPdfUrl
+                      ? 'Nomination Status'
+                      : 'Total Nominations'}
                   </h3>
                 </div>
                 {applicantDetails.nominationFormPdfUrl ? (
                   <>
-                    <p className="text-xl sm:text-2xl font-bold text-info">Paper Form</p>
-                    <p className="text-sm text-muted-foreground">uploaded successfully</p>
+                    <p className="text-xl sm:text-2xl font-bold text-info">
+                      Paper Form
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      uploaded successfully
+                    </p>
                   </>
                 ) : (
                   <>
-                    <p className="text-3xl sm:text-4xl font-bold">{applicantDetails.nominationCount}</p>
-                    <p className="text-sm text-muted-foreground">submitted nominations</p>
+                    <p className="text-3xl sm:text-4xl font-bold">
+                      {applicantDetails.nominationCount}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      submitted nominations
+                    </p>
                   </>
                 )}
               </CardContent>
             </Card>
-            
+
             <Card>
               <CardContent className="pt-4 sm:pt-6">
                 <div className="flex items-center mb-2">
                   <TrendingDown className="h-5 w-5 mr-2 text-primary" />
                   <h3 className="text-base sm:text-lg font-semibold">
-                    {applicantDetails.nominationFormPdfUrl ? 'Nomination Method' : 'Missing Nominations'}
+                    {applicantDetails.nominationFormPdfUrl
+                      ? 'Nomination Method'
+                      : 'Missing Nominations'}
                   </h3>
                 </div>
                 {applicantDetails.nominationFormPdfUrl ? (
                   <>
                     <p className="text-xl sm:text-2xl font-bold">Paper</p>
-                    <p className="text-sm text-muted-foreground">{settings.requiredNominations} signatures in PDF</p>
+                    <p className="text-sm text-muted-foreground">
+                      {settings.requiredNominations} signatures in PDF
+                    </p>
                   </>
                 ) : (
                   <>
-                    <p className="text-3xl sm:text-4xl font-bold">{missingNominations}</p>
-                    <p className="text-sm text-muted-foreground">needed to reach {settings.requiredNominations}</p>
+                    <p className="text-3xl sm:text-4xl font-bold">
+                      {missingNominations}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      needed to reach {settings.requiredNominations}
+                    </p>
                   </>
                 )}
               </CardContent>
@@ -266,7 +326,10 @@ export default function UserDashboard({ getApplicationByNuid, settings }: UserDa
             <Alert variant="destructive" className="mb-6">
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>
-                <strong>Warning:</strong> You have {communityNominationCount} approved community constituency nominations. Only {settings.maxCommunityNominations} nominations may come from community constituencies.
+                <strong>Warning:</strong> You have {communityNominationCount}{' '}
+                approved community constituency nominations. Only{' '}
+                {settings.maxCommunityNominations} nominations may come from
+                community constituencies.
               </AlertDescription>
             </Alert>
           )}
@@ -276,7 +339,13 @@ export default function UserDashboard({ getApplicationByNuid, settings }: UserDa
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle className="text-2xl">Your Information</CardTitle>
-                <Badge variant={getNominationBadgeColor(applicantDetails.nominationCount, settings.requiredNominations)} className="text-sm">
+                <Badge
+                  variant={getNominationBadgeColor(
+                    applicantDetails.nominationCount,
+                    settings.requiredNominations,
+                  )}
+                  className="text-sm"
+                >
                   {applicantDetails.nominationCount} Nominations
                 </Badge>
               </div>
@@ -285,19 +354,29 @@ export default function UserDashboard({ getApplicationByNuid, settings }: UserDa
               <div className="space-y-6">
                 {/* Personal Information */}
                 <div>
-                  <h3 className="text-lg font-bold mb-3">Personal Information</h3>
+                  <h3 className="text-lg font-bold mb-3">
+                    Personal Information
+                  </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <p className="text-sm text-muted-foreground">NUID</p>
-                      <p className="font-medium break-all">{applicantDetails.nuid}</p>
+                      <p className="font-medium break-all">
+                        {applicantDetails.nuid}
+                      </p>
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Email</p>
-                      <p className="font-medium break-all">{applicantDetails.email}</p>
+                      <p className="font-medium break-all">
+                        {applicantDetails.email}
+                      </p>
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground">Preferred Name</p>
-                      <p className="font-medium">{applicantDetails.preferredFullName}</p>
+                      <p className="text-sm text-muted-foreground">
+                        Preferred Name
+                      </p>
+                      <p className="font-medium">
+                        {applicantDetails.preferredFullName}
+                      </p>
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Pronouns</p>
@@ -305,19 +384,28 @@ export default function UserDashboard({ getApplicationByNuid, settings }: UserDa
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Phone</p>
-                      <p className="font-medium break-all">{applicantDetails.phoneNumber}</p>
+                      <p className="font-medium break-all">
+                        {applicantDetails.phoneNumber}
+                      </p>
                     </div>
                     <div className="col-span-1 sm:col-span-2">
-                      <p className="text-sm text-muted-foreground mb-1">Name Pronunciation</p>
-                      <p className="font-medium mb-2">{applicantDetails.phoneticPronunciation}</p>
+                      <p className="text-sm text-muted-foreground mb-1">
+                        Name Pronunciation
+                      </p>
+                      <p className="font-medium mb-2">
+                        {applicantDetails.phoneticPronunciation}
+                      </p>
                       {applicantDetails.pronunciationAudioUrl && (
                         <div className="flex items-center gap-2">
-                          <audio 
-                            controls 
+                          <audio
+                            controls
                             className="h-10 w-full max-w-md"
                             preload="none"
                           >
-                            <source src={applicantDetails.pronunciationAudioUrl} type="audio/webm" />
+                            <source
+                              src={applicantDetails.pronunciationAudioUrl}
+                              type="audio/webm"
+                            />
                             Your browser does not support the audio element.
                           </audio>
                         </div>
@@ -330,10 +418,14 @@ export default function UserDashboard({ getApplicationByNuid, settings }: UserDa
 
                 {/* Academic Information */}
                 <div>
-                  <h3 className="text-lg font-bold mb-3">Academic Information</h3>
+                  <h3 className="text-lg font-bold mb-3">
+                    Academic Information
+                  </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <p className="text-sm text-muted-foreground">College(s)</p>
+                      <p className="text-sm text-muted-foreground">
+                        College(s)
+                      </p>
                       <p className="font-medium">{applicantDetails.college}</p>
                     </div>
                     <div>
@@ -342,20 +434,30 @@ export default function UserDashboard({ getApplicationByNuid, settings }: UserDa
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Minor(s)</p>
-                      <p className="font-medium">{applicantDetails.minors || 'None'}</p>
+                      <p className="font-medium">
+                        {applicantDetails.minors || 'None'}
+                      </p>
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Year</p>
                       <p className="font-medium">{applicantDetails.year}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground">Academic Constituency</p>
-                      <p className="font-medium">{applicantDetails.constituency}</p>
+                      <p className="text-sm text-muted-foreground">
+                        Academic Constituency
+                      </p>
+                      <p className="font-medium">
+                        {applicantDetails.constituency}
+                      </p>
                     </div>
                     {applicantDetails.communityConstituency && (
                       <div>
-                        <p className="text-sm text-muted-foreground">Community Constituency</p>
-                        <p className="font-medium">{applicantDetails.communityConstituency.name}</p>
+                        <p className="text-sm text-muted-foreground">
+                          Community Constituency
+                        </p>
+                        <p className="font-medium">
+                          {applicantDetails.communityConstituency.name}
+                        </p>
                       </div>
                     )}
                   </div>
@@ -369,23 +471,35 @@ export default function UserDashboard({ getApplicationByNuid, settings }: UserDa
             <CardHeader>
               <CardTitle className="text-2xl">Paper Nomination Form</CardTitle>
               <p className="text-sm text-muted-foreground mt-2">
-                <strong>Alternative to online nominations:</strong> Upload a single PDF containing all {settings.requiredNominations} nomination signatures you collected from constituents.
+                <strong>Alternative to online nominations:</strong> Upload a
+                single PDF containing all {settings.requiredNominations}{' '}
+                nomination signatures you collected from constituents.
               </p>
             </CardHeader>
             <CardContent>
               {(() => {
                 const hasOnlineNominations = applicantDetails.nominations.some(
-                  n => n.status === 'APPROVED' || n.status === 'PENDING'
+                  (n) => n.status === 'APPROVED' || n.status === 'PENDING',
                 );
-                
-                if (hasOnlineNominations && !applicantDetails.nominationFormPdfUrl) {
+
+                if (
+                  hasOnlineNominations &&
+                  !applicantDetails.nominationFormPdfUrl
+                ) {
                   return (
                     <Alert variant="destructive">
                       <AlertCircle className="h-4 w-4" />
                       <AlertDescription>
                         <strong>Paper nomination upload is disabled.</strong>
-                        <p className="mt-2">You have existing online nominations (pending or approved). You must choose either online nominations OR paper upload, not both.</p>
-                        <p className="mt-2">If you want to use paper nominations instead, all online nominations must be removed first.</p>
+                        <p className="mt-2">
+                          You have existing online nominations (pending or
+                          approved). You must choose either online nominations
+                          OR paper upload, not both.
+                        </p>
+                        <p className="mt-2">
+                          If you want to use paper nominations instead, all
+                          online nominations must be removed first.
+                        </p>
                       </AlertDescription>
                     </Alert>
                   );
@@ -398,11 +512,19 @@ export default function UserDashboard({ getApplicationByNuid, settings }: UserDa
                         <FileText className="h-4 w-4" />
                         <AlertDescription>
                           <div className="flex items-center justify-between">
-                            <span>Your nomination form PDF has been uploaded.</span>
+                            <span>
+                              Your nomination form PDF has been uploaded.
+                            </span>
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => window.open(applicantDetails.nominationFormPdfUrl!, '_blank', 'noopener,noreferrer')}
+                              onClick={() =>
+                                window.open(
+                                  applicantDetails.nominationFormPdfUrl!,
+                                  '_blank',
+                                  'noopener,noreferrer',
+                                )
+                              }
                             >
                               <Download className="h-4 w-4 mr-2" />
                               View PDF
@@ -428,22 +550,28 @@ export default function UserDashboard({ getApplicationByNuid, settings }: UserDa
                       <AlertDescription>
                         <p className="font-semibold mb-2">Instructions:</p>
                         <ol className="list-decimal list-inside space-y-1 text-sm">
-                          <li>Download the paper nomination form from the{' '}
-                            <a 
-                              href="https://northeasternsga.com/senate-election" 
-                              target="_blank" 
+                          <li>
+                            Download the paper nomination form from the{' '}
+                            <a
+                              href="https://northeasternsga.com/senate-election"
+                              target="_blank"
                               rel="noopener noreferrer"
                               className="text-primary hover:underline font-medium"
                             >
                               SGA website (Senate Elections page)
                             </a>
                           </li>
-                          <li>Collect {settings.requiredNominations} nomination signatures from your constituents on the paper form</li>
+                          <li>
+                            Collect {settings.requiredNominations} nomination
+                            signatures from your constituents on the paper form
+                          </li>
                           <li>Scan the completed form as a PDF</li>
                           <li>Upload the PDF below (max 10MB)</li>
                         </ol>
                         <p className="mt-2 text-sm">
-                          <strong>Note:</strong> This is an alternative to having constituents submit nominations online. Choose either paper OR online nominations, not both.
+                          <strong>Note:</strong> This is an alternative to
+                          having constituents submit nominations online. Choose
+                          either paper OR online nominations, not both.
                         </p>
                       </AlertDescription>
                     </Alert>
@@ -463,7 +591,8 @@ export default function UserDashboard({ getApplicationByNuid, settings }: UserDa
                       {pdfFile && (
                         <p className="text-sm text-muted-foreground flex items-center gap-2">
                           <FileText className="h-4 w-4" />
-                          Selected: {pdfFile.name} ({(pdfFile.size / 1024 / 1024).toFixed(2)} MB)
+                          Selected: {pdfFile.name} (
+                          {(pdfFile.size / 1024 / 1024).toFixed(2)} MB)
                         </p>
                       )}
                     </div>
@@ -497,41 +626,75 @@ export default function UserDashboard({ getApplicationByNuid, settings }: UserDa
                       <CardContent className="pt-4">
                         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-2">
                           <div className="min-w-0 flex-1">
-                            <p className="font-medium truncate">{nomination.fullName}</p>
-                            <p className="text-sm text-muted-foreground truncate">{nomination.email}</p>
+                            <p className="font-medium truncate">
+                              {nomination.fullName}
+                            </p>
+                            <p className="text-sm text-muted-foreground truncate">
+                              {nomination.email}
+                            </p>
                           </div>
                           <div className="flex gap-2">
-                            <Badge variant="outline" className="self-start">{nomination.status}</Badge>
-                            {nomination.constituencyType === 'community' && nomination.communityConstituency ? (
-                              <Badge variant="secondary" className="self-start text-xs border border-gray-400 dark:border-gray-500">Community</Badge>
+                            <Badge variant="outline" className="self-start">
+                              {nomination.status}
+                            </Badge>
+                            {nomination.constituencyType === 'community' &&
+                            nomination.communityConstituency ? (
+                              <Badge
+                                variant="secondary"
+                                className="self-start text-xs border border-gray-400 dark:border-gray-500"
+                              >
+                                Community
+                              </Badge>
                             ) : nomination.constituencyType === 'academic' ? (
-                              <Badge variant="outline" className="self-start text-xs border-gray-400 dark:border-gray-500">Academic</Badge>
+                              <Badge
+                                variant="outline"
+                                className="self-start text-xs border-gray-400 dark:border-gray-500"
+                              >
+                                Academic
+                              </Badge>
                             ) : null}
                           </div>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm mt-2">
-                          {nomination.constituencyType === 'community' && nomination.communityConstituency ? (
+                          {nomination.constituencyType === 'community' &&
+                          nomination.communityConstituency ? (
                             <>
                               <div>
-                                <span className="text-muted-foreground">Community Constituency:</span> {nomination.communityConstituency.name}
+                                <span className="text-muted-foreground">
+                                  Community Constituency:
+                                </span>{' '}
+                                {nomination.communityConstituency.name}
                               </div>
                               <div>
-                                <span className="text-muted-foreground">Major(s):</span> {nomination.major}
+                                <span className="text-muted-foreground">
+                                  Major(s):
+                                </span>{' '}
+                                {nomination.major}
                               </div>
                             </>
                           ) : (
                             <>
                               <div>
-                                <span className="text-muted-foreground">College(s):</span> {nomination.college}
+                                <span className="text-muted-foreground">
+                                  College(s):
+                                </span>{' '}
+                                {nomination.college}
                               </div>
                               <div>
-                                <span className="text-muted-foreground">Major(s):</span> {nomination.major}
+                                <span className="text-muted-foreground">
+                                  Major(s):
+                                </span>{' '}
+                                {nomination.major}
                               </div>
                             </>
                           )}
                           <div className="sm:col-span-2">
-                            <span className="text-muted-foreground">Submitted:</span>{' '}
-                            {new Date(nomination.createdAt).toLocaleDateString()}
+                            <span className="text-muted-foreground">
+                              Submitted:
+                            </span>{' '}
+                            {new Date(
+                              nomination.createdAt,
+                            ).toLocaleDateString()}
                           </div>
                         </div>
                       </CardContent>
@@ -546,7 +709,8 @@ export default function UserDashboard({ getApplicationByNuid, settings }: UserDa
             <Alert>
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>
-                You haven't received any nominations yet. Share your candidacy with your constituents!
+                You haven't received any nominations yet. Share your candidacy
+                with your constituents!
               </AlertDescription>
             </Alert>
           )}
