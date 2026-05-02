@@ -75,6 +75,10 @@ const applicationSchema = z
     campaignBlurb: z
       .string()
       .min(50, 'Please provide a detailed response (at least 50 characters)'),
+    bostonCampus: z.boolean({
+      error: 'Please indicate if you will be on the Boston campus',
+    }),
+    bostonCampusExplanation: z.string().optional(),
   })
   .refine(
     (data) => {
@@ -84,6 +88,19 @@ const applicationSchema = z
     {
       message: 'Constituency must be one of the selected colleges',
       path: ['constituency'],
+    },
+  )
+  .refine(
+    (data) => {
+      // If not on Boston campus, explanation is required
+      if (data.bostonCampus === false) {
+        return data.bostonCampusExplanation && data.bostonCampusExplanation.trim().length > 0;
+      }
+      return true;
+    },
+    {
+      message: 'Please explain your situation if you will not be on the Boston campus for the entirety of your term',
+      path: ['bostonCampusExplanation'],
     },
   );
 
@@ -133,11 +150,13 @@ export default function ApplicationForm({
       diversityEquityInclusionLongAnswer: '',
       conflictSituationLongAnswer: '',
       campaignBlurb: '',
+      bostonCampusExplanation: '',
     },
   });
 
   const colleges = watch('college');
   const constituency = watch('constituency');
+  const bostonCampus = watch('bostonCampus');
 
   // Auto-select constituency if only one college is selected, clear if invalid
   useEffect(() => {
@@ -795,6 +814,65 @@ export default function ApplicationForm({
                           </p>
                         )}
                       </div>
+
+                      <div className="space-y-2">
+                        <Label>
+                          Do you plan to be on the Boston campus for the
+                          entirety of your potential term?
+                        </Label>
+                        <div className="flex gap-6">
+                          <label className="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="radio"
+                              value="yes"
+                              checked={bostonCampus === true}
+                              onChange={() =>
+                                setValue('bostonCampus', true, {
+                                  shouldValidate: true,
+                                })
+                              }
+                            />
+                            Yes
+                          </label>
+                          <label className="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="radio"
+                              value="no"
+                              checked={bostonCampus === false}
+                              onChange={() =>
+                                setValue('bostonCampus', false, {
+                                  shouldValidate: true,
+                                })
+                              }
+                            />
+                            No
+                          </label>
+                        </div>
+                        {errors.bostonCampus && (
+                          <p className="text-sm text-destructive">
+                            {errors.bostonCampus.message}
+                          </p>
+                        )}
+                      </div>
+
+                      {bostonCampus === false && (
+                        <div className="space-y-2">
+                          <Label htmlFor="bostonCampusExplanation">
+                            Please explain your situation.
+                          </Label>
+                          <textarea
+                            id="bostonCampusExplanation"
+                            className="w-full min-h-[120px] px-3 py-2 text-sm border border-input bg-background rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
+                            placeholder="Please explain why you will not be on the Boston campus for the entirety of your term"
+                            {...register('bostonCampusExplanation')}
+                          />
+                          {errors.bostonCampusExplanation && (
+                            <p className="text-sm text-destructive">
+                              {errors.bostonCampusExplanation.message}
+                            </p>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
 

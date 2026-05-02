@@ -54,6 +54,8 @@ model Application {
   diversityEquityInclusionLongAnswer String
   conflictSituationLongAnswer        String
   campaignBlurb                      String                 @default("")
+  bostonCampus                       Boolean                @default(true)
+  bostonCampusExplanation            String?
   nominationFormPdfUrl               String?
   createdAt                          DateTime               @default(now())
 

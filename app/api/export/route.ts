@@ -28,6 +28,8 @@ export async function GET(request: NextRequest) {
       'Diversity, Equity, & Inclusion',
       'Conflict Situation',
       'Campaign Blurb',
+      'Boston Campus Full Term',
+      'Boston Campus Explanation',
       'Created At'
     ];
 
@@ -51,6 +53,8 @@ export async function GET(request: NextRequest) {
       app.diversityEquityInclusionLongAnswer || '',
       app.conflictSituationLongAnswer || '',
       app.campaignBlurb || '',
+      app.bostonCampus ? 'Yes' : 'No',
+      app.bostonCampusExplanation || '',
       app.createdAt?.toISOString() || ''
     ]);
 
@@ -66,7 +70,9 @@ export async function GET(request: NextRequest) {
     // Build CSV content
     const csvContent = [
       headers.map(escapeCSVField).join(','),
-      ...rows.map((row) => row.map(escapeCSVField).join(','))
+      ...rows.map((row: (string | null | undefined)[]) =>
+        row.map(escapeCSVField).join(',')
+      )
     ].join('\n');
 
     const filename = `applicants_${new Date().toISOString().split('T')[0]}.csv`;

@@ -391,6 +391,26 @@ export default function AdminDashboard({ applications, getApplicationDetails, se
                           <p className="text-sm font-semibold text-muted-foreground mb-1">Campaign Blurb</p>
                           <p className="text-sm">{selectedApplicant.campaignBlurb}</p>
                         </div>
+                        <div>
+                          <p className="text-sm font-semibold text-muted-foreground mb-1">
+                            Boston campus for full term
+                          </p>
+                          <p className="text-sm">
+                            {selectedApplicant.bostonCampus ? 'Yes' : 'No'}
+                          </p>
+                        </div>
+                        {!selectedApplicant.bostonCampus && (
+                          <div>
+                            <p className="text-sm font-semibold text-muted-foreground mb-1">
+                              Boston campus explanation
+                            </p>
+                            <p className="text-sm">
+                              {selectedApplicant.bostonCampusExplanation?.trim()
+                                ? selectedApplicant.bostonCampusExplanation
+                                : '—'}
+                            </p>
+                          </div>
+                        )}
                       </div>
                     </div>
 

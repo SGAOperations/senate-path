@@ -30,6 +30,8 @@ type ApplicationData = {
   diversityEquityInclusionLongAnswer: string;
   conflictSituationLongAnswer: string;
   campaignBlurb: string;
+  bostonCampus: boolean;
+  bostonCampusExplanation?: string;
 };
 
 export async function submitApplication(formData: ApplicationData) {
@@ -70,6 +72,8 @@ export async function submitApplication(formData: ApplicationData) {
       diversityEquityInclusionLongAnswer: formData.diversityEquityInclusionLongAnswer,
       conflictSituationLongAnswer: formData.conflictSituationLongAnswer,
       campaignBlurb: formData.campaignBlurb,
+      bostonCampus: formData.bostonCampus,
+      bostonCampusExplanation: formData.bostonCampusExplanation || null,
     };
 
     await createOrUpdateApplication(data);
