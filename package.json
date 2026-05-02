@@ -48,9 +48,9 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@types/styled-components": "^5.1.36",
-    "eslint": "^10.2.1",
+    "eslint": "^10.3.0",
     "eslint-config-next": "^16.2.4",
-    "postcss": "^8.5.10",
+    "postcss": "^8.5.13",
     "prettier": "^3.8.3",
     "tailwindcss": "^4.2.4",
     "typescript": "^5.9.3"
