@@ -4,19 +4,9 @@ import { db } from '@/lib/db';
 import { Application } from '@prisma/client';
 import { getActiveCycle } from '@/lib/data/cycles';
 
-export async function getApplications() {
-  return db.application.findMany();
-}
-
-export async function getApplicationByNuid(nuid: string) {
-  return db.application.findUnique({
-    where: { nuid },
-  });
-}
-
-export async function getApplicationByNuidWithNominations(nuid: string) {
+export async function getActiveApplicationByNuidWithNominations(nuid: string) {
   const application = await db.application.findUnique({
-    where: { nuid },
+    where: { nuid, cycle: { isActive: true } },
     include: {
       communityConstituency: {
         select: { name: true },
@@ -75,7 +65,10 @@ export async function getApplicationWithNominations(id: string) {
   });
 
   const endorsements = await db.endorsement.findMany({
-    where: { applicantName: application.fullName, cycleId: application.cycleId },
+    where: {
+      applicantName: application.fullName,
+      cycleId: application.cycleId,
+    },
     orderBy: { createdAt: 'desc' },
   });
 
@@ -91,7 +84,10 @@ export async function getApplicationWithNominations(id: string) {
   };
 }
 
-export async function getApplicationWithNominationsByCycleId(cycleId: string, id: string) {
+export async function getApplicationWithNominationsByCycleId(
+  cycleId: string,
+  id: string,
+) {
   const application = await db.application.findUnique({
     where: { id },
     include: {
@@ -176,21 +172,25 @@ export async function getApplicationsWithNominationCounts() {
 }
 
 export async function getNominationFormData() {
-  // Get all nominees (applications)
+  const activeCycle = await getActiveCycle();
+
+  // Get nominees from the active cycle only
   const allNominees = await db.application.findMany({
-    select: { 
-      fullName: true, 
+    where: { cycleId: activeCycle.id },
+    select: {
+      fullName: true,
       email: true,
-      nominationFormPdfUrl: true 
+      nominationFormPdfUrl: true,
     },
   });
 
   // Filter out nominees who have uploaded a paper nomination form
   const nominees = allNominees
-    .filter(nominee => !nominee.nominationFormPdfUrl)
+    .filter((nominee) => !nominee.nominationFormPdfUrl)
     .map(({ fullName, email }) => ({ fullName, email }));
 
   const constituencies = await db.application.findMany({
+    where: { cycleId: activeCycle.id },
     select: { constituency: true },
     distinct: ['constituency'],
   });
@@ -208,7 +208,9 @@ export async function getNominationFormData() {
   };
 }
 
-export async function getApplicationsWithNominationCountsByCycleId(cycleId: string) {
+export async function getApplicationsWithNominationCountsByCycleId(
+  cycleId: string,
+) {
   const applications = await db.application.findMany({
     where: { cycleId },
     include: {
@@ -250,7 +252,10 @@ export async function getApplicationsWithNominationCountsByCycleId(cycleId: stri
 }
 
 export async function createOrUpdateApplication(
-  data: Omit<Application, 'id' | 'createdAt' | 'nominationFormPdfUrl' | 'cycleId'>,
+  data: Omit<
+    Application,
+    'id' | 'createdAt' | 'nominationFormPdfUrl' | 'cycleId'
+  >,
 ) {
   const activeCycle = await getActiveCycle();
 
