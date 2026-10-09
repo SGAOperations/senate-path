@@ -264,7 +264,7 @@ export default function ApplicationForm({
               application and, to be considered, Candidates must complete
               additional application items. See more information on the{' '}
               <a
-                href="https://northeasternsga.com/senate-elections"
+                href="https://northeasternsga.com/senate-election"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary hover:underline font-medium"
