@@ -45,6 +45,9 @@ model Application {
   year                               Int
   semester                           String
   constituency                       String
+  // Free-text community constituency entered by the applicant
+  communityConstituencyName          String?
+  // Legacy: applications submitted before free-text entry link to a preset constituency
   communityConstituencyId            String?
   communityConstituency              CommunityConstituency? @relation(fields: [communityConstituencyId], references: [id])
   cycleId                            String

@@ -18,7 +18,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { SearchableSelect } from '@/components/ui/searchable-select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   XCircle,
@@ -29,7 +28,6 @@ import {
 } from 'lucide-react';
 import { useUnsavedChangesWarning } from '@/lib/hooks/useUnsavedChangesWarning';
 import { toast } from 'sonner';
-import { CommunityConstituency } from '@prisma/client';
 import { VoiceRecorder } from '@/components/ui/voice-recorder';
 
 const applicationSchema = z
@@ -57,9 +55,10 @@ const applicationSchema = z
     minors: z.string().optional(),
     year: z.string().min(1, 'Please select your year'),
     constituency: z.string().min(1, 'Please select your constituency'),
-    communityConstituencyId: z
+    communityConstituencyName: z
       .string()
-      .min(1, 'Please select your community constituency'),
+      .trim()
+      .min(1, 'Please enter your community constituency'),
     whySenateLongAnswer: z
       .string()
       .min(50, 'Please provide a detailed response (at least 50 characters)'),
@@ -89,13 +88,7 @@ const applicationSchema = z
 
 type ApplicationFormData = z.infer<typeof applicationSchema>;
 
-interface ApplicationFormProps {
-  communityConstituencies: CommunityConstituency[];
-}
-
-export default function ApplicationForm({
-  communityConstituencies,
-}: ApplicationFormProps) {
+export default function ApplicationForm() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -127,7 +120,7 @@ export default function ApplicationForm({
       minors: '',
       year: '',
       constituency: '',
-      communityConstituencyId: '',
+      communityConstituencyName: '',
       whySenateLongAnswer: '',
       constituencyIssueLongAnswer: '',
       diversityEquityInclusionLongAnswer: '',
@@ -198,7 +191,7 @@ export default function ApplicationForm({
       'major',
       'year',
       'constituency',
-      'communityConstituencyId',
+      'communityConstituencyName',
     ];
 
     const isValid = await trigger(fieldsToValidate);
@@ -619,49 +612,33 @@ export default function ApplicationForm({
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="communityConstituency">
+                      <Label htmlFor="communityConstituencyName">
                         Community Constituency
                         <span className="block text-sm text-muted-foreground font-normal mt-1">
-                          Select the community constituency you've been approved
-                          to represent
+                          Community Constituencies can be named as top
+                          involvements on campus. They can be the following:
+                          student organizations, a job, a research lab, an
+                          athletics involvement, or an alternative constituency
+                          confirmed by the Speaker of the Senate at{' '}
+                          <a
+                            href="mailto:sgasenatespeaker@northeastern.edu"
+                            className="text-primary hover:underline"
+                          >
+                            sgaSenateSpeaker@northeastern.edu
+                          </a>
+                          .
                         </span>
                       </Label>
-                      <SearchableSelect
-                        value={watch('communityConstituencyId')}
-                        onValueChange={(value) => {
-                          setValue('communityConstituencyId', value, {
-                            shouldValidate: true,
-                          });
-                        }}
-                        options={communityConstituencies.map((c) => ({
-                          value: c.id,
-                          label: c.name,
-                        }))}
-                        placeholder="Search and select community constituency"
-                        disabled={communityConstituencies.length === 0}
+                      <Input
+                        id="communityConstituencyName"
+                        placeholder="e.g. a student organization, job, research lab, or team"
+                        {...register('communityConstituencyName')}
                       />
-                      {errors.communityConstituencyId && (
+                      {errors.communityConstituencyName && (
                         <p className="text-sm text-destructive">
-                          {errors.communityConstituencyId.message}
+                          {errors.communityConstituencyName.message}
                         </p>
                       )}
-                      {communityConstituencies.length === 0 && (
-                        <p className="text-sm text-muted-foreground">
-                          No community constituencies available
-                        </p>
-                      )}
-                      <p className="text-sm text-muted-foreground">
-                        If you wish to represent a community constituency that
-                        isn't listed, please contact the Speaker of the Senate
-                        at{' '}
-                        <a
-                          href="mailto:sgasenatespeaker@northeastern.edu"
-                          className="text-primary hover:underline"
-                        >
-                          sgaSenateSpeaker@northeastern.edu
-                        </a>
-                        .
-                      </p>
                     </div>
                   </div>
 

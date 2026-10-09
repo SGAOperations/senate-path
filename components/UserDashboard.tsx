@@ -450,13 +450,15 @@ export default function UserDashboard({
                         {applicantDetails.constituency}
                       </p>
                     </div>
-                    {applicantDetails.communityConstituency && (
+                    {(applicantDetails.communityConstituencyName ||
+                      applicantDetails.communityConstituency) && (
                       <div>
                         <p className="text-sm text-muted-foreground">
                           Community Constituency
                         </p>
                         <p className="font-medium">
-                          {applicantDetails.communityConstituency.name}
+                          {applicantDetails.communityConstituencyName ||
+                            applicantDetails.communityConstituency?.name}
                         </p>
                       </div>
                     )}

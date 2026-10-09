@@ -356,10 +356,10 @@ export default function AdminDashboard({ applications, getApplicationDetails, se
                           <p className="text-sm text-muted-foreground">Academic Constituency</p>
                           <p className="font-medium">{selectedApplicant.constituency}</p>
                         </div>
-                        {selectedApplicant.communityConstituency && (
+                        {(selectedApplicant.communityConstituencyName || selectedApplicant.communityConstituency) && (
                           <div className="col-span-1 sm:col-span-2">
                             <p className="text-sm text-muted-foreground">Community Constituency</p>
-                            <p className="font-medium">{selectedApplicant.communityConstituency.name}</p>
+                            <p className="font-medium">{selectedApplicant.communityConstituencyName || selectedApplicant.communityConstituency?.name}</p>
                           </div>
                         )}
                       </div>
