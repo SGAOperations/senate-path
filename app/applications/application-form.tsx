@@ -2,7 +2,11 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+import {
+  applicationSchema,
+  type ApplicationFormData,
+} from '@/lib/schemas/application';
+import { COMMUNITY_CONSTITUENCY_MAX_LENGTH } from '@/lib/schemas/community-constituency';
 import { useState, useEffect } from 'react';
 import { submitApplication } from '@/lib/actions/applications';
 import { useRouter } from 'next/navigation';
@@ -29,64 +33,6 @@ import {
 import { useUnsavedChangesWarning } from '@/lib/hooks/useUnsavedChangesWarning';
 import { toast } from 'sonner';
 import { VoiceRecorder } from '@/components/ui/voice-recorder';
-
-const applicationSchema = z
-  .object({
-    nuid: z
-      .string()
-      .min(9, 'NUID must be 9 digits')
-      .max(9, 'NUID must be 9 digits'),
-    fullName: z.string().min(1, 'Full name is required'),
-    preferredFullName: z.string().optional(),
-    phoneticPronunciation: z
-      .string()
-      .min(1, 'Phonetic pronunciation of last name is required'),
-    pronunciationAudioUrl: z.string().optional(),
-    pronouns: z.string().min(1, 'Pronouns are required'),
-    email: z
-      .string()
-      .email('Please enter a valid email address')
-      .refine((email) => email.endsWith('@northeastern.edu'), {
-        message: 'Email must be a Northeastern email (@northeastern.edu)',
-      }),
-    phoneNumber: z.string().min(10, 'Valid phone number is required'),
-    college: z.array(z.string()).min(1, 'Please select at least one college'),
-    major: z.string().min(1, 'Major is required'),
-    minors: z.string().optional(),
-    year: z.string().min(1, 'Please select your year'),
-    constituency: z.string().min(1, 'Please select your constituency'),
-    communityConstituencyName: z
-      .string()
-      .trim()
-      .min(1, 'Please enter your community constituency'),
-    whySenateLongAnswer: z
-      .string()
-      .min(50, 'Please provide a detailed response (at least 50 characters)'),
-    constituencyIssueLongAnswer: z
-      .string()
-      .min(50, 'Please provide a detailed response (at least 50 characters)'),
-    diversityEquityInclusionLongAnswer: z
-      .string()
-      .min(50, 'Please provide a detailed response (at least 50 characters)'),
-    conflictSituationLongAnswer: z
-      .string()
-      .min(50, 'Please provide a detailed response (at least 50 characters)'),
-    campaignBlurb: z
-      .string()
-      .min(50, 'Please provide a detailed response (at least 50 characters)'),
-  })
-  .refine(
-    (data) => {
-      // Constituency must be one of the selected colleges
-      return data.college.includes(data.constituency);
-    },
-    {
-      message: 'Constituency must be one of the selected colleges',
-      path: ['constituency'],
-    },
-  );
-
-type ApplicationFormData = z.infer<typeof applicationSchema>;
 
 export default function ApplicationForm() {
   const router = useRouter();
@@ -632,6 +578,7 @@ export default function ApplicationForm() {
                       <Input
                         id="communityConstituencyName"
                         placeholder="e.g. a student organization, job, research lab, or team"
+                        maxLength={COMMUNITY_CONSTITUENCY_MAX_LENGTH}
                         {...register('communityConstituencyName')}
                       />
                       {errors.communityConstituencyName && (

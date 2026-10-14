@@ -195,16 +195,9 @@ export async function getNominationFormData() {
     distinct: ['constituency'],
   });
 
-  const communityConstituencies = await db.communityConstituency.findMany({
-    where: { isActive: true },
-    select: { id: true, name: true },
-    orderBy: { name: 'asc' },
-  });
-
   return {
     nominees,
     constituencies: constituencies.map((c) => c.constituency),
-    communityConstituencies,
   };
 }
 
