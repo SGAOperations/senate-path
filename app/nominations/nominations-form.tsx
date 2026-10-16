@@ -2,7 +2,11 @@
 
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+import {
+  nominationSchema,
+  type NominationFormData,
+} from '@/lib/schemas/nomination';
+import { COMMUNITY_CONSTITUENCY_MAX_LENGTH } from '@/lib/schemas/community-constituency';
 import { useState, useEffect } from 'react';
 import { createNomination } from '@/lib/actions/nominations';
 import { getNominationFormData } from '@/lib/data/applications';
@@ -19,44 +23,9 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { SearchableSelect } from '@/components/ui/searchable-select';
 import { XCircle, Loader2, AlertCircle } from 'lucide-react';
 import { useUnsavedChangesWarning } from '@/lib/hooks/useUnsavedChangesWarning';
 import { toast } from 'sonner';
-
-const nominationSchema = z.object({
-  fullName: z.string().min(1, 'Your full name is required'),
-  email: z
-    .string()
-    .min(1, 'Email is required')
-    .email('Valid email is required')
-    .refine(
-      (email) => email.endsWith('@northeastern.edu'),
-      'Email must be a @northeastern.edu address',
-    ),
-  nominee: z.string().min(1, 'Please select a nominee'),
-  college: z.string().min(1, 'Please select your home college'),
-  major: z.string().min(1, 'Major is required'),
-  constituencyType: z.enum(['academic', 'community']).refine(
-    (val) => val === 'academic' || val === 'community',
-    { message: 'Please select a constituency type' }
-  ),
-  communityConstituencyId: z.string().optional(),
-}).refine(
-  (data) => {
-    // If constituency type is community, community constituency must be selected
-    if (data.constituencyType === 'community' && !data.communityConstituencyId) {
-      return false;
-    }
-    return true;
-  },
-  {
-    message: 'Please select a community constituency',
-    path: ['communityConstituencyId'],
-  }
-);
-
-type NominationFormData = z.infer<typeof nominationSchema>;
 
 interface NominationsPageClientProps {
   nominationsOpen: boolean;
@@ -72,9 +41,6 @@ export default function NominationsPageClient({ nominationsOpen }: NominationsPa
   const [nomineesLoadError, setNomineesLoadError] = useState<string | null>(
     null,
   );
-  const [communityConstituencies, setCommunityConstituencies] = useState<
-    Array<{ id: string; name: string }>
-  >([]);
 
   const {
     register,
@@ -92,7 +58,7 @@ export default function NominationsPageClient({ nominationsOpen }: NominationsPa
       college: '',
       major: '',
       constituencyType: 'academic',
-      communityConstituencyId: '',
+      communityConstituencyName: '',
     },
   });
 
@@ -108,7 +74,6 @@ export default function NominationsPageClient({ nominationsOpen }: NominationsPa
       try {
         const data = await getNominationFormData();
         setNominees(data.nominees);
-        setCommunityConstituencies(data.communityConstituencies);
         setNomineesLoadError(null);
       } catch (error) {
         console.error('Failed to fetch nominees:', error);
@@ -327,28 +292,24 @@ export default function NominationsPageClient({ nominationsOpen }: NominationsPa
                       {/* Conditional Community Constituency Field */}
                       {constituencyType === 'community' && (
                         <div className="space-y-2">
-                          <Label htmlFor="communityConstituencyId">
+                          <Label htmlFor="communityConstituencyName">
                             Community Constituency
+                            <span className="block text-sm text-muted-foreground font-normal mt-1">
+                              The community constituency you share with the
+                              nominee. Community nominations are reviewed by
+                              the Speaker of the Senate before they count.
+                            </span>
                           </Label>
-                          <Controller
-                            name="communityConstituencyId"
-                            control={control}
-                            render={({ field }) => (
-                              <SearchableSelect
-                                value={field.value || ''}
-                                onValueChange={field.onChange}
-                                options={communityConstituencies.map((cc) => ({
-                                  value: cc.id,
-                                  label: cc.name,
-                                }))}
-                                placeholder="Search and select your community constituency"
-                                disabled={isSubmitting}
-                              />
-                            )}
+                          <Input
+                            id="communityConstituencyName"
+                            placeholder="e.g. a student organization, job, research lab, or team"
+                            maxLength={COMMUNITY_CONSTITUENCY_MAX_LENGTH}
+                            disabled={isSubmitting}
+                            {...register('communityConstituencyName')}
                           />
-                          {errors.communityConstituencyId && (
+                          {errors.communityConstituencyName && (
                             <p className="text-sm text-destructive">
-                              {errors.communityConstituencyId.message}
+                              {errors.communityConstituencyName.message}
                             </p>
                           )}
                         </div>

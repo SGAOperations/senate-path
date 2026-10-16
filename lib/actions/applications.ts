@@ -5,35 +5,21 @@ import { createOrUpdateApplication } from '@/lib/data/applications';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { randomUUID } from 'crypto';
 import { db } from '@/lib/db';
+import { applicationSchema } from '@/lib/schemas/application';
 
 // Constants
 const UPLOAD_FOLDER = 'nomination-forms';
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
-type ApplicationData = {
-  nuid: string;
-  fullName: string;
-  preferredFullName?: string;
-  phoneticPronunciation: string;
-  pronunciationAudioUrl: string;
-  pronouns: string;
-  email: string;
-  phoneNumber: string;
-  college: string[];
-  major: string;
-  minors?: string;
-  year: string;
-  constituency: string;
-  communityConstituencyId?: string;
-  whySenateLongAnswer: string;
-  constituencyIssueLongAnswer: string;
-  diversityEquityInclusionLongAnswer: string;
-  conflictSituationLongAnswer: string;
-  campaignBlurb: string;
-};
-
-export async function submitApplication(formData: ApplicationData) {
+export async function submitApplication(input: unknown) {
   try {
+    // Re-validate on the server; the client-side check can be bypassed
+    const parsed = applicationSchema.safeParse(input);
+    if (!parsed.success) {
+      throw new Error(parsed.error.issues[0]?.message ?? 'Invalid application');
+    }
+    const formData = parsed.data;
+
     // Map year names to numbers for database storage
     const yearMap: { [key: string]: number } = {
       '1st year': 1,
@@ -54,7 +40,7 @@ export async function submitApplication(formData: ApplicationData) {
       fullName: formData.fullName,
       preferredFullName: formData.preferredFullName || '',
       phoneticPronunciation: formData.phoneticPronunciation,
-      pronunciationAudioUrl: formData.pronunciationAudioUrl,
+      pronunciationAudioUrl: formData.pronunciationAudioUrl || '',
       pronouns: formData.pronouns,
       email: formData.email,
       phoneNumber: formData.phoneNumber,
@@ -64,7 +50,8 @@ export async function submitApplication(formData: ApplicationData) {
       year,
       semester: '',
       constituency: formData.constituency,
-      communityConstituencyId: formData.communityConstituencyId || null,
+      communityConstituencyName: formData.communityConstituencyName,
+      communityConstituencyId: null,
       whySenateLongAnswer: formData.whySenateLongAnswer,
       constituencyIssueLongAnswer: formData.constituencyIssueLongAnswer,
       diversityEquityInclusionLongAnswer: formData.diversityEquityInclusionLongAnswer,

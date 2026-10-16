@@ -45,6 +45,9 @@ model Application {
   year                               Int
   semester                           String
   constituency                       String
+  // Free-text community constituency entered by the applicant
+  communityConstituencyName          String?
+  // Legacy: applications submitted before free-text entry link to a preset constituency
   communityConstituencyId            String?
   communityConstituency              CommunityConstituency? @relation(fields: [communityConstituencyId], references: [id])
   cycleId                            String
@@ -67,19 +70,22 @@ enum NominationStatus {
 }
 
 model Nomination {
-  id                      String                 @id @default(uuid())
-  nominee                 String
-  fullName                String
-  email                   String
-  college                 String
-  major                   String
-  status                  NominationStatus       @default(PENDING)
-  constituencyType        String?                // 'academic' or 'community'
-  communityConstituencyId String?
-  communityConstituency   CommunityConstituency? @relation(fields: [communityConstituencyId], references: [id])
-  cycleId                 String
-  cycle                   Cycle                  @relation(fields: [cycleId], references: [id])
-  createdAt               DateTime               @default(now())
+  id                        String                 @id @default(uuid())
+  nominee                   String
+  fullName                  String
+  email                     String
+  college                   String
+  major                     String
+  status                    NominationStatus       @default(PENDING)
+  constituencyType          String? // 'academic' or 'community'
+  // Free-text community constituency entered by the nominator
+  communityConstituencyName String?
+  // Legacy: nominations submitted before free-text entry link to a preset constituency
+  communityConstituencyId   String?
+  communityConstituency     CommunityConstituency? @relation(fields: [communityConstituencyId], references: [id])
+  cycleId                   String
+  cycle                     Cycle                  @relation(fields: [cycleId], references: [id])
+  createdAt                 DateTime               @default(now())
 
   @@map("nominations")
 }

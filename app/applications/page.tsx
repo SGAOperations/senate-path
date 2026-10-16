@@ -1,4 +1,3 @@
-import { getActiveCommunityConstituencies } from '@/lib/data/community-constituencies';
 import { getSettings } from '@/lib/data/settings';
 import { redirect } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -9,7 +8,6 @@ export const dynamic = 'force-dynamic';
 
 export default async function ApplicationsPage() {
   const settings = await getSettings();
-  const communityConstituencies = await getActiveCommunityConstituencies();
 
   // Check if applications are closed
   const now = new Date();
@@ -31,5 +29,5 @@ export default async function ApplicationsPage() {
     );
   }
 
-  return <ApplicationForm communityConstituencies={communityConstituencies} />;
+  return <ApplicationForm />;
 }

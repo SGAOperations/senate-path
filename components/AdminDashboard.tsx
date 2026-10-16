@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/table';
 import { Search, User, Vote, TrendingUp, Download, AlertCircle, X, Trash2 } from 'lucide-react';
 import { Application, Nomination, Endorsement, CommunityConstituency } from '@prisma/client';
+import { getCommunityConstituencyName } from '@/lib/schemas/community-constituency';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { removeNominationFormPDF } from '@/lib/actions/applications';
@@ -356,10 +357,10 @@ export default function AdminDashboard({ applications, getApplicationDetails, se
                           <p className="text-sm text-muted-foreground">Academic Constituency</p>
                           <p className="font-medium">{selectedApplicant.constituency}</p>
                         </div>
-                        {selectedApplicant.communityConstituency && (
+                        {getCommunityConstituencyName(selectedApplicant) && (
                           <div className="col-span-1 sm:col-span-2">
                             <p className="text-sm text-muted-foreground">Community Constituency</p>
-                            <p className="font-medium">{selectedApplicant.communityConstituency.name}</p>
+                            <p className="font-medium">{getCommunityConstituencyName(selectedApplicant)}</p>
                           </div>
                         )}
                       </div>
@@ -465,7 +466,7 @@ export default function AdminDashboard({ applications, getApplicationDetails, se
                                     </div>
                                     <div className="flex gap-2">
                                       <Badge variant="outline" className="self-start">{nomination.status}</Badge>
-                                      {nomination.constituencyType === 'community' && nomination.communityConstituency ? (
+                                      {nomination.constituencyType === 'community' && getCommunityConstituencyName(nomination) ? (
                                         <Badge variant="secondary" className="self-start text-xs border border-gray-400 dark:border-gray-500">Community</Badge>
                                       ) : nomination.constituencyType === 'academic' ? (
                                         <Badge variant="outline" className="self-start text-xs border-gray-400 dark:border-gray-500">Academic</Badge>
@@ -473,10 +474,10 @@ export default function AdminDashboard({ applications, getApplicationDetails, se
                                     </div>
                                   </div>
                                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm mt-2">
-                                    {nomination.constituencyType === 'community' && nomination.communityConstituency ? (
+                                    {nomination.constituencyType === 'community' && getCommunityConstituencyName(nomination) ? (
                                       <>
                                         <div>
-                                          <span className="text-muted-foreground">Community Constituency:</span> {nomination.communityConstituency.name}
+                                          <span className="text-muted-foreground">Community Constituency:</span> {getCommunityConstituencyName(nomination)}
                                         </div>
                                         <div>
                                           <span className="text-muted-foreground">Major(s):</span> {nomination.major}

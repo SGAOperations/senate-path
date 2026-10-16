@@ -25,6 +25,7 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { Search, CheckCircle, XCircle, AlertCircle, Clock, Users } from 'lucide-react';
 import { Nomination, CommunityConstituency, NominationStatus } from '@prisma/client';
+import { getCommunityConstituencyName } from '@/lib/schemas/community-constituency';
 import { approveNomination, rejectNomination, bulkApproveNominations, bulkRejectNominations } from '@/lib/actions/nominations';
 import { toast } from 'sonner';
 import { Settings } from '@/lib/data/settings';
@@ -53,8 +54,9 @@ function getStatusBadge(status: string) {
 }
 
 function getConstituencyBadge(nom: NominationWithCommunity) {
-  if (nom.constituencyType === 'community' && nom.communityConstituency) {
-    return <Badge variant="secondary" className="text-xs border border-gray-400 dark:border-gray-500">Community: {nom.communityConstituency.name}</Badge>;
+  const communityName = getCommunityConstituencyName(nom);
+  if (nom.constituencyType === 'community' && communityName) {
+    return <Badge variant="secondary" className="text-xs border border-gray-400 dark:border-gray-500">Community: {communityName}</Badge>;
   } else if (nom.constituencyType === 'academic') {
     return <Badge variant="outline" className="text-xs border-gray-400 dark:border-gray-500">Academic: {nom.college}</Badge>;
   }
