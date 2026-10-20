@@ -61,11 +61,12 @@ export async function createNomination(input: unknown) {
     // automatically. The nomination stays PENDING and an admin checks that the
     // nominator and nominee share a constituency before approving it.
 
-    // Check if already nominated
+    // Check if already nominated this cycle; past cycles' nominations don't count
     const existing = await db.nomination.findFirst({
       where: {
         email: data.email,
         nominee: data.nominee,
+        cycleId: activeCycle.id,
       },
     });
 

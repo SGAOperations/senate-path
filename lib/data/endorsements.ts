@@ -32,9 +32,11 @@ export async function getEndorsementsByEmail(email: string) {
 }
 
 export async function createEndorsement(data: Omit<Endorsement, 'id' | 'createdAt' | 'cycleId'>) {
-  // Validate: Applicant must exist
+  const activeCycle = await getActiveCycle();
+
+  // Validate: Applicant must exist in the active cycle
   const applicant = await db.application.findFirst({
-    where: { fullName: data.applicantName },
+    where: { fullName: data.applicantName, cycleId: activeCycle.id },
   });
 
   if (!applicant) {
@@ -46,14 +48,13 @@ export async function createEndorsement(data: Omit<Endorsement, 'id' | 'createdA
     where: {
       endorserEmail: data.endorserEmail,
       applicantName: data.applicantName,
+      cycleId: activeCycle.id,
     },
   });
 
   if (existing) {
     throw new Error(`You have already endorsed ${data.applicantName}`);
   }
-
-  const activeCycle = await getActiveCycle();
 
   // Create endorsement
   return db.endorsement.create({
