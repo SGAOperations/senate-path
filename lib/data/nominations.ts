@@ -49,8 +49,9 @@ export async function getNominationsByStatus(
 }
 
 export async function getNominationsByNuid(nuid: string) {
+  const activeCycle = await getActiveCycle();
   const application = await db.application.findUnique({
-    where: { nuid },
+    where: { nuid_cycleId: { nuid, cycleId: activeCycle.id } },
     select: { fullName: true },
   });
 
@@ -61,6 +62,7 @@ export async function getNominationsByNuid(nuid: string) {
   const count = await db.nomination.count({
     where: {
       nominee: application.fullName,
+      cycleId: activeCycle.id,
       status: Status.APPROVED,
     },
   });
