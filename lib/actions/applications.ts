@@ -6,6 +6,7 @@ import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { randomUUID } from 'crypto';
 import { db } from '@/lib/db';
 import { applicationSchema } from '@/lib/schemas/application';
+import { getActiveCycle } from '@/lib/data/cycles';
 
 // Constants
 const UPLOAD_FOLDER = 'nomination-forms';
@@ -112,9 +113,10 @@ export async function uploadNominationFormPDF(formData: FormData) {
       };
     }
 
-    // Verify the application exists
+    // Verify the application exists for the current cycle
+    const activeCycle = await getActiveCycle();
     const application = await db.application.findUnique({
-      where: { nuid },
+      where: { nuid_cycleId: { nuid, cycleId: activeCycle.id } },
     });
 
     if (!application) {
@@ -156,7 +158,7 @@ export async function uploadNominationFormPDF(formData: FormData) {
 
     // Update the application with the PDF URL
     await db.application.update({
-      where: { nuid },
+      where: { id: application.id },
       data: { nominationFormPdfUrl: publicUrl },
     });
 
@@ -181,9 +183,10 @@ export async function uploadNominationFormPDF(formData: FormData) {
  */
 export async function removeNominationFormPDF(nuid: string) {
   try {
+    const activeCycle = await getActiveCycle();
     const application = await db.application.findUnique({
-      where: { nuid },
-      select: { nominationFormPdfUrl: true },
+      where: { nuid_cycleId: { nuid, cycleId: activeCycle.id } },
+      select: { id: true, nominationFormPdfUrl: true },
     });
 
     if (!application) {
@@ -195,7 +198,7 @@ export async function removeNominationFormPDF(nuid: string) {
 
     // Update the application to remove the PDF URL
     await db.application.update({
-      where: { nuid },
+      where: { id: application.id },
       data: { nominationFormPdfUrl: null },
     });
 
