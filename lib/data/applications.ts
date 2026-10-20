@@ -5,7 +5,7 @@ import { Application } from '@prisma/client';
 import { getActiveCycle } from '@/lib/data/cycles';
 
 export async function getActiveApplicationByNuidWithNominations(nuid: string) {
-  const application = await db.application.findUnique({
+  const application = await db.application.findFirst({
     where: { nuid, cycle: { isActive: true } },
     include: {
       communityConstituency: {
@@ -19,7 +19,7 @@ export async function getActiveApplicationByNuidWithNominations(nuid: string) {
   }
 
   const nominations = await db.nomination.findMany({
-    where: { nominee: application.fullName },
+    where: { nominee: application.fullName, cycleId: application.cycleId },
     include: {
       communityConstituency: {
         select: { name: true },
@@ -195,16 +195,9 @@ export async function getNominationFormData() {
     distinct: ['constituency'],
   });
 
-  const communityConstituencies = await db.communityConstituency.findMany({
-    where: { isActive: true },
-    select: { id: true, name: true },
-    orderBy: { name: 'asc' },
-  });
-
   return {
     nominees,
     constituencies: constituencies.map((c) => c.constituency),
-    communityConstituencies,
   };
 }
 
@@ -260,19 +253,19 @@ export async function createOrUpdateApplication(
   const activeCycle = await getActiveCycle();
 
   const existing = await db.application.findUnique({
-    where: { nuid: data.nuid },
+    where: { nuid_cycleId: { nuid: data.nuid, cycleId: activeCycle.id } },
   });
 
   if (existing) {
-    // Update existing application
+    // Update existing application for the current cycle
     const updated = await db.application.update({
-      where: { nuid: data.nuid },
+      where: { id: existing.id },
       data,
     });
 
-    // Delete nominations for this applicant when updated
+    // Delete nominations for this applicant in the current cycle when updated
     await db.nomination.deleteMany({
-      where: { nominee: data.fullName },
+      where: { nominee: data.fullName, cycleId: activeCycle.id },
     });
 
     return updated;

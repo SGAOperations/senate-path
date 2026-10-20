@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/db';
 import { getActiveCycle } from '@/lib/data/cycles';
+import { nominationSchema } from '@/lib/schemas/nomination';
 
 const Status = {
   APPROVED: 'APPROVED',
@@ -10,18 +11,15 @@ const Status = {
   MANUAL_REVIEW: 'MANUAL_REVIEW',
 } as const;
 
-type NominationData = {
-  fullName: string;
-  email: string;
-  nominee: string;
-  college: string;
-  major: string;
-  constituencyType: 'academic' | 'community';
-  communityConstituencyId?: string;
-};
-
-export async function createNomination(data: NominationData) {
+export async function createNomination(input: unknown) {
   try {
+    // Re-validate on the server; the client-side check can be bypassed
+    const parsed = nominationSchema.safeParse(input);
+    if (!parsed.success) {
+      throw new Error(parsed.error.issues[0]?.message ?? 'Invalid nomination');
+    }
+    const data = parsed.data;
+
     // Map college to constituency
     const collegeToConstituency: Record<string, string> = {
       'College of Arts, Media and Design': 'College of Arts, Media and Design',
@@ -45,10 +43,7 @@ export async function createNomination(data: NominationData) {
     const activeCycle = await getActiveCycle();
     const nomineeApp = await db.application.findFirst({
       where: { fullName: data.nominee, cycleId: activeCycle.id },
-      select: { 
-        constituency: true,
-        communityConstituencyId: true,
-      },
+      select: { constituency: true },
     });
 
     if (!nomineeApp) {
@@ -61,18 +56,10 @@ export async function createNomination(data: NominationData) {
       if (nominatorConstituency && nomineeApp.constituency !== nominatorConstituency) {
         throw new Error('The nominator must belong to the same academic constituency (college) as the nominee');
       }
-    } else if (data.constituencyType === 'community') {
-      // For community nominations, check that community constituencies match
-      if (!data.communityConstituencyId) {
-        throw new Error('Community constituency must be selected for community-based nominations');
-      }
-      if (!nomineeApp.communityConstituencyId) {
-        throw new Error('The nominee does not belong to a community constituency');
-      }
-      if (data.communityConstituencyId !== nomineeApp.communityConstituencyId) {
-        throw new Error('The nominator must belong to the same community constituency as the nominee');
-      }
     }
+    // Community constituencies are free text, so they can't be matched
+    // automatically. The nomination stays PENDING and an admin checks that the
+    // nominator and nominee share a constituency before approving it.
 
     // Check if already nominated
     const existing = await db.nomination.findFirst({
@@ -95,7 +82,10 @@ export async function createNomination(data: NominationData) {
         college: data.college,
         major: data.major,
         constituencyType: data.constituencyType,
-        communityConstituencyId: data.constituencyType === 'community' ? data.communityConstituencyId : null,
+        communityConstituencyName:
+          data.constituencyType === 'community'
+            ? data.communityConstituencyName?.trim() || null
+            : null,
         status: 'PENDING',
         cycleId: activeCycle.id,
       },

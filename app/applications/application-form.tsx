@@ -2,7 +2,11 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+import {
+  applicationSchema,
+  type ApplicationFormData,
+} from '@/lib/schemas/application';
+import { COMMUNITY_CONSTITUENCY_MAX_LENGTH } from '@/lib/schemas/community-constituency';
 import { useState, useEffect } from 'react';
 import { submitApplication } from '@/lib/actions/applications';
 import { useRouter } from 'next/navigation';
@@ -18,7 +22,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { SearchableSelect } from '@/components/ui/searchable-select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   XCircle,
@@ -29,73 +32,9 @@ import {
 } from 'lucide-react';
 import { useUnsavedChangesWarning } from '@/lib/hooks/useUnsavedChangesWarning';
 import { toast } from 'sonner';
-import { CommunityConstituency } from '@prisma/client';
 import { VoiceRecorder } from '@/components/ui/voice-recorder';
 
-const applicationSchema = z
-  .object({
-    nuid: z
-      .string()
-      .min(9, 'NUID must be 9 digits')
-      .max(9, 'NUID must be 9 digits'),
-    fullName: z.string().min(1, 'Full name is required'),
-    preferredFullName: z.string().optional(),
-    phoneticPronunciation: z
-      .string()
-      .min(1, 'Phonetic pronunciation of last name is required'),
-    pronunciationAudioUrl: z.string().optional(),
-    pronouns: z.string().min(1, 'Pronouns are required'),
-    email: z
-      .string()
-      .email('Please enter a valid email address')
-      .refine((email) => email.endsWith('@northeastern.edu'), {
-        message: 'Email must be a Northeastern email (@northeastern.edu)',
-      }),
-    phoneNumber: z.string().min(10, 'Valid phone number is required'),
-    college: z.array(z.string()).min(1, 'Please select at least one college'),
-    major: z.string().min(1, 'Major is required'),
-    minors: z.string().optional(),
-    year: z.string().min(1, 'Please select your year'),
-    constituency: z.string().min(1, 'Please select your constituency'),
-    communityConstituencyId: z
-      .string()
-      .min(1, 'Please select your community constituency'),
-    whySenateLongAnswer: z
-      .string()
-      .min(50, 'Please provide a detailed response (at least 50 characters)'),
-    constituencyIssueLongAnswer: z
-      .string()
-      .min(50, 'Please provide a detailed response (at least 50 characters)'),
-    diversityEquityInclusionLongAnswer: z
-      .string()
-      .min(50, 'Please provide a detailed response (at least 50 characters)'),
-    conflictSituationLongAnswer: z
-      .string()
-      .min(50, 'Please provide a detailed response (at least 50 characters)'),
-    campaignBlurb: z
-      .string()
-      .min(50, 'Please provide a detailed response (at least 50 characters)'),
-  })
-  .refine(
-    (data) => {
-      // Constituency must be one of the selected colleges
-      return data.college.includes(data.constituency);
-    },
-    {
-      message: 'Constituency must be one of the selected colleges',
-      path: ['constituency'],
-    },
-  );
-
-type ApplicationFormData = z.infer<typeof applicationSchema>;
-
-interface ApplicationFormProps {
-  communityConstituencies: CommunityConstituency[];
-}
-
-export default function ApplicationForm({
-  communityConstituencies,
-}: ApplicationFormProps) {
+export default function ApplicationForm() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -127,7 +66,7 @@ export default function ApplicationForm({
       minors: '',
       year: '',
       constituency: '',
-      communityConstituencyId: '',
+      communityConstituencyName: '',
       whySenateLongAnswer: '',
       constituencyIssueLongAnswer: '',
       diversityEquityInclusionLongAnswer: '',
@@ -198,7 +137,7 @@ export default function ApplicationForm({
       'major',
       'year',
       'constituency',
-      'communityConstituencyId',
+      'communityConstituencyName',
     ];
 
     const isValid = await trigger(fieldsToValidate);
@@ -264,7 +203,7 @@ export default function ApplicationForm({
               application and, to be considered, Candidates must complete
               additional application items. See more information on the{' '}
               <a
-                href="https://northeasternsga.com/senate-elections"
+                href="https://northeasternsga.com/senate-election"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary hover:underline font-medium"
@@ -619,49 +558,34 @@ export default function ApplicationForm({
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="communityConstituency">
+                      <Label htmlFor="communityConstituencyName">
                         Community Constituency
                         <span className="block text-sm text-muted-foreground font-normal mt-1">
-                          Select the community constituency you've been approved
-                          to represent
+                          Community Constituencies can be named as top
+                          involvements on campus. They can be the following:
+                          student organizations, a job, a research lab, an
+                          athletics involvement, or an alternative constituency
+                          confirmed by the Speaker of the Senate at{' '}
+                          <a
+                            href="mailto:sgasenatespeaker@northeastern.edu"
+                            className="text-primary hover:underline"
+                          >
+                            sgaSenateSpeaker@northeastern.edu
+                          </a>
+                          .
                         </span>
                       </Label>
-                      <SearchableSelect
-                        value={watch('communityConstituencyId')}
-                        onValueChange={(value) => {
-                          setValue('communityConstituencyId', value, {
-                            shouldValidate: true,
-                          });
-                        }}
-                        options={communityConstituencies.map((c) => ({
-                          value: c.id,
-                          label: c.name,
-                        }))}
-                        placeholder="Search and select community constituency"
-                        disabled={communityConstituencies.length === 0}
+                      <Input
+                        id="communityConstituencyName"
+                        placeholder="e.g. a student organization, job, research lab, or team"
+                        maxLength={COMMUNITY_CONSTITUENCY_MAX_LENGTH}
+                        {...register('communityConstituencyName')}
                       />
-                      {errors.communityConstituencyId && (
+                      {errors.communityConstituencyName && (
                         <p className="text-sm text-destructive">
-                          {errors.communityConstituencyId.message}
+                          {errors.communityConstituencyName.message}
                         </p>
                       )}
-                      {communityConstituencies.length === 0 && (
-                        <p className="text-sm text-muted-foreground">
-                          No community constituencies available
-                        </p>
-                      )}
-                      <p className="text-sm text-muted-foreground">
-                        If you wish to represent a community constituency that
-                        isn't listed, please contact the Speaker of the Senate
-                        at{' '}
-                        <a
-                          href="mailto:sgasenatespeaker@northeastern.edu"
-                          className="text-primary hover:underline"
-                        >
-                          sgaSenateSpeaker@northeastern.edu
-                        </a>
-                        .
-                      </p>
                     </div>
                   </div>
 

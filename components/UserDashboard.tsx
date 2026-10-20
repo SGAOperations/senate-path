@@ -18,6 +18,7 @@ import {
   Download,
 } from 'lucide-react';
 import { Application, Nomination, CommunityConstituency } from '@prisma/client';
+import { getCommunityConstituencyName } from '@/lib/schemas/community-constituency';
 import {
   uploadNominationFormPDF,
   removeNominationFormPDF,
@@ -450,13 +451,13 @@ export default function UserDashboard({
                         {applicantDetails.constituency}
                       </p>
                     </div>
-                    {applicantDetails.communityConstituency && (
+                    {getCommunityConstituencyName(applicantDetails) && (
                       <div>
                         <p className="text-sm text-muted-foreground">
                           Community Constituency
                         </p>
                         <p className="font-medium">
-                          {applicantDetails.communityConstituency.name}
+                          {getCommunityConstituencyName(applicantDetails)}
                         </p>
                       </div>
                     )}
@@ -638,7 +639,7 @@ export default function UserDashboard({
                               {nomination.status}
                             </Badge>
                             {nomination.constituencyType === 'community' &&
-                            nomination.communityConstituency ? (
+                            getCommunityConstituencyName(nomination) ? (
                               <Badge
                                 variant="secondary"
                                 className="self-start text-xs border border-gray-400 dark:border-gray-500"
@@ -657,13 +658,13 @@ export default function UserDashboard({
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm mt-2">
                           {nomination.constituencyType === 'community' &&
-                          nomination.communityConstituency ? (
+                          getCommunityConstituencyName(nomination) ? (
                             <>
                               <div>
                                 <span className="text-muted-foreground">
                                   Community Constituency:
                                 </span>{' '}
-                                {nomination.communityConstituency.name}
+                                {getCommunityConstituencyName(nomination)}
                               </div>
                               <div>
                                 <span className="text-muted-foreground">
