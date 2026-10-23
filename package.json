@@ -16,6 +16,9 @@
     "postinstall": "prisma generate"
   },
   "private": true,
+  "engines": {
+    "node": ">=24.22.1 <25"
+  },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
     "@prisma/client": "^6.18.0",
